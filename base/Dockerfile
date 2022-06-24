@@ -4,6 +4,19 @@ FROM $BASE_IMAGE
 # Change default shell
 SHELL ["/bin/bash", "-c"]
 
+# Setup user
+ARG USER=bobby
+RUN groupadd -r ${USER} --gid=1000 && \
+    useradd ${USER} --uid=1000 -g ${USER} --groups sudo -r --no-log-init --create-home && \
+    passwd -d ${USER}
+
+# Setup workspace
+ARG WORKSPACE_DIR=/home/${USER}/work
+RUN mkdir ${WORKSPACE_DIR} && chown -R ${USER}:${USER} ${WORKSPACE_DIR}
+WORKDIR ${WORKSPACE_DIR}
+
+USER root
+
 # Utilities
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
@@ -30,7 +43,8 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
 # Install helm
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
     chmod 700 get_helm.sh && \
-    ./get_helm.sh
+    ./get_helm.sh && \
+    rm ./get_helm.sh
 
 # Install Minio client
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
@@ -42,19 +56,11 @@ RUN wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VER
     unzip vault.zip -d /usr/local/bin/ && \
     rm vault.zip
 
-# Setup user
-ARG UID=bobby
-RUN useradd ${UID} --no-log-init -r --create-home
-USER ${UID}
-
-# Setup workspace
-ARG WORKSPACE_DIR=/home/${UID}/work
-RUN mkdir ${WORKSPACE_DIR}
-WORKDIR ${WORKSPACE_DIR}
-
-# Enable autocompletion for binaries
-RUN echo 'source <(kubectl completion bash)' >>~/.bashrc && \
-    echo 'source <(helm completion bash)' >>~/.bashrc && \
+# Enable autocompletion for downloaded binaries
+RUN echo 'source <(kubectl completion bash)' >> /home/${USER}/.bashrc && \
+    echo 'source <(helm completion bash)' >> /home/${USER}/.bashrc && \
     vault -autocomplete-install
+
+USER ${USER}
 
 CMD ["/bin/bash"]
