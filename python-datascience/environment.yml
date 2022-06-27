@@ -23,6 +23,6 @@ dependencies:
   - seaborn
   - scikit-learn
   - scipy
-  - statsmodel
+  - statsmodels
   - wheel
   - xgboost
