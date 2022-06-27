@@ -44,5 +44,6 @@ jobs:
           file: base/Dockerfile
           push: true
           tags: |
-            ${{ steps.docker_meta.outputs.tags }}
-            ${{ github.ref == 'refs/heads/master' && 'inseefrlab/base-datascience:latest' || '' }}
+            type=semver,pattern={{raw}}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+
