@@ -25,7 +25,9 @@ jobs:
         with:
           images: inseefrlab/base-datascience
           tags: |
-            type=ref,event=branch
+            # set latest tag for master branch
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            # propagate valid semver tags
             type=semver,pattern={{raw}}
       -
         name: Set up QEMU
