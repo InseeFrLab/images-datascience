@@ -9,6 +9,7 @@ on:
       - "*"
     paths:
       - "base/Dockerfile"
+      - ".github/workflows/base.yml"
 
 jobs:
   docker:
