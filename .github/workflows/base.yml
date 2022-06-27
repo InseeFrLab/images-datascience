@@ -1,4 +1,4 @@
-name: ci-base
+name: ci-base-datascience
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
     tags:
       - "*"
     paths:
-      - "base/Dockerfile"
-      - ".github/workflows/base.yml"
+      - "base-datascience/Dockerfile"
+      - ".github/workflows/base-datascience.yml"
 
 jobs:
   docker:
@@ -25,7 +25,7 @@ jobs:
         with:
           images: inseefrlab/base-datascience
           tags: |
-            # set latest tag for master branch
+            # set latest tag for main branch
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
             # propagate valid semver tags
             type=semver,pattern={{raw}}
@@ -45,8 +45,8 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: base/
-          file: base/Dockerfile
+          context: base-datascience/
+          file: base-datascience/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}

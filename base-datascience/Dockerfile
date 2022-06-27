@@ -23,8 +23,11 @@ RUN apt-get update && \
         bash-completion \
         ca-certificates \
         curl \
+        git \
         jq \
+        less \
         locales \
+        openssh-client \
         sudo \
         tini \
         unzip \
@@ -55,5 +58,3 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     vault -autocomplete-install
 
 USER ${USER}
-
-CMD ["/bin/bash"]
