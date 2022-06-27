@@ -24,6 +24,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: inseefrlab/base-datascience
+          tags: type=semver,pattern={{raw}}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -43,7 +44,5 @@ jobs:
           context: base/
           file: base/Dockerfile
           push: true
-          tags: |
-            type=semver,pattern={{raw}}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-
