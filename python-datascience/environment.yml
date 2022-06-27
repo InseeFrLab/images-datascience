@@ -1,0 +1,28 @@
+name: basesspcloud
+
+channels:
+  - conda-forge
+
+dependencies:
+  - beautifulsoup4
+  - bokeh
+  - boto3
+  - dask
+  - flake8
+  - geopandas
+  - hvac
+  - matplotlib-base
+  - numba
+  - numpy
+  - pandas
+  - pylint
+  - pyyaml
+  - pytest
+  - requests
+  - s3fs
+  - seaborn
+  - scikit-learn
+  - scipy
+  - statsmodel
+  - wheel
+  - xgboost

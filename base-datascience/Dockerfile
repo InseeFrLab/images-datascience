@@ -57,3 +57,5 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     vault -autocomplete-install
 
 USER ${USERNAME}
+
+CMD ["/bin/bash"]
