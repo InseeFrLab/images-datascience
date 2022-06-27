@@ -24,5 +24,6 @@ dependencies:
   - scikit-learn
   - scipy
   - statsmodels
+  - tensorflow-gpu
   - wheel
   - xgboost
