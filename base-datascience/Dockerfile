@@ -5,12 +5,12 @@ FROM $BASE_IMAGE
 SHELL ["/bin/bash", "-c"]
 
 # Setup user & workspace
-ARG USER=bobby
-ARG WORKSPACE_DIR=/home/${USER}/work
-RUN groupadd -r ${USER} --gid=1000 && \
-    useradd ${USER} --uid=1000 -g ${USER} --groups sudo -r --no-log-init --create-home && \
-    passwd -d ${USER} && \
-    mkdir ${WORKSPACE_DIR} && chown -R ${USER}:${USER} ${WORKSPACE_DIR}
+ARG USERNAME=bobby
+ARG WORKSPACE_DIR=/home/${USERNAME}/work
+RUN groupadd -r ${USERNAME} --gid=1000 && \
+    useradd ${USERNAME} --uid=1000 -g ${USERNAME} --groups sudo -r --no-log-init --create-home && \
+    passwd -d ${USERNAME} && \
+    mkdir ${WORKSPACE_DIR} && chown -R ${USERNAME}:${USERNAME} ${WORKSPACE_DIR}
 WORKDIR ${WORKSPACE_DIR}
 
 USER root
@@ -29,7 +29,6 @@ RUN apt-get update && \
         locales \
         openssh-client \
         sudo \
-        tini \
         unzip \
         wget && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
@@ -41,13 +40,13 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     # kubectl
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl && \
-    echo 'source <(kubectl completion bash)' >> /home/${USER}/.bashrc && \
+    echo 'source <(kubectl completion bash)' >> /home/${USERNAME}/.bashrc && \
     # helm
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
     chmod 700 get_helm.sh && \
     ./get_helm.sh && \
     rm ./get_helm.sh && \
-    echo 'source <(helm completion bash)' >> /home/${USER}/.bashrc && \
+    echo 'source <(helm completion bash)' >> /home/${USERNAME}/.bashrc && \
     # mc
     wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod +x /usr/local/bin/mc && \
@@ -57,4 +56,4 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     rm vault.zip && \
     vault -autocomplete-install
 
-USER ${USER}
+USER ${USERNAME}
