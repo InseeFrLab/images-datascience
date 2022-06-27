@@ -32,7 +32,6 @@ ARG CONDA_ENV_NAME="basesspcloud"
 COPY environment.yml .
 RUN conda create -n ${CONDA_ENV_NAME} python=${PYTHON_VERSION} && \
     mamba env update -n ${CONDA_ENV_NAME} -f environment.yml && \
-    mamba install -y pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch && \
     rm environment.yml
 
 # Activate custom Conda env by default

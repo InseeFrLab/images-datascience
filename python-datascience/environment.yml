@@ -18,12 +18,14 @@ dependencies:
   - pylint
   - pyyaml
   - pytest
+  - pytorch::pytorch
   - requests
   - s3fs
   - seaborn
   - scikit-learn
   - scipy
   - statsmodels
-  - tensorflow-gpu
   - wheel
   - xgboost
+  - pip:
+    - tensorflow
