@@ -15,10 +15,10 @@ dependencies:
   - numba
   - numpy
   - pandas
+  - pip
   - pylint
   - pyyaml
   - pytest
-  - pytorch::pytorch
   - requests
   - s3fs
   - seaborn
