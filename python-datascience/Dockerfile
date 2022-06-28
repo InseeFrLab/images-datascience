@@ -12,32 +12,29 @@ RUN apt-get -y update && \
         build-essential && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Quarto
-ARG QUARTO_VERSION="0.9.626"
-RUN wget "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb" && \
-    apt-get install "./quarto-${QUARTO_VERSION}-linux-amd64.deb" && \
-    rm quarto-${QUARTO_VERSION}-linux-amd64.deb
-
 USER ${USERNAME}
 
 # Install mambaforge : conda & mamba
-RUN curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh && \
-    bash Mambaforge-Linux-x86_64.sh -b -p ${HOME}/mambaforge && \
-    rm Mambaforge-Linux-x86_64.sh
-ENV PATH="${HOME}/mambaforge/bin:${PATH}"
+ARG MAMBAFORGE_VERSION=4.12.0-2
+ARG MAMBAFORGE_DIR=${HOME}/mambaforge
+RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/download/${MAMBAFORGE_VERSION}/Mambaforge-${MAMBAFORGE_VERSION}-Linux-x86_64.sh -O /tmp/mambaforge.sh && \
+    /bin/bash /tmp/mambaforge.sh -b -p ${MAMBAFORGE_DIR} && \
+    rm /tmp/mambaforge.sh && \
+    conda clean -tipsy && \
+    find ${MAMBAFORGE_DIR} -follow -type f -name '*.a' -delete && \
+    find ${MAMBAFORGE_DIR} -follow -type f -name '*.pyc' -delete && \
+    conda clean -afy
+ENV PATH="${MAMBAFORGE_DIR}/bin:${PATH}"
 
-# Create custom Conda env
+# Create custom Conda env and activate it by default in shells
 ARG PYTHON_VERSION="3.9"
 ARG CONDA_ENV_NAME="basesspcloud"
+ENV PATH="${HOME}/mambaforge/envs/${CONDA_ENV_NAME}/bin:${PATH}"
 COPY environment.yml .
 RUN conda create -n ${CONDA_ENV_NAME} python=${PYTHON_VERSION} && \
     mamba env update -n ${CONDA_ENV_NAME} -f environment.yml && \
-    rm environment.yml
-
-# Activate custom Conda env by default
-ENV PATH="${HOME}/mambaforge/envs/${CONDA_ENV_NAME}/bin:${PATH}"
-RUN echo ". ${HOME}/mambaforge/etc/profile.d/conda.sh" >> ${HOME}/.bashrc && \
-    echo "conda activate ${CONDA_ENV_NAME}" >> ${HOME}/.bashrc && \
-    echo "export PATH=$PATH" >> ${HOME}/.bashrc
+    rm environment.yml && \
+    conda clean -afy && \
+    echo ". ${MAMBAFORGE_DIR}/etc/profile.d/conda.sh && conda activate ${CONDA_ENV_NAME}" >> ${HOME}/.bashrc
 
 CMD ["python3"]
