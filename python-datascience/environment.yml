@@ -19,6 +19,9 @@ dependencies:
   - pylint
   - pyyaml
   - pytest
+  - pytorch::pytorch
+  - pytorch::torchvision
+  - pytorch::cpuonly
   - requests
   - s3fs
   - seaborn
