@@ -18,9 +18,8 @@ jobs:
       matrix:
         include:
           - base_image: ubuntu:20.04
-            output_image: inseefrlab/base-datascience
           - base_image: nvidia/cuda:11.3.1-base-ubuntu20.04
-            output_image: inseefrlab/base-datascience-gpu
+            tag_suffix: -gpu
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,12 +28,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ matrix.output_image }}
+          images: inseefrlab/base-datascience
           tags: |
             # set latest tag for main branch
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=raw,value=latest${{ matrix.tag_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
             # propagate valid semver tags
-            type=semver,pattern={{raw}}
+            type=semver,pattern={{raw}}${{ matrix.tag_suffix }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
