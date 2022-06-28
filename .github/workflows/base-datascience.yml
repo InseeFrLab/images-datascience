@@ -3,50 +3,57 @@ name: ci-base-datascience
 on:
   push:
     branches:
-      - 'main'
-      - 'dev'
+      - main
     tags:
       - "*"
     paths:
-      - "base-datascience/Dockerfile"
-      - ".github/workflows/base-datascience.yml"
+      - base-datascience/Dockerfile
+      - .github/workflows/base-datascience.yml
 
 jobs:
   docker:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - base_image: ubuntu:20.04
+            output_image: inseefrlab/base-datascience
+          - base_image: nvidia/cuda:11.3.1-base-ubuntu20.04
+            output_image: inseefrlab/base-datascience-gpu
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Docker meta
+
+      - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: inseefrlab/base-datascience
+          images: ${{ matrix.output_image }}
           tags: |
             # set latest tag for main branch
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
             # propagate valid semver tags
             type=semver,pattern={{raw}}
-      -
-        name: Set up QEMU
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
+
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Login to DockerHub
+
+      - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
+
+      - name: Build and push base-datascience
         uses: docker/build-push-action@v3
         with:
           context: base-datascience/
           file: base-datascience/Dockerfile
+          build-args: BASE_IMAGE=${{ matrix.base_image }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}

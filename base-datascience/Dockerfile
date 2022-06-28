@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=nvidia/cuda:11.3.1-base-ubuntu20.04
+ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 # Change default shell
