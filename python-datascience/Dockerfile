@@ -29,7 +29,7 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/dow
     # Create custom Conda environment
     conda create -n ${CONDA_ENV_NAME} python=${PYTHON_VERSION} && \
     mamba env update -n ${CONDA_ENV_NAME} -f environment.yml && \
-    mamba install -c pytorch -c conda-forge pytorch torchvision torchaudio tensorflow cudatoolkit={CUDA_VERSION} && \
+    mamba install -c pytorch -c conda-forge pytorch torchvision torchaudio tensorflow cudatoolkit=${CUDA_VERSION} && \
     # Activate custom Conda env by default in shell
     echo ". ${MAMBAFORGE_DIR}/etc/profile.d/conda.sh && conda activate ${CONDA_ENV_NAME}" >> ${HOME}/.bashrc && \
     # Clean
