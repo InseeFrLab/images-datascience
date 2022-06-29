@@ -15,9 +15,10 @@ RUN apt-get -y update && \
 USER ${USERNAME}
 
 # Install mambaforge & create custom Conda environment
-ARG MAMBAFORGE_VERSION=4.12.0-2
-ARG MAMBAFORGE_DIR=${HOME}/mambaforge
+ARG MAMBAFORGE_VERSION="4.12.0-2"
+ARG MAMBAFORGE_DIR="${HOME}/mambaforge"
 ARG PYTHON_VERSION="3.9"
+ARG CUDA_VERSION="11.6"
 ARG CONDA_ENV_NAME="basesspcloud"
 ENV PATH="${HOME}/mambaforge/envs/${CONDA_ENV_NAME}/bin:${MAMBAFORGE_DIR}/bin:${PATH}"
 COPY environment.yml .
@@ -28,11 +29,11 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/dow
     # Create custom Conda environment
     conda create -n ${CONDA_ENV_NAME} python=${PYTHON_VERSION} && \
     mamba env update -n ${CONDA_ENV_NAME} -f environment.yml && \
-    rm environment.yml && \
+    mamba install -c pytorch -c conda-forge pytorch torchvision torchaudio tensorflow cudatoolkit={CUDA_VERSION} && \
     # Activate custom Conda env by default in shell
     echo ". ${MAMBAFORGE_DIR}/etc/profile.d/conda.sh && conda activate ${CONDA_ENV_NAME}" >> ${HOME}/.bashrc && \
-    # Clean tmp files created by conda 
-    conda clean -tipsy && \
+    # Clean
+    rm environment.yml && \ 
     find ${MAMBAFORGE_DIR} -follow -type f -name '*.a' -delete && \
     find ${MAMBAFORGE_DIR} -follow -type f -name '*.pyc' -delete && \
     conda clean -afy
