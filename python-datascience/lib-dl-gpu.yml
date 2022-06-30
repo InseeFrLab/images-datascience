@@ -1,7 +1,3 @@
-channels:
-  - conda-forge
-
-dependencies:
   - cudatoolkit=11.6
   - pytorch::pytorch
   - pytorch::torchaudio

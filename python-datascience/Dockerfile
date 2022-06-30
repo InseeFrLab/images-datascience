@@ -19,14 +19,14 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/dow
     rm /tmp/mambaforge.sh && \
     # Create custom Conda environment
     conda create -n ${CONDA_ENV_NAME} python=${PYTHON_VERSION} && \
-    # Install data science packages
-    mamba env update -n ${CONDA_ENV_NAME} -f lib-datascience.yml && \
-    # Install deep learning packages
-    mamba env update -n ${CONDA_ENV_NAME} -f lib-dl${DEVICE_SUFFIX}.yml && \
+    # Merge Conda env files
+    cat lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml > env-specs.yml && \
+    # Install packages
+    mamba env update -n ${CONDA_ENV_NAME} -f env-specs.yml && \
     # Activate custom Conda env by default in shell
     echo ". ${MAMBAFORGE_DIR}/etc/profile.d/conda.sh && conda activate ${CONDA_ENV_NAME}" >> ${HOME}/.bashrc && \
     # Clean
-    rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml && \ 
+    rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml env-specs.yml && \ 
     find ${MAMBAFORGE_DIR} -follow -type f -name '*.a' -delete && \
     find ${MAMBAFORGE_DIR} -follow -type f -name '*.pyc' -delete && \
     conda clean -afy

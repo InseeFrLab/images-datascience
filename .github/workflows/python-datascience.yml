@@ -7,7 +7,7 @@ on:
     tags:
       - "*"
     paths:
-      - python-datascience/Dockerfile
+      - python-datascience/
       - .github/workflows/python-datascience.yml
 
 jobs:
