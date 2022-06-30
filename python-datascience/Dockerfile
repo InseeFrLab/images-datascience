@@ -2,16 +2,6 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 ARG USERNAME="bobby"
-ENV HOME="/home/${USERNAME}"
-
-USER root
-
-# Install additional system libraries
-RUN apt-get -y update && \ 
-    apt-get install -y --no-install-recommends \
-        build-essential && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
 USER ${USERNAME}
 
 # Install mambaforge & create custom Conda environment
