@@ -6,7 +6,8 @@ SHELL ["/bin/bash", "-c"]
 
 # Setup user & workspace
 ARG USERNAME=bobby
-ARG WORKSPACE_DIR=/home/${USERNAME}/work
+ENV HOME="/home/${USERNAME}"
+ARG WORKSPACE_DIR=${HOME}/work
 RUN groupadd -r ${USERNAME} --gid=1000 && \
     useradd ${USERNAME} --uid=1000 -g ${USERNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
