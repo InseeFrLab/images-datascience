@@ -3,50 +3,59 @@ name: ci-python-datascience
 on:
   push:
     branches:
-      - 'main'
-      - 'dev'
+      - main
     tags:
       - "*"
     paths:
-      - "python-datascience/Dockerfile"
-      - ".github/workflows/python-datascience.yml"
+      - python-datascience/Dockerfile
+      - .github/workflows/python-datascience.yml
 
 jobs:
   docker:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - base_image: inseefrlab/base-datascience:latest
+            device_suffix: ""
+          - base_image: inseefrlab/base-datascience:latest-gpu
+            device_suffix: "-gpu"
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Docker meta
+
+      - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: inseefrlab/python-datascience
           tags: |
             # set latest tag for main branch
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
             # propagate valid semver tags
-            type=semver,pattern={{raw}}
-      -
-        name: Set up QEMU
+            type=semver,pattern={{raw}}${{ matrix.device_suffix }}
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
+
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Login to DockerHub
+
+      - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
+
+      - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: python-datascience/
           file: python-datascience/Dockerfile
+          build-args: |
+            BASE_IMAGE=${{ matrix.base_image }}
+            DEVICE_SUFFIX=${{ matrix.device_suffix }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
