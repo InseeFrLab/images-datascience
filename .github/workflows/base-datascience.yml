@@ -7,7 +7,7 @@ on:
     tags:
       - "*"
     paths:
-      - base-datascience/
+      - base-datascience/**
       - .github/workflows/base-datascience.yml
 
 jobs:
