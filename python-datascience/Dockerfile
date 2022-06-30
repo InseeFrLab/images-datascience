@@ -20,9 +20,7 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/dow
     # Create custom Conda environment
     conda create -n ${CONDA_ENV_NAME} python=${PYTHON_VERSION} && \
     # Install data science packages
-    mamba env update -n ${CONDA_ENV_NAME} -f lib-datascience.yml && \
-    # Install deep learning packages
-    mamba env update -n ${CONDA_ENV_NAME} -f lib-dl${DEVICE_SUFFIX}.yml && \
+    mamba env update -n ${CONDA_ENV_NAME} -f lib-datascience.yml -f lib-dl${DEVICE_SUFFIX}.yml && \
     # Activate custom Conda env by default in shell
     echo ". ${MAMBAFORGE_DIR}/etc/profile.d/conda.sh && conda activate ${CONDA_ENV_NAME}" >> ${HOME}/.bashrc && \
     # Clean
