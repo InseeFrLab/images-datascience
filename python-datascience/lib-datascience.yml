@@ -1,5 +1,3 @@
-name: basesspcloud
-
 channels:
   - conda-forge
 

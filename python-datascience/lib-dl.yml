@@ -1,12 +1,9 @@
-name: lib-dl-cpu
-
 channels:
-  - pytorch
   - conda-forge
 
 dependencies:
-  - cpuonly
-  - pytorch
-  - torchvision 
-  - torchaudio 
+  - pytorch::cpuonly
+  - pytorch::pytorch
+  - pytorch::torchaudio
+  - pytorch::torchvision
   - tensorflow-cpu

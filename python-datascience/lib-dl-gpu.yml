@@ -1,12 +1,9 @@
-name: lib-dl-gpu
-
 channels:
-  - pytorch
   - conda-forge
 
 dependencies:
   - cudatoolkit=11.6
-  - pytorch
-  - torchvision 
-  - torchaudio 
+  - pytorch::pytorch
+  - pytorch::torchaudio
+  - pytorch::torchvision 
   - tensorflow
