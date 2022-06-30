@@ -1,4 +1,4 @@
-  - cudatoolkit=11.6
+  - cudatoolkit>=11.2
   - pytorch::pytorch
   - pytorch::torchaudio
   - pytorch::torchvision 
