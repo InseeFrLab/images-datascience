@@ -9,6 +9,7 @@ USER ${USERNAME}
 
 RUN mamba install -y -c conda-forge \
         jupyterlab \
+        ipywidgets \
         jupyterlab-git && \
     # Clean 
     mamba clean --all -f -y && \
