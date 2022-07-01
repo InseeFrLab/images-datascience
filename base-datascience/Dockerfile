@@ -8,11 +8,9 @@ ENV SHELL="/bin/bash"
 ARG USERNAME=bobby
 ARG UID=1000
 ARG GROUPNAME=users
-ARG GID=100
 ENV HOME="/home/${USERNAME}"
 ARG WORKSPACE_DIR=${HOME}/work
-RUN groupadd -r ${GROUPNAME} --gid=${GID} && \
-    useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
+RUN useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
     mkdir ${WORKSPACE_DIR} && chown -R ${USERNAME}:${GROUPNAME} ${WORKSPACE_DIR}
 WORKDIR ${WORKSPACE_DIR}
