@@ -22,7 +22,7 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/dow
     # Install mambaforge
     /bin/bash /tmp/mambaforge.sh -b -p ${MAMBAFORGE_DIR} && \
     # Set specified Python version
-    mamba install python==${PYTHON_VERSION}} && \
+    mamba install python==${PYTHON_VERSION} && \
     # Merge Conda env files to install DL libraries for CPU or GPU
     cat lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml > env-specs.yml && \
     # Install packages
