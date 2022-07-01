@@ -2,16 +2,19 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 # Change default shell
-SHELL ["/bin/bash", "-c"]
+ENV SHELL="/bin/bash"
 
 # Setup user & workspace
 ARG USERNAME=bobby
+ARG UID=1000
+ARG GROUPNAME=users
+ARG GID=100
 ENV HOME="/home/${USERNAME}"
 ARG WORKSPACE_DIR=${HOME}/work
-RUN groupadd -r ${USERNAME} --gid=1000 && \
-    useradd ${USERNAME} --uid=1000 -g ${USERNAME} --groups sudo -r --no-log-init --create-home && \
+RUN groupadd -r ${GROUPNAME} --gid=${GID} && \
+    useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
-    mkdir ${WORKSPACE_DIR} && chown -R ${USERNAME}:${USERNAME} ${WORKSPACE_DIR}
+    mkdir ${WORKSPACE_DIR} && chown -R ${USERNAME}:${GROUPNAME} ${WORKSPACE_DIR}
 WORKDIR ${WORKSPACE_DIR}
 
 USER root
@@ -29,7 +32,6 @@ RUN apt-get update && \
         jq \
         less \
         locales \
-        tini \
         openssh-client \
         sudo \
         unzip \
