@@ -1,6 +1,9 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
+# Set shell
+SHELL ["/bin/bash", "-c"]
+
 ARG USERNAME="bobby"
 USER ${USERNAME}
 

@@ -1,7 +1,8 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
-# Change default shell
+# Set shell
+SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
 
 # Setup user & workspace
