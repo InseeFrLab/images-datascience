@@ -14,7 +14,10 @@ dependencies:
   - numpy
   - pandas
   - pip
+  - plotly
+  - pyarrow
   - pylint
+  - pymongo
   - pyyaml
   - pytest
   - requests
