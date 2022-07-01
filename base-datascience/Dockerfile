@@ -5,9 +5,9 @@ FROM $BASE_IMAGE
 ENV SHELL="/bin/bash"
 
 # Setup user & workspace
-ARG USERNAME=bobby
-ARG UID=1000
-ARG GROUPNAME=users
+ARG USERNAME="bobby"
+ARG UID="1000"
+ARG GROUPNAME="users"
 ENV HOME="/home/${USERNAME}"
 ARG WORKSPACE_DIR=${HOME}/work
 RUN useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
@@ -38,7 +38,7 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install common binaries : kubectl, helm, mc, vault
-ARG VAULT_VERSION=1.11.0
+ARG VAULT_VERSION="1.11.0"
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
     # kubectl
     chmod +x ./kubectl && \

@@ -6,8 +6,6 @@ USER ${USERNAME}
 
 RUN mamba install -y -c conda-forge \
         jupyterlab \
-        ipykernel \
-        nb_conda_kernels \
         jupyterlab-git && \
     # Clean 
     mamba clean --all -f -y && \
