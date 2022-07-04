@@ -5,6 +5,7 @@ FROM $BASE_IMAGE
 SHELL ["/bin/bash", "-c"]
 
 ARG USERNAME="bobby"
+ARG GROUPNAME="users"
 USER ${USERNAME}
 
 ARG MAMBAFORGE_VERSION="4.12.0-2"
@@ -34,6 +35,8 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/dow
     rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml env-specs.yml && \ 
     find ${MAMBAFORGE_DIR} -follow -type f -name '*.a' -delete && \
     find ${MAMBAFORGE_DIR} -follow -type f -name '*.pyc' -delete && \
-    mamba clean --all -f -y
+    mamba clean --all -f -y && \
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 CMD ["python3"]
