@@ -5,6 +5,7 @@ FROM $BASE_IMAGE
 SHELL ["/bin/bash", "-c"]
 
 ARG USERNAME="bobby"
+ARG GROUPNAME="users"
 USER ${USERNAME}
 
 RUN mamba install -y -c conda-forge \
@@ -13,7 +14,9 @@ RUN mamba install -y -c conda-forge \
         jupyterlab-git && \
     # Clean 
     mamba clean --all -f -y && \
-    jupyter lab clean
+    jupyter lab clean && \
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 EXPOSE 8888
 
