@@ -58,7 +58,9 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip -O vault.zip  && \
     unzip vault.zip -d /usr/local/bin/ && \
     rm vault.zip && \
-    vault -autocomplete-install
+    vault -autocomplete-install && \
+    # fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${WORKSPACE_DIR}
 
 USER ${USERNAME}
 
