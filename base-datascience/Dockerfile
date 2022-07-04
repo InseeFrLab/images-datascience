@@ -13,7 +13,7 @@ ENV HOME="/home/${USERNAME}"
 ARG WORKSPACE_DIR=${HOME}/work
 RUN useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
-    mkdir ${WORKSPACE_DIR} && chown -R ${USERNAME}:${GROUPNAME} ${WORKSPACE_DIR}
+    mkdir ${WORKSPACE_DIR} && chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 WORKDIR ${WORKSPACE_DIR}
 
 USER root
@@ -60,7 +60,7 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     rm vault.zip && \
     vault -autocomplete-install && \
     # fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${WORKSPACE_DIR}
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 USER ${USERNAME}
 
