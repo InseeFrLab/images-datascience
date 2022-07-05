@@ -10,10 +10,10 @@ ARG USERNAME="bobby"
 ARG UID="1000"
 ARG GROUPNAME="users"
 ENV HOME="/home/${USERNAME}"
-ARG WORKSPACE_DIR=${HOME}/work
+ENV WORKSPACE_DIR=${HOME}/work
 RUN useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
-    mkdir ${WORKSPACE_DIR} && chown -R ${USERNAME}:${GROUPNAME} ${HOME}
+    mkdir ${WORKSPACE_DIR}
 WORKDIR ${WORKSPACE_DIR}
 
 USER root
