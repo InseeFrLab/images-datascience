@@ -6,9 +6,9 @@ SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
 
 # Setup user & workspace
-ARG USERNAME="bobby"
-ARG UID="1000"
-ARG GROUPNAME="users"
+ENV USERNAME="bobby"
+ENV UID="1000"
+ENV GROUPNAME="users"
 ENV HOME="/home/${USERNAME}"
 ENV WORKSPACE_DIR=${HOME}/work
 RUN useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
