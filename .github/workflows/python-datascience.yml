@@ -9,6 +9,10 @@ on:
     paths:
       - python-datascience/**
       - .github/workflows/python-datascience.yml
+  workflow_run:
+    workflows: [ci-base-datascience]
+    types:
+      - completed
 
 jobs:
   docker:
