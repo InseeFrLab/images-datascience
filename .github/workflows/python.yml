@@ -1,4 +1,4 @@
-name: ci-base-datascience
+name: ci-python
 
 on:
   push:
@@ -7,20 +7,25 @@ on:
     tags:
       - "*"
     paths:
-      - base-datascience/**
-      - .github/workflows/base-datascience.yml
+      - python/**
+      - .github/workflows/python.yml
+  workflow_run:
+    workflows: [ci-base]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
   docker:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - base_image: ubuntu:20.04
+          - base_image: inseefrlab/onyxia-base:latest
             device_suffix: ""
-          - base_image: nvidia/cuda:11.3.1-base-ubuntu20.04
+          - base_image: inseefrlab/onyxia-base:latest-gpu
             device_suffix: "-gpu"
     steps:
       - name: Checkout
@@ -30,7 +35,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: inseefrlab/base-datascience
+          images: inseefrlab/onyxia-python
           tags: |
             # set latest tag for main branch
             type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
@@ -52,9 +57,11 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: base-datascience/
-          file: base-datascience/Dockerfile
-          build-args: BASE_IMAGE=${{ matrix.base_image }}
+          context: python-datascience/
+          file: python-datascience/Dockerfile
+          build-args: |
+            BASE_IMAGE=${{ matrix.base_image }}
+            DEVICE_SUFFIX=${{ matrix.device_suffix }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}

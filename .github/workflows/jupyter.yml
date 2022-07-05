@@ -1,4 +1,4 @@
-name: ci-python-datascience
+name: ci-jupyter
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
     tags:
       - "*"
     paths:
-      - python-datascience/**
-      - .github/workflows/python-datascience.yml
+      - jupyter/**
+      - .github/workflows/jupyter.yml
   workflow_run:
-    workflows: [ci-base-datascience]
+    workflows: [ci-python]
     types:
       - completed
   workflow_dispatch:
@@ -23,9 +23,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - base_image: inseefrlab/base-datascience:latest
+          - base_image: inseefrlab/onyxia-python:latest
             device_suffix: ""
-          - base_image: inseefrlab/base-datascience:latest-gpu
+          - base_image: inseefrlab/onyxia-python:latest-gpu
             device_suffix: "-gpu"
     steps:
       - name: Checkout
@@ -35,7 +35,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: inseefrlab/python-datascience
+          images: inseefrlab/onyxia-jupyter
           tags: |
             # set latest tag for main branch
             type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
@@ -57,8 +57,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: python-datascience/
-          file: python-datascience/Dockerfile
+          context: jupyter-datascience/
+          file: jupyter-datascience/Dockerfile
           build-args: |
             BASE_IMAGE=${{ matrix.base_image }}
             DEVICE_SUFFIX=${{ matrix.device_suffix }}
