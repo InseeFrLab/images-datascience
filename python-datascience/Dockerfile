@@ -1,11 +1,8 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
-# Set shell
 SHELL ["/bin/bash", "-c"]
 
-ARG USERNAME="bobby"
-ARG GROUPNAME="users"
 USER ${USERNAME}
 
 ARG MAMBAFORGE_VERSION="4.12.0-2"
