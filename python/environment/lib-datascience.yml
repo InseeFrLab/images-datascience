@@ -9,6 +9,7 @@ dependencies:
   - flake8
   - geopandas
   - hvac
+  - ipykernel
   - matplotlib-base
   - numba
   - numpy

@@ -13,8 +13,8 @@ ARG DEVICE_SUFFIX
 
 ENV PATH="${HOME}/mambaforge/envs/${CONDA_ENV_NAME}/bin:${MAMBAFORGE_DIR}/bin:${PATH}"
 
-COPY lib-datascience.yml .
-COPY lib-dl${DEVICE_SUFFIX}.yml .
+COPY environment/lib-datascience.yml .
+COPY environment/lib-dl${DEVICE_SUFFIX}.yml .
 
 RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/download/${MAMBAFORGE_VERSION}/Mambaforge-${MAMBAFORGE_VERSION}-Linux-x86_64.sh -O /tmp/mambaforge.sh && \
     # Install mambaforge
