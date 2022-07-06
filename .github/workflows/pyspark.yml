@@ -7,7 +7,7 @@ on:
     tags:
       - "*"
     paths:
-      - vscode/**
+      - pyspark/**
       - .github/workflows/pyspark.yml
   workflow_run:
     workflows: [ci-python]
