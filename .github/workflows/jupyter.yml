@@ -24,16 +24,16 @@ jobs:
         include:
           - base_image: inseefrlab/onyxia-python:latest
             device_suffix: ""
-            output_image_name: onyxia-python-jupyter
+            output_image_name: onyxia-jupyter-python
           # - base_image: inseefrlab/onyxia-python:latest-gpu
           #   device_suffix: "-gpu"
-          #   output_image_name: onyxia-python-jupyter
+          #   output_image_name: onyxia-jupyter-python
           - base_image: inseefrlab/onyxia-python:latest
             device_suffix: ""
-            output_image_name: onyxia-pyspark-jupyter
+            output_image_name: onyxia-jupyter-pyspark
           # - base_image: inseefrlab/onyxia-python:latest
           #   device_suffix: "-gpu"
-          #   output_image_name: onyxia-pyspark-jupyter
+          #   output_image_name: onyxia-jupyter-pyspark
     steps:
       - name: Checkout
         uses: actions/checkout@v3
