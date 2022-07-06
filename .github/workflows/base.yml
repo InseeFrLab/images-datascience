@@ -20,8 +20,8 @@ jobs:
         include:
           - base_image: ubuntu:20.04
             device_suffix: ""
-          - base_image: nvidia/cuda:11.3.1-base-ubuntu20.04
-            device_suffix: "-gpu"
+          # - base_image: nvidia/cuda:11.3.1-base-ubuntu20.04
+          #   device_suffix: "-gpu"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
