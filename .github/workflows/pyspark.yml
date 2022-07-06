@@ -56,8 +56,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: vscode/
-          file: vscode/Dockerfile
+          context: pyspark/
+          file: pyspark/Dockerfile
           build-args: |
             BASE_IMAGE=${{ matrix.base_image }}
             DEVICE_SUFFIX=${{ matrix.device_suffix }}
