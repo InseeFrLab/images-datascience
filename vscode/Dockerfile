@@ -20,12 +20,13 @@ RUN curl -fOL https://github.com/coder/code-server/releases/download/v${CODE_SER
     code-server --install-extension mhutchie.git-graph && \
     # Create directories to store custom VSCode settings
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR} && \
+    # Set Conda binary path in remote settings
+    echo "{\"python.condaPath\": \"${HOME}/mambaforge/bin/conda\"}" > ${REMOTE_CONFIG_DIR}/settings.json && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
-# Copy custom VSCode settings
-COPY --chown={USERNAME}:{GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/settings.json
-COPY --chown={USERNAME}:{GROUPNAME} settings/Machine.json ${REMOTE_CONFIG_DIR}/settings.json
+# Copy custom VSCode User settings
+COPY --chown=${USERNAME}:${GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/settings.json
 
 USER ${USERNAME}
 
