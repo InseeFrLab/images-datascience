@@ -26,8 +26,13 @@ ENV HIVE_HOME="/opt/hive"
 COPY get-binaries.sh /tmp/get-binaries.sh
 RUN mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
     cd /tmp && \
-    ./get-binaries.sh && \
-    rm -rf /tmp/*
+    /bin/bash get-binaries.sh && \
+    # Clean
+    rm -rf /tmp/* && \
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME}
 
-COPY spark-env.sh $SPARK_HOME/conf
-ADD entrypoint.sh /opt/entrypoint.sh
+COPY --chown=${USERNAME}:${GROUPNAME} spark-env.sh $SPARK_HOME/conf
+COPY --chown=${USERNAME}:${GROUPNAME} entrypoint.sh /opt/entrypoint.sh
+
+ENTRYPOINT [ "/opt/entrypoint.sh" ]

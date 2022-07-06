@@ -33,6 +33,7 @@ RUN apt-get update && \
         locales \
         openssh-client \
         sudo \
+        tini \
         unzip \
         wget && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
