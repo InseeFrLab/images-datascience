@@ -1,0 +1,33 @@
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
+
+SHELL ["/bin/bash", "-c"]
+
+USER root
+
+ENV SPARK_VERSION=3.2.1
+ENV HADOOP_VERSION=3.3.1
+ENV HIVE_VERSION=2.3.9
+ENV HIVE_LISTENER_VERSION=0.0.3
+ENV HADOOP_URL="https://downloads.apache.org/hadoop/common/hadoop-${HADOOP_VERSION}"
+ENV HADOOP_AWS_URL="https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws"
+ENV HIVE_URL="https://archive.apache.org/dist/hive/hive-${HIVE_VERSION}"
+ENV SPARK_BUILD_NAME="spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}"
+ENV SPARK_BUILD_S3_BUCKET="https://minio.lab.sspcloud.fr/projet-onyxia/build"
+ENV HIVE_AUTHENTICATION_JAR="hive-authentication.jar"
+ENV HIVE_LISTENER_SRC_JAR="hive-listener-${HIVE_LISTENER_VERSION}.jar"
+ENV HIVE_LISTENER_DEST_JAR="hive-listener.jar"
+
+ENV HADOOP_HOME="/opt/hadoop"
+ENV SPARK_HOME="/opt/spark"
+ENV HIVE_HOME="/opt/hive"
+
+# Get Spark/Hadoop/Hive binaries
+COPY get-binaries.sh /tmp/get-binaries.sh
+RUN mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
+    cd /tmp && \
+    ./get-binaries.sh && \
+    rm -rf /tmp/*
+
+COPY spark-env.sh $SPARK_HOME/conf
+ADD entrypoint.sh /opt/entrypoint.sh
