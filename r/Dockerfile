@@ -15,10 +15,11 @@ RUN apt-get update && \
     wget -qO - https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc && \
     add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" && \
     add-apt-repository "ppa:c2d4u.team/c2d4u4.0+" && \
+    apt-get update && \
     # Install R and its dependencies
     apt-get install -y --no-install-recommends r-base \
                                                r-base-dev && \
-    # Download Rocker scripts and give permissions to execute
+    # Download Rocker scripts and give execution rights
     git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chmod -R 755 /rocker_scripts/ && \
