@@ -18,8 +18,14 @@ RUN apt-get update && \
     # Install R and its dependencies
     apt-get install -y --no-install-recommends r-base \
                                                r-base-dev && \
+    # Download Rocker scripts and give permissions to execute
+    git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
+    cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
+    chmod -R 755 /rocker_scripts/ && \
     # Set up R (CRAN mirror, RSPM, OpenBLAS, littler)
-    wget -qO - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/setup_R.sh | bash && \
+    /rocker_scripts/setup_R.sh && \
+    # Install Shiny server
+    /rocker_scripts/install_shiny_server.sh && \
     # Install packages suites
     apt-get install -y --no-install-recommends r-recommended \
                                                r-cran-devtools \
@@ -48,7 +54,8 @@ RUN apt-get update && \
     apt-get purge -y software-properties-common dirmngr && \
     apt-get autoremove -y && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/*
 
 USER ${USERNAME}
 
