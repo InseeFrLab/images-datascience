@@ -18,7 +18,8 @@ RUN apt-get update && \
     apt-get update && \
     # Install R and its dependencies
     apt-get install -y --no-install-recommends r-base \
-                                               r-base-dev && \
+                                               r-base-dev \
+                                               r-recommended && \
     # Download Rocker scripts and give execution rights
     git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
@@ -27,14 +28,12 @@ RUN apt-get update && \
     mkdir ${R_HOME}/etc/ && \
     touch ${R_HOME}/etc/Rprofile.site && \
     /rocker_scripts/setup_R.sh && \
-    # Install Shiny server
+    # Install packages suites from rocker
+    /rocker_scripts/install_tidyverse.sh && \
+    /rocker_scripts/install_verse.sh && \
+    /rocker_scripts/install_quarto.sh && \
+    /rocker_scripts/install_geospatial.sh && \
     /rocker_scripts/install_shiny_server.sh && \
-    # Install packages suites
-    apt-get install -y --no-install-recommends r-recommended \
-                                               r-cran-devtools \
-                                               r-cran-roxygen2 \
-                                               r-cran-tidyverse \
-                                               r-cran-ggplot2 && \
     # Install additional R packages
     install2.r -e -s RPostgreSQL \
                      RSQLite \
