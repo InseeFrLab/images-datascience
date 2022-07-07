@@ -42,7 +42,7 @@ RUN apt-get update && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME}
 
-COPY --chown=${USERNAME}:${GROUPNAME} spark-env.sh $SPARK_HOME/conf
-COPY --chown=${USERNAME}:${GROUPNAME} entrypoint.sh /opt/entrypoint.sh
+COPY --chown=${USERNAME}:${GROUPNAME} --chmod=755 spark-env.sh $SPARK_HOME/conf
+COPY --chown=${USERNAME}:${GROUPNAME} --chmod=755 entrypoint.sh /opt/entrypoint.sh
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
