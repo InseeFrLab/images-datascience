@@ -14,20 +14,42 @@ RUN apt-get update && \
     # Add relevant repositories
     wget -qO - https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc && \
     add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" && \
-    add-apt-repository ppa:c2d4u.team/c2d4u4.0+ && \
+    add-apt-repository "ppa:c2d4u.team/c2d4u4.0+" && \
     # Install R and its dependencies
     apt-get install -y --no-install-recommends r-base \
-                                               r-base-core \
-                                               r-base-dev \
-                                               r-recommended \
+                                               r-base-dev && \
+    # Set up R (CRAN mirror, RSPM, OpenBLAS, littler)
+    wget -qO - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/master/scripts/setup_R.sh | bash && \
+    # Install packages suites
+    apt-get install -y --no-install-recommends r-recommended \
                                                r-cran-devtools \
                                                r-cran-roxygen2 \
                                                r-cran-tidyverse \
                                                r-cran-ggplot2 && \
+    # Install additional R packages
+    install2.r -e -s RPostgreSQL \
+                     RSQLite \
+                     odbc \
+                     keyring \
+                     aws.s3 \
+                     Rglpk \
+                     paws \
+                     vaultr \
+                     arrow && \ 
+    installGithub.r inseeFrLab/doremifasol \
+                    rstudio/pagedown \
+                    spyrales/gouvdown \
+                    spyrales/gouvdown.fonts && \
+    # Make gouvdown fonts available
+    find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
+    fc-cache && \
+    Rscript -e "gouvdown::check_fonts_in_r()" && \
     # Clean
     apt-get purge -y software-properties-common dirmngr && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+USER ${USERNAME}
 
 CMD ["R"]
