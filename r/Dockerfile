@@ -23,6 +23,8 @@ RUN apt-get update && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chmod -R 755 /rocker_scripts/ && \
     # Set up R (CRAN mirror, RSPM, OpenBLAS, littler)
+    mkdir ${R_HOME}/etc/ && \
+    touch ${R_HOME}/etc/Rprofile.site && \
     /rocker_scripts/setup_R.sh && \
     # Install Shiny server
     /rocker_scripts/install_shiny_server.sh && \
