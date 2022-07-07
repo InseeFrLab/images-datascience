@@ -28,13 +28,17 @@ ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 ENV HADOOP_OPTIONAL_TOOLS="hadoop-aws"
 ENV PATH="${JAVA_HOME}/bin:${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 
-# Get Spark/Hadoop/Hive binaries
 COPY get-binaries.sh /tmp/get-binaries.sh
-RUN mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
+RUN apt-get update && \
+    # Install JDK
+    apt-get install -y --no-install-recommends openjdk-11-jre-headless ca-certificates-java && \
+    # Get Spark/Hadoop/Hive binaries
+    mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
     cd /tmp && \
     /bin/bash get-binaries.sh && \
     # Clean
     rm -rf /tmp/* && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME}
 
