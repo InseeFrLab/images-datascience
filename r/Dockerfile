@@ -35,7 +35,8 @@ RUN /rocker_scripts/install_quarto.sh
 RUN /rocker_scripts/install_geospatial.sh
 RUN /rocker_scripts/install_shiny_server.sh
     # # Install additional R packages
-RUN install2.r -e -s RPostgreSQL \
+RUN apt-get update && apt-get install libsecret-1-dev pkg-config && \
+    install2.r -e -s RPostgreSQL \
                      RSQLite \
                      odbc \
                      keyring \
