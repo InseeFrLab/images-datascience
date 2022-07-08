@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends libsecret-1-dev
                      paws \
                      vaultr \
                      arrow
-RUN apt-get install locales \
+RUN locale-gen \
     && dpkg-reconfigure --frontend=noninteractive locales \
     && update-locale LANG=fr_FR.UTF-8 \
     && installGithub.r inseeFrLab/doremifasol \
