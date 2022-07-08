@@ -30,10 +30,10 @@ RUN apt-get update && \
     /rocker_scripts/setup_R.sh
 
 RUN /rocker_scripts/install_tidyverse.sh
-    # /rocker_scripts/install_verse.sh && \
-    # /rocker_scripts/install_quarto.sh && \
-    # /rocker_scripts/install_geospatial.sh && \
-    # /rocker_scripts/install_shiny_server.sh && \
+RUN /rocker_scripts/install_verse.sh
+RUN /rocker_scripts/install_quarto.sh
+RUN /rocker_scripts/install_geospatial.sh
+RUN /rocker_scripts/install_shiny_server.sh
     # # Install additional R packages
     # install2.r -e -s RPostgreSQL \
     #                  RSQLite \
