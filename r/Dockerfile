@@ -45,11 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends libsecret-1-dev
                      paws \
                      vaultr \
                      arrow
-RUN apt-get update && apt-get install -y --no-install-recommends language-pack-fr \
-    && echo "LANG=fr_FR.UTF-8" >> /etc/default/locale \
-    && dpkg-reconfigure --frontend=noninteractive locales \
-    && installGithub.r inseeFrLab/doremifasol \
-    #                 rstudio/pagedown \
+RUN installGithub.r rstudio/pagedown \
     #                 spyrales/gouvdown \
     #                 spyrales/gouvdown.fonts && \
     # # Make gouvdown fonts available
