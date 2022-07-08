@@ -45,9 +45,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends libsecret-1-dev
                      paws \
                      vaultr \
                      arrow
-RUN locale-gen \
+RUN apt-get update && apt-get install -y --no-install-recommends language-pack-fr \
+    && echo "LANG=fr_FR.UTF-8" >> /etc/default/locale \
     && dpkg-reconfigure --frontend=noninteractive locales \
-    && update-locale LANG=fr_FR.UTF-8 \
     && installGithub.r inseeFrLab/doremifasol \
     #                 rstudio/pagedown \
     #                 spyrales/gouvdown \
