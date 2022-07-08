@@ -45,7 +45,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends libsecret-1-dev
                      paws \
                      vaultr \
                      arrow
-RUN Rscript -e remotes::install_github(inseeFrLab/doremifasol) \
+RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
+    && update-locale LANG=fr_FR.UTF-8 \
+    && installGithub.r inseeFrLab/doremifasol \
     #                 rstudio/pagedown \
     #                 spyrales/gouvdown \
     #                 spyrales/gouvdown.fonts && \
