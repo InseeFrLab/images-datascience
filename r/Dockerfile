@@ -8,27 +8,23 @@ USER root
 ENV R_VERSION=4.2.1
 ENV R_HOME=/usr/local/lib/R
 
-RUN apt-get update && \
-    # Install system libraries
-    apt-get install -y --no-install-recommends software-properties-common dirmngr && \
-    # Add relevant repositories
-    wget -qO - https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc && \
-    add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" && \
-    add-apt-repository "ppa:c2d4u.team/c2d4u4.0+" && \
-    apt-get update && \
-    # Install R and its dependencies
-    apt-get install -y --no-install-recommends r-base \
-                                               r-base-dev \
-                                               r-recommended && \
-    # Download Rocker scripts and give execution rights
-    git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
+# Install R using rocker's install scripts
+RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chmod -R 755 /rocker_scripts/ && \
-    # Set up R (CRAN mirror, RSPM, OpenBLAS, littler)
-    mkdir ${R_HOME}/etc/ && \
-    touch ${R_HOME}/etc/Rprofile.site && \
+    /rocker_scripts/install_R_source.sh
+
+# Use RStudio's package manager to download packages as binaries
+ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22
+
+# Set up R
+RUN apt-get update && \
+    # Install system libraries
+    apt-get install -y --no-install-recommends language-pack-fr \
+                                               libsecret-1-dev && \
+    # Set up R (RSPM, OpenBLAS, littler)
     /rocker_scripts/setup_R.sh && \
-    # Install packages suites from rocker
+    # Install packages bundles from rocker
     /rocker_scripts/install_tidyverse.sh && \
     /rocker_scripts/install_verse.sh && \
     /rocker_scripts/install_quarto.sh && \
@@ -43,21 +39,20 @@ RUN apt-get update && \
                      Rglpk \
                      paws \
                      vaultr \
-                     arrow && \ 
-    installGithub.r inseeFrLab/doremifasol \
-                    rstudio/pagedown \
-                    spyrales/gouvdown \
-                    spyrales/gouvdown.fonts && \
-    # Make gouvdown fonts available
+                     arrow && \
+    # Install gouvdown
+    # Temporary set French locales to download French packages from GitHub
+    export LANG=fr_FR.UTF-8 && \
+    installGithub.r spyrales/gouvdown && \
+    installGithub.r spyrales/gouvdown.fonts && \
     find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
     fc-cache && \
     Rscript -e "gouvdown::check_fonts_in_r()" && \
-    # Clean
-    apt-get purge -y software-properties-common dirmngr && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /tmp/*
+    # Fix permissions
+    chown -R bobby:users ${R_HOME}
+
+# s3 support in arrow package
+ENV LIBARROW_MINIMAL=false
 
 USER ${USERNAME}
 
