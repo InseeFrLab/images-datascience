@@ -27,37 +27,39 @@ RUN apt-get update && \
     # Set up R (CRAN mirror, RSPM, OpenBLAS, littler)
     mkdir ${R_HOME}/etc/ && \
     touch ${R_HOME}/etc/Rprofile.site && \
-    /rocker_scripts/setup_R.sh && \
+    /rocker_scripts/setup_R.sh
+
+
     # Install packages suites from rocker
-    /rocker_scripts/install_tidyverse.sh && \
-    /rocker_scripts/install_verse.sh && \
-    /rocker_scripts/install_quarto.sh && \
-    /rocker_scripts/install_geospatial.sh && \
-    /rocker_scripts/install_shiny_server.sh && \
-    # Install additional R packages
-    install2.r -e -s RPostgreSQL \
-                     RSQLite \
-                     odbc \
-                     keyring \
-                     aws.s3 \
-                     Rglpk \
-                     paws \
-                     vaultr \
-                     arrow && \ 
-    installGithub.r inseeFrLab/doremifasol \
-                    rstudio/pagedown \
-                    spyrales/gouvdown \
-                    spyrales/gouvdown.fonts && \
-    # Make gouvdown fonts available
-    find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
-    fc-cache && \
-    Rscript -e "gouvdown::check_fonts_in_r()" && \
-    # Clean
-    apt-get purge -y software-properties-common dirmngr && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /tmp/*
+    # /rocker_scripts/install_tidyverse.sh && \
+    # /rocker_scripts/install_verse.sh && \
+    # /rocker_scripts/install_quarto.sh && \
+    # /rocker_scripts/install_geospatial.sh && \
+    # /rocker_scripts/install_shiny_server.sh && \
+    # # Install additional R packages
+    # install2.r -e -s RPostgreSQL \
+    #                  RSQLite \
+    #                  odbc \
+    #                  keyring \
+    #                  aws.s3 \
+    #                  Rglpk \
+    #                  paws \
+    #                  vaultr \
+    #                  arrow && \ 
+    # installGithub.r inseeFrLab/doremifasol \
+    #                 rstudio/pagedown \
+    #                 spyrales/gouvdown \
+    #                 spyrales/gouvdown.fonts && \
+    # # Make gouvdown fonts available
+    # find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
+    # fc-cache && \
+    # Rscript -e "gouvdown::check_fonts_in_r()" && \
+    # # Clean
+    # apt-get purge -y software-properties-common dirmngr && \
+    # apt-get autoremove -y && \
+    # apt-get clean && \
+    # rm -rf /var/lib/apt/lists/* && \
+    # rm -rf /tmp/*
 
 USER ${USERNAME}
 
