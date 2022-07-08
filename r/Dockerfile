@@ -29,9 +29,7 @@ RUN apt-get update && \
     touch ${R_HOME}/etc/Rprofile.site && \
     /rocker_scripts/setup_R.sh
 
-
-    # Install packages suites from rocker
-    # /rocker_scripts/install_tidyverse.sh && \
+RUN /rocker_scripts/install_tidyverse.sh
     # /rocker_scripts/install_verse.sh && \
     # /rocker_scripts/install_quarto.sh && \
     # /rocker_scripts/install_geospatial.sh && \
