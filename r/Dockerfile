@@ -48,6 +48,9 @@ RUN apt-get update && \
     find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
     fc-cache && \
     Rscript -e "gouvdown::check_fonts_in_r()" && \
+    # Clean
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
     # Fix permissions
     chown -R bobby:users ${R_HOME}
 
