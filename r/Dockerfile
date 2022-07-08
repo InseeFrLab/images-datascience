@@ -44,7 +44,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends libsecret-1-dev
                      Rglpk \
                      paws \
                      vaultr \
-                     arrow && \
+                     arrow
 RUN installGithub.r inseeFrLab/doremifasol \
                     rstudio/pagedown \
                     spyrales/gouvdown \
