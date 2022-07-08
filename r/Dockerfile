@@ -45,19 +45,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends libsecret-1-dev
                      paws \
                      vaultr \
                      arrow
-RUN installGithub.r rstudio/pagedown \
-                    spyrales/gouvdown \
-                    spyrales/gouvdown.fonts && \
-    # Make gouvdown fonts available
-    find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
-    fc-cache && \
-    Rscript -e "gouvdown::check_fonts_in_r()" && \
-    # Clean
-    apt-get purge -y software-properties-common dirmngr && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /tmp/*
 
 USER ${USERNAME}
 
