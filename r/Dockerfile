@@ -30,34 +30,34 @@ RUN apt-get update && \
     /rocker_scripts/setup_R.sh
 
 RUN /rocker_scripts/install_tidyverse.sh
-RUN /rocker_scripts/install_verse.sh
+RUN apt-get update && apt-get install gfortran -y --no-install-recommends && /rocker_scripts/install_verse.sh
 RUN /rocker_scripts/install_quarto.sh
 RUN /rocker_scripts/install_geospatial.sh
 RUN /rocker_scripts/install_shiny_server.sh
     # # Install additional R packages
-    # install2.r -e -s RPostgreSQL \
-    #                  RSQLite \
-    #                  odbc \
-    #                  keyring \
-    #                  aws.s3 \
-    #                  Rglpk \
-    #                  paws \
-    #                  vaultr \
-    #                  arrow && \ 
-    # installGithub.r inseeFrLab/doremifasol \
-    #                 rstudio/pagedown \
-    #                 spyrales/gouvdown \
-    #                 spyrales/gouvdown.fonts && \
-    # # Make gouvdown fonts available
-    # find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
-    # fc-cache && \
-    # Rscript -e "gouvdown::check_fonts_in_r()" && \
-    # # Clean
-    # apt-get purge -y software-properties-common dirmngr && \
-    # apt-get autoremove -y && \
-    # apt-get clean && \
-    # rm -rf /var/lib/apt/lists/* && \
-    # rm -rf /tmp/*
+RUN install2.r -e -s RPostgreSQL \
+                     RSQLite \
+                     odbc \
+                     keyring \
+                     aws.s3 \
+                     Rglpk \
+                     paws \
+                     vaultr \
+                     arrow && \ 
+    installGithub.r inseeFrLab/doremifasol \
+                    rstudio/pagedown \
+                    spyrales/gouvdown \
+                    spyrales/gouvdown.fonts && \
+    # Make gouvdown fonts available
+    find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
+    fc-cache && \
+    Rscript -e "gouvdown::check_fonts_in_r()" && \
+    # Clean
+    apt-get purge -y software-properties-common dirmngr && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/*
 
 USER ${USERNAME}
 
