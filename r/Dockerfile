@@ -30,7 +30,7 @@ RUN apt-get update && \
     /rocker_scripts/setup_R.sh
 
 RUN /rocker_scripts/install_tidyverse.sh
-RUN apt-get update && apt-get install -y --no-install-recommends gfortran && /rocker_scripts/install_verse.sh
+RUN apt-get update && apt-get install gfortran -y --no-install-recommends && /rocker_scripts/install_verse.sh
 RUN /rocker_scripts/install_quarto.sh
 RUN /rocker_scripts/install_geospatial.sh
 RUN /rocker_scripts/install_shiny_server.sh
