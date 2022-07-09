@@ -21,6 +21,7 @@ ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22
 RUN /rocker_scripts/setup_R.sh && \
     # Install system libraries
     # Reinstall some libraries removed by `apt-get autoremove` in rocker scripts
+    apt-get update && \
     apt-get install -y --no-install-recommends build-essential \
                                                git \
                                                language-pack-fr \
@@ -49,10 +50,10 @@ RUN /rocker_scripts/setup_R.sh && \
     find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
     fc-cache && \
     Rscript -e "gouvdown::check_fonts_in_r()" && \
-    # Clean
-    rm -rf /var/lib/apt/lists/* && \
     # Fix permissions
-    chown -R bobby:users ${R_HOME}
+    chown -R bobby:users ${R_HOME} && \
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 # s3 support in arrow package
 ENV LIBARROW_MINIMAL=false
