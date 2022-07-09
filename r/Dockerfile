@@ -50,7 +50,7 @@ RUN apt-get update && \
     Rscript -e "gouvdown::check_fonts_in_r()" && \
     # Clean
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
     # Fix permissions
     chown -R bobby:users ${R_HOME}
 
