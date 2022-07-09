@@ -31,16 +31,18 @@ ENV PATH="${JAVA_HOME}/bin:${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 COPY get-binaries.sh /tmp/get-binaries.sh
 RUN apt-get update && \
     # Install JDK
-    apt-get install -y --no-install-recommends openjdk-11-jre-headless ca-certificates-java && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates-java \
+        openjdk-11-jre-headless && \
     # Get Spark/Hadoop/Hive binaries
     mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
     cd /tmp && \
     /bin/bash get-binaries.sh && \
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
     # Clean
     rm -rf /tmp/* && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME}
+    rm -rf /var/lib/apt/lists/*
 
 COPY --chown=${USERNAME}:${GROUPNAME} --chmod=755 spark-env.sh $SPARK_HOME/conf
 COPY --chown=${USERNAME}:${GROUPNAME} --chmod=755 entrypoint.sh /opt/entrypoint.sh
