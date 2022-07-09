@@ -7,6 +7,7 @@ USER root
 
 ENV R_VERSION=4.2.1
 ENV R_HOME=/usr/local/lib/R
+ENV DEFAULT_USER=${USERNAME}
 
 # Install R using rocker's install scripts
 RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
@@ -22,10 +23,11 @@ RUN /rocker_scripts/setup_R.sh && \
     # Install system libraries
     # Reinstall some libraries removed by `apt-get autoremove` in rocker scripts
     apt-get update && \
-    apt-get install -y --no-install-recommends build-essential \
-                                               git \
-                                               language-pack-fr \
-                                               libsecret-1-dev && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        language-pack-fr \
+        libsecret-1-dev && \
     # Install packages bundles from rocker
     /rocker_scripts/install_tidyverse.sh && \
     /rocker_scripts/install_verse.sh && \
@@ -33,15 +35,16 @@ RUN /rocker_scripts/setup_R.sh && \
     /rocker_scripts/install_geospatial.sh && \
     /rocker_scripts/install_shiny_server.sh && \
     # Install additional R packages
-    install2.r -e -s RPostgreSQL \
-                     RSQLite \
-                     odbc \
-                     keyring \
-                     aws.s3 \
-                     Rglpk \
-                     paws \
-                     vaultr \
-                     arrow && \
+    install2.r -e -s \
+        RPostgreSQL \
+        RSQLite \
+        odbc \
+        keyring \
+        aws.s3 \
+        Rglpk \
+        paws \
+        vaultr \
+        arrow && \
     # Install gouvdown
     # Temporary set French locales to download French packages from GitHub
     export LANG=fr_FR.UTF-8 && \
