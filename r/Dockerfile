@@ -17,13 +17,14 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
 # Use RStudio's package manager to download packages as binaries
 ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22
 
-# Set up R
-RUN apt-get update && \
+# Set up R (RSPM, OpenBLAS, littler, addtional packages)
+RUN /rocker_scripts/setup_R.sh && \
     # Install system libraries
-    apt-get install -y --no-install-recommends language-pack-fr \
+    # Reinstall some libraries removed by `apt-get autoremove` in rocker scripts
+    apt-get install -y --no-install-recommends build-essential \
+                                               git \
+                                               language-pack-fr \
                                                libsecret-1-dev && \
-    # Set up R (RSPM, OpenBLAS, littler)
-    /rocker_scripts/setup_R.sh && \
     # Install packages bundles from rocker
     /rocker_scripts/install_tidyverse.sh && \
     /rocker_scripts/install_verse.sh && \
@@ -49,7 +50,6 @@ RUN apt-get update && \
     fc-cache && \
     Rscript -e "gouvdown::check_fonts_in_r()" && \
     # Clean
-    apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     # Fix permissions
     chown -R bobby:users ${R_HOME}
