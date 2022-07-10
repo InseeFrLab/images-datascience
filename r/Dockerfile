@@ -54,7 +54,7 @@ RUN /rocker_scripts/setup_R.sh && \
     fc-cache && \
     Rscript -e "gouvdown::check_fonts_in_r()" && \
     # Fix permissions
-    chown -R bobby:users ${R_HOME} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${R_HOME} && \
     # Clean
     rm -rf /var/lib/apt/lists/*
 
