@@ -37,7 +37,8 @@ RUN apt-get update && \
         unzip \
         wget && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 # Install common binaries : kubectl, helm, mc, vault
 ARG VAULT_VERSION="1.11.0"
@@ -60,7 +61,7 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     unzip vault.zip -d /usr/local/bin/ && \
     rm vault.zip && \
     vault -autocomplete-install && \
-    # fix permissions
+    # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 USER ${USERNAME}
