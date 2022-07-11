@@ -56,8 +56,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: rstudio-sparkr/
-          file: rstudio-sparkr/Dockerfile
+          context: rstudio/
+          file: rstudio/Dockerfile
           build-args: |
             BASE_IMAGE=${{ matrix.base_image }}
             DEVICE_SUFFIX=${{ matrix.device_suffix }}
