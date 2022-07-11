@@ -22,9 +22,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - base_image: inseefrlab/onyxia-python:latest
+          - base_image: inseefrlab/onyxia-pyspark:latest
             device_suffix: ""
-          - base_image: inseefrlab/onyxia-python:latest-gpu
+          - base_image: inseefrlab/onyxia-pyspark:latest-gpu
             device_suffix: "-gpu"
     steps:
       - name: Checkout
