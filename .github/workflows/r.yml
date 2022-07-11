@@ -1,14 +1,14 @@
 name: ci-r
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - "*"
-    paths:
-      - r/**
-      - .github/workflows/r.yml
+  # push:
+  #   branches:
+  #     - main
+  #   tags:
+  #     - "*"
+  #   paths:
+  #     - r/**
+  #     - .github/workflows/r.yml
   workflow_run:
     workflows: [ci-base]
     types:
@@ -24,8 +24,8 @@ jobs:
         include:
           - base_image: inseefrlab/onyxia-base:latest
             device_suffix: ""
-          # - base_image: inseefrlab/onyxia-base:latest-gpu
-          #   device_suffix: "-gpu"
+          - base_image: inseefrlab/onyxia-base:latest-gpu
+            device_suffix: "-gpu"
     steps:
       - name: Checkout
         uses: actions/checkout@v3

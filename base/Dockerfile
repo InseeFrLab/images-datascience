@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
 
 # Setup user & workspace
-ENV USERNAME="bobby"
+ENV USERNAME="onyxia"
 ENV UID="1000"
 ENV GROUPNAME="users"
 ENV HOME="/home/${USERNAME}"

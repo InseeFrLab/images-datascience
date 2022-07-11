@@ -1,14 +1,14 @@
 name: ci-vscode
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - "*"
-    paths:
-      - vscode/**
-      - .github/workflows/vscode.yml
+  # push:
+  #   branches:
+  #     - main
+  #   tags:
+  #     - "*"
+  #   paths:
+  #     - vscode/**
+  #     - .github/workflows/vscode.yml
   workflow_run:
     workflows: [ci-python]
     types:
@@ -24,10 +24,8 @@ jobs:
         include:
           - base_image: inseefrlab/onyxia-python:latest
             device_suffix: ""
-            output_image_name: onyxia-vscode-python
-          # - base_image: inseefrlab/onyxia-python:latest-gpu
-          #   device_suffix: "-gpu"
-          #   output_image_name: onyxia-vscode-python
+          - base_image: inseefrlab/onyxia-python:latest-gpu
+            device_suffix: "-gpu"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,7 +34,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: inseefrlab/${{ matrix.output_image_name }}
+          images: inseefrlab/onyxia-vscode-python
           tags: |
             # set latest tag for main branch
             type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
