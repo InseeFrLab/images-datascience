@@ -1,4 +1,4 @@
-name: ci-spark
+name: ci-jupyter-pyspark
 
 on:
   # push:
@@ -7,10 +7,10 @@ on:
   #   tags:
   #     - "*"
   #   paths:
-  #     - pyspark/**
-  #     - .github/workflows/pyspark.yml
+  #     - jupyter/**
+  #     - .github/workflows/jupyter.yml
   workflow_run:
-    workflows: [ci-python, ci-r]
+    workflows: [ci-pyspark]
     types:
       - completed
   workflow_dispatch:
@@ -24,16 +24,8 @@ jobs:
         include:
           - base_image: inseefrlab/onyxia-python:latest
             device_suffix: ""
-            output_image_name: onyxia-pyspark
           - base_image: inseefrlab/onyxia-python:latest-gpu
             device_suffix: "-gpu"
-            output_image_name: onyxia-pyspark
-          - base_image: inseefrlab/onyxia-r:latest
-            device_suffix: ""
-            output_image_name: onyxia-sparkr
-          - base_image: inseefrlab/onyxia-r:latest-gpu
-            device_suffix: "-gpu"
-            output_image_name: onyxia-sparkr
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,7 +34,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: inseefrlab/${{ matrix.output_image_name }}
+          images: inseefrlab/onyxia-jupyter-pyspark
           tags: |
             # set latest tag for main branch
             type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
@@ -64,8 +56,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: spark/
-          file: spark/Dockerfile
+          context: jupyter/
+          file: jupyter/Dockerfile
           build-args: |
             BASE_IMAGE=${{ matrix.base_image }}
             DEVICE_SUFFIX=${{ matrix.device_suffix }}

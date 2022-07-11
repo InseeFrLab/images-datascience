@@ -1,4 +1,4 @@
-name: ci-jupyter
+name: ci-jupyter-python
 
 on:
   # push:
@@ -10,7 +10,7 @@ on:
   #     - jupyter/**
   #     - .github/workflows/jupyter.yml
   workflow_run:
-    workflows: [ci-pyspark]
+    workflows: [ci-python]
     types:
       - completed
   workflow_dispatch:
@@ -24,16 +24,8 @@ jobs:
         include:
           - base_image: inseefrlab/onyxia-python:latest
             device_suffix: ""
-            output_image_name: onyxia-jupyter-python
           - base_image: inseefrlab/onyxia-python:latest-gpu
             device_suffix: "-gpu"
-            output_image_name: onyxia-jupyter-python
-          - base_image: inseefrlab/onyxia-pyspark:latest
-            device_suffix: ""
-            output_image_name: onyxia-jupyter-pyspark
-          - base_image: inseefrlab/onyxia-pyspark:latest-gpu
-            device_suffix: "-gpu"
-            output_image_name: onyxia-jupyter-pyspark
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,7 +34,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: inseefrlab/${{ matrix.output_image_name }}
+          images: inseefrlab/onyxia-jupyter-python
           tags: |
             # set latest tag for main branch
             type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
