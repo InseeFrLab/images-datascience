@@ -9,9 +9,11 @@ ENV SHELL="/bin/bash"
 ENV USERNAME="onyxia"
 ENV UID="1000"
 ENV GROUPNAME="users"
+ENV GID="100"
 ENV HOME="/home/${USERNAME}"
 ENV WORKSPACE_DIR=${HOME}/work
-RUN useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
+RUN groupmod -g ${GID} ${GROUPNAME} && \
+    useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
     mkdir ${WORKSPACE_DIR}
 WORKDIR ${WORKSPACE_DIR}
