@@ -27,12 +27,12 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/dow
     mamba env update -n base -f env-specs.yml && \
     # Activate custom Conda env by default in shell
     echo ". ${MAMBAFORGE_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
     rm /tmp/mambaforge.sh && \
     rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml env-specs.yml && \ 
-    mamba clean --all -f -y
+    mamba clean --all -f -y && \
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 USER ${USERNAME}
 
