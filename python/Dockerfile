@@ -3,7 +3,7 @@ FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 
-USER ${USERNAME}
+USER root
 
 ARG MAMBAFORGE_VERSION="4.12.0-2"
 ARG MAMBAFORGE_DIR="${HOME}/mambaforge"
@@ -32,6 +32,8 @@ RUN wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/dow
     # Clean
     rm /tmp/mambaforge.sh && \
     rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml env-specs.yml && \ 
-    mamba clean --all -f -y && \
+    mamba clean --all -f -y
+
+USER ${USERNAME}
 
 CMD ["python3"]
