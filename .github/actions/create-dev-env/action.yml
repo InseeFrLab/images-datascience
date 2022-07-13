@@ -19,8 +19,10 @@ runs:
         python-version: 3.x
       if: ${{ inputs.platform == 'amd64' }}
 
-    - name: Install Dev Dependencies 📦
-      run: |
-        pip install --upgrade pip
-        pip install --upgrade -r requirements-dev.txt
+    - name: Build image 🛠
+      run: docker build --rm --force-rm --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
+      env:
+        DOCKER_BUILDKIT: 1
+        # Full logs for CI build
+        BUILDKIT_PROGRESS: plain
       shell: bash
