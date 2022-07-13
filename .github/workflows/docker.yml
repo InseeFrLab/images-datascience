@@ -10,4 +10,4 @@ jobs:
       parentImage: ""
       image: base
       platform: aarch64
-      runsOn: ""
+      runsOn: ubuntu-latest
