@@ -1,0 +1,13 @@
+name: Build, test and push Docker Images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  aarch64-base:
+    uses: ./.github/workflows/build-and-test.yaml
+    with:
+      parentImage: ""
+      image: base
+      platform: aarch64
+      runsOn: 
