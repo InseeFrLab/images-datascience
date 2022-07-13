@@ -30,3 +30,10 @@ jobs:
         uses: ./.github/actions/create-dev-env
         with:
           platform: ${{ inputs.platform }}
+      - name: Build image 🛠
+        run: docker build --rm --force-rm --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
+        env:
+          DOCKER_BUILDKIT: 1
+          # Full logs for CI build
+          BUILDKIT_PROGRESS: plain
+        shell: bash
