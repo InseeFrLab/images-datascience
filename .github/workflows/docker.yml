@@ -5,7 +5,7 @@ on:
 
 jobs:
   aarch64-base:
-    uses: ./.github/workflows/build-and-test.yaml
+    uses: ./.github/workflows/build-and-test.yml
     with:
       parentImage: ""
       image: base
