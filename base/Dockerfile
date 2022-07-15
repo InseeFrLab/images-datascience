@@ -1,4 +1,4 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=ubuntu:20.04
 FROM $BASE_IMAGE
 
 # Set default shell
@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
 
 # Setup user & workspace
-ENV USERNAME="onyxia"
+ARG USERNAME="onyxia"
 ENV UID="1000"
 ENV GROUPNAME="users"
 ENV GID="100"
