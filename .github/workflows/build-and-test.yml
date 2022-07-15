@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Repo ⚡️
         uses: actions/checkout@v3
       - name: docker build
-        run: docker build --build-arg BASE_IMAGE=ubuntu:20.04 ./base --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
+        run: docker build --build-arg BASE_IMAGE=ubuntu:20.04  --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
         env:
           DOCKER_BUILDKIT: 1
           # Full logs for CI build
@@ -37,7 +37,7 @@ jobs:
         uses: plexsystems/container-structure-test-action@v0.1.0
         with:
           image: jupyter/${{ inputs.image }}
-          config: ./base/tests.yaml
+          config: ${{ inputs.image }}//tests.yaml
       #- name: Build image 🛠
       #  run: docker build --rm --force-rm --build-arg BASE_IMAGE=ubuntu:20.04 --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
       #  env:
