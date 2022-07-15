@@ -21,19 +21,22 @@ on:
         type: string
 
 jobs:
-  build-test-upload:
+  build-and-test:
     runs-on: ${{ inputs.runsOn }}
     steps:
       - name: Checkout Repo ⚡️
         uses: actions/checkout@v3
-      - name: Create dev environment 📦
-        uses: ./.github/actions/create-dev-env
+      - name: docker build
+        run: docker build --build-arg BASE_IMAGE=ubuntu:20.04 ./base -t --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
+      - name: run structure tests
+        uses: plexsystems/container-structure-test-action@v0.1.0
         with:
-          platform: ${{ inputs.platform }}
-      - name: Build image 🛠
-        run: docker build --rm --force-rm --build-arg BASE_IMAGE=ubuntu:20.04 --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
-        env:
-          DOCKER_BUILDKIT: 1
-          # Full logs for CI build
-          BUILDKIT_PROGRESS: plain
-        shell: bash
+          image: jupyter/${{ inputs.image }}
+          config: ./base/tests.yaml
+      #- name: Build image 🛠
+      #  run: docker build --rm --force-rm --build-arg BASE_IMAGE=ubuntu:20.04 --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
+      #  env:
+      #    DOCKER_BUILDKIT: 1
+      #    # Full logs for CI build
+      #    BUILDKIT_PROGRESS: plain
+      #  shell: bash
