@@ -47,3 +47,11 @@ test/%: ## run tests against an image
 	$(call make_test,$(SOURCES),$(OWNER),$(notdir $@))
 	@echo "::endgroup::"
 test-all: $(foreach I, $(ALL_IMAGES), test/$(I)) ## test all images
+
+
+run-jupyter-lab: ## launch image jupyter local as user onyxia
+	docker run -t -i -p 8888:8888 --user onyxia --env USERNAME=test --env NB_USER=toto --rm $(OWNER)/jupyter start-onyxia.sh jupyter lab --no-browser --ip '0.0.0.0' --LabApp.token='password'
+
+
+run-jupyter-lab-bash/%: ## launch bash in image specified
+	docker run -t -i -p 8888:8888 --user onyxia  --rm --env NB_USER=test $(OWNER)/$(notdir $@) bash
