@@ -43,6 +43,36 @@ jobs:
       push: false
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+  vscode:
+    needs: [python]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-python
+      context: vscode
+      test: false
+      push: false
+      base_image: inseefrlab/onyxia-python:latest
+      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+  pyspark:
+    needs: [python]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: pyspark
+      context: spark
+      test: false
+      push: false
+      base_image: inseefrlab/onyxia-python:latest
+      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+  jupyter-pyspark:
+    needs: [pyspark]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-pyspark
+      context: jupyter
+      test: false
+      push: false
+      base_image: inseefrlab/onyxia-pyspark:latest
+      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
     needs: [r]
     uses: ./.github/workflows/main-workflow-template.yml
