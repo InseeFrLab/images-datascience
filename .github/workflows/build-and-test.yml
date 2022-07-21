@@ -38,10 +38,3 @@ jobs:
         with:
           image: jupyter/${{ inputs.image }}
           config: ${{ inputs.image }}//tests.yaml
-      #- name: Build image 🛠
-      #  run: docker build --rm --force-rm --build-arg BASE_IMAGE=ubuntu:20.04 --tag jupyter/${{ inputs.image }} ${{ inputs.image }}/
-      #  env:
-      #    DOCKER_BUILDKIT: 1
-      #    # Full logs for CI build
-      #    BUILDKIT_PROGRESS: plain
-      #  shell: bash
