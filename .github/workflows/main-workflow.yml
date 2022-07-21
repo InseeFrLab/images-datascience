@@ -10,8 +10,8 @@ jobs:
       image: base
       test: true
       push: false
-      base_image: ubuntu:20.04
-      base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
+      base-image: ubuntu:20.04
+      base-image-gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
   python:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -19,5 +19,5 @@ jobs:
       image: python
       test: false
       push: false
-      base_image: inseefrlab/onyxia-base:latest
-      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+      base-image: inseefrlab/onyxia-base:latest
+      base-image-gpu: inseefrlab/onyxia-base:latest-gpu
