@@ -71,21 +71,21 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
       
       - name: run structure tests
-        if: ${{ github.event.inputs.test == 'true' }}
+        if: ${{ inputs.test == 'true' }}
         uses: plexsystems/container-structure-test-action@v0.1.0
         with:
           image: ${{ steps.meta.outputs.tags }}
           config: ./${{ inputs.image }}/tests.yaml
 
       - name: Login to DockerHub
-        if: ${{ github.event.inputs.push == 'true' }}
+        if: ${{ inputs.push == 'true' }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
       - name: Build and push
-        if: ${{ github.event.inputs.push == 'true' }}
+        if: ${{ inputs.push == 'true' }}
         uses: docker/build-push-action@v3
         with:
           context: .
