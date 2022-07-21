@@ -21,3 +21,21 @@ jobs:
       push: false
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+  r:
+    needs: [base]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: r
+      test: false
+      push: false
+      base_image: inseefrlab/onyxia-base:latest
+      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+  jupyter:
+    needs: [python]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter
+      test: false
+      push: false
+      base_image: inseefrlab/onyxia-python:latest
+      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
