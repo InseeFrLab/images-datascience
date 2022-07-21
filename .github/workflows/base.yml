@@ -61,5 +61,5 @@ jobs:
       - name: run structure tests
         uses: plexsystems/container-structure-test-action@v0.1.0
         with:
-          image: inseefrlab/onyxia-base
+          image: inseefrlab/onyxia-base:${{ steps.meta.outputs.tags }}
           config: ./base/tests.yaml
