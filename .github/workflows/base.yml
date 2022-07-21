@@ -61,6 +61,7 @@ jobs:
         with:
           context: base/
           file: base/Dockerfile
+          load: true
           build-args: BASE_IMAGE=${{ matrix.base_image }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
