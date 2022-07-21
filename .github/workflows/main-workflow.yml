@@ -10,7 +10,7 @@ jobs:
       image: base
       test: true
       push: false
-  base:
+  python:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python
