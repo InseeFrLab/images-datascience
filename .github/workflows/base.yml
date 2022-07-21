@@ -55,6 +55,11 @@ jobs:
           context: base/
           file: base/Dockerfile
           build-args: BASE_IMAGE=${{ matrix.base_image }}
-          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
+      
+      - name: run structure tests
+        uses: plexsystems/container-structure-test-action@v0.1.0
+        with:
+          image: jupyter/${{ inputs.image }}
+          config: /base/tests.yaml
