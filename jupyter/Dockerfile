@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=jupyter/python:latest
+ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
