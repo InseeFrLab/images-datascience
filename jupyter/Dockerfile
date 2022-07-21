@@ -15,7 +15,6 @@ RUN mamba install -y -c conda-forge \
     #mamba clean --all -f -y && \
     #jupyter lab clean
 
-COPY start-onyxia.sh /usr/local/bin/
 EXPOSE 8888
 
 CMD ["jupyter", "lab", "--no-browser", "--ip '0.0.0.0'"]
