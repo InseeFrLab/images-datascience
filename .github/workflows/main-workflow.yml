@@ -14,7 +14,7 @@ jobs:
       image: base
       context: base
       test: true
-      push: ${{ env.PUSH }}
+      push: true
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
   python:
@@ -24,7 +24,7 @@ jobs:
       image: python
       context: python
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   r:
@@ -34,7 +34,7 @@ jobs:
       image: r
       context: r
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   jupyter:
@@ -44,7 +44,7 @@ jobs:
       image: jupyter
       context: jupyter
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   vscode:
@@ -54,7 +54,7 @@ jobs:
       image: vscode-python
       context: vscode
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   pyspark:
@@ -64,7 +64,7 @@ jobs:
       image: pyspark
       context: spark
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   jupyter-pyspark:
@@ -74,7 +74,7 @@ jobs:
       image: jupyter-pyspark
       context: jupyter
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-pyspark:latest
       base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
@@ -84,7 +84,7 @@ jobs:
       image: rstudio
       context: rstudio
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-r:latest
       base_image_gpu: inseefrlab/onyxia-r:latest-gpu
   sparkr:
@@ -94,7 +94,7 @@ jobs:
       image: sparkr
       context: spark
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-r:latest
       base_image_gpu: inseefrlab/onyxia-r:latest-gpu
   rstudio-sparkr:
@@ -104,6 +104,6 @@ jobs:
       image: rstudio-sparkr
       context: rstudio
       test: false
-      push: ${{ env.PUSH }}
+      push: true
       base_image: inseefrlab/onyxia-sparkr:latest
       base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
