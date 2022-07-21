@@ -15,11 +15,11 @@ on:
         description: context of docker image
         required: true
         type: string
-      base-image:
+      base_image:
         description: context of docker image
         required: true
         type: string
-      base-image-gpu:
+      base_image_gpu:
         description: context of docker image
         required: true
         type: string
