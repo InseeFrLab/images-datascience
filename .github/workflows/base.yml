@@ -10,9 +10,14 @@ on:
   #     - base/**
   #     - .github/workflows/base.yml
   workflow_dispatch:
-env:
-  TEST: false
-  
+     inputs:
+      test:
+        type: choice
+        description: should make test step
+        options: 
+        - true
+        - false
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -61,8 +66,8 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
       
       - name: run structure tests
-        if: ${{ env.TEST == 'True' }}
+        if: ${{ github.event.inputs.name }}
         uses: plexsystems/container-structure-test-action@v0.1.0
         with:
-          image: inseefrlab/onyxia-base:${{ steps.meta.outputs.tags }}
+          image: ${{ steps.meta.outputs.tags }}
           config: ./base/tests.yaml
