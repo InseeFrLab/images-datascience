@@ -1,4 +1,4 @@
-name: Build, test and push Docker Images
+name: Main workflow template
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: base
+      context: base
       test: true
       push: false
       base_image: ubuntu:20.04
@@ -17,6 +18,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python
+      context: python
       test: false
       push: false
       base_image: inseefrlab/onyxia-base:latest
@@ -26,6 +28,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r
+      context: r
       test: false
       push: false
       base_image: inseefrlab/onyxia-base:latest
@@ -35,7 +38,38 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter
+      context: jupyter
       test: false
       push: false
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+  r-studio:
+    needs: [r]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: rstudio
+      context: rstudio
+      test: false
+      push: false
+      base_image: inseefrlab/onyxia-r:latest
+      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+  sparkr:
+    needs: [r]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: sparkr
+      context: spark
+      test: false
+      push: false
+      base_image: inseefrlab/onyxia-r:latest
+      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+  rstudio-sparkr:
+    needs: [sparkr]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: rstudio-sparkr
+      context: rstudio
+      test: false
+      push: false
+      base_image: inseefrlab/onyxia-sparkr:latest
+      base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu

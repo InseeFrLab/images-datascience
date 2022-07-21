@@ -1,4 +1,4 @@
-name: Download parent image, build new one, test it and upload to GitHub artifacts
+name: Build all images
 
 on:
   workflow_call:
@@ -12,6 +12,10 @@ on:
         required: true
         type: string
       image:
+        description: name of docker image
+        required: true
+        type: string
+      context:
         description: context of docker image
         required: true
         type: string
@@ -59,8 +63,8 @@ jobs:
       - name: Build and store
         uses: docker/build-push-action@v3
         with:
-          context: ${{ inputs.image }}/
-          file: ${{ inputs.image }}/Dockerfile
+          context: ${{ inputs.context }}/
+          file: ${{ inputs.context }}/Dockerfile
           load: true
           build-args: BASE_IMAGE=${{ matrix.base_image }}
           tags: ${{ steps.meta.outputs.tags }}
