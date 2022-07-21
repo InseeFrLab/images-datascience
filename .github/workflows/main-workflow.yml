@@ -11,6 +11,7 @@ jobs:
       test: true
       push: false
   python:
+    needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python
