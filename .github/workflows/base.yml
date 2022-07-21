@@ -62,4 +62,4 @@ jobs:
         uses: plexsystems/container-structure-test-action@v0.1.0
         with:
           image: inseefrlab/onyxia-base
-          config: .base/tests.yaml
+          config: ./base/tests.yaml
