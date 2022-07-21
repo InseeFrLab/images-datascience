@@ -10,7 +10,9 @@ on:
   #     - base/**
   #     - .github/workflows/base.yml
   workflow_dispatch:
-
+env:
+  TEST: false
+  
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -59,6 +61,7 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
       
       - name: run structure tests
+        if: ${{ env.TEST == 'True' }}
         uses: plexsystems/container-structure-test-action@v0.1.0
         with:
           image: inseefrlab/onyxia-base:${{ steps.meta.outputs.tags }}
