@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=jupyter/base:latest
+ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-c"]
 USER root
 
 ARG MAMBAFORGE_VERSION="4.12.0-2"
-ARG MAMBAFORGE_DIR="/opt/mambaforge"
+ARG MAMBAFORGE_DIR="${HOME}/mambaforge"
 ARG CONDA_ENV_NAME="base"
 ARG PYTHON_VERSION="3.9"
 ARG DEVICE_SUFFIX
