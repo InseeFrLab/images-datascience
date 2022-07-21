@@ -12,7 +12,15 @@ on:
         required: true
         type: string
       image:
-        description: should push
+        description: context of docker image
+        required: true
+        type: string
+      base-image:
+        description: context of docker image
+        required: true
+        type: string
+      base-image-gpu:
+        description: context of docker image
         required: true
         type: string
 
@@ -23,9 +31,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - base_image: ubuntu:20.04
+          - base_image: ${{ inputs.base_image }}
             device_suffix: ""
-          - base_image: nvidia/cuda:11.3.1-base-ubuntu20.04
+          - base_image: ${{ inputs.base_image_gpu }} 
             device_suffix: "-gpu"
     steps:
       - name: Checkout
