@@ -8,12 +8,12 @@ USER ${USERNAME}
 RUN mamba install -y -c conda-forge \
         ipywidgets \
         jupyterlab \
-        jupyterlab-git
+        jupyterlab-git && \
     # Fix permissions
-    #chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean 
-    #mamba clean --all -f -y && \
-    #jupyter lab clean
+    mamba clean --all -f -y && \
+    jupyter lab clean
 
 EXPOSE 8888
 
