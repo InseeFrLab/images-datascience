@@ -27,14 +27,6 @@ on:
         description: context of docker image
         required: true
         type: string
-      username:
-        description: username to login dockerhub
-        required: true
-        type: string
-      password:
-        description: password to login dockerhub
-        required: true
-        type: string
         
 
 jobs:
@@ -90,8 +82,8 @@ jobs:
         if: ${{ inputs.push == 'true' }}
         uses: docker/login-action@v2
         with:
-          username: ${{ inputs.username }}
-          password: ${{ inputs.password }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
           
       - name: Build and push
         if: ${{ inputs.push == 'true' }}
