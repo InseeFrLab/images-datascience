@@ -94,6 +94,6 @@ jobs:
         if: ${{ inputs.push == 'true' }}
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ${{ inputs.context }}/
           push: true
           tags: ${{ steps.meta.outputs.tags }}
