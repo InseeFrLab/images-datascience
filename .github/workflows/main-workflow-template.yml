@@ -27,11 +27,11 @@ on:
         description: context of docker image
         required: true
         type: string
-      secrets:
-        DOCKERHUB_USERNAME:
-          required: true
-        DOCKERHUB_TOKEN:
-          required: true
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
         
 
 jobs:
