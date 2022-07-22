@@ -1,4 +1,4 @@
-name: Main workflow template
+name: Main manual workflow
 
 on:
   workflow_dispatch:
