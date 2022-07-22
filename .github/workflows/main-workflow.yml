@@ -53,7 +53,7 @@ jobs:
     needs: [python]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: jupyter
+      image: jupyter-python
       context: jupyter
       test: false
       push: true
