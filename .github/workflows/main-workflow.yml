@@ -10,6 +10,9 @@ env:
 jobs:
   base:
     uses: ./.github/workflows/main-workflow-template.yml
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
       image: base
       context: base
@@ -17,8 +20,6 @@ jobs:
       push: true
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
-      username: ${{ secrets.DOCKERHUB_USERNAME }}
-      password: ${{ secrets.DOCKERHUB_TOKEN }}
   python:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
