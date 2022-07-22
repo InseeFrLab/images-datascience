@@ -48,6 +48,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      
+      #https://github.com/actions/virtual-environments/issues/2840
+      - name: make free space
+        if: ${{ inputs.platform != 'amd64' }}
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        shell: bash
 
       - name: Docker meta
         id: meta
