@@ -51,7 +51,6 @@ jobs:
       
       #https://github.com/actions/virtual-environments/issues/2840
       - name: make free space
-        if: ${{ inputs.platform != 'amd64' }}
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
