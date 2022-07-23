@@ -43,8 +43,8 @@ jobs:
         include:
           - base_image: ${{ inputs.base_image }}
             device_suffix: ""
-        #  - base_image: ${{ inputs.base_image_gpu }} 
-        #    device_suffix: "-gpu"
+          - base_image: ${{ inputs.base_image_gpu }} 
+            device_suffix: "-gpu"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
