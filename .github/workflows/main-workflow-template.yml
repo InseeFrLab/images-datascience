@@ -108,15 +108,19 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
-      - name: Build and push
-        if: ${{ inputs.push == 'true' }}
-        uses: docker/build-push-action@v3
-        with:
-          context: ${{ inputs.context }}/
-          build-args: BASE_IMAGE=${{ matrix.base_image }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+    
+      - name: Push Images to Docker Hub 
+        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+        run: docker push --all-tags  ${{ steps.meta.outputs.tags }}
+        shell: bash
+   #   - name: Build and push
+   #     if: ${{ inputs.push == 'true' }}
+   #     uses: docker/build-push-action@v3
+   #    with:
+   #       context: ${{ inputs.context }}/
+   #       build-args: BASE_IMAGE=${{ matrix.base_image }}
+   #       push: true
+   #       tags: ${{ steps.meta.outputs.tags }}
         #  cache-from: type=local,src=/tmp/.buildx-cache
         #  cache-to: type=local,dest=/tmp/.buildx-cache-new
           
