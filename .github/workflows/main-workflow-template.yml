@@ -111,7 +111,7 @@ jobs:
     
       - name: Push Images to Docker Hub 
         if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
-        run: docker push --all-tags  ${{ steps.meta.outputs.tags }}
+        run: docker push   ${{ steps.meta.outputs.tags }}
         shell: bash
    #   - name: Build and push
    #     if: ${{ inputs.push == 'true' }}
