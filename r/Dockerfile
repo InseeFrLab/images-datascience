@@ -8,6 +8,7 @@ USER root
 ENV R_VERSION=4.2.1
 ENV R_HOME=/usr/local/lib/R
 ENV DEFAULT_USER=${USERNAME}
+ARG DEVICE_SUFFIX
 
 # Install R using rocker's install scripts
 RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
@@ -28,6 +29,8 @@ RUN /rocker_scripts/setup_R.sh && \
         git \
         language-pack-fr \
         libsecret-1-dev && \
+    # Configure R for CUDA if parent image has CUDA
+    if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
     # Install packages bundles from rocker
     /rocker_scripts/install_tidyverse.sh && \
     /rocker_scripts/install_verse.sh && \
