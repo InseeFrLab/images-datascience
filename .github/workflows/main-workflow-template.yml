@@ -114,7 +114,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
            context: ${{ inputs.context }}/
-           build-args: BASE_IMAGE=${{ matrix.base_image }}
+           build-args: |
+            BASE_IMAGE=${{ matrix.base_image }}
+            DEVICE_SUFFIX=${{ matrix.device_suffix }}
            push: true
            tags: ${{ steps.meta.outputs.tags }}
         #  cache-from: type=local,src=/tmp/.buildx-cache
