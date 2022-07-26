@@ -31,7 +31,7 @@ RUN apt-get update && \
     cd /tmp && \
     ${SHELL} /tmp/get-binaries.sh && \
     # Get SparkR package if base image is R
-    if [[ "${BASE_IMAGE}" == *"onyxia-r" ]]; then Rscript -e "devtools::install_github('apache/spark@v$SPARK_VERSION', subdir='R/pkg')"; fi && \
+    if [[ "${BASE_IMAGE}" == *"onyxia-r"* ]]; then Rscript -e "devtools::install_github('apache/spark@v$SPARK_VERSION', subdir='R/pkg')"; fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
     # Clean
