@@ -4,19 +4,7 @@
 echo "start of onyxia-init.sh script en tant que :"
 whoami
 
-if [  "`which jq`" = "" ]; then
-    if [  "`which apt`" != "" ]; then
-        sudo apt-get update -y && sudo apt-get install -y jq
-    fi
-fi
-
 if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
-
-    if [  "`which wget`" = "" ]; then
-        if [  "`which apt`" != "" ]; then
-            sudo apt-get update -y && sudo apt-get install -y wget
-        fi
-    fi
     JSON=$(wget -qO- \
         --header="X-Vault-Token: $VAULT_TOKEN" \
         $VAULT_ADDR/v1/$VAULT_MOUNT/data/$VAULT_TOP_DIR/$VAULT_RELATIVE_PATH )
@@ -50,9 +38,6 @@ if [  "`which kubectl`" != "" ]; then
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     chmod 640 ${HOME}/.kube/config 
 fi
-
-
-
 
 if [  "`which mc`" != "" ]; then
     export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY:$AWS_SESSION_TOKEN@$AWS_S3_ENDPOINT
@@ -189,7 +174,7 @@ if [ -n "$URL_INIT_SERVICE" ]; then
 fi
 
 # Fix permissions on HOME for images that require to be run as root
-chown -R onyxia:users ${HOME} && echo "chown done"
+chown -R onyxia:users ${HOME}
 
 echo "execution of $@"
 exec "$@"
