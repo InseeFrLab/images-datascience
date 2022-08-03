@@ -189,7 +189,7 @@ if [ -n "$URL_INIT_SERVICE" ]; then
 fi
 
 # Fix permissions on HOME for images that require to be run as root
-chown -R onyxia:users ${HOME}
+chown -R onyxia:users ${HOME} && echo "chown done"
 
 echo "execution of $@"
 exec "$@"
