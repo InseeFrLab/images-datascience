@@ -12,11 +12,11 @@ ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER=${USERNAME}
 ENV CRAN="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22"
 
+ENV QUARTO_VERSION="1.0.37"
+
 # Python config for the `reticulate` package
 ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
 ENV RETICULATE_AUTOCONFIGURE="0"
-
-ENV QUARTO_VERSION="1.0.37"
 
 USER root 
 
