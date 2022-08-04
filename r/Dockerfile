@@ -3,39 +3,42 @@ FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 
-USER root 
-
 # CPU/GPU
 ARG DEVICE_SUFFIX
 
 # R Config
-ENV R_VERSION=4.2.1
-ENV R_HOME=/usr/local/lib/R
+ENV R_VERSION="4.2.1"
+ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER=${USERNAME}
+ENV CRAN="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22"
 
 # Python config for the `reticulate` package
-ENV PYTHON_CONFIGURE_OPTS=--enable-shared
-ENV RETICULATE_AUTOCONFIGURE=0
+ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
+ENV RETICULATE_AUTOCONFIGURE="0"
 
-# Install R using rocker's install scripts
+ENV QUARTO_VERSION="1.0.37"
+
+USER root 
+
 RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chmod -R 755 /rocker_scripts/ && \
-    /rocker_scripts/install_R_source.sh
-
-# Use RStudio's package manager to download packages as binaries
-ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22
-
-# Set up R (RSPM, OpenBLAS, littler, addtional packages)
-RUN /rocker_scripts/setup_R.sh && \
+    # Install R using rocker's install scripts
+    /rocker_scripts/install_R_source.sh && \
+    # Set up R (RSPM, OpenBLAS, littler, addtional packages)
+    /rocker_scripts/setup_R.sh && \
     # Install system libraries
-    # Reinstall some libraries removed by `apt-get autoremove` in rocker scripts
+    # (reinstall some libraries removed by `apt-get autoremove` in rocker scripts)
     apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
         git \
         language-pack-fr \
         libsecret-1-dev && \
+    # Install quarto
+    /rocker_scripts/install_quarto.sh && \
+    # Install shiny server
+    /rocker_scripts/install_shiny_server.sh && \
     # Install Python to use the `reticulate` package
     /rocker_scripts/install_python.sh && \
     # Configure R for CUDA if parent image has CUDA
@@ -43,9 +46,7 @@ RUN /rocker_scripts/setup_R.sh && \
     # Install packages bundles from rocker
     /rocker_scripts/install_tidyverse.sh && \
     /rocker_scripts/install_verse.sh && \
-    /rocker_scripts/install_quarto.sh && \
     /rocker_scripts/install_geospatial.sh && \
-    /rocker_scripts/install_shiny_server.sh && \
     # Install additional R packages
     install2.r -e -s \
         RPostgreSQL \

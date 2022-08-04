@@ -45,7 +45,7 @@ case "$SPARK_K8S_CMD" in
       ;;
     *)
       echo "Non-spark-on-k8s command provided, proceeding in pass-through mode..."
-      exec /opt/conda/bin/tini -g -- "$@"
+      exec /usr/bin/tini -g -- "$@"
       ;;
 esac
 export SPARK_DIST_CLASSPATH=$(hadoop classpath)

@@ -4,6 +4,7 @@ FROM $BASE_IMAGE
 # Set default shell
 SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
+ENV DEBIAN_FRONTEND noninteractive
 
 # Setup user & workspace
 ENV USERNAME="onyxia"
@@ -18,12 +19,13 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     mkdir ${WORKSPACE_DIR}
 WORKDIR ${WORKSPACE_DIR}
 
+ARG VAULT_VERSION="1.11.0"
+
 USER root
 
-# Install system libraries
-ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
     apt-get upgrade -y && \
+    ## Install system libraries
     apt-get install -y --no-install-recommends \
         bash-completion \
         build-essential \
@@ -38,14 +40,11 @@ RUN apt-get update && \
         tini \
         unzip \
         wget && \
+    # Set up locales
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
-    # Clean
-    rm -rf /var/lib/apt/lists/*
-
-# Install common binaries : kubectl, helm, mc, vault
-ARG VAULT_VERSION="1.11.0"
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    ## Install common binaries required for Onyxia
     # kubectl
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl && \
     echo 'source <(kubectl completion bash)' >> /home/${USERNAME}/.bashrc && \
@@ -56,15 +55,17 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     rm ./get_helm.sh && \
     echo 'source <(helm completion bash)' >> /home/${USERNAME}/.bashrc && \
     # mc
-    wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
+    wget -q https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod +x /usr/local/bin/mc && \
     # vault
-    wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip -O vault.zip  && \
+    wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip -O vault.zip  && \
     unzip vault.zip -d /usr/local/bin/ && \
     rm vault.zip && \
     vault -autocomplete-install && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 USER ${USERNAME}
 
