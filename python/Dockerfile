@@ -11,8 +11,8 @@ ARG JULIA_VERSION="1.7.3"
 ARG QUARTO_VERSION="1.0.37"
 ARG MAMBAFORGE_VERSION="4.12.0-2"
 
-ARG MAMBA_DIR="/opt/mamba"
-ARG JULIA_DIR="/opt/julia"
+ENV MAMBA_DIR="/opt/mamba"
+ENV JULIA_DIR="/opt/julia"
 
 ENV PATH="${MAMBA_DIR}/bin:${JULIA_DIR}/bin:${PATH}"
 
