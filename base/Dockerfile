@@ -13,12 +13,13 @@ ENV GROUPNAME="users"
 ENV GID="100"
 ENV HOME="/home/${USERNAME}"
 ENV WORKSPACE_DIR="${HOME}/work"
-ENV SCRIPTS_DIR="/scripts"
 RUN groupmod -g ${GID} ${GROUPNAME} && \
     useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
     mkdir ${WORKSPACE_DIR}
 WORKDIR ${WORKSPACE_DIR}
+
+ARG SCRIPTS_DIR="/scripts"
 
 ARG VAULT_VERSION="1.11.0"
 

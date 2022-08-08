@@ -67,7 +67,7 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     fc-cache && \
     Rscript -e "gouvdown::check_fonts_in_r()" && \
     # Set default working directory in R
-    echo "setwd(\"${WORKSPACE_DIR}\")" > "${R_HOME}/etc/Renviron.site" && \
+    echo "setwd(\"${WORKSPACE_DIR}\")" > "${R_HOME}/etc/Rprofile.site" && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${R_HOME} && \
     # Clean
