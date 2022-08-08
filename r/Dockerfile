@@ -12,7 +12,7 @@ ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER=${USERNAME}
 ENV CRAN="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22"
 
-ENV QUARTO_VERSION="1.0.37"
+ENV QUARTO_VERSION="1.0.38"
 
 # Python config for the `reticulate` package
 ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
@@ -21,8 +21,8 @@ ENV RETICULATE_AUTOCONFIGURE="0"
 USER root 
 
 RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
-    cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
-    chmod -R 755 /rocker_scripts/ && \
+    cp -r /tmp/rocker-versioned2/scripts/* ${SCRIPTS_DIR} && \
+    chmod -R +x ${SCRIPTS_DIR} && \
     # Install R using rocker's install scripts
     /rocker_scripts/install_R_source.sh && \
     # Set up R (RSPM, OpenBLAS, littler, addtional packages)
@@ -66,6 +66,8 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
     fc-cache && \
     Rscript -e "gouvdown::check_fonts_in_r()" && \
+    # Set default working directory in R
+    echo "setwd(\"${WORKSPACE_DIR}\")" > "${R_HOME}/etc/Renviron.site" && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${R_HOME} && \
     # Clean

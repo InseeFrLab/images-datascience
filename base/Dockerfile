@@ -12,7 +12,8 @@ ENV UID="1000"
 ENV GROUPNAME="users"
 ENV GID="100"
 ENV HOME="/home/${USERNAME}"
-ENV WORKSPACE_DIR=${HOME}/work
+ENV WORKSPACE_DIR="${HOME}/work"
+ENV SCRIPTS_DIR="/scripts"
 RUN groupmod -g ${GID} ${GROUPNAME} && \
     useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
@@ -50,9 +51,8 @@ RUN apt-get update && \
     echo 'source <(kubectl completion bash)' >> /home/${USERNAME}/.bashrc && \
     # helm
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
-    chmod 700 get_helm.sh && \
+    chmod +x get_helm.sh && \
     ./get_helm.sh && \
-    rm ./get_helm.sh && \
     echo 'source <(helm completion bash)' >> /home/${USERNAME}/.bashrc && \
     # mc
     wget -q https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
@@ -60,11 +60,15 @@ RUN apt-get update && \
     # vault
     wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip -O vault.zip  && \
     unzip vault.zip -d /usr/local/bin/ && \
-    rm vault.zip && \
     vault -autocomplete-install && \
+    # Fetch Onyxia init script
+    mkdir ${SCRIPTS_DIR} && \
+    wget https://inseefrlab.github.io/onyxia/onyxia-init.sh -O ${SCRIPTS_DIR}/onyxia-init.sh && \
+    chmod +x ${SCRIPTS_DIR}/onyxia-init.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
+    rm get_helm.sh vault.zip && \
     rm -rf /var/lib/apt/lists/*
 
 USER ${USERNAME}
