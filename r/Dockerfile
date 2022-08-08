@@ -24,9 +24,9 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     cp -r /tmp/rocker-versioned2/scripts/* ${SCRIPTS_DIR} && \
     chmod -R +x ${SCRIPTS_DIR} && \
     # Install R using rocker's install scripts
-    /rocker_scripts/install_R_source.sh && \
+    ${SCRIPTS_DIR}/install_R_source.sh && \
     # Set up R (RSPM, OpenBLAS, littler, addtional packages)
-    /rocker_scripts/setup_R.sh && \
+    ${SCRIPTS_DIR}/setup_R.sh && \
     # Install system libraries
     # (reinstall some libraries removed by `apt-get autoremove` in rocker scripts)
     apt-get update && \
@@ -36,17 +36,17 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
         language-pack-fr \
         libsecret-1-dev && \
     # Install quarto
-    /rocker_scripts/install_quarto.sh && \
+    ${SCRIPTS_DIR}/install_quarto.sh && \
     # Install shiny server
-    /rocker_scripts/install_shiny_server.sh && \
+    ${SCRIPTS_DIR}/install_shiny_server.sh && \
     # Install Python to use the `reticulate` package
-    /rocker_scripts/install_python.sh && \
+    ${SCRIPTS_DIR}/install_python.sh && \
     # Configure R for CUDA if parent image has CUDA
-    if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
+    if ! [[ -z "${CUDA_VERSION}" ]]; then ${SCRIPTS_DIR}/config_R_cuda.sh; fi && \
     # Install packages bundles from rocker
-    /rocker_scripts/install_tidyverse.sh && \
-    /rocker_scripts/install_verse.sh && \
-    /rocker_scripts/install_geospatial.sh && \
+    ${SCRIPTS_DIR}/install_tidyverse.sh && \
+    ${SCRIPTS_DIR}/install_verse.sh && \
+    ${SCRIPTS_DIR}/install_geospatial.sh && \
     # Install additional R packages
     install2.r -e -s \
         RPostgreSQL \
