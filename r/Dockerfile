@@ -10,7 +10,6 @@ ARG DEVICE_SUFFIX
 ENV R_VERSION="4.2.1"
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER=${USERNAME}
-ENV CRAN="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22"
 
 ENV QUARTO_VERSION="1.0.38"
 
@@ -18,15 +17,20 @@ ENV QUARTO_VERSION="1.0.38"
 ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
 ENV RETICULATE_AUTOCONFIGURE="0"
 
-USER root 
+USER root
 
+# Install R using rocker's install scripts
 RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
-    chmod -R +x /rocker_scripts/ && \
-    # Install R using rocker's install scripts
-    /rocker_scripts/install_R_source.sh && \
-    # Set up R (RSPM, OpenBLAS, littler, addtional packages)
-    /rocker_scripts/setup_R.sh && \
+    chmod -R 755 /rocker_scripts/ && \
+    /rocker_scripts/install_R_source.sh
+
+# Use RStudio's package manager to download packages as binaries
+ENV CRAN="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22"
+ENV LANG=en_US.UTF-8
+
+# Set up R (RSPM, OpenBLAS, littler, addtional packages)
+RUN /rocker_scripts/setup_R.sh && \
     # Install system libraries
     # (reinstall some libraries removed by `apt-get autoremove` in rocker scripts)
     apt-get update && \
