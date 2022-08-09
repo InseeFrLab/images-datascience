@@ -12,7 +12,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    uses: .github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r
       context: r
