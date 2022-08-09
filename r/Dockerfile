@@ -49,15 +49,16 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     /rocker_scripts/install_geospatial.sh && \
     # Install additional R packages
     install2.r -e -s \
+        arrow \
+        aws.s3 \
+        keyring \
+        odbc \
+        paws \
+        quarto \
+        Rglpk \
         RPostgreSQL \
         RSQLite \
-        odbc \
-        keyring \
-        aws.s3 \
-        Rglpk \
-        paws \
-        vaultr \
-        arrow && \
+        vaultr && \
     # Install gouvdown
     # Temporary set French locales to download French packages from GitHub
     export LANG=fr_FR.UTF-8 && \
