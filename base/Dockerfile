@@ -19,8 +19,6 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     mkdir ${WORKSPACE_DIR}
 WORKDIR ${WORKSPACE_DIR}
 
-ARG SCRIPTS_DIR="/scripts"
-
 ARG VAULT_VERSION="1.11.0"
 
 USER root
@@ -63,9 +61,9 @@ RUN apt-get update && \
     unzip vault.zip -d /usr/local/bin/ && \
     vault -autocomplete-install && \
     # Fetch Onyxia init script
-    mkdir ${SCRIPTS_DIR} && \
-    wget https://inseefrlab.github.io/onyxia/onyxia-init.sh -O ${SCRIPTS_DIR}/onyxia-init.sh && \
-    chmod +x ${SCRIPTS_DIR}/onyxia-init.sh && \
+    mkdir /scripts && \
+    wget https://inseefrlab.github.io/onyxia/onyxia-init.sh -O /scripts/onyxia-init.sh && \
+    chmod +x /scripts/onyxia-init.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
