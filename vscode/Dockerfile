@@ -10,9 +10,10 @@ ARG REMOTE_CONFIG_DIR="${HOME}/.local/share/code-server/Machine"
 
 USER root
 
-RUN curl -fOL https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VERSION}/code-server_${CODE_SERVER_VERSION}_amd64.deb && \
+RUN wget -q https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VERSION}/code-server_${CODE_SERVER_VERSION}_amd64.deb -O code-server.deb && \
     # Install code-server
-    dpkg -i code-server_${CODE_SERVER_VERSION}_amd64.deb && \
+    dpkg -i code-server.deb && \
+    rm code-server.deb && \
     # Install extensions
     code-server --install-extension ms-python.python && \
     code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools && \

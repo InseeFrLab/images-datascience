@@ -22,7 +22,9 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     /rocker_scripts/install_rstudio.sh && \
     /rocker_scripts/install_pandoc.sh && \
     # Reinstall quarto to ensure consistency with RStudio bundled version
-    /rocker_scripts/install_quarto.sh
+    /rocker_scripts/install_quarto.sh && \
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 EXPOSE 8787
 

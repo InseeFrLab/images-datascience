@@ -70,7 +70,7 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     # Set default working directory in R
     echo "setwd(\"${WORKSPACE_DIR}\")" > "${R_HOME}/etc/Rprofile.site" && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${R_HOME} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean
     rm -rf /var/lib/apt/lists/*
 
