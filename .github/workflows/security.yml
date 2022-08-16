@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: scan images
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -14,7 +14,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'inseeFrLab/onyxia-jupyter-pyspark:latest'
+          image-ref: 'inseefrlab/onyxia-jupyter-pyspark:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
 
