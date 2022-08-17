@@ -9,9 +9,13 @@ RUN mamba install -y -c conda-forge \
         ipywidgets \
         jupyterlab \
         jupyterlab-git && \
+    # Make Julia kernel available in Jupyter
+    julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
+    mv "${HOME}/.local/share/jupyter/kernels/julia"* "${MAMBA_DIR}/share/jupyter/kernels/" && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean 
+    rm -rf "${HOME}/.local" && \
     mamba clean --all -f -y && \
     jupyter lab clean
 

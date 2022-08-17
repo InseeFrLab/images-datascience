@@ -10,31 +10,31 @@ export HIVE_LISTENER_JAR="hive-listener-${HIVE_LISTENER_VERSION}.jar"
 
 # Spark for Kubernetes with Hadoop, Hive and Kubernetes support
 # Built here : https://github.com/InseeFrLab/Spark-hive
-wget ${SPARK_BUILD_S3_BUCKET}/spark-hive/${SPARK_BUILD_NAME}.tgz
+wget -q ${SPARK_BUILD_S3_BUCKET}/spark-hive/${SPARK_BUILD_NAME}.tgz
 tar xzf ${SPARK_BUILD_NAME}.tgz -C $SPARK_HOME --owner root --group root --no-same-owner --strip-components=1
 
 # Hadoop
-wget ${HADOOP_URL}/hadoop-${HADOOP_VERSION}.tar.gz
+wget -q ${HADOOP_URL}/hadoop-${HADOOP_VERSION}.tar.gz
 tar xzf hadoop-${HADOOP_VERSION}.tar.gz -C ${HADOOP_HOME} --owner root --group root --no-same-owner --strip-components=1
-wget ${HADOOP_AWS_URL}/${HADOOP_VERSION}/hadoop-aws-${HADOOP_VERSION}.jar
+wget -q ${HADOOP_AWS_URL}/${HADOOP_VERSION}/hadoop-aws-${HADOOP_VERSION}.jar
 mkdir -p ${HADOOP_HOME}/share/lib/common/lib
 mv hadoop-aws-${HADOOP_VERSION}.jar ${HADOOP_HOME}/share/lib/common/lib
 
 # Hive
-wget ${HIVE_URL}/apache-hive-${HIVE_VERSION}-bin.tar.gz
+wget -q ${HIVE_URL}/apache-hive-${HIVE_VERSION}-bin.tar.gz
 tar xzf apache-hive-${HIVE_VERSION}-bin.tar.gz -C ${HIVE_HOME} --owner root --group root --no-same-owner --strip-components=1
-wget ${SPARK_BUILD_S3_BUCKET}/hive-authentication/${HIVE_AUTHENTICATION_JAR}
+wget -q ${SPARK_BUILD_S3_BUCKET}/hive-authentication/${HIVE_AUTHENTICATION_JAR}
 mv ${HIVE_AUTHENTICATION_JAR} ${HIVE_HOME}/lib/
-wget ${SPARK_BUILD_S3_BUCKET}/hive-listener/${HIVE_LISTENER_JAR}
+wget -q ${SPARK_BUILD_S3_BUCKET}/hive-listener/${HIVE_LISTENER_JAR}
 mv ${HIVE_LISTENER_JAR} ${HIVE_HOME}/lib/hive-listener.jar
 
 # Add postgreSQL support to Hive
-wget https://jdbc.postgresql.org/download/postgresql-42.2.18.jar
+wget -q https://jdbc.postgresql.org/download/postgresql-42.2.18.jar
 mv postgresql-42.2.18.jar ${HIVE_HOME}/lib/postgresql-jdbc.jar
 
 # Fix versions inconsistencies of some binaries between Hadoop & Hive distributions
 rm ${HIVE_HOME}/lib/guava-14.0.1.jar
 cp ${HADOOP_HOME}/share/hadoop/common/lib/guava-27.0-jre.jar ${HIVE_HOME}/lib/
-wget https://repo1.maven.org/maven2/jline/jline/2.14.6/jline-2.14.6.jar
+wget -q https://repo1.maven.org/maven2/jline/jline/2.14.6/jline-2.14.6.jar
 mv jline-2.14.6.jar ${HIVE_HOME}/lib/
 rm ${HIVE_HOME}/lib/jline-2.12.jar
