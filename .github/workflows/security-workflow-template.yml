@@ -2,11 +2,6 @@ name: scan all images
 
 on:
   workflow_dispatch:
-    inputs:
-      image:
-        description: name of docker image to pull and scan
-        required: true
-        type: string
         
 jobs:
   build:
