@@ -21,6 +21,16 @@ jobs:
         filters: |
           base:
             - 'base/**'
+          python:
+            - 'python/**'
+          r:
+            - 'r/**'
+          jupyter:
+            - 'jupyter/**'
+          rstudio:
+            - 'rstudio/**'
+          vscode:
+            - 'vscode/**'
   base:
     uses: ./.github/workflows/main-workflow-template.yml
     if: steps.filter.outputs.base == 'true'
@@ -34,6 +44,7 @@ jobs:
   python:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: steps.filter.outputs.python == 'true'
     with:
       image: python
       context: python
@@ -44,6 +55,7 @@ jobs:
   r:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: steps.filter.outputs.r == 'true'
     with:
       image: r
       context: r
@@ -54,6 +66,7 @@ jobs:
   jupyter:
     needs: [python]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: steps.filter.outputs.jupyter == 'true'
     with:
       image: jupyter
       context: jupyter
@@ -64,6 +77,7 @@ jobs:
   vscode:
     needs: [python]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: steps.filter.outputs.vscode == 'true'
     with:
       image: vscode-python
       context: vscode
