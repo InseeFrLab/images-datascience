@@ -11,9 +11,19 @@ env:
   TEST: false
 
 jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          base:
+            - 'base/**'
   base:
     uses: ./.github/workflows/main-workflow-template.yml
-    if: $env.TEST
+    if: steps.filter.outputs.base == 'true'
     with:
       image: base
       context: base
