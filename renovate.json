@@ -5,7 +5,7 @@
   ],
   "regexManagers": [
     {
-      "fileMatch": ["^Dockerfile$"],
+      "fileMatch": ["^vscode/Dockerfile$"],
       "matchStrings": ["ARG CODE_SERVER_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "coder/code-server",
       "datasourceTemplate": "github-releases"
