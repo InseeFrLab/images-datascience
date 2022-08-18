@@ -8,11 +8,18 @@ on:
 
 env:
   PUSH: false
-  TEST: false
 
 jobs:
   tests:
     runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.filter.outputs.base }}
+      python: ${{ steps.filter.outputs.python }}
+      r: ${{ steps.filter.outputs.r }}
+      vscode: ${{ steps.filter.outputs.vscode }}
+      jupyter: ${{ steps.filter.outputs.jupyter }}
+      sparkr: ${{ steps.filter.outputs.sparkr }}
+      pyspark: ${{ steps.filter.outputs.pyspark }}
     steps:
     - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
@@ -25,15 +32,19 @@ jobs:
             - 'python/**'
           r:
             - 'r/**'
-          jupyter:
-            - 'jupyter/**'
-          rstudio:
-            - 'rstudio/**'
           vscode:
             - 'vscode/**'
+          jupyter:
+            - 'jupyter/**'
+          spark:
+            - 'sparkr/**'
+          rstudio:
+            - 'rstudio/**'
+            
   base:
     uses: ./.github/workflows/main-workflow-template.yml
-    if: steps.filter.outputs.base == 'true'
+    if: always() && needs.tests.outputs.base == 'true'
+    needs: tests
     with:
       image: base
       context: base
@@ -43,8 +54,8 @@ jobs:
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
   python:
     needs: [base]
+    if: always() && needs.tests.outputs.python == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
-    if: steps.filter.outputs.python == 'true'
     with:
       image: python
       context: python
@@ -55,7 +66,7 @@ jobs:
   r:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
-    if: steps.filter.outputs.r == 'true'
+    if: always() && needs.tests.outputs.r == 'true'
     with:
       image: r
       context: r
@@ -65,8 +76,8 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   jupyter:
     needs: [python]
+    if: always() && needs.tests.outputs.jupyter == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
-    if: steps.filter.outputs.jupyter == 'true'
     with:
       image: jupyter
       context: jupyter
@@ -76,8 +87,8 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   vscode:
     needs: [python]
+    if: always() && needs.tests.outputs.vscode == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
-    if: steps.filter.outputs.vscode == 'true'
     with:
       image: vscode-python
       context: vscode
@@ -87,6 +98,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   pyspark:
     needs: [python]
+    if: always() && needs.tests.outputs.spark == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
@@ -98,6 +110,7 @@ jobs:
   jupyter-pyspark:
     needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.jupyter == 'true'
     with:
       image: jupyter-pyspark
       context: jupyter
@@ -107,6 +120,7 @@ jobs:
       base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
     needs: [r]
+    if: always() &&  needs.tests.outputs.rstudio == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio
@@ -118,6 +132,7 @@ jobs:
   sparkr:
     needs: [r]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.spark == 'true'
     with:
       image: sparkr
       context: spark
@@ -128,6 +143,7 @@ jobs:
   rstudio-sparkr:
     needs: [sparkr]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.rstudio == 'true'
     with:
       image: rstudio-sparkr
       context: rstudio
