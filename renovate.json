@@ -8,7 +8,8 @@
       "fileMatch": ["^vscode/Dockerfile$"],
       "matchStrings": ["ARG CODE_SERVER_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "coder/code-server",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ]
 }
