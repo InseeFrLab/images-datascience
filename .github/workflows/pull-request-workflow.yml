@@ -1,110 +1,153 @@
 name: Main workflow on pull request
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
-    - master
+    - main
 
 env:
   PUSH: false
 
 jobs:
+  tests:
+    runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.filter.outputs.base }}
+      python: ${{ steps.filter.outputs.python }}
+      r: ${{ steps.filter.outputs.r }}
+      vscode: ${{ steps.filter.outputs.vscode }}
+      jupyter: ${{ steps.filter.outputs.jupyter }}
+      sparkr: ${{ steps.filter.outputs.sparkr }}
+      pyspark: ${{ steps.filter.outputs.pyspark }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          base:
+            - 'base/**'
+          python:
+            - 'python/**'
+          r:
+            - 'r/**'
+          vscode:
+            - 'vscode/**'
+          jupyter:
+            - 'jupyter/**'
+          spark:
+            - 'sparkr/**'
+          rstudio:
+            - 'rstudio/**'
+            
   base:
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.base == 'true'
+    needs: tests
     with:
       image: base
       context: base
       test: true
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
   python:
     needs: [base]
+    if: always() && needs.tests.outputs.python == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python
       context: python
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   r:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.r == 'true'
     with:
       image: r
       context: r
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   jupyter:
     needs: [python]
+    if: always() && needs.tests.outputs.jupyter == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter
       context: jupyter
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   vscode:
     needs: [python]
+    if: always() && needs.tests.outputs.vscode == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-python
       context: vscode
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   pyspark:
     needs: [python]
+    if: always() && needs.tests.outputs.spark == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
       context: spark
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
   jupyter-pyspark:
     needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.jupyter == 'true'
     with:
       image: jupyter-pyspark
       context: jupyter
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-pyspark:latest
       base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
     needs: [r]
+    if: always() &&  needs.tests.outputs.rstudio == 'true'
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio
       context: rstudio
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-r:latest
       base_image_gpu: inseefrlab/onyxia-r:latest-gpu
   sparkr:
     needs: [r]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.spark == 'true'
     with:
       image: sparkr
       context: spark
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-r:latest
       base_image_gpu: inseefrlab/onyxia-r:latest-gpu
   rstudio-sparkr:
     needs: [sparkr]
     uses: ./.github/workflows/main-workflow-template.yml
+    if: always() && needs.tests.outputs.rstudio == 'true'
     with:
       image: rstudio-sparkr
       context: rstudio
       test: false
-      push: ${{env.PUSH}}
+      push: $env.PUSH
       base_image: inseefrlab/onyxia-sparkr:latest
       base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
