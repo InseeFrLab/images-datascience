@@ -8,10 +8,12 @@ on:
 
 env:
   PUSH: false
+  TEST: false
 
 jobs:
   base:
     uses: ./.github/workflows/main-workflow-template.yml
+    if: $env.TEST
     with:
       image: base
       context: base
