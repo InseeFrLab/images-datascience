@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^vscode/Dockerfile$"],
+      "matchStrings": ["ARG CODE_SERVER_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "coder/code-server",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    }
+  ]
+}
