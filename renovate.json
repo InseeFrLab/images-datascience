@@ -7,7 +7,7 @@
     {
       "fileMatch": ["^Dockerfile$"],
       "matchStrings": ["ARG CODE_SERVER_VERSION=(?<currentValue>.*?)\\n"],
-      "depNameTemplate": "code/code-server",
+      "depNameTemplate": "coder/code-server",
       "datasourceTemplate": "github-releases"
     }
   ]
