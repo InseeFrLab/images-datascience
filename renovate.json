@@ -16,8 +16,7 @@
       "matchStrings": ["ENV RSTUDIO_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "rstudio/rstudio",
       "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>.*)$",
-      "versioning":"regex:(?<major>.*?)\\.(?<minor>.*?)\\.(?<patch>.*?)\\+(?<build>.*?)"
+      "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ]
 }
