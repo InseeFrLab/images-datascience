@@ -15,7 +15,7 @@
       "fileMatch": ["^rstudio/Dockerfile$"],
       "matchStrings": ["ENV RSTUDIO_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "rstudio/rstudio",
-      "datasourceTemplate": "github-releases",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ]
