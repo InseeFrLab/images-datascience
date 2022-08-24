@@ -20,6 +20,7 @@ jobs:
       jupyter: ${{ steps.filter.outputs.jupyter }}
       sparkr: ${{ steps.filter.outputs.sparkr }}
       pyspark: ${{ steps.filter.outputs.pyspark }}
+      rstudio: ${{ steps.filter.outputs.rstudio }}
     steps:
     - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
