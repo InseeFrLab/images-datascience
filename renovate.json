@@ -17,7 +17,7 @@
       "depNameTemplate": "rstudio/rstudio",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.*)$",
-      "versioning":"regex:(?<major>.*?)\.(?<minor>.*?)\.(?<patch>.*?)\+(?<build>.*?)"
+      "versioning":"regex:(?<major>.*?)\\.(?<minor>.*?)\\.(?<patch>.*?)\\+(?<build>.*?)"
     }
   ]
 }
