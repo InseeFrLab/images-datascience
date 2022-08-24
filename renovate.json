@@ -10,6 +10,13 @@
       "depNameTemplate": "coder/code-server",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["^rstudio/Dockerfile$"],
+      "matchStrings": ["ENV RSTUDIO_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "rstudio/rstudio",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ]
 }
