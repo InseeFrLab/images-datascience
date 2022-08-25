@@ -34,12 +34,11 @@
       "versioningTemplate":"regex:(?<major>.*?)\\.(?<minor>.*?)\\.(?<patch>.*?)\\-(?<build>.*?)"
     },
     {
-      "fileMatch": ["^rstudio/Dockerfile$"],
-      "matchStrings": ["ENV RSTUDIO_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "rstudio/rstudio",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>.*)$",
-      "versioningTemplate":"regex:(?<major>.*?)\\.(?<minor>.*?)\\.(?<patch>.*?)\\+(?<build>.*?)"
+      "fileMatch": ["^r/Dockerfile$"],
+      "matchStrings": ["ENV R_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "rocker-org/rocker-versioned2",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^R(?<version>.*)$"
     }
   ]
 }
