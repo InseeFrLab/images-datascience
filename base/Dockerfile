@@ -23,8 +23,6 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     touch ${HOME}/.sudo_as_admin_successful
 WORKDIR ${WORKSPACE_DIR}
 
-ARG VAULT_VERSION="1.11.0"
-
 USER root
 
 RUN apt-get update && \
@@ -63,7 +61,8 @@ RUN apt-get update && \
     wget -q https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod +x /usr/local/bin/mc && \
     # vault
-    wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip -O vault.zip  && \
+    VAULT_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/hashicorp/vault/releases/latest" | grep -Po '"tag_name": "v\K.*?(?=")') && \
+    wget -q https://releases.hashicorp.com/vault/${VAULT_LATEST_VERSION}/vault_${VAULT_LATEST_VERSION}_linux_amd64.zip -O vault.zip  && \
     unzip vault.zip -d /usr/local/bin/ && \
     vault -autocomplete-install && \
     # Fetch Onyxia init script
@@ -79,3 +78,5 @@ RUN apt-get update && \
 USER ${USERNAME}
 
 CMD ["/bin/bash"]
+
+
