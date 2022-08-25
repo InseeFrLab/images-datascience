@@ -18,6 +18,14 @@
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
     },
+     {
+      "fileMatch": ["^r/Dockerfile$"],
+      "matchStrings": ["ENV QUARTO_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "quarto-dev/quarto-cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    }
+    ,
     {
       "fileMatch": ["^python/Dockerfile$"],
       "matchStrings": ["ARG MAMBAFORGE_VERSION=\"(?<currentValue>.*?)\""],
