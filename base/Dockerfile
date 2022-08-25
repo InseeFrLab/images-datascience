@@ -23,7 +23,7 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     touch ${HOME}/.sudo_as_admin_successful
 WORKDIR ${WORKSPACE_DIR}
 
-ARG VAULT_VERSION="1.11.0"
+ARG VAULT_VERSION="1.11.2"
 
 USER root
 
