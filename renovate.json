@@ -4,12 +4,48 @@
     "config:base"
   ],
   "regexManagers": [
+     {
+      "fileMatch": ["^base/Dockerfile$"],
+      "matchStrings": ["ARG VAULT_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "hashicorp/vault",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
     {
       "fileMatch": ["^vscode/Dockerfile$"],
       "matchStrings": ["ARG CODE_SERVER_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "coder/code-server",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["^python/Dockerfile$"],
+      "matchStrings": ["ARG QUARTO_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "quarto-dev/quarto-cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+     {
+      "fileMatch": ["^r/Dockerfile$"],
+      "matchStrings": ["ENV QUARTO_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "quarto-dev/quarto-cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    }
+    ,
+    {
+      "fileMatch": ["^python/Dockerfile$"],
+      "matchStrings": ["ARG MAMBAFORGE_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "conda-forge/miniforge",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate":"regex:(?<major>.*?)\\.(?<minor>.*?)\\.(?<patch>.*?)\\-(?<build>.*?)"
+    },
+    {
+      "fileMatch": ["^r/Dockerfile$"],
+      "matchStrings": ["ENV R_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "rocker-org/rocker-versioned2",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^R(?<version>.*)$"
     }
   ]
 }
