@@ -4,31 +4,10 @@
     "config:base"
   ],
   "regexManagers": [
-     {
-      "fileMatch": ["^base/Dockerfile$"],
-      "matchStrings": ["ARG VAULT_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "hashicorp/vault",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
-    },
     {
       "fileMatch": ["^vscode/Dockerfile$"],
       "matchStrings": ["ARG CODE_SERVER_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "coder/code-server",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
-    },
-    {
-      "fileMatch": ["^python/Dockerfile$"],
-      "matchStrings": ["ARG QUARTO_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "quarto-dev/quarto-cli",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
-    },
-     {
-      "fileMatch": ["^r/Dockerfile$"],
-      "matchStrings": ["ENV QUARTO_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "quarto-dev/quarto-cli",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
     }
