@@ -12,6 +12,13 @@
       "extractVersionTemplate": "^v(?<version>.*)$"
     },
     {
+      "fileMatch": ["^python/Dockerfile$"],
+      "matchStrings": ["ARG QUARTO_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "quarto-dev/quarto-cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
       "fileMatch": ["^rstudio/Dockerfile$"],
       "matchStrings": ["ENV RSTUDIO_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "rstudio/rstudio",
