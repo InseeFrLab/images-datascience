@@ -6,7 +6,7 @@
   "regexManagers": [
      {
       "fileMatch": ["^base/Dockerfile$"],
-      "matchStrings": ["ARG VAULT_VERSION==\"(?<currentValue>.*?)\""],
+      "matchStrings": ["ARG VAULT_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "hashicorp/vault",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
