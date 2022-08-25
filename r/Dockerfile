@@ -18,7 +18,7 @@ ENV RETICULATE_AUTOCONFIGURE="0"
 USER root
 
 # Install R using rocker's install scripts
-RUN git clone --branch R${R_VERSION} --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
+RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chmod -R 755 /rocker_scripts/ && \
     /rocker_scripts/install_R_source.sh
