@@ -10,14 +10,6 @@
       "depNameTemplate": "coder/code-server",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
-    }
-    ,
-    {
-      "fileMatch": ["^python/Dockerfile$"],
-      "matchStrings": ["ARG MAMBAFORGE_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "conda-forge/miniforge",
-      "datasourceTemplate": "github-releases",
-      "versioningTemplate":"regex:(?<major>.*?)\\.(?<minor>.*?)\\.(?<patch>.*?)\\-(?<build>.*?)"
     },
     {
       "fileMatch": ["^r/Dockerfile$"],
