@@ -81,7 +81,7 @@ jobs:
               buildargs+="\nPYTHON_VERSION=${{ matrix.python_version }}"
             fi
             echo "[${buildargs}]"
-            echo "::set-output name=buildargs::[${buildargs}]"
+            echo "::set-output name=buildargs::${buildargs}"
         shell: bash
             
       - name: Build and store
