@@ -44,6 +44,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        base_image: [${{ inputs.base_image }},${{ inputs.base_image_gpu }} ]
         python_version: [3.9,3.10]
         include:
           - base_image: ${{ inputs.base_image }}
@@ -98,7 +99,7 @@ jobs:
           file: ${{ inputs.context }}/Dockerfile
           load: true
           build-args: |
-             echo ${{steps.buildargs.output.buildargs}}
+             echo ${{steps.buildargs.outputs.buildargs}}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
