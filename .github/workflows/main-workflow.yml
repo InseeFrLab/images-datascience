@@ -26,7 +26,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-python-template.yml
     with:
       image: python
       context: python
@@ -34,12 +34,13 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+      python_version:
   r:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-r-template.yml
     with:
       image: r
       context: r
@@ -52,7 +53,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-python-template.yml
     with:
       image: jupyter-python
       context: jupyter
@@ -65,7 +66,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-python-template.yml
     with:
       image: vscode-python
       context: vscode
@@ -78,7 +79,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-python-spark-template.yml
     with:
       image: pyspark
       context: spark

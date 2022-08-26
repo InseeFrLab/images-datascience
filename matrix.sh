@@ -36,4 +36,4 @@ if [[ "$context" =~ ^(python)$ ]]; then
 fi
 
 r=${result::-1}
-echo [$r]
+echo "{"inputs":[$r]
