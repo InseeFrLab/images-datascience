@@ -38,6 +38,8 @@ jobs:
   build-matrix:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - id: set-matrix
         run: |
           result=$(./matrix.sh | tail -1)
@@ -53,8 +55,6 @@ jobs:
       matrix:
         json_matrix:  ${{ fromJson(needs.build-matrix.outputs.json_matrix) }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
 
       - name: Docker meta
         id: meta
