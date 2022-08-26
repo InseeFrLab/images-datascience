@@ -76,9 +76,9 @@ jobs:
       - name: buildargs docker command
         id: buildargs
         run: |
-            buildargs=BASE_IMAGE=${{ matrix.base_image }}
+            buildargs='BASE_IMAGE=${{ matrix.base_image }}'
             if [[ ${{ matrix.python_version}} ]]; then
-              buildargs+=", PYTHON_VERSION=${{ matrix.python_version }}"
+              buildargs+=", 'PYTHON_VERSION=${{ matrix.python_version }}'"
             fi
             echo "[${buildargs}]"
             echo "::set-output name=buildargs::[${buildargs}]"
