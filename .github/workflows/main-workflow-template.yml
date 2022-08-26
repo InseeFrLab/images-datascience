@@ -81,7 +81,7 @@ jobs:
               buildargs+=", PYTHON_VERSION=${{ matrix.python_version }}"
             fi
             echo "[${buildargs}]"
-            echo "::set-output name=buildargs::{'args':[${buildargs}]}"
+            echo "::set-output name=buildargs::[${buildargs}]"
         shell: bash
             
       - name: Build and store
@@ -90,7 +90,7 @@ jobs:
           context: ${{ inputs.context }}/
           file: ${{ inputs.context }}/Dockerfile
           load: true
-          build-args: ${{ fromJson(steps.buildargs.outputs.buildargs).args }}
+          build-args: ${{ fromJson(steps.buildargs.outputs.buildargs) }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
