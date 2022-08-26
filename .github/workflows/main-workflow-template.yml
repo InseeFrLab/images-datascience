@@ -50,15 +50,6 @@ jobs:
       run: |
         matrix=$(cat ${{ inputs.matrix_json }} | jq .)                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
-  # build-matrix:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - id: set-matrix
-  #       run: |
-  #         echo '::set-output name=base_image_matrix::["${{ inputs.base_image }}","${{ inputs.base_image_gpu }}"]'
-  #   outputs:
-  #     base_image_matrix: ${{ steps.set-matrix.outputs.base_image_matrix }}
-  #     python_matrix: ${{ steps.set-matrix.outputs.python_matrix }}
 
   docker:
     runs-on: ubuntu-latest
@@ -66,15 +57,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.matrix_prep.outputs.matrix)}}
-        #base_image: ${{fromJson(needs.matrix_prep.outputs.matrix)}}   ${{ fromJson(needs.build-matrix.outputs.base_image_matrix) }}
-        # include:
-        #   - base_image: ${{ inputs.base_image }}
-        #     device_suffix: ""
-        #   - base_image: ${{ inputs.base_image_gpu }} 
-        #     device_suffix: "-gpu"
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      #- name: Checkout
+      #  uses: actions/checkout@v3
 
       - name: Docker meta
         id: meta
@@ -99,15 +85,31 @@ jobs:
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
         shell: bash
             
-      - name: Build and store
-        uses: docker/build-push-action@v3
-        with:
-          context: ${{ inputs.context }}/
-          file: ${{ inputs.context }}/Dockerfile
-          load: true
-          build-args: BASE_IMAGE={{inputs.base_image}}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+      # - name: Build and store
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: ${{ inputs.context }}/
+      #     file: ${{ inputs.context }}/Dockerfile
+      #     load: true
+      #     build-args: BASE_IMAGE={{inputs.base_image}}
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.docker_meta.outputs.labels }}
+
+      - name: buildargs docker command
+        id: buildargs
+        run: |
+            buildargs="--build-arg BASE_IMAGE=${{ matrix.base_image }}"
+            if [[ ${{ matrix.python_version}} ]]; then
+              buildargs+=" --build-arg PYTHON_VERSION=${{ matrix.python_version }}"
+            fi
+            echo "${buildargs}"
+            echo "::set-output name=buildargs::${buildargs}"
+        shell: bash
+      
+      - name: classic build
+        if: ${{ inputs.push == 'true' }}
+        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/ 
+
       
       - name: run structure tests
         if: ${{ inputs.test == 'true' }}
