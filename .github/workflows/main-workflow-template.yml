@@ -104,7 +104,6 @@ jobs:
               buildargs+=" --build-arg PYTHON_VERSION=$python_version"
             fi
             echo "${buildargs}"
-            echo "${env.PUSH}"
             echo "::set-output name=buildargs::${buildargs}"
         shell: bash
       
