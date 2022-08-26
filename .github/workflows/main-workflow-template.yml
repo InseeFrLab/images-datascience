@@ -73,12 +73,6 @@ jobs:
             # propagate valid semver tags
             type=semver,pattern={{raw}}${{ matrix.device_suffix }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       # https://github.com/actions/virtual-environments/issues/2840
       - name: Make free space
         run: |
@@ -108,8 +102,12 @@ jobs:
         shell: bash
       
       - name: classic build
-        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ./${{ inputs.image }}/ 
-
+        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/
+        env:
+          DOCKER_BUILDKIT: 1
+          # Full logs for CI build
+          BUILDKIT_PROGRESS: plain
+        shell: bash
       
       - name: run structure tests
         if: ${{ inputs.test == 'true' }}
