@@ -108,7 +108,7 @@ jobs:
         shell: bash
       
       - name: classic build
-        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/ 
+        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ./${{ inputs.image }}/ 
 
       
       - name: run structure tests
