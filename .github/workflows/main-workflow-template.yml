@@ -29,7 +29,7 @@ on:
         type: string
       python_version:
         description: context of docker image
-        required: true
+        required: false
         type: string
     secrets:
       DOCKERHUB_USERNAME:
