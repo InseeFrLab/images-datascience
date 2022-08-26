@@ -27,7 +27,11 @@ on:
         description: context of docker image
         required: true
         type: string
-      python_version:
+      python_v1:
+        description: context of docker image
+        required: false
+        type: string
+      python_v2:
         description: context of docker image
         required: false
         type: string
@@ -43,9 +47,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: set-matrix
-        run: echo '::set-output name=version_matrix::["${{ inputs.base_image }}","${{ inputs.base_image_gpu }}"]'
+        run: |
+          echo '::set-output name=base_image_matrix::["${{ inputs.base_image }}","${{ inputs.base_image_gpu }}"]'
+          echo '::set-output name=python_matrix::["${{ inputs.python_v1 }}","${{ inputs.python_v2 }}"]'
     outputs:
-      version_matrix: ${{ steps.set-matrix.outputs.version_matrix }}
+      base_image_matrix: ${{ steps.set-matrix.outputs.base_image_matrix }}
+      python_matrix: ${{ steps.set-matrix.outputs.python_matrix }}
 
   docker:
     runs-on: ubuntu-latest
@@ -53,10 +60,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base_image:  ${{ fromJson(needs.build-matrix.outputs.version_matrix) }}
-        python_version: [ "3.9","3.10"]
-        r_version: ["4.2.1","4.1.3"]
-        spark_version: ["3.3.0"]
+        base_image:  ${{ fromJson(needs.build-matrix.outputs.base_image_matrix) }}
+        python_version:  ${{ fromJson(needs.build-matrix.outputs.python_matrix) }}
         include:
           - base_image: ${{ inputs.base_image }}
             device_suffix: ""

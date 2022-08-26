@@ -5,6 +5,8 @@ on:
 
 env:
   PUSH: true
+  PYTHON_VERSION_1: 3.9
+  PYTHON_VERSION_2: 3.10
 
 
 jobs:
@@ -20,12 +22,14 @@ jobs:
       push: true
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
+      python_v1: $env.PYTHON_VERSION_1
+      python_v2: $env.PYTHON_VERSION_2
   python:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-python.yml
     with:
       image: python
       context: python
@@ -33,6 +37,8 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+      python_v1: $env.PYTHON_VERSION_1
+      python_v2: $env.PYTHON_VERSION_2
   r:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
