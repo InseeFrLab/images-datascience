@@ -27,14 +27,6 @@ on:
         description: context of docker image
         required: true
         type: string
-      python_v1:
-        description: context of docker image
-        required: false
-        type: string
-      python_v2:
-        description: context of docker image
-        required: false
-        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: false
@@ -49,7 +41,6 @@ jobs:
       - id: set-matrix
         run: |
           echo '::set-output name=base_image_matrix::["${{ inputs.base_image }}","${{ inputs.base_image_gpu }}"]'
-          echo '::set-output name=python_matrix::["${{ inputs.python_v1 }}","${{ inputs.python_v2 }}"]'
     outputs:
       base_image_matrix: ${{ steps.set-matrix.outputs.base_image_matrix }}
       python_matrix: ${{ steps.set-matrix.outputs.python_matrix }}
@@ -61,7 +52,6 @@ jobs:
       fail-fast: false
       matrix:
         base_image:  ${{ fromJson(needs.build-matrix.outputs.base_image_matrix) }}
-        python_version:  ${{ fromJson(needs.build-matrix.outputs.python_matrix) }}
         include:
           - base_image: ${{ inputs.base_image }}
             device_suffix: ""
@@ -93,20 +83,6 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
         shell: bash
-
-      - name: buildargs docker command
-        id: buildargs
-        run: |
-            buildargs="\"BASE_IMAGE=${{ matrix.base_image }}\""
-            if [[ ${{ matrix.python_version}} ]]; then
-              buildargs+="\n\"PYTHON_VERSION=${{ matrix.python_version }}\""
-            fi
-            echo "${buildargs}"
-            buildargs="${buildargs//'%'/'%25'}"
-            buildargs="${buildargs//$'\n'/'%0A'}"
-            buildargs="${buildargs//$'\r'/'%0D'}"
-            echo "::set-output name=buildargs::${buildargs}"
-        shell: bash
             
       - name: Build and store
         uses: docker/build-push-action@v3
@@ -114,8 +90,7 @@ jobs:
           context: ${{ inputs.context }}/
           file: ${{ inputs.context }}/Dockerfile
           load: true
-          build-args: |
-             echo ${{steps.buildargs.outputs.buildargs}}
+          build-args: BASE_IMAGE=${{ matrix.base_image }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
