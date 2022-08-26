@@ -44,8 +44,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base_image: [ ${{ inputs.base_image }}, ${{ inputs.base_image_gpu }}]
+        base_image: ${{ fromJson([${{ inputs.base_image }},  ${{ inputs.base_image_gpu }}]) }} 
         python_version: [ "3.9","3.10"]
+        r_version: ["",""]
+        spark_version: ["",""]
         include:
           - base_image: ${{ inputs.base_image }}
             device_suffix: ""
