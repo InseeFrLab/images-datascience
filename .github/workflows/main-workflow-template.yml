@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v3
       - id: set-matrix
         run: |
-          result=$(./matrix.sh | tail -1)
+          result=$(sh ./matrix.sh | tail -1)
           echo '::set-output name=json_matrix::$result'
     outputs:
       json_matrix: ${{ steps.set-matrix.outputs.json_matrix }}
