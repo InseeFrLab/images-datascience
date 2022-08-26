@@ -1,17 +1,10 @@
 [
     {
-        "runs_on":"ubuntu-16.04",
-        "someValue":"Foo",
-        "runOn":"always"
+        "image_base":"ubuntu-20.04",
+        "device_suffix":"",
     },
-    {
-        "runs_on":"ubuntu-18.04",
-        "someValue":"Bar",
-        "runOn":"v2.1-Release"
-    },
-    {
-        "runs_on":"ubuntu-20.04",
-        "someValue":"Hello again",
-        "runOn":"v2.1-Release"
+   {
+        "image_base":"nvidia/cuda:11.3.1-base-ubuntu20.04",
+        "device_suffix":"-gpu",
     }
 ]

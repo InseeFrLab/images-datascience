@@ -27,6 +27,10 @@ on:
         description: context of docker image
         required: true
         type: string
+      matrix_json:
+        description: zad
+        required: false
+        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: false
