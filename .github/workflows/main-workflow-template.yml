@@ -27,6 +27,10 @@ on:
         description: context of docker image
         required: true
         type: string
+      python_version:
+        description: context of docker image
+        required: true
+        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: false
@@ -78,9 +82,12 @@ jobs:
         run: |
             buildargs="\"BASE_IMAGE=${{ matrix.base_image }}\""
             if [[ ${{ matrix.python_version}} ]]; then
-              buildargs+="\\n\"PYTHON_VERSION=${{ matrix.python_version }}\""
+              buildargs+="\n\"PYTHON_VERSION=${{ matrix.python_version }}\""
             fi
             echo "${buildargs}"
+            buildargs="${buildargs//'%'/'%25'}"
+            buildargs="${buildargs//$'\n'/'%0A'}"
+            buildargs="${buildargs//$'\r'/'%0D'}"
             echo "::set-output name=buildargs::${buildargs}"
         shell: bash
             
@@ -91,7 +98,8 @@ jobs:
           file: ${{ inputs.context }}/Dockerfile
           load: true
           build-args: |
-             ${{ steps.buildargs.outputs.buildargs }}
+             BASE_IMAGE=${{ matrix.base_image }}
+             PYTHON_VERSION=${{matrix.python_version}}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
