@@ -52,11 +52,6 @@ jobs:
       fail-fast: false
       matrix:
         json_matrix:  ${{ fromJson(needs.build-matrix.outputs.json_matrix) }}
-        include:
-          - base_image: ${{ fromJson(inputs.base_image }}
-            device_suffix: ""
-          - base_image: ${{ inputs.base_image_gpu }} 
-            device_suffix: "-gpu"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
