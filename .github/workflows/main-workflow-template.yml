@@ -100,7 +100,7 @@ jobs:
         run: |
             buildargs="--build-arg BASE_IMAGE=${{ matrix.base_image }}"
             python_version="${{ matrix.python_version}}"
-            if [ -z "$python_version" ]; then
+            if [ -n "$python_version" ]; then
               buildargs+=" --build-arg PYTHON_VERSION=$python_version"
             fi
             echo "${buildargs}"
