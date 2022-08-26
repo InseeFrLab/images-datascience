@@ -72,6 +72,19 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
         shell: bash
+
+      - name: buildargs docker command
+        id: buildargs
+        run: |
+            buildargs=BASE_IMAGE=${{ matrix.base_image }}
+            if [[ ${{ matrix.python_version}} ]]; then
+              buildargs+=", PYTHON_VERSION=${{ matrix.python_version }}"
+            fi
+            echo "${buildargs}"
+            echo "::set-output name=buildargs::${buildargs}"
+        shell: bash
+
+    
             
       - name: Build and store
         uses: docker/build-push-action@v3
@@ -79,7 +92,7 @@ jobs:
           context: ${{ inputs.context }}/
           file: ${{ inputs.context }}/Dockerfile
           load: true
-          build-args: BASE_IMAGE=${{ matrix.base_image }} PYTHON_VERSION=${{ matrix.python_version }}
+          build-args: ${{steps.buildargs.outputs.buildargs}}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
