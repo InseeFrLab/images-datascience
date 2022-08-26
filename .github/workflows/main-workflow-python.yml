@@ -97,29 +97,29 @@ jobs:
       - name: buildargs docker command
         id: buildargs
         run: |
-            buildargs="\"BASE_IMAGE=${{ matrix.base_image }}\""
+            buildargs="--build-arg BASE_IMAGE=${{ matrix.base_image }}"
             if [[ ${{ matrix.python_version}} ]]; then
-              buildargs+="\n\"PYTHON_VERSION=${{ matrix.python_version }}\""
+              buildargs+=" --build-arg PYTHON_VERSION=${{ matrix.python_version }}"
             fi
             echo "${buildargs}"
-            buildargs="${buildargs//'%'/'%25'}"
-            buildargs="${buildargs//$'\n'/'%0A'}"
-            buildargs="${buildargs//$'\r'/'%0D'}"
             echo "::set-output name=buildargs::${buildargs}"
         shell: bash
             
-      - name: Build and store
-        uses: docker/build-push-action@v3
-        with:
-          context: ${{ inputs.context }}/
-          file: ${{ inputs.context }}/Dockerfile
-          load: true
-          build-args: |
-             BASE_IMAGE=${{ matrix.base_image }}
-             PYTHON_VERSION=${{ matrix.python_version }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
-      
+    #  - name: Build and store
+    #    uses: docker/build-push-action@v3
+    #    with:
+    #      context: ${{ inputs.context }}/
+    #      file: ${{ inputs.context }}/Dockerfile
+    #     load: true
+    #     build-args: |
+    #        BASE_IMAGE=${{ matrix.base_image }}
+    #        PYTHON_VERSION=${{ matrix.python_version }}
+    #     tags: ${{ steps.meta.outputs.tags }}
+    #     labels: ${{ steps.docker_meta.outputs.labels }}
+      - name: classic build
+        if: ${{ inputs.push == 'true' }}
+        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/ 
+
       - name: run structure tests
         if: ${{ inputs.test == 'true' }}
         uses: plexsystems/container-structure-test-action@v0.2.0
