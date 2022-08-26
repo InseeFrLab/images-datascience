@@ -1,10 +1,10 @@
 [
     {
         "image_base":"ubuntu-20.04",
-        "device_suffix":"",
+        "device_suffix":""
     },
    {
         "image_base":"nvidia/cuda:11.3.1-base-ubuntu20.04",
-        "device_suffix":"-gpu",
+        "device_suffix":"-gpu"
     }
 ]

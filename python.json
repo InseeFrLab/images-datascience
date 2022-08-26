@@ -2,21 +2,21 @@
     {
         "image_base":"ubuntu-20.04",
         "python_version":"3.9",
-        "device_suffix":"",
+        "device_suffix":""
     },
    {
         "image_base":"nvidia/cuda:11.3.1-base-ubuntu20.04",
         "python_version":"3.9",
-        "device_suffix":"-gpu",
+        "device_suffix":"-gpu"
     },
     {
         "image_base":"ubuntu-20.04",
         "python_version":"3.10",
-        "device_suffix":"",
+        "device_suffix":""
     },
    {
         "image_base":"nvidia/cuda:11.3.1-base-ubuntu20.04",
         "python_version":"3.10",
-        "device_suffix":"-gpu",
+        "device_suffix":"-gpu"
     }
 ]
