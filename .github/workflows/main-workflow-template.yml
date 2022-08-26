@@ -78,7 +78,7 @@ jobs:
         run: |
             buildargs=BASE_IMAGE=${{ matrix.base_image }}
             if [[ ${{ matrix.python_version}} ]]; then
-              buildargs+=", \"PYTHON_VERSION=${{ matrix.python_version }}\""
+              buildargs+=", PYTHON_VERSION=${{ matrix.python_version }}"
             fi
             echo "[${buildargs}]"
             echo "::set-output name=buildargs::[${buildargs}]"
@@ -96,7 +96,7 @@ jobs:
           context: ${{ inputs.context }}/
           file: ${{ inputs.context }}/Dockerfile
           load: true
-          build-args: ${{ steps.stringToArray.outputs.stringArray }}
+          build-args: ${{ steps.stringToArray.outputs.stringList }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
