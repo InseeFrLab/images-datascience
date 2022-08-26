@@ -98,8 +98,7 @@ jobs:
           file: ${{ inputs.context }}/Dockerfile
           load: true
           build-args: |
-             BASE_IMAGE=${{ matrix.base_image }}
-             PYTHON_VERSION=${{matrix.python_version}}
+             echo ${{steps.buildargs.output.buildargs}}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
