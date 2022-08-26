@@ -76,12 +76,12 @@ jobs:
       - name: buildargs docker command
         id: buildargs
         run: |
-            buildargs="'BASE_IMAGE=${{ matrix.base_image }}'"
+            buildargs=""BASE_IMAGE=${{ matrix.base_image }}""
             if [[ ${{ matrix.python_version}} ]]; then
-              buildargs+=", 'PYTHON_VERSION=${{ matrix.python_version }}'"
+              buildargs+="\n"PYTHON_VERSION=${{ matrix.python_version }}""
             fi
             echo "[${buildargs}]"
-            echo "::set-output name=buildargs::[${buildargs}]"
+            echo "::set-output name=buildargs::${buildargs}"
         shell: bash
             
       - name: Build and store
@@ -90,7 +90,8 @@ jobs:
           context: ${{ inputs.context }}/
           file: ${{ inputs.context }}/Dockerfile
           load: true
-          build-args: ${{ fromJson(steps.buildargs.outputs.buildargs) }}
+          build-args: \
+             ${{ steps.buildargs.outputs.buildargs }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
