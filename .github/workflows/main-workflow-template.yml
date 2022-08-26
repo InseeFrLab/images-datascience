@@ -49,7 +49,7 @@ jobs:
     - id: set-matrix
       run: |
         branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')  
-        matrix=$(cat base.json | jq .)                
+        matrix=$(cat ${{ inputs.matrix.json }} | jq .)                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
   # build-matrix:
   #   runs-on: ubuntu-latest
