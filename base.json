@@ -1,6 +1,6 @@
 [
     {
-        "base_image":"ubuntu-20.04",
+        "base_image":"ubuntu:20.04",
         "device_suffix":""
     },
    {
