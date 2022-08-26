@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: set-matrix
-        run: echo '::set-output name=version_matrix::["12","14","16"]'
+        run: echo '::set-output name=version_matrix::["${{ inputs.base_image }}","${{ inputs.base_image_gpu }}"]'
     outputs:
       version_matrix: ${{ steps.set-matrix.outputs.version_matrix }}
 
