@@ -40,6 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        python_version: [${{ inputs.python_version }}]
         include:
           - base_image: ${{ inputs.base_image }}
             device_suffix: ""
@@ -78,7 +79,7 @@ jobs:
           context: ${{ inputs.context }}/
           file: ${{ inputs.context }}/Dockerfile
           load: true
-          build-args: BASE_IMAGE=${{ matrix.base_image }}
+          build-args: BASE_IMAGE=${{ matrix.base_image }} PYTHON_VERSION=${{ matrix.python_version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
