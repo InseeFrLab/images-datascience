@@ -3,7 +3,7 @@ base_image=image1,image2
 python_version=v1,v2
 context=python
 
-result=()
+result=""
 if [[ "$context" =~ ^(base)$ ]]; then
     echo "$context is in the list"
     IFS=', ' read -r -a array <<< "$base_image"
