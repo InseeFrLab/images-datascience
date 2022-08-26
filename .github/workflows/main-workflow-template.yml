@@ -78,13 +78,17 @@ jobs:
         run: |
             buildargs=BASE_IMAGE=${{ matrix.base_image }}
             if [[ ${{ matrix.python_version}} ]]; then
-              buildargs+=", PYTHON_VERSION=${{ matrix.python_version }}"
+              buildargs+=", \"PYTHON_VERSION=${{ matrix.python_version }}\""
             fi
-            echo "${buildargs}"
-            echo "::set-output name=buildargs::${buildargs}"
+            echo "[${buildargs}]"
+            echo "::set-output name=buildargs::[${buildargs}]"
         shell: bash
 
-    
+      - name: Create list from array of strings
+        id: stringToArray
+        uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
+        with:
+          stringArray: ${{ steps.buildargs.outputs.buildargs }}
             
       - name: Build and store
         uses: docker/build-push-action@v3
@@ -92,7 +96,7 @@ jobs:
           context: ${{ inputs.context }}/
           file: ${{ inputs.context }}/Dockerfile
           load: true
-          build-args: ${{steps.buildargs.outputs.buildargs}}
+          build-args: ${{ steps.stringToArray.outputs.stringArray }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
