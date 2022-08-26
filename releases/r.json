@@ -1,0 +1,22 @@
+[
+    {
+        "base_image":"ubuntu:20.04",
+        "r_version":"3.9",
+        "device_suffix":""
+    },
+   {
+        "base_image":"nvidia/cuda:11.3.1-base-ubuntu20.04",
+        "r_version":"3.9",
+        "device_suffix":"-gpu"
+    },
+    {
+        "base_image":"ubuntu:20.04",
+        "r_version":"3.10",
+        "device_suffix":""
+    },
+   {
+        "base_image":"nvidia/cuda:11.3.1-base-ubuntu20.04",
+        "r_version":"4.2.1",
+        "device_suffix":"-gpu"
+    }
+]

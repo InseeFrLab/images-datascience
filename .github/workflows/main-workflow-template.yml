@@ -48,7 +48,8 @@ jobs:
       uses: actions/checkout@v2
     - id: set-matrix
       run: |
-        matrix=$(cat ${{ inputs.matrix_json }} | jq .)                
+        matrix=$(cat ./releases/${{ inputs.matrix_json }} | jq .) 
+        echo $matrix                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
 
   docker:
