@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: ${{ inputs.python_version }}
+        python_version: [3.9,3.10]
         include:
           - base_image: ${{ inputs.base_image }}
             device_suffix: ""
