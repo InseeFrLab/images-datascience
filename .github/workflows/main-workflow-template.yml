@@ -40,10 +40,10 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          echo '::set-output name=base_image_matrix::["${{ inputs.base_image }}","${{ inputs.base_image_gpu }}"]'
+          result=$(./matrix.sh | tail -1)
+          echo '::set-output name=json_matrix::$result'
     outputs:
-      base_image_matrix: ${{ steps.set-matrix.outputs.base_image_matrix }}
-      python_matrix: ${{ steps.set-matrix.outputs.python_matrix }}
+      json_matrix: ${{ steps.set-matrix.outputs.json_matrix }}
 
   docker:
     runs-on: ubuntu-latest
@@ -51,9 +51,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base_image:  ${{ fromJson(needs.build-matrix.outputs.base_image_matrix) }}
+        json_matrix:  ${{ fromJson(needs.build-matrix.outputs.json_matrix) }}
         include:
-          - base_image: ${{ inputs.base_image }}
+          - base_image: ${{ fromJson(inputs.base_image }}
             device_suffix: ""
           - base_image: ${{ inputs.base_image_gpu }} 
             device_suffix: "-gpu"
