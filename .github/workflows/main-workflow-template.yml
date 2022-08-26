@@ -108,7 +108,6 @@ jobs:
         shell: bash
       
       - name: classic build
-        if: ${{ inputs.push == 'true' }}
         run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/ 
 
       
