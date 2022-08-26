@@ -59,7 +59,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    needs: build-matrix
+    needs: matrix_prep
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.matrix_prep.outputs.matrix)}}
