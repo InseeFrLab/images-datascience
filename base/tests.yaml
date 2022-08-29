@@ -12,10 +12,10 @@ commandTests:
     command: "which"
     args: ["mc"]
     expectedOutput: ["/usr/local/bin/mc"]
-  - name: "is vault present in good version"
-    command: "vault"
-    args: ["version"]
-    expectedOutput: ["v1.11.0"]
+  - name: "is vault present"
+    command: "which"
+    args: ["vault"]
+    expectedOutput: ["/usr/local/bin/vault"]
 fileExistenceTests:
   - name: "user home"
     path: "/home/onyxia"
