@@ -3,7 +3,7 @@ name: vscode-python
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [python]
+    workflows: [python-datascience]
     types:
       - completed
 
@@ -18,5 +18,5 @@ jobs:
       context: vscode
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      base_image: inseefrlab/onyxia-python-datascience:latest
+      base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu

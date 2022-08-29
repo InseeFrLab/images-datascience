@@ -20,32 +20,58 @@ jobs:
       push: true
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
-  python:
+  python-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: python
-      context: python
+      image: python-minimal
+      context: python-minimal
       test: false
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
-  r:
+  python-datascience:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-minimal]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: python-datascience
+      context: python-datascience
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-python-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
+  r-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: r
-      context: r
+      image: r-minimal
+      context: r-minimal
       test: false
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+  r-datascience:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [r-minimal]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: r-datascience
+      context: r-datascience
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-r-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
   jupyter:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -76,15 +102,15 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python]
+    needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
       context: spark
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      base_image: inseefrlab/onyxia-python-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
   jupyter-pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -115,15 +141,15 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r]
+    needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: sparkr
       context: spark
       test: false
       push: true
-      base_image: inseefrlab/onyxia-r:latest
-      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+      base_image: inseefrlab/onyxia-r-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
   rstudio-sparkr:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

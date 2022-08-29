@@ -1,10 +1,10 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=ubuntu:20.04
 FROM $BASE_IMAGE
 
 # Set default shell
 SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND="noninteractive"
 
 # Setup user & workspace
 ENV USERNAME="onyxia"

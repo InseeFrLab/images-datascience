@@ -1,4 +1,4 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=inseefrlab/onyxia-python-minimal
 FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
@@ -30,8 +30,7 @@ RUN apt-get update && \
         openjdk-11-jre-headless && \
     # Get Spark/Hadoop/Hive binaries
     mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
-    cd /tmp && \
-    ${SHELL} get-binaries.sh && \
+    ${SHELL} /tmp/get-binaries.sh && \
     # Get SparkR package if base image is R
     if [[ "${BASE_IMAGE}" == *"onyxia-r"* ]]; then Rscript -e "devtools::install_github('apache/spark@v$SPARK_VERSION', subdir='R/pkg')"; fi && \
     # Fix permissions

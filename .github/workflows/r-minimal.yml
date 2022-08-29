@@ -1,4 +1,4 @@
-name: python
+name: r-minimal
 
 on:
   workflow_dispatch:
@@ -14,8 +14,8 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: python
-      context: python
+      image: r-minimal
+      context: r-minimal
       test: false
       push: true
       base_image: inseefrlab/onyxia-base:latest
