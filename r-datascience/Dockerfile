@@ -45,7 +45,7 @@ RUN apt-get update && \
     installGithub.r spyrales/gouvdown.fonts && \
     find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
     fc-cache && \
-    Rscript -e "gouvdown::check_fonts_in_r()" && \
+    R -e "gouvdown::check_fonts_in_r()" && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean
