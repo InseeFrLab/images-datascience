@@ -23,7 +23,10 @@ on:
         description: context of docker image
         required: true
         type: string
-        
+    outputs:
+      matrix:
+        description: "The first output string"
+        value: ${{ jobs.matrix_prep.outputs.matrix }}       
 
 jobs:
   matrix_prep:
