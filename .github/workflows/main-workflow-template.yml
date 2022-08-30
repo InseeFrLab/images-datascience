@@ -124,7 +124,7 @@ jobs:
         run: |
             python_version="${{ matrix.python_version}}"
             r_version="${{ matrix.r_version}}"
-            spark_version="${{ matrix.r_version}}"
+            spark_version="${{ matrix.spark_version}}"
             tag=""
             if [ -n "$python_version" ]; then
               tag+="py$python_version"
