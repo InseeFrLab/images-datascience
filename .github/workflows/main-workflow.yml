@@ -26,7 +26,7 @@ jobs:
       #base_image: ubuntu:20.04
       #base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
       #matrix_json: base.json
-      matrix: ${{ initVariables.outputs.matrix.base }}
+      matrix: ${{ jobs.init-variables.outputs.matrix.base }}
   python:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -40,7 +40,7 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
-      matrix: ${{ initVariables.outputs.matrix.base }}
+      matrix: ${{ jobs.init-variables.outputs.matrix.base }}
   r:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
