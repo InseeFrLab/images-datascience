@@ -1,6 +1,0 @@
-python is in the list
-{ "base_image": "image1", "python_version_array": "v1" }
-{ "base_image": "image1", "python_version_array": "v2" }
-{ "base_image": "image2", "python_version_array": "v1" }
-{ "base_image": "image2", "python_version_array": "v2" }
-[{ "base_image": "image1", "python_version_array": "v1" },{ "base_image": "image1", "python_version_array": "v2" },{ "base_image": "image2", "python_version_array": "v1" },{ "base_image": "image2", "python_version_array": "v2" }]

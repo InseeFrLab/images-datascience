@@ -1,0 +1,40 @@
+name: Build all images
+
+on:
+  workflow_call:
+    base_image:
+      test:
+        description: should test
+        required: true
+        type: string
+      base_image_gpu:
+        description: should push
+        required: true
+        type: string
+      python_version:
+        description: name of docker image
+        required: true
+        type: string
+      r_version:
+        description: context of docker image
+        required: true
+        type: string
+      spark_version:
+        description: context of docker image
+        required: true
+        type: string
+        
+
+jobs:
+  matrix_prep:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: Check out code 
+      uses: actions/checkout@v2
+    - id: set-matrix
+      run: |
+        matrix=$(cat ./releases/matrix.json | jq .) 
+        echo $matrix                
+        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}

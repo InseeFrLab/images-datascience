@@ -27,7 +27,7 @@ on:
         description: context of docker image
         required: true
         type: string
-      matrix_json:
+      matrix:
         description: zad
         required: false
         type: string
@@ -39,25 +39,25 @@ on:
         
 
 jobs:
-  matrix_prep:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
-    - id: set-matrix
-      run: |
-        matrix=$(cat ./releases/${{ inputs.matrix_json }} | jq .) 
-        echo $matrix                
-        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
+  # matrix_prep:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     matrix: ${{ steps.set-matrix.outputs.matrix }}
+  #   steps:
+  #   - name: Check out code 
+  #     uses: actions/checkout@v2
+  #   - id: set-matrix
+  #     run: |
+  #       matrix=$(cat ./releases/${{ inputs.matrix_json }} | jq .) 
+  #       echo $matrix                
+  #       echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
 
   docker:
     runs-on: ubuntu-latest
-    needs: matrix_prep
+    # needs: matrix_prep
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.matrix_prep.outputs.matrix)}}
+      matrix: ${{fromJson(inputs.matrix)}}
 
     steps:
       #- name: Checkout
