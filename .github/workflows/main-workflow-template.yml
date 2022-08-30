@@ -172,7 +172,7 @@ jobs:
         if: ${{ inputs.test == 'true' }}
         uses: plexsystems/container-structure-test-action@v0.2.0
         with:
-          image: inseefrlab/${{ inputs.image }}:latest
+          image: inseefrlab/${{ inputs.image }}:${{steps.currentTag.outputs.tag}}
           config: ./${{ inputs.image }}/tests.yaml
 
       - name: Login to DockerHub
