@@ -48,8 +48,10 @@ jobs:
       uses: actions/checkout@v2
     - id: set-matrix
       run: |
-        sed -i 's/$base_image/${{inputs.base_image_gpu}}/g' ${{ inputs.matrix_json }}
-        sed -i 's/$base_image/${{inputs.base_image}}/g' ${{ inputs.matrix_json }}
+        base_image_escaped=${echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g'}
+        base_image_gpu_escaped=${echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g'}
+        sed -i 's/$base_image_gpu/$base_image_gpu_escaped/g' ${{ inputs.matrix_json }}
+        sed -i 's/$base_image/${{inputs.base_image_escaped}}/g' ${{ inputs.matrix_json }}
         matrix=$(cat ./releases/${{ inputs.matrix_json }} | jq .) 
         echo $matrix                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
