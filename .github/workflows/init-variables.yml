@@ -37,7 +37,12 @@ jobs:
     - name: Check out code 
       uses: actions/checkout@v2
     - id: set-matrix
+      name: set-matrix
       run: |
         matrix=$(cat ./releases/matrix.json | jq .) 
         echo $matrix                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
+    - name: echo
+      run: |
+          echo ${{fromJson(steps.set-matrix.outputs.matrix ).base}}
+      shell: bash
