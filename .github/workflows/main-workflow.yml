@@ -37,6 +37,8 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
   r:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -50,6 +52,8 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+      r_version_1: 4.1.1
+      r_version_2: 4.2.1
   jupyter:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -63,6 +67,8 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
   vscode:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -76,6 +82,8 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
   pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -89,6 +97,10 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
+      spark_version_1: 3.2.0
+      spark_version_2: 3.3.0
   jupyter-pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
