@@ -52,9 +52,8 @@ RUN chmod +x /opt/install-system-libs.sh && \
     unzip vault.zip -d /usr/local/bin/ && \
     vault -autocomplete-install && \
     # Fetch Onyxia init script
-    mkdir /scripts && \
-    wget https://inseefrlab.github.io/onyxia/onyxia-init.sh -O /scripts/onyxia-init.sh && \
-    chmod +x /scripts/onyxia-init.sh && \
+    wget https://inseefrlab.github.io/onyxia/onyxia-init.sh -O /opt/onyxia-init.sh && \
+    chmod +x /opt/onyxia-init.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
