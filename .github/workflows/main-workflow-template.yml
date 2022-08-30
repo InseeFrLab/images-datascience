@@ -27,7 +27,7 @@ on:
         description: context of docker image
         required: true
         type: string
-      matrix:
+      matrix_json:
         description: zad
         required: false
         type: string
