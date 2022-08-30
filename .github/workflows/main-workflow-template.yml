@@ -92,16 +92,16 @@ jobs:
       #  uses: actions/checkout@v3
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: inseefrlab/onyxia-${{ inputs.image }}
-          tags: |
-            # set latest tag for main branch
-            type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-            # propagate valid semver tags
-            type=semver,pattern={{raw}}${{ matrix.device_suffix }}
+      # - name: Docker meta
+      #   id: meta
+      #   uses: docker/metadata-action@v4
+      #   with:
+      #     images: inseefrlab/onyxia-${{ inputs.image }}
+      #     tags: |
+      #       # set latest tag for main branch
+      #       type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+      #       # propagate valid semver tags
+      #       type=semver,pattern={{raw}}${{ matrix.device_suffix }}
 
       # https://github.com/actions/virtual-environments/issues/2840
       - name: Make free space
@@ -125,18 +125,34 @@ jobs:
             buildargs="--build-arg BASE_IMAGE=${{ matrix.base_image }}"
             python_version="${{ matrix.python_version}}"
             r_version="${{ matrix.r_version}}"
+            extraTag=""
             if [ -n "$python_version" ]; then
               buildargs+=" --build-arg PYTHON_VERSION=$python_version"
+              extraTag+="py$python_version"
             fi
-             if [ -n "$r_version" ]; then
+            if [ -n "$r_version" ]; then
               buildargs+=" --build-arg R_VERSION=$r_version"
+              extraTag+="r$r_version"
             fi
+            if [ -n "$spark_version" ]; then
+              buildargs+=" --build-arg SPARK_VERSION=$spark_version"
+              extraTag+="spark$spark_version"
+            fi
+            date=$(date '+%Y-%m-%d')
+            tags=" --tag ${{ inputs.image }}:latest "
+            tags+=" --tag ${{ inputs.image }}:$date "
+            if [ -n "$extraTag" ]; then
+              tags+=" --tag ${{ inputs.image }}:$extraTag$date "
+            fi
+            echo "${tags}"
+            echo ::set-output name=extratags::${tags}
             echo "${buildargs}"
             echo "::set-output name=buildargs::${buildargs}"
         shell: bash
       
       - name: classic build
-        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/
+        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} ${{steps.buildargs.outputs.tags}} ${{ inputs.image }}/
+        #docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/
         env:
           DOCKER_BUILDKIT: 1
           # Full logs for CI build
