@@ -23,6 +23,7 @@ ENV PATH="${JAVA_HOME}/bin:${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 USER root
 
 COPY get-binaries.sh /tmp/get-binaries.sh
+
 RUN apt-get update && \
     # Install JDK
     apt-get install -y --no-install-recommends \

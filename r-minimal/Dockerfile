@@ -17,17 +17,12 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     /rocker_scripts/install_R_source.sh
 
 # Use RStudio's package manager to download packages as binaries
-ENV CRAN="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22"
-ENV LANG=en_US.UTF-8
+ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/latest
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
 RUN /rocker_scripts/setup_R.sh && \
-    # Install system libraries
-    # (reinstall some libraries removed by `apt-get autoremove` in rocker scripts)
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        git && \
+    # Reinstall libraries removed by `apt-get autoremove` in rocker scripts)
+    /opt/install-system-libs.sh && \
     # Configure R for CUDA if parent image has CUDA
     if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
     # Set default working directory in R

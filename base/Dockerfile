@@ -1,10 +1,11 @@
 ARG BASE_IMAGE=ubuntu:20.04
 FROM $BASE_IMAGE
 
-# Set default shell
+# System-wide configuration
 SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
 ENV DEBIAN_FRONTEND="noninteractive"
+ENV LANG="en_US.UTF-8"
 
 # Setup user & workspace
 ENV USERNAME="onyxia"
@@ -25,25 +26,13 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-RUN apt-get update && \
+COPY install-system-libs.sh /opt/install-system-libs.sh
+
+RUN chmod +x /opt/install-system-libs.sh && \
+    # Install system libraries
+    /opt/install-system-libs.sh && \
+    # Upgrade installed system libraries
     apt-get upgrade -y && \
-    ## Install system libraries
-    apt-get install -y --no-install-recommends \
-        bash-completion \
-        build-essential \
-        ca-certificates \
-        curl \
-        git \
-        jq \
-        less \
-        locales \
-        nano-tiny \
-        openssh-client \
-        sudo \
-        tini \
-        unzip \
-        vim-tiny \
-        wget && \
     # Set up locales
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
     ## Install common binaries required for Onyxia
