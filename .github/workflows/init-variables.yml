@@ -2,26 +2,26 @@ name: Build all images
 
 on:
   workflow_call:
-    base_image:
-      test:
+    inputs:
+      base_image:
         description: should test
-        required: true
+        required: false
         type: string
       base_image_gpu:
         description: should push
-        required: true
+        required: false
         type: string
       python_version:
         description: name of docker image
-        required: true
+        required: false
         type: string
       r_version:
         description: context of docker image
-        required: true
+        required: false
         type: string
       spark_version:
         description: context of docker image
-        required: true
+        required: false
         type: string
     outputs:
       matrix:

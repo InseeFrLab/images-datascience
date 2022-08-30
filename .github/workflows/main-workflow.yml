@@ -6,12 +6,12 @@ on:
 jobs:
   init-variables:
     uses: ./.github/workflows/init-variables.yml
-    with:
-       base_image: ubuntu:20.04
-       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
-       python_version: "3.10.4,3.9.13"
-       r_version: "4.2.0,4.3.0"
-       spark_version: "3.2.1,3.3.0"
+    # with:
+    #    base_image: ubuntu:20.04
+    #    base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
+    #    python_version: "3.10.4,3.9.13"
+    #    r_version: "4.2.0,4.3.0"
+    #    spark_version: "3.2.1,3.3.0"
   base:
     needs: [init-variables]
     secrets:
