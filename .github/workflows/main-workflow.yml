@@ -76,28 +76,28 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python]
+    needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-python
       context: jupyter
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      base_image: inseefrlab/onyxia-python-datascience:latest
+      base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
   vscode:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python]
+    needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-python
       context: vscode
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      base_image: inseefrlab/onyxia-python-datascience:latest
+      base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
   pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
