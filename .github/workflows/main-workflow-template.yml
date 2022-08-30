@@ -142,6 +142,7 @@ jobs:
             tags=" --tag inseefrlab/${{ inputs.image }}:latest "
             tags+=" --tag inseefrlab/${{ inputs.image }}:$date "
             if [ -n "$extraTag" ]; then
+              extraTag=$(echo "tags"| xargs)
               tags+=" --tag inseefrlab/${{ inputs.image }}:$extraTag$date "
             fi
             echo "${tags}"
