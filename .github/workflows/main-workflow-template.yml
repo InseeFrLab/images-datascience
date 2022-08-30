@@ -43,6 +43,14 @@ on:
         description: context of docker image
         required: false
         type: string
+      spark_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      spark_version_2:
+        description: context of docker image
+        required: false
+        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: false
