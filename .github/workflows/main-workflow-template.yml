@@ -72,6 +72,10 @@ jobs:
         base_image_gpu_escaped=$(echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g' )
         sed -i "s/:base_image_gpu/$base_image_gpu_escaped/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:base_image/$base_image_escaped/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:python_version_1/${{inputs.python_version_1}} /g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:python_version_2/${{inputs.python_version_2}} /g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:r_version_1/${{inputs.r_version_1}} /g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:r_version_2/${{inputs.r_version_2}} /g" ./releases/${{ inputs.image }}.json
         matrix=$(cat ./releases/${{ inputs.image }}.json | jq .) 
         echo $matrix                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
