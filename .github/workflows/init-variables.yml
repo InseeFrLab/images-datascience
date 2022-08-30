@@ -41,7 +41,7 @@ jobs:
       run: |
         matrix=$(cat ./releases/matrix.json | jq .) 
         echo $matrix                
-        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
+        echo ::set-output name=matrix::$(echo $matrix)
     - name: echo
       run: |
           echo ${{fromJson(steps.set-matrix.outputs.matrix ).base}}
