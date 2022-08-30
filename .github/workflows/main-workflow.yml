@@ -34,7 +34,7 @@ jobs:
       image: python
       context: python
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
       python_version_1: 3.9.13
@@ -49,7 +49,7 @@ jobs:
       image: r
       context: r
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
       r_version_1: 4.1.1
@@ -64,7 +64,7 @@ jobs:
       image: jupyter-python
       context: jupyter
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
       python_version_1: 3.9.13
@@ -79,7 +79,7 @@ jobs:
       image: vscode-python
       context: vscode
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
       python_version_1: 3.9.13
@@ -94,7 +94,7 @@ jobs:
       image: pyspark
       context: spark
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-python:latest
       base_image_gpu: inseefrlab/onyxia-python:latest-gpu
       python_version_1: 3.9.13
@@ -111,7 +111,7 @@ jobs:
       image: jupyter-pyspark
       context: jupyter
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-pyspark:latest
       base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
@@ -124,7 +124,7 @@ jobs:
       image: rstudio
       context: rstudio
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-r:latest
       base_image_gpu: inseefrlab/onyxia-r:latest-gpu
   sparkr:
@@ -137,7 +137,7 @@ jobs:
       image: sparkr
       context: spark
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-r:latest
       base_image_gpu: inseefrlab/onyxia-r:latest-gpu
   rstudio-sparkr:
@@ -150,6 +150,6 @@ jobs:
       image: rstudio-sparkr
       context: rstudio
       test: false
-      push: true
+      push: false
       base_image: inseefrlab/onyxia-sparkr:latest
       base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
