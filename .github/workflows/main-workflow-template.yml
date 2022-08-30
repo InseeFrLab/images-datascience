@@ -139,10 +139,10 @@ jobs:
               extraTag+="spark$spark_version"
             fi
             date=$(date '+%Y-%m-%d')
-            tags=" --tag ${{ inputs.image }}:latest "
-            tags+=" --tag ${{ inputs.image }}:$date "
+            tags=" --tag inseefrlab/${{ inputs.image }}:latest "
+            tags+=" --tag inseefrlab/${{ inputs.image }}:$date "
             if [ -n "$extraTag" ]; then
-              tags+=" --tag ${{ inputs.image }}:$extraTag$date "
+              tags+=" --tag inseefrlab/${{ inputs.image }}:$extraTag$date "
             fi
             echo "${tags}"
             echo ::set-output name=extratags::${tags}
@@ -163,7 +163,7 @@ jobs:
         if: ${{ inputs.test == 'true' }}
         uses: plexsystems/container-structure-test-action@v0.2.0
         with:
-          image: ${{ inputs.image }}:latest
+          image: inseefrlab/${{ inputs.image }}:latest
           config: ./${{ inputs.image }}/tests.yaml
 
       - name: Login to DockerHub
