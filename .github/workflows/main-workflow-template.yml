@@ -119,7 +119,7 @@ jobs:
       #     tags: ${{ steps.meta.outputs.tags }}
       #     labels: ${{ steps.docker_meta.outputs.labels }}
 
-      - name: buildargs docker command
+      - name: compute tag
         id: currentTag
         run: |
             python_version="${{ matrix.python_version}}"
@@ -136,10 +136,10 @@ jobs:
               tag+="spark$spark_version"
             fi
             date=$(date '+%Y-%m-%d')
-            if [ -n "$tag" ]; then
+            if [ -z "$tag" ]; then
               tag+=$date 
             fi
-            tag="$tag "
+            tag="$tag"
             tag=$(echo "$tag"| xargs)
             echo "${tag}"
             echo ::set-output name=tag::${tag}
