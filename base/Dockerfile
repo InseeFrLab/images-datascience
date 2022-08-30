@@ -5,7 +5,6 @@ FROM $BASE_IMAGE
 SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
 ENV DEBIAN_FRONTEND="noninteractive"
-ENV LANG="en_US.UTF-8"
 
 # Setup user & workspace
 ENV USERNAME="onyxia"
@@ -33,8 +32,6 @@ RUN chmod +x /opt/install-system-libs.sh && \
     /opt/install-system-libs.sh && \
     # Upgrade installed system libraries
     apt-get upgrade -y && \
-    # Set up locales
-    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
     ## Install common binaries required for Onyxia
     # kubectl
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
@@ -63,6 +60,8 @@ RUN chmod +x /opt/install-system-libs.sh && \
     # Clean
     rm get_helm.sh vault.zip && \
     rm -rf /var/lib/apt/lists/*
+
+ENV LANG="en_US.UTF-8"
 
 USER ${USERNAME}
 

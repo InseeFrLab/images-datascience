@@ -20,10 +20,10 @@ apt_install \
     jq \
     less \
     locales \
-    nano-tiny \
+    nano \
     openssh-client \
     sudo \
     tini \
     unzip \
-    vim-tiny \
+    vim \
     wget
