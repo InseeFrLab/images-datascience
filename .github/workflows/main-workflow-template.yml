@@ -120,33 +120,41 @@ jobs:
       #     labels: ${{ steps.docker_meta.outputs.labels }}
 
       - name: buildargs docker command
-        id: buildargs
+        id: currentTag
         run: |
-            buildargs="--build-arg BASE_IMAGE=${{ matrix.base_image }}"
             python_version="${{ matrix.python_version}}"
             r_version="${{ matrix.r_version}}"
-            extraTag=""
+            spark_version="${{ matrix.r_version}}"
+            tag=""
             if [ -n "$python_version" ]; then
-              buildargs+=" --build-arg PYTHON_VERSION=$python_version"
-              extraTag+="py$python_version"
+              tag+="py$python_version"
             fi
             if [ -n "$r_version" ]; then
-              buildargs+=" --build-arg R_VERSION=$r_version"
-              extraTag+="r$r_version"
+              tag+="r$r_version"
             fi
             if [ -n "$spark_version" ]; then
-              buildargs+=" --build-arg SPARK_VERSION=$spark_version"
-              extraTag+="spark$spark_version"
+              tag+="spark$spark_version"
             fi
             date=$(date '+%Y-%m-%d')
-            tags=" --tag inseefrlab/${{ inputs.image }}:latest "
-            tags+=" --tag inseefrlab/${{ inputs.image }}:$date "
-            if [ -n "$extraTag" ]; then
-              extraTag=$(echo "$extraTag"| xargs)
-              tags+=" --tag inseefrlab/${{ inputs.image }}:$extraTag$date "
+            if [ -n "$tag" ]; then
+              tag+=$date 
             fi
-            echo "${tags}"
-            echo ::set-output name=tags::${tags}
+            tag=" --tag inseefrlab/${{ inputs.image }}:$tag "
+            tag=$(echo "$extraTag"| xargs)
+            echo "${tag}"
+            echo ::set-output name=tag::${tag}
+        shell: bash
+
+      - name: buildargs docker command
+        id: buildargs
+        run: |
+            if [[ "${{ matrix.base_image }}" == *":"* ]]; then
+              echo "tag specified in input take it"
+              base_image=${{ matrix.base_image }}
+            else
+              base_image=${{ matrix.base_image }}: ${{steps.currentTag.outputs.tag}}
+            fi
+            buildargs="--build-arg BASE_IMAGE=$base_image"
             echo "${buildargs}"
             echo "::set-output name=buildargs::${buildargs}"
         shell: bash
