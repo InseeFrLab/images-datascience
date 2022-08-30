@@ -15,15 +15,17 @@ RUN apt-get update && \
         language-pack-fr \
         libsecret-1-dev && \
     # Install Shiny Server
-    /rocker_scripts/install_shiny_server.sh && \
+    /opt/rocker_scripts/install_shiny_server.sh && \
     # Install Quarto latest version
-    /rocker_scripts/install_quarto.sh && \
+    /opt/rocker_scripts/install_quarto.sh && \
     # Install Python to use the `reticulate` package
-    /rocker_scripts/install_python.sh && \
+    /opt/rocker_scripts/install_python.sh && \
     # Install packages bundles from rocker
-    /rocker_scripts/install_tidyverse.sh && \
-    /rocker_scripts/install_verse.sh && \
-    /rocker_scripts/install_geospatial.sh && \
+    /opt/rocker_scripts/install_tidyverse.sh && \
+    /opt/rocker_scripts/install_verse.sh && \
+    /opt/rocker_scripts/install_geospatial.sh && \
+    # Re-install system libs that may have been removed by autoremove in rocker scripts
+    /opt/install-system-libs.sh && \
     # Install additional R packages
     install2.r -e -s \
         arrow \
