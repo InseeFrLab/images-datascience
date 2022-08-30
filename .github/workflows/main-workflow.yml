@@ -39,7 +39,7 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
-      matrix: ${{ needs.init-variables.outputs.matrix.base }}
+      matrix_json: toto
   r:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
