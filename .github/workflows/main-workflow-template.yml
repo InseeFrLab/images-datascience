@@ -139,8 +139,8 @@ jobs:
             if [ -n "$tag" ]; then
               tag+=$date 
             fi
-            tag=" --tag inseefrlab/${{ inputs.image }}:$tag "
-            tag=$(echo "$extraTag"| xargs)
+            tag="$tag "
+            tag=$(echo "$tag"| xargs)
             echo "${tag}"
             echo ::set-output name=tag::${tag}
         shell: bash
@@ -160,7 +160,7 @@ jobs:
         shell: bash
       
       - name: classic build
-        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} ${{steps.buildargs.outputs.tags}} ${{ inputs.image }}/
+        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag inseefrlab/${{ inputs.image }}:${{steps.currentTag.outputs.tag}} ${{ inputs.image }}/
         #docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/
         env:
           DOCKER_BUILDKIT: 1
