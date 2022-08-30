@@ -65,8 +65,8 @@ jobs:
       context: jupyter
       test: false
       push: false
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      base_image: inseefrlab/onyxia-python
+      base_image_gpu: inseefrlab/onyxia-python
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   vscode:
@@ -80,8 +80,8 @@ jobs:
       context: vscode
       test: false
       push: false
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      base_image: inseefrlab/onyxia-python
+      base_image_gpu: inseefrlab/onyxia-python
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   pyspark:
