@@ -24,8 +24,6 @@ jobs:
       push: false
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
-      matrix_json: base.json
-      # matrix: ${{ needs.init-variables.outputs.matrix }}
   python:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -39,7 +37,6 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-base:latest
       base_image_gpu: inseefrlab/onyxia-base:latest-gpu
-      matrix_json: toto
   r:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
