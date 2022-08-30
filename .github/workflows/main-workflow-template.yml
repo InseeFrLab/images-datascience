@@ -57,7 +57,7 @@ jobs:
     # needs: matrix_prep
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(inputs.matrix)}}
+      matrix: ${{fromJson(inputs.matrix).base}}
     steps:
       #- name: Checkout
       #  uses: actions/checkout@v3
