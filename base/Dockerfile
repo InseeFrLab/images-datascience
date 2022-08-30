@@ -60,8 +60,6 @@ RUN chmod +x /opt/install-system-libs.sh && \
     rm get_helm.sh vault.zip && \
     rm -rf /var/lib/apt/lists/*
 
-ENV LANG="en_US.UTF-8"
-
 USER ${USERNAME}
 
 CMD ["/bin/bash"]
