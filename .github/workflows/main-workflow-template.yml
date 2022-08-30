@@ -145,7 +145,7 @@ jobs:
               tags+=" --tag inseefrlab/${{ inputs.image }}:$extraTag$date "
             fi
             echo "${tags}"
-            echo ::set-output name=extratags::${tags}
+            echo ::set-output name=tags::${tags}
             echo "${buildargs}"
             echo "::set-output name=buildargs::${buildargs}"
         shell: bash
