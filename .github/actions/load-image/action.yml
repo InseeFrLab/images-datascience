@@ -17,7 +17,8 @@ runs:
         path: /tmp/
     - name: Load downloaded image to docker 📥
       run: |
-        docker load --input /tmp/${{ inputs.image }}.tar
+        #docker load --input /tmp/${{ inputs.image }}.tar
+        docker load < ${{ inputs.image }}.tar.gz
         docker image ls -a
       shell: bash
     - name: Delete the file 🗑️

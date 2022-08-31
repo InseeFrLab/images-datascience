@@ -133,19 +133,20 @@ jobs:
 
       - name: Save image as a tar for later use 💾
         run: |
-          docker save ${{ inputs.image }} -o /tmp/${{ matrix.artefact_output_name}}.tar
+          #docker save ${{ inputs.image }} -o /tmp/${{ matrix.artefact_output_name}}.tar
+          docker save ${{ inputs.image }}  | gzip > /tmp/${{ matrix.artefact_output_name}}.tar.gz
         shell: bash
 
       - name: Upload image as artifact 💾
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.artefact_output_name}}
-          path: /tmp/${{ matrix.artefact_output_name}}.tar
+          path: /tmp/${{ matrix.artefact_output_name}}.tar.gz
           retention-days: 3
 
       # Self-hosted runners share a state (whole VM) between runs
       - name: Cleanup artifacts 🗑️
         run: |
-          rm -f /tmp/${{ inputs.image }}-${{ steps.tag.outputs.tag }}.tar
+          rm -f /tmp/${{ inputs.image }}-${{ steps.tag.outputs.tag }}.tar.gz
         shell: bash
         if: always()
