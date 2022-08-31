@@ -26,8 +26,9 @@ WORKDIR ${WORKSPACE_DIR}
 USER root
 
 COPY install-system-libs.sh /opt/install-system-libs.sh
+COPY onyxia-init.sh /opt/onyxia-init.sh
 
-RUN chmod +x /opt/install-system-libs.sh && \
+RUN chmod +x /opt/install-system-libs.sh /opt/onyxia-init.sh && \
     # Install system libraries
     /opt/install-system-libs.sh && \
     # Upgrade installed system libraries
@@ -51,9 +52,6 @@ RUN chmod +x /opt/install-system-libs.sh && \
     wget -q https://releases.hashicorp.com/vault/${VAULT_LATEST_VERSION}/vault_${VAULT_LATEST_VERSION}_linux_amd64.zip -O vault.zip  && \
     unzip vault.zip -d /usr/local/bin/ && \
     vault -autocomplete-install && \
-    # Fetch Onyxia init script
-    wget https://raw.githubusercontent.com/InseeFrLab/images-datascience/main/base/onyxia-init.sh -O /opt/onyxia-init.sh && \
-    chmod +x /opt/onyxia-init.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
