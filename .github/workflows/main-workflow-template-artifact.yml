@@ -119,7 +119,7 @@ jobs:
         if: ${{ inputs.image != 'base' }}
         uses: ./.github/actions/load-image
         with:
-          image: ${{ inputs.parentImage }}
+          image: ${{ inputs.base_image }}
           tag: ${{ steps.tag.outputs.tag }}
 
       - name: buildargs docker command

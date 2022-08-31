@@ -35,8 +35,8 @@ jobs:
       context: python
       test: false
       push: false
-      base_image: inseefrlab/onyxia-base
-      base_image_gpu: inseefrlab/onyxia-base
+      base_image: base  #base, base-gpu
+      #base_image_gpu: inseefrlab/onyxia-base
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   r:
