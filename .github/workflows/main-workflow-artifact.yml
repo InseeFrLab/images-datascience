@@ -59,7 +59,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: jupyter-python
       context: jupyter
@@ -73,7 +73,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: vscode-python
       context: vscode
@@ -88,7 +88,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: pyspark
       context: spark
@@ -105,7 +105,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [pyspark]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: jupyter-pyspark
       context: jupyter
@@ -118,7 +118,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [r]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: rstudio
       context: rstudio
@@ -148,7 +148,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [sparkr]
-    uses: ./.github/workflows/main-workflow-template.yml
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: rstudio-sparkr
       context: rstudio
