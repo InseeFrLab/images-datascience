@@ -152,7 +152,7 @@ jobs:
               echo "tag specified in input take it"
               base_image=${{ matrix.base_image }}
             else
-              base_image=${{ matrix.base_image }}: ${{steps.currentTag.outputs.tag}}
+              base_image=${{ matrix.base_image }}:${{steps.currentTag.outputs.tag}}
             fi
             buildargs="--build-arg BASE_IMAGE=$base_image"
             echo "${buildargs}"
