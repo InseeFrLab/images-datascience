@@ -121,7 +121,7 @@ jobs:
         uses: ./.github/actions/load-image
         with:
           image: ${{ inputs.parentImage }}
-          tag: ${{ step.tag.outputs.tag }}
+          tag: ${{ steps.tag.outputs.tag }}
 
       - name: buildargs docker command
         id: buildargs
@@ -153,18 +153,18 @@ jobs:
         shell: bash
 
       - name: Save image as a tar for later use 💾
-        run: docker save ${{ env.OWNER }}/${{ inputs.image }} -o /tmp/${{ inputs.image }}-${{ step.tag.outputs.tag }}.tar
+        run: docker save ${{ env.OWNER }}/${{ inputs.image }} -o /tmp/${{ inputs.image }}-${{ steps.tag.outputs.tag }}.tar
         shell: bash
       - name: Upload image as artifact 💾
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.image }}-${{ step.tag.outputs.tag }}
-          path: /tmp/${{ inputs.image }}-${{ step.tag.outputs.tag }}.tar
+          name: ${{ inputs.image }}-${{ steps.tag.outputs.tag }}
+          path: /tmp/${{ inputs.image }}-${{ steps.tag.outputs.tag }}.tar
           retention-days: 3
 
       # Self-hosted runners share a state (whole VM) between runs
       - name: Cleanup artifacts 🗑️
         run: |
-          rm -f /tmp/${{ inputs.image }}-${{ step.tag.outputs.tag }}.tar
+          rm -f /tmp/${{ inputs.image }}-${{ steps.tag.outputs.tag }}.tar
         shell: bash
         if: always()
