@@ -1,0 +1,22 @@
+[
+    {
+        "base_image":":base_image",
+        "r_version":":r_version_1",
+        "device_suffix":""
+    },
+   {
+        "base_image":":base_image_gpu",
+        "r_version":":r_version_1",
+        "device_suffix":"-gpu"
+    },
+    {
+        "base_image":":base_image",
+        "r_version":":r_version_2",
+        "device_suffix":""
+    },
+    {
+        "base_image":":base_image_gpu",
+        "r_version":":r_version_2",
+        "device_suffix":"-gpu"
+    }
+]

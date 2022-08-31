@@ -1,0 +1,30 @@
+name: Load Docker image
+description: Download image tar and load it to docker
+
+inputs:
+  image:
+    description: Image name
+    required: true
+    type: string
+  tag:
+    description: Image platform
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Download built image 📥
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.image }}${{ inputs.tag }}
+        path: /tmp/
+    - name: Load downloaded image to docker 📥
+      run: |
+        docker load --input /tmp/${{ inputs.image }}${{ inputs.tag }}.tar
+        docker image ls -a
+      shell: bash
+    - name: Delete the file 🗑️
+      run: rm -f /tmp/${{ inputs.image }}${{ inputs.tag }}.tar
+      shell: bash
+      if: always()

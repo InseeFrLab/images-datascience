@@ -8,8 +8,6 @@ ARG DEVICE_SUFFIX
 
 ARG PYTHON_VERSION="3.9"
 ARG JULIA_VERSION="1.7.3"
-ARG QUARTO_VERSION="1.0.37"
-ARG MAMBAFORGE_VERSION="4.12.0-2"
 
 ENV MAMBA_DIR="/opt/mamba"
 ENV JULIA_DIR="/opt/julia"
@@ -21,8 +19,8 @@ USER root
 COPY environment/lib-datascience.yml .
 COPY environment/lib-dl${DEVICE_SUFFIX}.yml .
 
-RUN wget -q https://github.com/conda-forge/miniforge/releases/download/${MAMBAFORGE_VERSION}/Mambaforge-${MAMBAFORGE_VERSION}-Linux-x86_64.sh -O mambaforge.sh && \
-    # Install mambaforge
+RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh -O mambaforge.sh && \
+    # Install mambaforge latest version
     /bin/bash mambaforge.sh -b -p "${MAMBA_DIR}" && \
     # Set specified Python version
     mamba install python=="${PYTHON_VERSION}" && \
@@ -43,8 +41,9 @@ RUN wget -q https://github.com/conda-forge/miniforge/releases/download/${MAMBAFO
     # Install additional Julia packages
     julia -e 'import Pkg; Pkg.update()' && \
     julia -e 'import Pkg; Pkg.add("HDF5")' && \    
-    # Install Quarto
-    wget -q "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb" -O quarto.deb && \
+    # Install Quarto latest version
+    QUARTO_DL_URL=$(wget -qO- https://quarto.org/docs/download/_download.json | grep -oP '(?<=\"download_url\":\s\")https.*linux-amd64.deb') && \
+    wget -q ${QUARTO_DL_URL} -O quarto.deb && \
     dpkg -i quarto.deb && \
     quarto check install && \
     # Fix permissions

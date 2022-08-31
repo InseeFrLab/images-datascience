@@ -10,6 +10,13 @@
       "depNameTemplate": "coder/code-server",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["^r/Dockerfile$"],
+      "matchStrings": ["ENV R_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "rocker-org/rocker-versioned2",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^R(?<version>.*)$"
     }
   ]
 }

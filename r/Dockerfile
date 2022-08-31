@@ -11,8 +11,6 @@ ENV R_VERSION="4.2.1"
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER=${USERNAME}
 
-ENV QUARTO_VERSION="1.0.38"
-
 # Python config for the `reticulate` package
 ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
 ENV RETICULATE_AUTOCONFIGURE="0"
@@ -39,9 +37,9 @@ RUN /rocker_scripts/setup_R.sh && \
         git \
         language-pack-fr \
         libsecret-1-dev && \
-    # Install quarto
+    # Install Quarto latest version
     /rocker_scripts/install_quarto.sh && \
-    # Install shiny server
+    # Install Shiny Server
     /rocker_scripts/install_shiny_server.sh && \
     # Install Python to use the `reticulate` package
     /rocker_scripts/install_python.sh && \

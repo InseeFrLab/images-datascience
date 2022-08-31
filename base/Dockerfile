@@ -14,12 +14,14 @@ ENV GID="100"
 ENV HOME="/home/${USERNAME}"
 ENV WORKSPACE_DIR="${HOME}/work"
 RUN groupmod -g ${GID} ${GROUPNAME} && \
+    # Setup custom user with sudo rights
     useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     passwd -d ${USERNAME} && \
-    mkdir ${WORKSPACE_DIR}
+    # Create workspace
+    mkdir ${WORKSPACE_DIR} && \
+    # Disable default sudo message when opening shell
+    touch ${HOME}/.sudo_as_admin_successful
 WORKDIR ${WORKSPACE_DIR}
-
-ARG VAULT_VERSION="1.11.0"
 
 USER root
 
@@ -35,10 +37,12 @@ RUN apt-get update && \
         jq \
         less \
         locales \
+        nano-tiny \
         openssh-client \
         sudo \
         tini \
         unzip \
+        vim-tiny \
         wget && \
     # Set up locales
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
@@ -57,7 +61,8 @@ RUN apt-get update && \
     wget -q https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod +x /usr/local/bin/mc && \
     # vault
-    wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip -O vault.zip  && \
+    VAULT_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/hashicorp/vault/releases/latest" | grep -Po '"tag_name": "v\K.*?(?=")') && \
+    wget -q https://releases.hashicorp.com/vault/${VAULT_LATEST_VERSION}/vault_${VAULT_LATEST_VERSION}_linux_amd64.zip -O vault.zip  && \
     unzip vault.zip -d /usr/local/bin/ && \
     vault -autocomplete-install && \
     # Fetch Onyxia init script
