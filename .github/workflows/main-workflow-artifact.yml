@@ -52,8 +52,8 @@ jobs:
       push: false
       base_image: base
       #base_image_gpu: base-gpu
-      r_version_1: 4.1.1
-      r_version_2: 4.2.1
+      r_version_1: 4.1.2
+      r_version_2: 4.2.3
   jupyter:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -110,6 +110,10 @@ jobs:
       test: false
       push: false
       base_image: pyspark
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
+      spark_version_1: 3.2.0
+      spark_version_2: 3.3.0
   r-studio:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -122,6 +126,8 @@ jobs:
       test: false
       push: false
       base_image: r
+      r_version_1: 4.1.2
+      r_version_2: 4.2.3
   sparkr:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -134,8 +140,8 @@ jobs:
       test: false
       push: false
       base_image: r
-      r_version_1: 4.1.1
-      r_version_2: 4.2.1
+      r_version_1: 4.1.2
+      r_version_2: 4.2.3
       spark_version_1: 3.2.0
       spark_version_2: 3.3.0
   rstudio-sparkr:
@@ -150,7 +156,7 @@ jobs:
       test: false
       push: false
       base_image: sparkr
-      r_version_1: 4.1.1
-      r_version_2: 4.2.1
+      r_version_1: 4.1.2
+      r_version_2: 4.2.3
       spark_version_1: 3.2.0
       spark_version_2: 3.3.0
