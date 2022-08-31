@@ -137,12 +137,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.image }}-${{ inputs.platform }}
-          path: /tmp/${{ inputs.image }}-${{ inputs.platform }}.tar
+          path: /tmp/${{ inputs.image }}.tar
           retention-days: 3
 
       # Self-hosted runners share a state (whole VM) between runs
       - name: Cleanup artifacts 🗑️
         run: |
-          rm -f /tmp/${{ inputs.image }}-${{ inputs.platform }}.tar
+          rm -f /tmp/${{ inputs.image }}.tar
         shell: bash
         if: always()
