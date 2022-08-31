@@ -111,6 +111,7 @@ jobs:
             if [ -n "$spark_version" ]; then
               tag+="spark$spark_version"
             fi
+            tag+="${{matrix.device_suffix}}"
             echo "${tag}"
             echo ::set-output name=tag::${tag}
         shell: bash
