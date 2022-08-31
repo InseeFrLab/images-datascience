@@ -8,19 +8,19 @@ on:
     inputs:
       test:
         description: should test
-        required: true
+        required: false
         type: string
       push:
         description: should push
-        required: true
+        required: false
         type: string
       image:
         description: name of docker image
-        required: true
+        required: false
         type: string
       context:
         description: context of docker image
-        required: true
+        required: false
         type: string
       base_image:
         description: context of docker image
@@ -28,7 +28,7 @@ on:
         type: string
       base_image_gpu:
         description: context of docker image
-        required: true
+        required: false
         type: string
       python_version_1:
         description: context of docker image
@@ -94,33 +94,11 @@ jobs:
       - name: Check out code 
         uses: actions/checkout@v2
 
-      - name: compute tag
-        id: tag
-        run: |
-            python_version="${{ matrix.python_version}}"
-            r_version="${{ matrix.r_version}}"
-            spark_version="${{ matrix.spark_version}}"
-            tag+=""
-            if [ -n "$python_version" ]; then
-              tag+="py$python_version"
-            fi
-            if [ -n "$r_version" ]; then
-              tag+="r$r_version"
-            fi
-            if [ -n "$spark_version" ]; then
-              tag+="spark$spark_version"
-            fi
-            tag+="${{matrix.device_suffix}}"
-            echo "${tag}"
-            echo ::set-output name=tag::${tag}
-        shell: bash
-
       - name: Load parent built image to Docker 📥
-        if: ${{ inputs.image != 'base' }}
+        if: ${{ matrix.artefact_input_name != '' }}
         uses: ./.github/actions/load-image
         with:
-          image: ${{ inputs.base_image }}
-          tag: ${{ steps.tag.outputs.tag }}
+          image: ${{ matrix.artefact_input_name }}
 
       - name: buildargs docker command
         id: buildargs
@@ -152,13 +130,13 @@ jobs:
         shell: bash
 
       - name: Save image as a tar for later use 💾
-        run: docker save ${{ env.OWNER }}/${{ inputs.image }} -o /tmp/${{ inputs.image }}-${{ steps.tag.outputs.tag }}.tar
+        run: docker save ${{ env.OWNER }}/${{ inputs.image }} -o /tmp/${{ matrix.artefact_output_name}}.tar
         shell: bash
       - name: Upload image as artifact 💾
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.image }}-${{ steps.tag.outputs.tag }}
-          path: /tmp/${{ inputs.image }}-${{ steps.tag.outputs.tag }}.tar
+          name: ${{ matrix.artefact_output_name}}
+          path: /tmp/${{ matrix.artefact_output_name}}.tar
           retention-days: 3
 
       # Self-hosted runners share a state (whole VM) between runs

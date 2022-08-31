@@ -1,6 +1,0 @@
-{
- "base_image": ["base_image","base_image_gpu"],
- "python_version":["3.9.13","3.10.4"],
- "r_version":["4.1.1","4.2.1"],
- "spark_version":["3.3.0"]
-}

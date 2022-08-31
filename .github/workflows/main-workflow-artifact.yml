@@ -33,10 +33,11 @@ jobs:
     with:
       image: python
       context: python
+      artifact_name: python-:python_version-:device_suffix
       test: false
       push: false
-      base_image: base  #base, base-gpu
-      #base_image_gpu: inseefrlab/onyxia-base
+      base_image: base
+      #base_image_gpu: base-gpu
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   r:
@@ -50,8 +51,8 @@ jobs:
       context: r
       test: false
       push: false
-      base_image: inseefrlab/onyxia-base
-      base_image_gpu: inseefrlab/onyxia-base
+      base_image: base
+      #base_image_gpu: base-gpu
       r_version_1: 4.1.1
       r_version_2: 4.2.1
   jupyter:
@@ -65,8 +66,7 @@ jobs:
       context: jupyter
       test: false
       push: false
-      base_image: inseefrlab/onyxia-python
-      base_image_gpu: inseefrlab/onyxia-python
+      base_image: python
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   vscode:
