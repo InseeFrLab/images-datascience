@@ -78,6 +78,8 @@ jobs:
         sed -i "s/:python_version_2/${{inputs.python_version_2}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:spark_version_1/${{inputs.spark_version_1}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:spark_version_2/${{inputs.spark_version_2}}/g" ./releases/${{ inputs.image }}.json
         matrix=$(cat ./releases/${{ inputs.image }}.json | jq .) 
         echo $matrix                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
@@ -111,7 +113,7 @@ jobs:
               buildargs+=" --build-arg PYTHON_VERSION=$python_version"
             fi
             if [ -n "$r_version" ]; then
-              buildargs+=" --build-arg R_VERSION=$python_version"
+              buildargs+=" --build-arg R_VERSION=$r_version"
             fi
             if [ -n "$spark_version" ]; then
                buildargs+=" --build-arg SPARK_VERSION=$python_version"
