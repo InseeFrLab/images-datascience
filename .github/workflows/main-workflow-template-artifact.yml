@@ -130,7 +130,9 @@ jobs:
         shell: bash
 
       - name: Save image as a tar for later use 💾
-        run: docker save ${{ inputs.image }} -o /tmp/${{ matrix.artefact_output_name}}.tar
+        run: |
+          artefact_output_name=echo "${{ matrix.artefact_output_name}}" | xargs
+          docker save ${{ inputs.image }} -o /tmp/$artefact_output_name.tar
         shell: bash
       - name: Upload image as artifact 💾
         uses: actions/upload-artifact@v3

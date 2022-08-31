@@ -8,7 +8,7 @@
     {
         "base_image":":base_image",
         "artefact_input_name":"python-py:python_version_1-gpu",
-        "artefact_output_name":"jupyter-py:python_version_1",
+        "artefact_output_name":"jupyter-py:python_version_1-gpu",
         "python_version":":python_version_1"
     },
     {
@@ -22,5 +22,5 @@
         "artefact_input_name":"python-py:python_version_2-gpu",
         "artefact_output_name":"jupyter-py:python_version_2",
         "python_version":":python_version_2"
-    }
+    },
 ]
