@@ -1,4 +1,4 @@
-name: Main manual workflow
+name: Main manual workflow with artefacts
 
 on:
   workflow_dispatch:
