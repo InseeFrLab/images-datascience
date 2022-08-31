@@ -8,7 +8,7 @@
    {
         "base_image":":base_image",
         "artefact_input_name":"base-gpu",
-        "artefact_output_name":"r-:r_version_1",
+        "artefact_output_name":"r-:r_version_1-gpu",
         "r_version":":r_version_1"
     },
     {
@@ -20,7 +20,7 @@
     {
         "base_image":":base_image",
         "artefact_input_name":"base-gpu",
-        "artefact_output_name":"r-:r_version_2",
+        "artefact_output_name":"r-:r_version_2-gpu",
         "r_version":":r_version_2"
     }
 ]
