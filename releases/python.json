@@ -2,25 +2,25 @@
     {
         "base_image":":base_image",
         "artefact_input_name":"base",
-        "artefact_output_name":"python-py:python_version_1",
+        "artefact_output_name":"python-py:python_version",
         "python_version":":python_version_1"
     },
    {
         "base_image":":base_image",
         "artefact_input_name":"base",
-        "artefact_output_name":"python-py:python_version_2",
+        "artefact_output_name":"python-py:python_version",
         "python_version":":python_version_2"
     },
     {
         "base_image":":base_image",
         "artefact_input_name":"base-gpu",
-        "artefact_output_name":"python-py:python_version_1-gpu",
+        "artefact_output_name":"python-py:python_version-gpu",
         "python_version":":python_version_1"
     },
    {
         "base_image":":base_image",
         "artefact_input_name":"base-gpu",
-        "artefact_output_name":"python-py:python_version_2-gpu",
+        "artefact_output_name":"python-py:python_version-gpu",
         "python_version":":python_version_2"
     }
 ]
