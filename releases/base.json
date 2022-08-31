@@ -1,10 +1,10 @@
 [
     {
         "base_image":":base_image",
-        "artefact_ouput_name":"base"
+        "artefact_output_name":"base"
     },
    {
         "base_image":":base_image_gpu",
-        "artefact_ouput_name":"base-gpu"
+        "artefact_output_name":"base-gpu"
     }
 ]
