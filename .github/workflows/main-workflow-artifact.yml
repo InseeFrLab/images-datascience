@@ -33,7 +33,6 @@ jobs:
     with:
       image: python
       context: python
-      artifact_name: python-:python_version-:device_suffix
       test: false
       push: false
       base_image: base
