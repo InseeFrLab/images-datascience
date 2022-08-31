@@ -122,7 +122,7 @@ jobs:
         shell: bash
 
       - name: Build image 🛠
-        run: docker build --rm --force-rm  ${{ steps.buildargs.outputs.buildargs }} --tag ${{ inputs.image }} ${{ inputs.image }}/
+        run: docker build --rm --force-rm  ${{ steps.buildargs.outputs.buildargs }} --tag ${{ inputs.image }} ${{ inputs.context }}/
         env:
           DOCKER_BUILDKIT: 1
           # Full logs for CI build

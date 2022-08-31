@@ -79,8 +79,7 @@ jobs:
       context: vscode
       test: false
       push: false
-      base_image: inseefrlab/onyxia-python
-      base_image_gpu: inseefrlab/onyxia-python
+      base_image: python
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   pyspark:
@@ -94,8 +93,7 @@ jobs:
       context: spark
       test: false
       push: false
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      base_image: python
       python_version_1: 3.9.13
       python_version_2: 3.10.4
       spark_version_1: 3.2.0
@@ -111,8 +109,7 @@ jobs:
       context: jupyter
       test: false
       push: false
-      base_image: inseefrlab/onyxia-pyspark:latest
-      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
+      base_image: pyspark
   r-studio:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -124,8 +121,7 @@ jobs:
       context: rstudio
       test: false
       push: false
-      base_image: inseefrlab/onyxia-r:latest
-      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+      base_image: r
   sparkr:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -137,8 +133,7 @@ jobs:
       context: spark
       test: false
       push: false
-      base_image: inseefrlab/onyxia-r:latest
-      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+      base_image: r
       r_version_1: 4.1.1
       r_version_2: 4.2.1
       spark_version_1: 3.2.0
@@ -154,8 +149,7 @@ jobs:
       context: rstudio
       test: false
       push: false
-      base_image: inseefrlab/onyxia-sparkr:latest
-      base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
+      base_image: sparkr
       r_version_1: 4.1.1
       r_version_2: 4.2.1
       spark_version_1: 3.2.0
