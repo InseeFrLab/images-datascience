@@ -78,7 +78,9 @@ jobs:
           context: ${{ inputs.context }}/
           file: ${{ inputs.context }}/Dockerfile
           load: true
-          build-args: BASE_IMAGE=${{ matrix.base_image }}
+          build-args: |
+            BASE_IMAGE=${{ matrix.base_image }}
+            DEVICE_SUFFIX=${{ matrix.device_suffix }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
       
