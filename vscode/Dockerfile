@@ -13,7 +13,6 @@ USER root
 RUN wget -q https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VERSION}/code-server_${CODE_SERVER_VERSION}_amd64.deb -O code-server.deb && \
     # Install code-server
     dpkg -i code-server.deb && \
-    rm code-server.deb && \
     # Install extensions
     code-server --install-extension ms-python.python && \
     code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools && \
@@ -27,7 +26,10 @@ RUN wget -q https://github.com/coder/code-server/releases/download/v${CODE_SERVE
     # Set Conda binary path in remote settings to auto activate base env when running Python code
     echo "{\"python.condaPath\": \"${MAMBA_DIR}/bin/conda\"}" > ${REMOTE_CONFIG_DIR}/settings.json && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    rm code-server.deb && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy custom VSCode User settings
 COPY --chown=${USERNAME}:${GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/settings.json
