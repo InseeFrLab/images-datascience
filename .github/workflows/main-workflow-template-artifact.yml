@@ -95,7 +95,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: compute tag
-        if: ${{ inputs.image != 'base' }}
         id: tag
         run: |
             python_version="${{ matrix.python_version}}"
