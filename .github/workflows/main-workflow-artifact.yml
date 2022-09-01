@@ -24,30 +24,45 @@ jobs:
       push: false
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
-  python:
+  python-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
-      image: python
-      context: python
+      image: python-minimal
+      context: python-minimal
       test: false
       push: false
       base_image: base
       #base_image_gpu: base-gpu
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-  r:
+  python-datascience:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
-      image: r
-      context: r
+      image: python-datascience
+      context: python-datascience
+      test: false
+      push: false
+      base_image: base
+      #base_image_gpu: base-gpu
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
+  r-minimal:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [base]
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    with:
+      image: r-minimal
+      context: r-minimal
       test: false
       push: false
       base_image: base
