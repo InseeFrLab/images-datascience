@@ -1,4 +1,4 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=inseefrlab/onyxia-python-minimal
 FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
@@ -23,6 +23,7 @@ ENV PATH="${JAVA_HOME}/bin:${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 USER root
 
 COPY get-binaries.sh /tmp/get-binaries.sh
+
 RUN apt-get update && \
     # Install JDK
     apt-get install -y --no-install-recommends \
@@ -30,10 +31,9 @@ RUN apt-get update && \
         openjdk-11-jre-headless && \
     # Get Spark/Hadoop/Hive binaries
     mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
-    cd /tmp && \
-    ${SHELL} get-binaries.sh && \
+    ${SHELL} /tmp/get-binaries.sh && \
     # Get SparkR package if base image is R
-    if [[ "${BASE_IMAGE}" == *"onyxia-r"* ]]; then Rscript -e "devtools::install_github('apache/spark@v$SPARK_VERSION', subdir='R/pkg')"; fi && \
+    if [[ "${BASE_IMAGE}" == *"onyxia-r"* ]]; then R -e "devtools::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
     # Clean

@@ -1,9 +1,9 @@
-name: r
+name: r-datascience
 
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [base]
+    workflows: [r-minimal]
     types:
       - completed
 
@@ -14,9 +14,9 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: r
-      context: r
+      image: r-datascience
+      context: r-datascience
       test: false
       push: true
-      base_image: inseefrlab/onyxia-base:latest
-      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+      base_image: inseefrlab/onyxia-r-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu

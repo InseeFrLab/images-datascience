@@ -3,7 +3,7 @@ name: sparkr
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [r]
+    workflows: [r-minimal]
     types:
       - completed
 
@@ -18,5 +18,5 @@ jobs:
       context: spark
       test: false
       push: true
-      base_image: inseefrlab/onyxia-r:latest
-      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+      base_image: inseefrlab/onyxia-r-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu

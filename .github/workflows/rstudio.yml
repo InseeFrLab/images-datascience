@@ -3,7 +3,7 @@ name: rstudio
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [r]
+    workflows: [r-datascience]
     types:
       - completed
 
@@ -18,5 +18,5 @@ jobs:
       context: rstudio
       test: false
       push: true
-      base_image: inseefrlab/onyxia-r:latest
-      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+      base_image: inseefrlab/onyxia-r-datascience:latest
+      base_image_gpu: inseefrlab/onyxia-r-datascience:latest-gpu

@@ -7,10 +7,12 @@ dependencies:
   - boto3
   - dask
   - flake8
+  - gensim
   - geopandas
   - hvac
   - ipykernel
   - matplotlib-base
+  - nltk
   - numba
   - numpy
   - pandas

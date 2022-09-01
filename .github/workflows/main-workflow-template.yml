@@ -109,6 +109,7 @@ jobs:
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
         shell: bash
             
+<<<<<<< HEAD
       # - name: Build and store
       #   uses: docker/build-push-action@v3
       #   with:
@@ -167,6 +168,19 @@ jobs:
           # Full logs for CI build
           BUILDKIT_PROGRESS: plain
         shell: bash
+=======
+      - name: Build and store
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.context }}/
+          file: ${{ inputs.context }}/Dockerfile
+          load: true
+          build-args: |
+            BASE_IMAGE=${{ matrix.base_image }}
+            DEVICE_SUFFIX=${{ matrix.device_suffix }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+>>>>>>> e81228e30456a71ef083262d8c59d6e9ef35f7ff
       
       - name: run structure tests
         if: ${{ inputs.test == 'true' }}

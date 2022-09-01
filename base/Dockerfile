@@ -1,10 +1,10 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=ubuntu:20.04
 FROM $BASE_IMAGE
 
-# Set default shell
+# System-wide configuration
 SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND="noninteractive"
 
 # Setup user & workspace
 ENV USERNAME="onyxia"
@@ -25,27 +25,14 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-RUN apt-get update && \
+COPY install-system-libs.sh /opt/install-system-libs.sh
+COPY onyxia-init.sh /opt/onyxia-init.sh
+
+RUN chmod +x /opt/install-system-libs.sh /opt/onyxia-init.sh && \
+    # Install system libraries
+    /opt/install-system-libs.sh && \
+    # Upgrade installed system libraries
     apt-get upgrade -y && \
-    ## Install system libraries
-    apt-get install -y --no-install-recommends \
-        bash-completion \
-        build-essential \
-        ca-certificates \
-        curl \
-        git \
-        jq \
-        less \
-        locales \
-        nano-tiny \
-        openssh-client \
-        sudo \
-        tini \
-        unzip \
-        vim-tiny \
-        wget && \
-    # Set up locales
-    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen && \
     ## Install common binaries required for Onyxia
     # kubectl
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
@@ -65,10 +52,6 @@ RUN apt-get update && \
     wget -q https://releases.hashicorp.com/vault/${VAULT_LATEST_VERSION}/vault_${VAULT_LATEST_VERSION}_linux_amd64.zip -O vault.zip  && \
     unzip vault.zip -d /usr/local/bin/ && \
     vault -autocomplete-install && \
-    # Fetch Onyxia init script
-    mkdir /scripts && \
-    wget https://inseefrlab.github.io/onyxia/onyxia-init.sh -O /scripts/onyxia-init.sh && \
-    chmod +x /scripts/onyxia-init.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
