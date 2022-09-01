@@ -43,7 +43,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [base]
+    needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: python-datascience
