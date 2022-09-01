@@ -69,11 +69,26 @@ jobs:
       #base_image_gpu: base-gpu
       r_version_1: 4.1.2
       r_version_2: 4.2.3
+  r-datascience:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [r-minimal]
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    with:
+      image: r-datascience
+      context: r-datascience
+      test: false
+      push: false
+      base_image: base
+      #base_image_gpu: base-gpu
+      r_version_1: 4.1.2
+      r_version_2: 4.2.3
   jupyter:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-minimal]
+    needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: jupyter-python
@@ -87,7 +102,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-minimal]
+    needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: vscode-python

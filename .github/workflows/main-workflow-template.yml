@@ -109,66 +109,6 @@ jobs:
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
         shell: bash
             
-<<<<<<< HEAD
-      # - name: Build and store
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     context: ${{ inputs.context }}/
-      #     file: ${{ inputs.context }}/Dockerfile
-      #     load: true
-      #     build-args: BASE_IMAGE={{inputs.base_image}}
-      #     tags: ${{ steps.meta.outputs.tags }}
-      #     labels: ${{ steps.docker_meta.outputs.labels }}
-
-      - name: compute tag
-        id: currentTag
-        run: |
-            python_version="${{ matrix.python_version}}"
-            r_version="${{ matrix.r_version}}"
-            spark_version="${{ matrix.spark_version}}"
-            tag=""
-            if [ -n "$python_version" ]; then
-              tag+="py$python_version"
-            fi
-            if [ -n "$r_version" ]; then
-              tag+="r$r_version"
-            fi
-            if [ -n "$spark_version" ]; then
-              tag+="spark$spark_version"
-            fi
-            date=$(date '+%Y-%m-%d')
-            if [ -z "$tag" ]; then
-              tag+=$date 
-            fi
-            tag="$tag"
-            tag=$(echo "$tag"| xargs)
-            echo "${tag}"
-            echo ::set-output name=tag::${tag}
-        shell: bash
-
-      - name: buildargs docker command
-        id: buildargs
-        run: |
-            if [[ "${{ matrix.base_image }}" == *":"* ]]; then
-              echo "tag specified in input take it"
-              base_image=${{ matrix.base_image }}
-            else
-              base_image=${{ matrix.base_image }}:${{steps.currentTag.outputs.tag}}
-            fi
-            buildargs="--build-arg BASE_IMAGE=$base_image"
-            echo "${buildargs}"
-            echo "::set-output name=buildargs::${buildargs}"
-        shell: bash
-      
-      - name: classic build
-        run:  docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag inseefrlab/${{ inputs.image }}:${{steps.currentTag.outputs.tag}} ${{ inputs.image }}/
-        #docker build --rm --force-rm ${{ steps.buildargs.outputs.buildargs }} --tag ${{ steps.meta.outputs.tags }} ${{ inputs.image }}/
-        env:
-          DOCKER_BUILDKIT: 1
-          # Full logs for CI build
-          BUILDKIT_PROGRESS: plain
-        shell: bash
-=======
       - name: Build and store
         uses: docker/build-push-action@v3
         with:
@@ -180,7 +120,6 @@ jobs:
             DEVICE_SUFFIX=${{ matrix.device_suffix }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
->>>>>>> e81228e30456a71ef083262d8c59d6e9ef35f7ff
       
       - name: run structure tests
         if: ${{ inputs.test == 'true' }}
