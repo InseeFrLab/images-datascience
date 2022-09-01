@@ -80,7 +80,7 @@ jobs:
       context: r-datascience
       test: false
       push: false
-      base_image: base
+      base_image: r-minimal
       #base_image_gpu: base-gpu
       r_version_1: 4.1.2
       r_version_2: 4.2.3
