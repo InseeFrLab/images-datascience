@@ -23,7 +23,7 @@
     {
         "base_image":":base_image",
         "artefact_input_name":"r:r_version_2-gpu",
-        "artefact_output_name":"r-:r_version_2-spark:spark_version_1-gpu",
+        "artefact_output_name":"r:r_version_2-spark:spark_version_1-gpu",
         "r_version":":r_version_2",
         "spark_version":":spark_version_1"
     },

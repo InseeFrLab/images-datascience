@@ -1,0 +1,38 @@
+name: Download Docker image from GitHub artifacts, tag and push it to DockerHub
+
+env:
+  OWNER: ${{ github.repository_owner }}
+
+on:
+  workflow_call:
+    inputs:
+      images:
+        description: Stringified JSON object listing image names
+        required: true
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  tag-push:
+    runs-on: ${{ inputs.runsOn }}
+
+    strategy:
+      matrix:
+        releases: ${{ fromJson(inputs.images) }}
+        python_version: ${{ fromJson(inputs.python_versions) }}
+        r_version: ${{ fromJson(inputs.r_versions) }}
+        spark-version: ${{ fromJson(inputs.spark_versions) }}
+
+    steps:
+
+      - name: Reset docker state and cleanup artifacts 🗑️
+        run: |
+          echo ${{matrix.image}}
+          echo ${{matrix.python_version}}
+          echo ${{matrix.r_version}}
+          echo ${{matrix.spark-version}}
+        shell: bash
