@@ -123,7 +123,7 @@ jobs:
       context: spark
       test: false
       push: false
-      base_image: python
+      base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
       spark_version_1: 3.2.0
