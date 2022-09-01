@@ -87,7 +87,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python]
+    needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: vscode-python
@@ -101,7 +101,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python]
+    needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: pyspark
@@ -133,7 +133,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r]
+    needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: rstudio
@@ -147,7 +147,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r]
+    needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: sparkr
