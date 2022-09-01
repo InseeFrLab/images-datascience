@@ -50,7 +50,7 @@ jobs:
       context: python-datascience
       test: false
       push: false
-      base_image: base
+      base_image: python-minimal
       #base_image_gpu: base-gpu
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -95,7 +95,7 @@ jobs:
       context: jupyter
       test: false
       push: false
-      base_image: python
+      base_image: python-datascience
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   vscode:
@@ -109,7 +109,7 @@ jobs:
       context: vscode
       test: false
       push: false
-      base_image: python
+      base_image: python-datascience
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   pyspark:
@@ -155,7 +155,7 @@ jobs:
       context: rstudio
       test: false
       push: false
-      base_image: r
+      base_image: r-datascience
       r_version_1: 4.1.2
       r_version_2: 4.2.3
   sparkr:
@@ -169,7 +169,7 @@ jobs:
       context: spark
       test: false
       push: false
-      base_image: r
+      base_image: r-minimal
       r_version_1: 4.1.2
       r_version_2: 4.2.3
       spark_version_1: 3.2.0
