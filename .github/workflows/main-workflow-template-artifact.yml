@@ -118,13 +118,12 @@ jobs:
             if [ -n "$spark_version" ]; then
                buildargs+=" --build-arg SPARK_VERSION=$spark_version"
             fi
-            
             echo "${buildargs}"
             echo ::set-output name=buildargs::${buildargs}
         shell: bash
 
       - name: Build image 🛠
-        run: docker build --rm --force-rm  ${{ steps.buildargs.outputs.buildargs }} --tag {{ matrix.artefact_output_name}} ${{ inputs.context }}/
+        run: docker build --rm --force-rm  ${{ steps.buildargs.outputs.buildargs }} --tag ${{ matrix.artefact_output_name}} ${{ inputs.context }}/
         env:
           DOCKER_BUILDKIT: 1
           # Full logs for CI build

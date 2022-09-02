@@ -69,16 +69,17 @@ jobs:
         id: buildargs
         run: |
             echo ${{matrix.image}}
+            date=$(date +"YYYY.MM.DD")              
+            echo ::set-output name=date::$date
         shell: bash
 
       - name: Load  image to Docker 📥
-        if: ${{ matrix.artefact_input_name != '' }}
         uses: ./.github/actions/load-image
         with:
           image: ${{ matrix.image }}
 
-      - name: change tag of image 📥
-        if: ${{ matrix.artefact_input_name != '' }}
-        uses: ./.github/actions/load-image
-        with:
-          image: ${{ matrix.image }}
+      - name: buildargs docker command
+        id: buildargs
+        run: |
+          docker tag ${{ matrix.image }} env.OWNER/onyxia-${{ matrix.image }} 
+        shell: bash
