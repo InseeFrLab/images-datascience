@@ -108,6 +108,11 @@ jobs:
             python_version="${{ matrix.python_version}}"
             r_version="${{ matrix.r_version}}"
             spark_version="${{ matrix.spark_version}}"
+            if [ -n "${{ matrix.artefact_input_name }}" ]; then
+                buildargs+=" --build-arg BASE_IMAGE=${{ matrix.artefact_input_name }}"
+            else
+                buildargs="--build-arg BASE_IMAGE=${{matrix.base_image}}"
+            fi
             buildargs="--build-arg BASE_IMAGE=${{matrix.base_image}}"
             if [ -n "$python_version" ]; then
               buildargs+=" --build-arg PYTHON_VERSION=$python_version"
