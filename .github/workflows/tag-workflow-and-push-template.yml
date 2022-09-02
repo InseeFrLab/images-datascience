@@ -17,9 +17,36 @@ on:
         required: true
 
 jobs:
-  tag-push:
-    runs-on: ${{ inputs.runsOn }}
-
+  matrix_prep:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: Check out code 
+      uses: actions/checkout@v2
+    - id: set-matrix
+      run: |
+        FILES="./releases/*"
+        data=[]
+        for f in $FILES
+        do
+          echo "Processing $f"
+            array=$(jq '.[] | .artefact_output_name' $f)
+            for a in ${array[@]}; do
+                echo "$a"
+                data=$(echo $data | jq ". += [{"image":$a}]")
+            done
+        done
+        echo $data
+        $data=$(echo $data | sed -i "s/:python_version_1/${{inputs.python_version_1}}/g" )
+        $data=$(echo $data | sed -i "s/:python_version_2/${{inputs.python_version_2}}/g" )
+        $data=$(echo $data | sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" )
+        $data=$(echo $data | sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" )
+        $data=$(echo $data | sed -i "s/:spark_version_1/${{inputs.spark_version_1}}/g" )
+        $data=$(echo $data | ssed -i "s/:spark_version_2/${{inputs.spark_version_2}}/g" )
+        matrix=$(echo $data| jq .) 
+        echo $matrix                
+        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
     strategy:
       matrix:
         releases: ${{ fromJson(inputs.images) }}
@@ -27,12 +54,31 @@ jobs:
         r_version: ${{ fromJson(inputs.r_versions) }}
         spark-version: ${{ fromJson(inputs.spark_versions) }}
 
+  docker:
+    runs-on: ubuntu-latest
+    needs: matrix_prep
+    strategy:
+      fail-fast: false
+      matrix: 
+        ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
-
-      - name: Reset docker state and cleanup artifacts 🗑️
+      - name: Check out code 
+        uses: actions/checkout@v2
+      
+      - name: buildargs docker command
+        id: buildargs
         run: |
-          echo ${{matrix.image}}
-          echo ${{matrix.python_version}}
-          echo ${{matrix.r_version}}
-          echo ${{matrix.spark-version}}
+            echo ${{matrix.image}}
         shell: bash
+
+      - name: Load  image to Docker 📥
+        if: ${{ matrix.artefact_input_name != '' }}
+        uses: ./.github/actions/load-image
+        with:
+          image: ${{ matrix.image }}
+
+      - name: change tag of image 📥
+        if: ${{ matrix.artefact_input_name != '' }}
+        uses: ./.github/actions/load-image
+        with:
+          image: ${{ matrix.image }}

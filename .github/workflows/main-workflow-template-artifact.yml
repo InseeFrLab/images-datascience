@@ -124,7 +124,7 @@ jobs:
         shell: bash
 
       - name: Build image 🛠
-        run: docker build --rm --force-rm  ${{ steps.buildargs.outputs.buildargs }} --tag ${{ inputs.image }} ${{ inputs.context }}/
+        run: docker build --rm --force-rm  ${{ steps.buildargs.outputs.buildargs }} --tag {{ matrix.artefact_output_name}} ${{ inputs.context }}/
         env:
           DOCKER_BUILDKIT: 1
           # Full logs for CI build
@@ -133,8 +133,8 @@ jobs:
 
       - name: Save image as a tar for later use 💾
         run: |
-          #docker save ${{ inputs.image }} -o /tmp/${{ matrix.artefact_output_name}}.tar
-          docker save ${{ inputs.image }}  | gzip > /tmp/${{ matrix.artefact_output_name}}.tar.gz
+          #docker save ${{ matrix.artefact_output_name}} -o /tmp/${{ matrix.artefact_output_name}}.tar
+          docker save ${{ matrix.artefact_output_name}}  | gzip > /tmp/${{ matrix.artefact_output_name}}.tar.gz
         shell: bash
 
       - name: Upload image as artifact 💾
@@ -147,6 +147,6 @@ jobs:
       # Self-hosted runners share a state (whole VM) between runs
       - name: Cleanup artifacts 🗑️
         run: |
-          rm -f /tmp/${{ inputs.image }}-${{ steps.tag.outputs.tag }}.tar.gz
+          rm -f /tmp/${{ matrix.artefact_output_name}}.tar.gz
         shell: bash
         if: always()
