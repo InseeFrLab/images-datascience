@@ -108,7 +108,7 @@ jobs:
             python_version="${{ matrix.python_version}}"
             r_version="${{ matrix.r_version}}"
             spark_version="${{ matrix.spark_version}}"
-            artefact_input_name={{ matrix.artefact_input_name }}
+            artefact_input_name=${{ matrix.artefact_input_name }}
             if [ -n "$artefact_input_name" ]; then
                 buildargs+=" --build-arg BASE_IMAGE=$artefact_input_name"
             else
