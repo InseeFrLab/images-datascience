@@ -17,7 +17,12 @@ RUN apt-get update && \
     # Install Shiny Server
     /rocker_scripts/install_shiny_server.sh && \
     # Install Quarto latest version
-    /rocker_scripts/install_quarto.sh && \
+    # Install Quarto latest version
+    QUARTO_DL_URL=$(wget -qO- https://quarto.org/docs/download/_download.json | grep -oP '(?<=\"download_url\":\s\")https.*linux-amd64.deb') && \
+    wget -q ${QUARTO_DL_URL} -O quarto.deb && \
+    dpkg -i quarto.deb && \
+    quarto check install && \
+    rm quarto.deb && \
     # Install Python to use the `reticulate` package
     /rocker_scripts/install_python.sh && \
     # Install packages bundles from rocker
