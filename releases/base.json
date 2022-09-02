@@ -1,0 +1,10 @@
+[
+    {
+        "base_image":":base_image",
+        "artefact_output_name":"base"
+    },
+   {
+        "base_image":":base_image_gpu",
+        "artefact_output_name":"base-gpu"
+    }
+]
