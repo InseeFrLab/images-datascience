@@ -102,12 +102,12 @@ jobs:
           image=${{ matrix.image }}
           if [[ "$image" == *"@"* ]]; then
             image_name=$(echo ${{ matrix.image }} | cut -d'@' -f1 )
-            tag=$(echo ${{ matrix.image }} | cut -d'@' -f2 )+"-"
+            tag=$(echo ${{ matrix.image }} | cut -d'@' -f2 )+"."
           else
             image_name=$image
             tag=""
           fi
-          final_name="env.OWNER/${{ inputs.prefix}}-$image_name:$tag.${{ steps.date.outputs.date }}"
+          final_name="env.OWNER/${{ inputs.prefix}}-$image_name:$tag${{ steps.date.outputs.date }}"
           echo "$final_name"
           docker tag ${{ matrix.image }} final_name
           echo ::set-output name=final_name::$final_name
