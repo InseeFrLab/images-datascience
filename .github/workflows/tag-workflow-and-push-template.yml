@@ -107,7 +107,7 @@ jobs:
             image_name=$image
             tag=""
           fi
-          final_name="env.OWNER/${{ inputs.prefix}}-$image_name:tag+${{ steps.date.outputs.date }}"
+          final_name="env.OWNER/${{ inputs.prefix}}-$image_name:$tag.${{ steps.date.outputs.date }}"
           echo "$final_name"
           docker tag ${{ matrix.image }} final_name
           echo ::set-output name=final_name::$final_name
