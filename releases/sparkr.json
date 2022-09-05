@@ -2,35 +2,35 @@
     {
         "base_image":":base_image",
         "artefact_input_name":"r:r_version_1",
-        "artefact_output_name":"r:r_version_1-spark:spark_version_1",
+        "artefact_output_name":"sparkr@r:r_version_1-spark:spark_version_1",
         "r_version":":r_version_1",
         "spark_version":":spark_version_1"
     },
     {
         "base_image":":base_image",
         "artefact_input_name":"r:r_version_1-gpu",
-        "artefact_output_name":"r:r_version_1-spark:spark_version_1-gpu",
+        "artefact_output_name":"sparkr@r:r_version_1-spark:spark_version_1-gpu",
         "r_version":":r_version_1",
         "spark_version":":spark_version_1"
     },
     {
         "base_image":":base_image",
         "artefact_input_name":"r:r_version_2",
-        "artefact_output_name":"r:r_version_2-spark:spark_version_1",
+        "artefact_output_name":"sparkr@r:r_version_2-spark:spark_version_1",
         "r_version":":r_version_2",
         "spark_version":":spark_version_1"
     },
     {
         "base_image":":base_image",
         "artefact_input_name":"r:r_version_2-gpu",
-        "artefact_output_name":"r:r_version_2-spark:spark_version_1-gpu",
+        "artefact_output_name":"sparkr@r:r_version_2-spark:spark_version_1-gpu",
         "r_version":":r_version_2",
         "spark_version":":spark_version_1"
     },
     {
         "base_image":":base_image",
         "artefact_input_name":"r:r_version_1",
-        "artefact_output_name":"r:r_version_1-spark:spark_version_2",
+        "artefact_output_name":"sparkr@r:r_version_1-spark:spark_version_2",
         "r_version":":r_version_1",
         "spark_version":":spark_version_2"
     },
@@ -44,14 +44,14 @@
     {
         "base_image":":base_image",
         "artefact_input_name":"r:r_version_2",
-        "artefact_output_name":"r:r_version_2-spark:spark_version_2",
+        "artefact_output_name":"sparkr@r:r_version_2-spark:spark_version_2",
         "r_version":":r_version_2",
         "spark_version":":spark_version_2"
     },
     {
         "base_image":":base_image",
         "artefact_input_name":"r:r_version_2-gpu",
-        "artefact_output_name":"r:r_version_2-spark:spark_version_2-gpu",
+        "artefact_output_name":"sparkr@r:r_version_2-spark:spark_version_2-gpu",
         "r_version":":r_version_2",
         "spark_version":":spark_version_2"
     }

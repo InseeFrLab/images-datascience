@@ -7,8 +7,12 @@ on:
   workflow_call:
     inputs:
       images:
-        description: Stringified JSON object listing image names
+        description:  docker owner
         required: true
+        type: string
+      prefix:
+        description: prefix image
+        required: false
         type: string
     secrets:
       DOCKERHUB_USERNAME:
@@ -43,7 +47,7 @@ jobs:
         $data=$(echo $data | sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" )
         $data=$(echo $data | sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" )
         $data=$(echo $data | sed -i "s/:spark_version_1/${{inputs.spark_version_1}}/g" )
-        $data=$(echo $data | ssed -i "s/:spark_version_2/${{inputs.spark_version_2}}/g" )
+        $data=$(echo $data | sed -i "s/:spark_version_2/${{inputs.spark_version_2}}/g" )
         matrix=$(echo $data| jq .) 
         echo $matrix                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
@@ -78,8 +82,19 @@ jobs:
         with:
           image: ${{ matrix.image }}
 
-      - name: buildargs docker command
+      - name: docker retag
         id: buildargs
         run: |
-          docker tag ${{ matrix.image }} env.OWNER/onyxia-${{ matrix.image }} 
+          image=$(echo ${{ matrix.image }} | sed -i "s/@/-/g" )
+          echo "env.OWNER/${{ inputs.prefix}}-${{ matrix.image }}"
+          docker tag ${{ matrix.image }} env.OWNER/${{ inputs.prefix}}-${{ matrix.image }} 
         shell: bash
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: classic push
+        run: docker push env.OWNER/${{ inputs.prefix}}-${{ matrix.image }} 

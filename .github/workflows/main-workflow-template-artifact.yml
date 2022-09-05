@@ -51,7 +51,11 @@ on:
         required: false
         type: string
       spark_version_2:
-        description: context of docker image
+        description: spark version
+        required: false
+        type: string
+      debug:
+        description: spark version
         required: false
         type: string
     secrets:
@@ -62,6 +66,7 @@ on:
 
 jobs:
   matrix_prep:
+    if: ${{ inputs.debug == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
