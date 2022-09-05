@@ -100,9 +100,9 @@ jobs:
         id: retag
         run: |
           image=${{ matrix.image }}
-          if [[ "$image" == *"@"* ]]; then
-            image_name=$(echo ${{ matrix.image }} | cut -d'@' -f1 )
-            tag=$(echo ${{ matrix.image }} | cut -d'@' -f2 )+"."
+          if [[ "$image" == *"-delim-"* ]]; then
+            image_name=$(echo ${{ matrix.image }} | cut -d'-delim-' -f1 )
+            tag=$(echo ${{ matrix.image }} | cut -d'-delim-' -f2 )+"."
           else
             image_name=$image
             tag=""
