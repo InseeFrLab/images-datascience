@@ -87,7 +87,7 @@ jobs:
         id: date
         run: |
             echo ${{matrix.image}}
-            date=$(date +"YYYY.MM.DD")              
+            date=$(date +%Y.%m.%d)              
             echo ::set-output name=date::$date
         shell: bash
 
