@@ -84,7 +84,7 @@ jobs:
         uses: actions/checkout@v2
       
       - name: buildargs docker command
-        id: buildargs
+        id: date
         run: |
             echo ${{matrix.image}}
             date=$(date +"YYYY.MM.DD")              
@@ -99,9 +99,18 @@ jobs:
       - name: docker retag
         id: retag
         run: |
-          image=$(echo ${{ matrix.image }} | sed -i "s/@/-/g" )
-          echo "env.OWNER/${{ inputs.prefix}}-${{ matrix.image }}"
-          docker tag ${{ matrix.image }} env.OWNER/${{ inputs.prefix}}-${{ matrix.image }} 
+          image=${{ matrix.image }}
+          if [[ "$image" == *"@"* ]]; then
+            image_name=$(echo ${{ matrix.image }} | cut -d'@' -f1 )
+            tag=$(echo ${{ matrix.image }} | cut -d'@' -f2 )+"-"
+          else;
+            image_name=$image
+            tag=""
+          fi
+          final_name="env.OWNER/${{ inputs.prefix}}-$image_name:tag+${{ steps.date.outputs.date }}"
+          echo "final_name"
+          docker tag ${{ matrix.image }} final_name
+          echo ::set-output name=final_name::$final_name
         shell: bash
 
       - name: Login to DockerHub
@@ -111,4 +120,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
       - name: classic push
-        run: docker push env.OWNER/${{ inputs.prefix}}-${{ matrix.image }} 
+        run: docker push ${{ steps.retag.outputs.final_name }}
