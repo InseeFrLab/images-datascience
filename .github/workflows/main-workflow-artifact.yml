@@ -180,7 +180,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [sparkr]
-    uses: ./.github/workflows/tag-workflow-and-push-tempplate.yml
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: rstudio-sparkr
       context: rstudio
