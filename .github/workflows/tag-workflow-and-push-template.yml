@@ -97,7 +97,7 @@ jobs:
           image: ${{ matrix.image }}
 
       - name: docker retag
-        id: buildargs
+        id: retag
         run: |
           image=$(echo ${{ matrix.image }} | sed -i "s/@/-/g" )
           echo "env.OWNER/${{ inputs.prefix}}-${{ matrix.image }}"
