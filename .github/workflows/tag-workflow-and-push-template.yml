@@ -62,12 +62,12 @@ jobs:
             done
         done
         echo $data
-        $data=$(echo $data | sed -i "s/:python_version_1/${{inputs.python_version_1}}/g" )
-        $data=$(echo $data | sed -i "s/:python_version_2/${{inputs.python_version_2}}/g" )
-        $data=$(echo $data | sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" )
-        $data=$(echo $data | sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" )
-        $data=$(echo $data | sed -i "s/:spark_version_1/${{inputs.spark_version_1}}/g" )
-        $data=$(echo $data | sed -i "s/:spark_version_2/${{inputs.spark_version_2}}/g" )
+        data=$(echo $data | sed  "s/:python_version_1/${{inputs.python_version_1}}/g" )
+        data=$(echo $data | sed  "s/:python_version_2/${{inputs.python_version_2}}/g" )
+        data=$(echo $data | sed  "s/:r_version_1/${{inputs.r_version_1}}/g" )
+        data=$(echo $data | sed  "s/:r_version_2/${{inputs.r_version_2}}/g" )
+        data=$(echo $data | sed  "s/:spark_version_1/${{inputs.spark_version_1}}/g" )
+        data=$(echo $data | sed  "s/:spark_version_2/${{inputs.spark_version_2}}/g" )
         matrix=$(echo $data| jq .) 
         echo $matrix                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
