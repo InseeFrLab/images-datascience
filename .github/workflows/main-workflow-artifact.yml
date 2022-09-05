@@ -179,7 +179,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [sparkr,jupyter-pyspark]
+    needs: [sparkr]
     uses: ./.github/workflows/tag-workflow-and-push-tempplate.yml
     with:
       image: rstudio-sparkr
@@ -196,15 +196,13 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [rstudio-sparkr,]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    needs: [rstudio-sparkr,jupyter-pyspark]
+    uses: ./.github/workflows/tag-workflow-and-push-template.yml
     with:
-      image: rstudio-sparkr
-      context: rstudio
-      test: false
-      push: false
-      base_image: sparkr
+      prefix: onyxia
       r_version_1: 4.1.2
       r_version_2: 4.2.3
       spark_version_1: 3.2.0
       spark_version_2: 3.3.0
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
