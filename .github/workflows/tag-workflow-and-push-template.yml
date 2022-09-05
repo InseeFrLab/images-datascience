@@ -6,12 +6,32 @@ env:
 on:
   workflow_call:
     inputs:
-      images:
-        description:  docker owner
-        required: true
-        type: string
       prefix:
         description: prefix image
+        required: false
+        type: string
+      python_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      python_version_2:
+        description: context of docker image
+        required: false
+        type: string
+      r_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      r_version_2:
+        description: context of docker image
+        required: false
+        type: string
+      spark_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      spark_version_2:
+        description: spark version
         required: false
         type: string
     secrets:
@@ -51,12 +71,6 @@ jobs:
         matrix=$(echo $data| jq .) 
         echo $matrix                
         echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
-    strategy:
-      matrix:
-        releases: ${{ fromJson(inputs.images) }}
-        python_version: ${{ fromJson(inputs.python_versions) }}
-        r_version: ${{ fromJson(inputs.r_versions) }}
-        spark-version: ${{ fromJson(inputs.spark_versions) }}
 
   docker:
     runs-on: ubuntu-latest
