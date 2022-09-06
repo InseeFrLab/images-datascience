@@ -109,7 +109,8 @@ jobs:
           fi
           date=${{ steps.date.outputs.date }}
           echo $date
-          final_name="$env.OWNER/${{ inputs.prefix}}-$image_name:$tag$date"
+          owner=${{ env.OWNER }}
+          final_name="$owner/${{ inputs.prefix}}-$image_name:$tag$date"
           echo "$final_name"
           docker tag ${{ matrix.image }} $final_name
           echo ::set-output name=final_name::$final_name
