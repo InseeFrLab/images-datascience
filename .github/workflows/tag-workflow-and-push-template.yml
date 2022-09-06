@@ -101,8 +101,8 @@ jobs:
         run: |
           image=${{ matrix.image }}
           if [[ "$image" == *"-delim-"* ]]; then
-            image_name=$(echo ${{ matrix.image }} | cut -d'-delim-' -f1 )
-            tag=$(echo ${{ matrix.image }} | cut -d'-delim-' -f2 )+"."
+            image_name=$(echo ${{ matrix.image }} | awk -F '-delim-' '{print $1}' )
+            tag=$(echo ${{ matrix.image }} | awk -F '-delim-' '{print $2}' )+"."
           else
             image_name=$image
             tag=""
