@@ -14,15 +14,13 @@ COPY environment/lib-dl${DEVICE_SUFFIX}.yml .
 RUN cat lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml > env-specs.yml && \
     # Install datascience packages
     mamba env update -n base -f env-specs.yml && \
-    # Install Quarto latest version
-    QUARTO_DL_URL=$(wget -qO- https://quarto.org/docs/download/_download.json | grep -oP '(?<=\"download_url\":\s\")https.*linux-amd64.deb') && \
-    wget -q ${QUARTO_DL_URL} -O quarto.deb && \
-    dpkg -i quarto.deb && \
-    quarto check install && \
+    # Install quarto
+    chmod +x /opt/install-quarto.sh && \
+    /opt/install-quarto.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
-    rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml env-specs.yml quarto.deb && \ 
+    rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml env-specs.yml && \ 
     mamba clean --all -f -y
 
 USER ${USERNAME}

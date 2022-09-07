@@ -14,10 +14,11 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         language-pack-fr \
         libsecret-1-dev && \
+    # Install quarto
+    chmod +x /opt/install-quarto.sh && \
+    /opt/install-quarto.sh && \
     # Install Shiny Server
     /rocker_scripts/install_shiny_server.sh && \
-    # Install Quarto latest version
-    /rocker_scripts/install_quarto.sh && \
     # Install Python to use the `reticulate` package
     # /rocker_scripts/install_python.sh && \
     # Install packages bundles from rocker
