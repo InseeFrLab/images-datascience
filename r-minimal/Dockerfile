@@ -27,8 +27,6 @@ RUN /rocker_scripts/setup_R.sh && \
     if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
     # Install devtools to install R packages from GitHub
     install2.r --error devtools && \
-    # Set default working directory in R
-    echo "setwd(\"${WORKSPACE_DIR}\")" >> "${R_HOME}/etc/Rprofile.site" && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean

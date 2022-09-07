@@ -9,6 +9,8 @@ ENV GROUPID=${GID}
 
 ENV PATH="/usr/lib/rstudio-server/bin:$PATH"
 
+ARG RSTUDIO_CONF_FILE="/etc/rstudio/rsession.conf"
+
 USER root 
 
 # Install Rstudio using rocker's install scripts
@@ -19,6 +21,9 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     /rocker_scripts/install_pandoc.sh && \
     # Ensure consistency between installed quarto CLI and RStudio's bundled version
     /rocker_scripts/install_quarto.sh && \
+    # Set default working directory for R sessions and R projects
+    echo "session-default-working-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_CONF_FILE} && \
+    echo "session-default-new-project-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_CONF_FILE} && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
