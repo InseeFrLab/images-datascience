@@ -19,7 +19,7 @@ RUN apt-get update && \
     # Install Quarto latest version
     /rocker_scripts/install_quarto.sh && \
     # Install Python to use the `reticulate` package
-    /rocker_scripts/install_python.sh && \
+    # /rocker_scripts/install_python.sh && \
     # Install packages bundles from rocker
     /rocker_scripts/install_tidyverse.sh && \
     /rocker_scripts/install_verse.sh && \
