@@ -20,9 +20,9 @@ RUN cat lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml > env-specs.yml && \
     dpkg -i quarto.deb && \
     quarto check install && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} ${JULIA_DIR} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
-    rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml env-specs.yml julia.tar.gz quarto.deb && \ 
+    rm lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml env-specs.yml quarto.deb && \ 
     mamba clean --all -f -y
 
 USER ${USERNAME}
