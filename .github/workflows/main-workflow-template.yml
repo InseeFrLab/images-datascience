@@ -57,6 +57,8 @@ jobs:
           tags: |
             # set latest tag for main branch
             type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            # branch event
+            type=ref,suffix=${{ matrix.device_suffix }},event=branch
             # propagate valid semver tags
             type=semver,pattern={{raw}}${{ matrix.device_suffix }}
 
