@@ -1,0 +1,126 @@
+name: Download Docker image from GitHub artifacts, tag and push it to DockerHub
+
+env:
+  OWNER: ${{ github.repository_owner }}
+
+on:
+  workflow_call:
+    inputs:
+      prefix:
+        description: prefix image
+        required: false
+        type: string
+      python_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      python_version_2:
+        description: context of docker image
+        required: false
+        type: string
+      r_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      r_version_2:
+        description: context of docker image
+        required: false
+        type: string
+      spark_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      spark_version_2:
+        description: spark version
+        required: false
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  matrix_prep:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: Check out code 
+      uses: actions/checkout@v2
+    - id: set-matrix
+      run: |
+        FILES="./releases/*"
+        data=[]
+        for f in $FILES
+        do
+          echo "Processing $f"
+            array=$(jq '.[] | .artefact_output_name' $f)
+            for a in ${array[@]}; do
+                echo "$a"
+                data=$(echo $data | jq ". += [{"image":$a}]")
+            done
+        done
+        echo $data
+        data=$(echo $data | sed  "s/:python_version_1/${{inputs.python_version_1}}/g" )
+        data=$(echo $data | sed  "s/:python_version_2/${{inputs.python_version_2}}/g" )
+        data=$(echo $data | sed  "s/:r_version_1/${{inputs.r_version_1}}/g" )
+        data=$(echo $data | sed  "s/:r_version_2/${{inputs.r_version_2}}/g" )
+        data=$(echo $data | sed  "s/:spark_version_1/${{inputs.spark_version_1}}/g" )
+        data=$(echo $data | sed  "s/:spark_version_2/${{inputs.spark_version_2}}/g" )
+        matrix=$(echo $data| jq .) 
+        echo $matrix                
+        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: matrix_prep
+    strategy:
+      fail-fast: false
+      matrix: 
+        ${{fromJson(needs.matrix_prep.outputs.matrix)}}
+    steps:
+      - name: Check out code 
+        uses: actions/checkout@v2
+      
+      - name: buildargs docker command
+        id: date
+        run: |
+            echo ${{matrix.image}}
+            date=$(date +%Y.%m.%d)              
+            echo ::set-output name=date::$date
+        shell: bash
+
+      - name: Load  image to Docker 📥
+        uses: ./.github/actions/load-image
+        with:
+          image: ${{ matrix.image }}
+
+      - name: docker retag
+        id: retag
+        run: |
+          image=${{ matrix.image }}
+          if [[ "$image" == *"-delim-"* ]]; then
+            image_name=$(echo ${{ matrix.image }} | awk -F '-delim-' '{print $1}' )
+            tag=$(echo ${{ matrix.image }} | awk -F '-delim-' '{print $2}' )"-"
+          else
+            image_name=$image
+            tag=""
+          fi
+          date=${{ steps.date.outputs.date }}
+          echo $date
+          owner=${{ env.OWNER }}
+          final_name="$owner/${{ inputs.prefix}}-$image_name:$tag$date"
+          echo "$final_name"
+          docker tag ${{ matrix.image }} $final_name
+          echo ::set-output name=final_name::$final_name
+        shell: bash
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: classic push
+        run: docker push ${{ steps.retag.outputs.final_name }}
