@@ -11,7 +11,7 @@ ENV DEFAULT_USER="${USERNAME}"
 USER root
 
 # Install R using rocker's install scripts
-RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
+RUN git clone --branch R${R_VERSION} --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chmod -R 755 /rocker_scripts/ && \
     /rocker_scripts/install_R_source.sh
@@ -27,8 +27,6 @@ RUN /rocker_scripts/setup_R.sh && \
     if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
     # Install devtools to install R packages from GitHub
     install2.r --error devtools && \
-    # Set default working directory in R
-    echo "setwd(\"${WORKSPACE_DIR}\")" >> "${R_HOME}/etc/Rprofile.site" && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean

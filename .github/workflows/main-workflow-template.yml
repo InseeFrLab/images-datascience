@@ -88,20 +88,27 @@ jobs:
       matrix: 
         ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
-      #- name: Checkout
-      #  uses: actions/checkout@v3
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
-      # - name: Docker meta
-      #   id: meta
-      #   uses: docker/metadata-action@v4
-      #   with:
-      #     images: inseefrlab/onyxia-${{ inputs.image }}
-      #     tags: |
-      #       # set latest tag for main branch
-      #       type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-      #       # propagate valid semver tags
-      #       type=semver,pattern={{raw}}${{ matrix.device_suffix }}
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: inseefrlab/onyxia-${{ inputs.image }}
+          tags: |
+            # set latest tag for main branch
+            type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            # branch event
+            type=ref,suffix=${{ matrix.device_suffix }},event=branch
+            # propagate valid semver tags
+            type=semver,pattern={{raw}}${{ matrix.device_suffix }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       # https://github.com/actions/virtual-environments/issues/2840
       - name: Make free space

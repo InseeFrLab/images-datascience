@@ -25,8 +25,7 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-COPY install-system-libs.sh /opt/install-system-libs.sh
-COPY onyxia-init.sh /opt/onyxia-init.sh
+ADD common-scripts /opt/
 
 RUN chmod +x /opt/install-system-libs.sh /opt/onyxia-init.sh && \
     # Install system libraries
