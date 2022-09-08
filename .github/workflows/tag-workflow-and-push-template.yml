@@ -110,6 +110,7 @@ jobs:
           date=${{ steps.date.outputs.date }}
           echo $date
           owner=${{ env.OWNER }}
+          owner=$(echo "$owner" | awk '{print tolower($0)}')
           final_name="$owner/${{ inputs.prefix}}-$image_name:$tag$date"
           echo "$final_name"
           docker tag ${{ matrix.image }} $final_name
