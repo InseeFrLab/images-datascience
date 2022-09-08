@@ -27,7 +27,7 @@ USER root
 
 ADD common-scripts /opt/
 
-RUN chmod +x /opt/install-system-libs.sh /opt/onyxia-init.sh && \
+RUN chmod +x -R /opt/ && \
     # Install system libraries
     /opt/install-system-libs.sh && \
     # Upgrade installed system libraries
