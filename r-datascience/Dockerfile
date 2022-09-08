@@ -15,7 +15,6 @@ RUN apt-get update && \
         language-pack-fr \
         libsecret-1-dev && \
     # Install quarto
-    chmod +x /opt/install-quarto.sh && \
     /opt/install-quarto.sh && \
     # Install Shiny Server
     /rocker_scripts/install_shiny_server.sh && \

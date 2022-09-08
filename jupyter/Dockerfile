@@ -5,15 +5,15 @@ SHELL ["/bin/bash", "-c"]
 
 USER ${USERNAME}
 
+# Install JupyterLab and minimal Julia & R kernels
 RUN mamba install -y -c conda-forge \
         ipywidgets \
         jupyterlab \
-        jupyterlab-git && \
-    # If Julia is installed, make it available as a kernel in Jupyter
-    if [ $(which julia) ]; then \
-        julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
-        mv "${HOME}/.local/share/jupyter/kernels/julia"* "${MAMBA_DIR}/share/jupyter/kernels/"; \
-    fi && \
+        julia \
+        r-base \
+        r-irkernel && \
+    # Make Julia kernel available in Jupyter
+    julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean 
