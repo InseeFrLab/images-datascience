@@ -3,15 +3,11 @@ name: Main manual workflow
 on:
   workflow_dispatch:
 
+env:
+  PUSH: true
+
+
 jobs:
-  # init-variables:
-  #   uses: ./.github/workflows/init-variables.yml
-    # with:
-    #    base_image: ubuntu:20.04
-    #    base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
-    #    python_version: "3.10.4,3.9.13"
-    #    r_version: "4.2.0,4.3.0"
-    #    spark_version: "3.2.1,3.3.0"
   base:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -21,7 +17,7 @@ jobs:
       image: base
       context: base
       test: true
-      push: false
+      push: true
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
   python-minimal:
@@ -125,7 +121,7 @@ jobs:
       image: jupyter-pyspark
       context: jupyter
       test: false
-      push: false
+      push: true
       base_image: inseefrlab/onyxia-pyspark:latest
       base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
@@ -164,10 +160,6 @@ jobs:
       image: rstudio-sparkr
       context: rstudio
       test: false
-      push: false
+      push: true
       base_image: inseefrlab/onyxia-sparkr:latest
       base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
-      r_version_1: 4.1.1
-      r_version_2: 4.2.1
-      spark_version_1: 3.2.0
-      spark_version_2: 3.3.0

@@ -27,30 +27,6 @@ on:
         description: context of docker image
         required: true
         type: string
-      python_version_1:
-        description: context of docker image
-        required: false
-        type: string
-      python_version_2:
-        description: context of docker image
-        required: false
-        type: string
-      r_version_1:
-        description: context of docker image
-        required: false
-        type: string
-      r_version_2:
-        description: context of docker image
-        required: false
-        type: string
-      spark_version_1:
-        description: context of docker image
-        required: false
-        type: string
-      spark_version_2:
-        description: context of docker image
-        required: false
-        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: false
@@ -59,34 +35,16 @@ on:
         
 
 jobs:
-  matrix_prep:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-    - name: Check out code 
-      uses: actions/checkout@v2
-    - id: set-matrix
-      run: |
-        base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
-        base_image_gpu_escaped=$(echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g' )
-        sed -i "s/:base_image_gpu/$base_image_gpu_escaped/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:base_image/$base_image_escaped/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:python_version_1/${{inputs.python_version_1}} /g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:python_version_2/${{inputs.python_version_2}} /g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:r_version_1/${{inputs.r_version_1}} /g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:r_version_2/${{inputs.r_version_2}} /g" ./releases/${{ inputs.image }}.json
-        matrix=$(cat ./releases/${{ inputs.image }}.json | jq .) 
-        echo $matrix                
-        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
-
   docker:
     runs-on: ubuntu-latest
-    needs: matrix_prep
     strategy:
       fail-fast: false
-      matrix: 
-        ${{fromJson(needs.matrix_prep.outputs.matrix)}}
+      matrix:
+        include:
+          - base_image: ${{ inputs.base_image }}
+            device_suffix: ""
+          - base_image: ${{ inputs.base_image_gpu }} 
+            device_suffix: "-gpu"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -132,7 +90,7 @@ jobs:
         if: ${{ inputs.test == 'true' }}
         uses: plexsystems/container-structure-test-action@v0.2.0
         with:
-          image: inseefrlab/${{ inputs.image }}:${{steps.currentTag.outputs.tag}}
+          image: ${{ steps.meta.outputs.tags }}
           config: ./${{ inputs.image }}/tests.yaml
 
       - name: Login to DockerHub
