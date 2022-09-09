@@ -19,7 +19,7 @@
     },
    {
         "base_image":":base_image",
-        "artefact_input_name":"base-gpu",
+        "artefact_input_name":"base-delim-gpu",
         "artefact_output_name":"python-minimal-delim-py:python_version_2-gpu",
         "python_version":":python_version_2"
     }
