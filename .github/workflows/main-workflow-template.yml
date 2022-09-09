@@ -79,6 +79,7 @@ jobs:
             baseimage=${{ matrix.base_image }}
           else
             baseimage=${{ matrix.base_image }}:${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+          fi
           echo ${baseimage}
           echo ::set-output name=baseimage::${baseimage}
         shell: bash
