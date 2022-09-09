@@ -30,6 +30,7 @@ RUN apt-get update && \
     install2.r -e -s \
         arrow \
         aws.s3 \
+        RJDemetra \
         keyring \
         odbc \
         paws \
