@@ -72,7 +72,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
     - name: Check out code 
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - id: set-matrix
       run: |
         base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
@@ -99,7 +99,7 @@ jobs:
       #- name: Checkout
       #  uses: actions/checkout@v3
       - name: Check out code 
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Load parent built image to Docker 📥
         if: ${{ matrix.artefact_input_name != '' }}
