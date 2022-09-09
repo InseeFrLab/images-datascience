@@ -21,6 +21,6 @@ for i, image in enumerate(chain):
         cmd = ["sudo", "docker", "build", image, "-t", image, "--build-arg", f"BASE_IMAGE={previous_image}"]
         print(" ".join(cmd))
         subprocess.run(cmd)
-        if len(sys.argv) == 2:
+        if len(sys.argv) == 3:
             if image == sys.argv[2]:
                 break
