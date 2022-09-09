@@ -13,10 +13,10 @@ RUN mamba install -y -c conda-forge \
         r-base \
         r-irkernel
 
+RUN chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR}
 # Make Julia kernel available in Jupyter
 RUN julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean 
     rm -rf "${HOME}/.local" && \
     mamba clean --all -f -y && \
