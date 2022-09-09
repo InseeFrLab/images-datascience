@@ -31,8 +31,8 @@ jobs:
       context: python-minimal
       test: false
       push: true
-      base_image: inseefrlab/onyxia-base
-      base_image_gpu: inseefrlab/onyxia-base
+      base_image: inseefrlab/onyxia-base:latest
+      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   python-datascience:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -44,8 +44,8 @@ jobs:
       context: python-datascience
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python-minimal
-      base_image_gpu: inseefrlab/onyxia-python-minimal
+      base_image: inseefrlab/onyxia-python-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
   r-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -57,8 +57,8 @@ jobs:
       context: r-minimal
       test: false
       push: true
-      base_image: inseefrlab/onyxia-base
-      base_image_gpu: inseefrlab/onyxia-base
+      base_image: inseefrlab/onyxia-base:latest
+      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
   r-datascience:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -70,8 +70,8 @@ jobs:
       context: r-datascience
       test: false
       push: true
-      base_image: inseefrlab/onyxia-r-minimal
-      base_image_gpu: inseefrlab/onyxia-r-minimal
+      base_image: inseefrlab/onyxia-r-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
   jupyter:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -83,8 +83,8 @@ jobs:
       context: jupyter
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python-datascience
-      base_image_gpu: inseefrlab/onyxia-python-datascience
+      base_image: inseefrlab/onyxia-python-datascience:latest
+      base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
   vscode:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -96,8 +96,8 @@ jobs:
       context: vscode
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python-datascience
-      base_image_gpu: inseefrlab/onyxia-python-datascience
+      base_image: inseefrlab/onyxia-python-datascience:latest
+      base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
   pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -109,8 +109,8 @@ jobs:
       context: spark
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python-minimal
-      base_image_gpu: inseefrlab/onyxia-python-minimal
+      base_image: inseefrlab/onyxia-python-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
   jupyter-pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -122,8 +122,8 @@ jobs:
       context: jupyter
       test: false
       push: true
-      base_image: inseefrlab/onyxia-pyspark
-      base_image_gpu: inseefrlab/onyxia-pyspark
+      base_image: inseefrlab/onyxia-pyspark:latest
+      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -135,8 +135,8 @@ jobs:
       context: rstudio
       test: false
       push: true
-      base_image: inseefrlab/onyxia-r-datascience
-      base_image_gpu: inseefrlab/onyxia-r-datascience
+      base_image: inseefrlab/onyxia-r-datascience:latest
+      base_image_gpu: inseefrlab/onyxia-r-datascience:latest-gpu
   sparkr:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -148,8 +148,8 @@ jobs:
       context: spark
       test: false
       push: true
-      base_image: inseefrlab/onyxia-r-minimal
-      base_image_gpu: inseefrlab/onyxia-r-minimal
+      base_image: inseefrlab/onyxia-r-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
   rstudio-sparkr:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -161,5 +161,5 @@ jobs:
       context: rstudio
       test: false
       push: true
-      base_image: inseefrlab/onyxia-sparkr
-      base_image_gpu: inseefrlab/onyxia-sparkr
+      base_image: inseefrlab/onyxia-sparkr:latest
+      base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
