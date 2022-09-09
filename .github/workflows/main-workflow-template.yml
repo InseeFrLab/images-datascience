@@ -59,8 +59,6 @@ jobs:
             type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
             # branch event
             type=ref,suffix=${{ matrix.device_suffix }},event=branch
-            # propagate valid semver tags
-            type=semver,pattern={{raw}}${{ matrix.device_suffix }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -73,6 +71,17 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
         shell: bash
+
+      - name: Set base image
+        id: setbaseimage
+        run: |
+          if [[ ${{ matrix.base_image }} = *":"* ]]; then
+            baseimage=${{ matrix.base_image }}
+          else
+            baseimage=${{ matrix.base_image }}:${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+          echo ${baseimage}
+          echo ::set-output name=baseimage::${baseimage}
+        shell: bash
             
       - name: Build and store
         uses: docker/build-push-action@v3
@@ -81,7 +90,7 @@ jobs:
           file: ${{ inputs.context }}/Dockerfile
           load: true
           build-args: |
-            BASE_IMAGE=${{ matrix.base_image }}
+            BASE_IMAGE=${{ steps.setbaseimage.outputs.baseimage }}
             DEVICE_SUFFIX=${{ matrix.device_suffix }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
@@ -103,14 +112,3 @@ jobs:
       - name: classic push
         if: ${{ inputs.push == 'true' }}
         run: docker push ${{ steps.meta.outputs.tags }}
-    
-     # - name: Build and push
-     #   if: ${{ inputs.push == 'true' }}
-     #   uses: docker/build-push-action@v3
-     #   with:
-     #      context: ${{ inputs.context }}/
-     #      build-args: |
-     #       BASE_IMAGE=${{ matrix.base_image }}
-     #       DEVICE_SUFFIX=${{ matrix.device_suffix }}
-     #      push: true
-     #      tags: ${{ steps.meta.outputs.tags }}
