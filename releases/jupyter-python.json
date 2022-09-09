@@ -1,26 +1,26 @@
 [
     {
         "base_image":":base_image",
-        "artefact_input_name":"python-delim-ds-py:python_version_1",
-        "artefact_output_name":"jupyter-delim-ds-py:python_version_1",
+        "artefact_input_name":"python-datascience-delim-ds-py:python_version_1",
+        "artefact_output_name":"jupyter-python-delim-ds-py:python_version_1",
         "python_version":":python_version_1"
     },
     {
         "base_image":":base_image",
-        "artefact_input_name":"python-delim-ds-py:python_version_1-gpu",
-        "artefact_output_name":"jupyter-delim-ds-py:python_version_1-gpu",
+        "artefact_input_name":"python-datascience-delim-ds-py:python_version_1-gpu",
+        "artefact_output_name":"jupyter-python-delim-ds-py:python_version_1-gpu",
         "python_version":":python_version_1"
     },
     {
         "base_image":":base_image",
-        "artefact_input_name":"python-delim-ds-py:python_version_2",
-        "artefact_output_name":"jupyter-delim-ds-py:python_version_2",
+        "artefact_input_name":"python-datascience-delim-ds-py:python_version_2",
+        "artefact_output_name":"jupyter-python-delim-ds-py:python_version_2",
         "python_version":":python_version_2"
     },
     {
         "base_image":":base_image",
-        "artefact_input_name":"python-delim-ds-py:python_version_2-gpu",
-        "artefact_output_name":"jupyter-delim-ds-py:python_version_2-gpu",
+        "artefact_input_name":"python-datascience-delim-ds-py:python_version_2-gpu",
+        "artefact_output_name":"jupyter-python-delim-ds-py:python_version_2-gpu",
         "python_version":":python_version_2"
     }
 ]
