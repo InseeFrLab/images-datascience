@@ -11,9 +11,10 @@ RUN mamba install -y -c conda-forge \
         jupyterlab \
         julia \
         r-base \
-        r-irkernel && \
-    # Make Julia kernel available in Jupyter
-    julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
+        r-irkernel
+
+# Make Julia kernel available in Jupyter
+RUN julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean 
