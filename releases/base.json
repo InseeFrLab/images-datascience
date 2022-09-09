@@ -5,6 +5,6 @@
     },
    {
         "base_image":":base_image_gpu",
-        "artefact_output_name":"base-gpu"
+        "artefact_output_name":"base-delim-gpu"
     }
 ]
