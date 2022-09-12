@@ -114,6 +114,7 @@ jobs:
             r_version="${{ matrix.r_version}}"
             spark_version="${{ matrix.spark_version}}"
             artefact_input_name=${{ matrix.artefact_input_name }}
+            gpu=${{ matrix.gpu }}
             echo $artefact_input_name
             if [ -n "$artefact_input_name" ]; then
                 buildargs+=" --build-arg BASE_IMAGE=$artefact_input_name"
@@ -128,6 +129,9 @@ jobs:
             fi
             if [ -n "$spark_version" ]; then
                buildargs+=" --build-arg SPARK_VERSION=$spark_version"
+            fi
+            if [ -n "$spark_version" ]; then
+               buildargs+=" --build-arg DEVICE_SUFFIX=-gpu"
             fi
             echo "${buildargs}"
             echo ::set-output name=buildargs::${buildargs}
