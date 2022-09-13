@@ -8,7 +8,7 @@ USER root
 # Install JupyterLab through pip and add R kernel
 RUN if [ "`which pip3`" = "" ]; then \
         apt-get update && \
-        apt-get install python3-pip \
+        apt-get install -y --no-install-recommends python3-pip; \
     fi && \
     # Install JupyterLab
     pip install jupyterlab && \
