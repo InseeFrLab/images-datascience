@@ -5,6 +5,7 @@ SHELL ["/bin/bash", "-c"]
 
 ARG JULIA_VERSION="1.8.1"
 ENV JULIA_DIR="/opt/julia"
+ENV PATH="${JULIA_DIR}/bin:${PATH}"
 
 USER root
 
