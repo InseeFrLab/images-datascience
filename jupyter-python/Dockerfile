@@ -8,13 +8,11 @@ ENV JULIA_DIR="/opt/julia"
 
 USER root
 
-# Install JupyterLab and minimal Julia & R kernels
+# Install JupyterLab and Julia kernel
 RUN mamba install -y -c conda-forge \
         ipywidgets \
         jupyterlab \
-        jupyterlab-git \
-        r-base \
-        r-irkernel && \
+        jupyterlab-git && \
     # Install Julia
     julia_major_minor=$(echo "${JULIA_VERSION}" | cut -d. -f 1,2) && \
     wget -q "https://julialang-s3.julialang.org/bin/linux/x64/${julia_major_minor}/julia-${JULIA_VERSION}-linux-x86_64.tar.gz" -O julia.tar.gz && \
