@@ -130,7 +130,7 @@ jobs:
             if [ -n "$spark_version" ]; then
                buildargs+=" --build-arg SPARK_VERSION=$spark_version"
             fi
-            if [ -n "$spark_version" ]; then
+            if [ -n "$gpu" ]; then
                buildargs+=" --build-arg DEVICE_SUFFIX=-gpu"
             fi
             echo "${buildargs}"
