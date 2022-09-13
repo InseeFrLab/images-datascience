@@ -4,7 +4,8 @@ import sys
 chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
     "rstudio-sparkr": ["base", "r-minimal", "spark", "rstudio"],
-    "jupyter": ["base", "python-minimal", "python-datascience", "jupyter"],
+    "jupyter-r": ["base", "r-minimal", "r-datascience", "jupyter-r"],
+    "jupyter-python": ["base", "python-minimal", "python-datascience", "jupyter-python"],
     "jupyter-pyspark": ["base", "python-minimal", "spark", "jupyter"],
     "vscode": ["base", "python-minimal", "python-datascience", "vscode"],
 }
