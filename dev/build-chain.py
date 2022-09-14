@@ -12,9 +12,12 @@ chains = {
     "vscode": ["base", "python-minimal", "python-datascience", "vscode"],
 }
 
-GPU = False
-
 chain = chains[sys.argv[1]]
+
+GPU = False
+if len(sys.argv) == 3:
+    if sys.argv[2] == "gpu":
+        GPU = True
 
 for i, image in enumerate(chain):
 
@@ -33,7 +36,3 @@ for i, image in enumerate(chain):
            "--build-arg", f"DEVICE_SUFFIX={device_suffix}"]
     print(" ".join(cmd))
     subprocess.run(cmd)
-
-    if len(sys.argv) == 3:
-        if image == sys.argv[2]:
-            break
