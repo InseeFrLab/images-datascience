@@ -7,7 +7,7 @@ ARG JULIA_VERSION="1.8.1"
 ENV JULIA_DIR="/opt/julia"
 ENV PATH="${JULIA_DIR}/bin:${PATH}"
 
-USER ${USERNAME}
+USER root
 
 # Install JupyterLab and Julia kernel
 RUN mamba install -y -c conda-forge \
@@ -33,6 +33,8 @@ RUN mamba install -y -c conda-forge \
     rm -rf "${HOME}/.local" julia.tar.gz && \
     mamba clean --all -f -y && \
     jupyter lab clean
+
+USER ${USERNAME}
 
 EXPOSE 8888
 
