@@ -102,10 +102,10 @@ jobs:
           image=${{ matrix.image }}
           if [[ "$image" == *"-delim-"* ]]; then
             image_name=$(echo ${{ matrix.image }} | awk -F '-delim-' '{print $1}' )
-            tag=$(echo ${{ matrix.image }} | awk -F '-delim-' '{print $2}' )"-"
+            tag=$(echo ${{ matrix.image }} | awk -F '-delim-' '{print $2}' )
           else
             image_name=$image
-            tag=""
+            tag="latest"
           fi
           date=${{ steps.date.outputs.date }}
           echo $date
@@ -113,8 +113,9 @@ jobs:
           owner=$(echo "$owner" | awk '{print tolower($0)}')
           final_name="$owner/${{ inputs.prefix}}-$image_name"
           final_name_tag="$owner/${{ inputs.prefix}}-$image_name:$tag"
-          final_name_tag_with_date="$owner/${{ inputs.prefix}}-$image_name:$tag$date"
+          final_name_tag_with_date="$owner/${{ inputs.prefix}}-$image_name:$tag-$date"
           echo "$final_name"
+          echo "final_name_tag"
           echo "$final_name_tag_with_date"
           docker tag ${{ matrix.image }} $final_name_tag
           docker tag ${{ matrix.image }} $final_name_tag_with_date
