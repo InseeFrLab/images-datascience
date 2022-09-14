@@ -93,7 +93,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: jupyter-python
-      context: jupyter
+      context: jupyter-python
       test: false
       push: false
       base_image: python-datascience
@@ -137,7 +137,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: jupyter-pyspark
-      context: jupyter
+      context: jupyter-python
       test: false
       push: false
       base_image: pyspark
