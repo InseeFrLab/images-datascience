@@ -1,9 +1,9 @@
-name: jupyter-python
+name: jupyter-r
 
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [python-datascience]
+    workflows: [r-datascience]
     types:
       - completed
 
@@ -14,9 +14,9 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: jupyter-python
-      context: jupyter-python
+      image: jupyter-r
+      context: jupyter-r
       test: false
       push: true
-      base_image: inseefrlab/onyxia-python-datascience:latest
-      base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
+      base_image: inseefrlab/onyxia-r-datascience:latest
+      base_image_gpu: inseefrlab/onyxia-r-datascience:latest-gpu

@@ -15,7 +15,6 @@ RUN cat lib-datascience.yml lib-dl${DEVICE_SUFFIX}.yml > env-specs.yml && \
     # Install datascience packages
     mamba env update -n base -f env-specs.yml && \
     # Install quarto
-    chmod +x /opt/install-quarto.sh && \
     /opt/install-quarto.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
