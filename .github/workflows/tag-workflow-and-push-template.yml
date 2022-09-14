@@ -111,11 +111,13 @@ jobs:
           echo $date
           owner=${{ env.OWNER }}
           owner=$(echo "$owner" | awk '{print tolower($0)}')
-          final_name="$owner/${{ inputs.prefix}}-$image_name:$tag$date"
-          final_name_with_date="$owner/${{ inputs.prefix}}-$image_name:$tag$date"
+          final_name="$owner/${{ inputs.prefix}}-$image_name"
+          final_name_tag="$owner/${{ inputs.prefix}}-$image_name:$tag"
+          final_name_tag_with_date="$owner/${{ inputs.prefix}}-$image_name:$tag$date"
           echo "$final_name"
-          docker tag ${{ matrix.image }} $final_name
-          docker tag ${{ matrix.image }} $final_name_with_date
+          echo "$final_name_tag_with_date"
+          docker tag ${{ matrix.image }} $final_name_tag
+          docker tag ${{ matrix.image }} $final_name_tag_with_date
           docker images
           echo ::set-output name=final_name::$final_name
         shell: bash
@@ -127,4 +129,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
       - name: classic push
-        run: docker push --all-tags  ${{ matrix.image }}
+        run: docker push --all-tags  ${{ steps.retag.outputs.final_name }}
