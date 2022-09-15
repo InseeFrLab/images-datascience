@@ -132,7 +132,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pyspark
-      context: jupyter
+      context: jupyter-python
       test: false
       push: true
       base_image: inseefrlab/onyxia-pyspark:latest
