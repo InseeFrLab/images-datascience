@@ -14,7 +14,7 @@ RUN mamba install -y -c conda-forge \
     if command -v julia &> /dev/null \
     then \
         julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
-        mv "${HOME}/.local/share/jupyter/kernels/julia"* "${MAMBA_DIR}/share/jupyter/kernels/" && \
+        mv "${HOME}/.local/share/jupyter/kernels/julia"* "${MAMBA_DIR}/share/jupyter/kernels/" \
     fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
