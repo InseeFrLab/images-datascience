@@ -11,10 +11,9 @@ RUN mamba install -y -c conda-forge \
         jupyterlab \
         jupyterlab-git && \
     # If Julia is installed, make the kernel available in Jupyter
-    if command -v julia &> /dev/null \
-    then \
+    if command -v julia ; then \
         julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
-        mv "${HOME}/.local/share/jupyter/kernels/julia"* "${MAMBA_DIR}/share/jupyter/kernels/" \
+        mv "${HOME}/.local/share/jupyter/kernels/julia"* "${MAMBA_DIR}/share/jupyter/kernels/"; \
     fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
