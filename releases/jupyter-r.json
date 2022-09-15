@@ -22,5 +22,5 @@
         "artefact_input_name":"r-datascience-delim-r:r_version_2-gpu",
         "artefact_output_name":"jupyter-r-delim-r:r_version_2-gpu",
         "r_version":":r_version_2"
-    },
+    }
 ]
