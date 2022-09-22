@@ -12,6 +12,8 @@ dependencies:
   - hvac
   - ipykernel
   - matplotlib-base
+  - nbclient
+  - nbformat
   - nltk
   - numba
   - numpy
