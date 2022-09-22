@@ -21,6 +21,7 @@ RUN wget -q https://github.com/coder/code-server/releases/download/v${CODE_SERVE
     code-server --install-extension redhat.vscode-yaml && \
     code-server --install-extension mhutchie.git-graph && \
     code-server --install-extension julialang.language-julia && \
+    code-server --install-extension quarto.quarto && \
     # Create directories to store custom VSCode settings
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR} && \
     # Set Conda binary path in remote settings to auto activate base env when running Python code
