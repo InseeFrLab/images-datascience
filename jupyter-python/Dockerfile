@@ -7,7 +7,6 @@ USER root
 
 # Install JupyterLab and Julia kernel
 RUN mamba install -y -c conda-forge \
-        ipywidgets \
         jupyterlab \
         jupyterlab-git && \
     # If Julia is installed, make the kernel available in Jupyter
