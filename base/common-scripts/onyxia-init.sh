@@ -6,7 +6,11 @@ whoami
 
 if [[ -n "$REGION_INIT_SCRIPT" ]]; then
     echo "download $REGION_INIT_SCRIPT"
-    curl $REGION_INIT_SCRIPT | bash
+    # The insecure flag is used as a temporary fix to accomodate Onyxia instances
+    # not open to the internet. This should be removed as soon as region-specific
+    # configurations are properly handled.
+    # See : https://github.com/InseeFrLab/onyxia/issues/56
+    curl --insecure $REGION_INIT_SCRIPT | bash
 fi
 
 if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
