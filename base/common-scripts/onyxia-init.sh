@@ -4,6 +4,11 @@
 echo "start of onyxia-init.sh script en tant que :"
 whoami
 
+if [[ -n "$REGION_INIT_SCRIPT" ]]; then
+    echo "download $REGION_INIT_SCRIPT"
+    curl $REGION_INIT_SCRIPT | bash
+fi
+
 if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
 
     JSON=$(wget -qO- \
