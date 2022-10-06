@@ -10,7 +10,7 @@ chains = {
                        "jupyter-python"],
     "jupyter-pyspark": ["base", "python-minimal", "spark", "jupyter"],
     "vscode": ["base", "python-minimal", "python-datascience", "vscode"],
-    "vscode_minimal": ["base", "python-minimal", "vscode"]
+    "vscode-minimal": ["base", "python-minimal", "vscode"]
 }
 
 chain = chains[sys.argv[1]]
