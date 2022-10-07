@@ -36,6 +36,8 @@ RUN apt-get update && \
     if [[ "${BASE_IMAGE}" == *"onyxia-r"* ]]; then R -e "devtools::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
+    # Change log verbosity hadoop
+    sed -i -e "s/hadoop.root.logger=INFO,console/hadoop.root.logger=WARN,console/g" /opt/hadoop/etc/hadoop/log4j.properties && \
     # Clean
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
