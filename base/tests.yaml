@@ -16,6 +16,10 @@ commandTests:
     command: "which"
     args: ["vault"]
     expectedOutput: ["/usr/local/bin/vault"]
+  - name: "is argo-workflows cli present"
+    command: "which"
+    args: ["argo"]
+    expectedOutput: ["/usr/local/bin/argo"]
 fileExistenceTests:
   - name: "user home"
     path: "/home/onyxia"

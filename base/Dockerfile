@@ -51,10 +51,15 @@ RUN chmod +x -R /opt/ && \
     wget -q https://releases.hashicorp.com/vault/${VAULT_LATEST_VERSION}/vault_${VAULT_LATEST_VERSION}_linux_amd64.zip -O vault.zip  && \
     unzip vault.zip -d /usr/local/bin/ && \
     vault -autocomplete-install && \
+    # argo-workflows cli
+    curl -sLO https://github.com/argoproj/argo-workflows/releases/latest/download/argo-linux-amd64.gz && \
+    gunzip argo-linux-amd64.gz && \
+    chmod +x argo-linux-amd64 && \
+    mv ./argo-linux-amd64 /usr/local/bin/argo && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    rm get_helm.sh vault.zip && \
+    rm get_helm.sh vault.zip argo-linux-amd64.gz && \
     rm -rf /var/lib/apt/lists/*
 
 USER ${USERNAME}
