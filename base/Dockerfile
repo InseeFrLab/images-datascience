@@ -32,6 +32,8 @@ RUN chmod +x -R /opt/ && \
     /opt/install-system-libs.sh && \
     # Upgrade installed system libraries
     apt-get upgrade -y && \
+    # Generate locales
+    locale-gen en_US.UTF-8 && \
     ## Install common binaries required for Onyxia
     # kubectl
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
