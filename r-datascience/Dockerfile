@@ -41,7 +41,6 @@ RUN apt-get update && \
         vaultr && \
     # Install gouvdown
     # Temporary set French locales to download French packages from GitHub
-    export LANG=fr_FR.UTF-8 && \
     installGithub.r spyrales/gouvdown && \
     installGithub.r spyrales/gouvdown.fonts && \
     find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
