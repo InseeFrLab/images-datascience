@@ -13,6 +13,7 @@ dependencies:
   - ipykernel
   - ipywidgets
   - matplotlib-base
+  - mlflow
   - nbclient
   - nbformat
   - nltk
