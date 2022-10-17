@@ -23,6 +23,10 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     touch ${HOME}/.sudo_as_admin_successful
 WORKDIR ${WORKSPACE_DIR}
 
+# Set locales
+ENV LC_ALL="en_US.UTF-8"
+ENV LANG="en_US.UTF-8"
+
 USER root
 
 ADD common-scripts /opt/
