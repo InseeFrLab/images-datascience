@@ -23,10 +23,6 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     touch ${HOME}/.sudo_as_admin_successful
 WORKDIR ${WORKSPACE_DIR}
 
-# Set locales
-ENV LC_ALL="en_US.UTF-8"
-ENV LANG="en_US.UTF-8"
-
 USER root
 
 ADD common-scripts /opt/
@@ -65,6 +61,10 @@ RUN chmod +x -R /opt/ && \
     # Clean
     rm get_helm.sh vault.zip && \
     rm -rf /var/lib/apt/lists/*
+
+# Set locales
+ENV LC_ALL="en_US.UTF-8"
+ENV LANG="en_US.UTF-8"
 
 USER ${USERNAME}
 
