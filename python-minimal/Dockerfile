@@ -10,17 +10,21 @@ ENV PATH="${MAMBA_DIR}/bin:${PATH}"
 
 USER root
 
+COPY environment/lib-minimal.yml .
+
 RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh -O mambaforge.sh && \
     # Install mambaforge latest version
     /bin/bash mambaforge.sh -b -p "${MAMBA_DIR}" && \
     # Set specified Python version in base Conda env
     mamba install python=="${PYTHON_VERSION}" && \
+    # Install essential Python packages
+    mamba env update -n base -f lib-minimal.yml && \
     # Activate custom Conda env by default in shell
     echo ". ${MAMBA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
-    rm mambaforge.sh && \ 
+    rm mambaforge.sh lib-minimal.yml && \ 
     mamba clean --all -f -y
 
 USER ${USERNAME}
