@@ -47,13 +47,7 @@ if [  "`which kubectl`" != "" ]; then
     export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode | jq -r ' .["kubernetes.io"].serviceaccount.name'`
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     # Fix permissions on kubectl config file
-    if [[ $(id -u) = 0 ]] && grep -q "onyxia" /etc/passwd; then 
-        # For internal images that need to be run as root
-        chown -R onyxia:users ${HOME}/.kube 
-    else
-        # For community-based images
-        chmod 640 ${HOME}/.kube/config
-    fi
+    chown -R onyxia:users ${HOME}/.kube 
 fi
 
 
