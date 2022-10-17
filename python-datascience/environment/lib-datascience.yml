@@ -5,7 +5,6 @@ dependencies:
   - beautifulsoup4
   - bokeh
   - dask
-  - flake8
   - gensim
   - geopandas
   - matplotlib-base
