@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   schedule:
     # every day at midnight for test
-    - cron: '0 0 0 * * ?'
-
+    - cron: "0 0 0 * * ?"
+    
 jobs:
   # init-variables:
   #   uses: ./.github/workflows/init-variables.yml
