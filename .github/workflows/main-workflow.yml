@@ -72,6 +72,19 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python-minimal:latest
       base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
+  pyspark:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-minimal]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: pyspark
+      context: spark
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-python-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
   r-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -98,7 +111,20 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-r-minimal:latest
       base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
-  jupyter-python:
+  jupyter-python-minimal:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-minimal]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-python
+      context: jupyter-python
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-python-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
+  jupyter-python-datascience:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -111,6 +137,45 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python-datascience:latest
       base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
+  jupyter-python-pytorch:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-pytorch]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-python
+      context: jupyter-python
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-python-pytorch:latest
+      base_image_gpu: inseefrlab/onyxia-python-pytorch:latest-gpu
+  jupyter-python-tensorflow:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-tensorflow]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-python
+      context: jupyter-python
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-python-tensorflow:latest
+      base_image_gpu: inseefrlab/onyxia-python-tensorflow:latest-gpu
+  jupyter-pyspark:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [pyspark]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-pyspark
+      context: jupyter-python
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-pyspark:latest
+      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   jupyter-r:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -137,32 +202,6 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python-datascience:latest
       base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
-  pyspark:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: pyspark
-      context: spark
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
-  jupyter-pyspark:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [pyspark]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-pyspark
-      context: jupyter-python
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-pyspark:latest
-      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
   r-studio:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
