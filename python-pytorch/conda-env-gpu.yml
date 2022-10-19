@@ -1,5 +1,8 @@
+channels:
+  - conda-forge
+
+dependencies:
   - cudatoolkit=11.6
   - pytorch::pytorch
   - pytorch::torchaudio
   - pytorch::torchvision 
-  - tensorflow==2.6.0=cuda112* # works with any cudatoolkit>=11.2

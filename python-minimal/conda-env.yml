@@ -6,7 +6,6 @@ dependencies:
   - hvac
   - ipykernel
   - ipywidgets
-  - mlflow
   - nbclient
   - nbformat
   - numpy
@@ -14,9 +13,6 @@ dependencies:
   - pip
   - pyarrow
   - pylint
-  - pymongo
-  - pyyaml
-  - pytest
   - requests
   - s3fs
   - wheel
