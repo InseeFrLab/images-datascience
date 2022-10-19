@@ -46,6 +46,32 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python-minimal:latest
       base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
+  python-pytorch:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-minimal]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: python-pytorch
+      context: python-pytorch
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-python-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
+  python-tensorflow:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-minimal]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: python-tensorflow
+      context: python-tensorflow
+      test: false
+      push: true
+      base_image: inseefrlab/onyxia-python-minimal:latest
+      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
   r-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

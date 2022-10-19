@@ -55,6 +55,36 @@ jobs:
       #base_image_gpu: base-gpu
       python_version_1: 3.9.13
       python_version_2: 3.10.4
+  python-pytorch:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-minimal]
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    with:
+      image: python-pytorch
+      context: python-pytorch
+      test: false
+      push: false
+      base_image: python-minimal
+      #base_image_gpu: base-gpu
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
+  python-tensorflow:
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs: [python-minimal]
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    with:
+      image: python-tensorflow
+      context: python-tensorflow
+      test: false
+      push: false
+      base_image: python-minimal
+      #base_image_gpu: base-gpu
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
   r-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
