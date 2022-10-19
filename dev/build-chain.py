@@ -6,8 +6,10 @@ chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
     "rstudio-sparkr": ["base", "r-minimal", "spark", "rstudio"],
     "jupyter-r": ["base", "r-minimal", "r-datascience", "jupyter-r"],
-    "jupyter-python": ["base", "python-minimal", "python-datascience",
-                       "jupyter-python"],
+    "jupyter-minimal": ["base", "python-minimal", "jupyter-python"],
+    "jupyter-datascience": ["base", "python-minimal", "python-datascience", "jupyter-python"],
+    "jupyter-pytorch": ["base", "python-minimal", "python-pytorch", "jupyter-python"],
+    "jupyter-tensorflow": ["base", "python-minimal", "python-tensorflow", "jupyter-python"],
     "jupyter-pyspark": ["base", "python-minimal", "spark", "jupyter"],
     "vscode": ["base", "python-minimal", "python-datascience", "vscode"],
     "vscode-minimal": ["base", "python-minimal", "vscode"]
