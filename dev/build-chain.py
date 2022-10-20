@@ -25,7 +25,10 @@ if len(sys.argv) == 3:
 for i, image in enumerate(chain):
 
     if image == "base":
-        previous_image = "ubuntu:20.04"
+        if GPU:
+            previous_image = "nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04"
+        else:
+            previous_image = "ubuntu:20.04"
     else:
         previous_image = chain[i-1]
 
