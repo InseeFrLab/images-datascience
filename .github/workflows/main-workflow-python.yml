@@ -1,4 +1,4 @@
-name: Main manual workflow
+name: Main manual workflow for Python-based image
 
 on:
   workflow_dispatch:
@@ -85,46 +85,7 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python-minimal:latest
       base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
-  r-minimal:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [base]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: r-minimal
-      context: r-minimal
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-base:latest
-      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
-  r-datascience:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r-minimal]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: r-datascience
-      context: r-datascience
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-r-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
-  jupyter-python-minimal:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-python
-      context: jupyter-python
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
-  jupyter-python-datascience:
+  jupyter-python:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -144,7 +105,7 @@ jobs:
     needs: [python-pytorch]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: jupyter-python
+      image: jupyter-python-pytorch
       context: jupyter-python
       test: false
       push: true
@@ -157,7 +118,7 @@ jobs:
     needs: [python-tensorflow]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: jupyter-python
+      image: jupyter-python-tensorflow
       context: jupyter-python
       test: false
       push: true
@@ -176,20 +137,7 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-pyspark:latest
       base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
-  jupyter-r:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r-datascience]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-r
-      context: jupyter-r
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-r-datascience:latest
-      base_image_gpu: inseefrlab/onyxia-r-datascience:latest-gpu
-  vscode:
+  vscode-python:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -202,42 +150,42 @@ jobs:
       push: true
       base_image: inseefrlab/onyxia-python-datascience:latest
       base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
-  r-studio:
+  vscode-python-pytorch:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r-datascience]
+    needs: [python-pytorch]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: rstudio
-      context: rstudio
+      image: vscode-python-pytorch
+      context: vscode
       test: false
       push: true
-      base_image: inseefrlab/onyxia-r-datascience:latest
-      base_image_gpu: inseefrlab/onyxia-r-datascience:latest-gpu
-  sparkr:
+      base_image: inseefrlab/onyxia-python-pytorch:latest
+      base_image_gpu: inseefrlab/onyxia-python-pytorch:latest-gpu
+  vscode-python-tensorflow:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r-minimal]
+    needs: [python-tensorflow]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: sparkr
-      context: spark
+      image: vscode-python-tensorflow
+      context: vscode
       test: false
       push: true
-      base_image: inseefrlab/onyxia-r-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
-  rstudio-sparkr:
+      base_image: inseefrlab/onyxia-python-tensorflow:latest
+      base_image_gpu: inseefrlab/onyxia-python-tensorflow:latest-gpu
+  vscode-pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [sparkr]
+    needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: rstudio-sparkr
-      context: rstudio
+      image: vscode-pyspark
+      context: vscode
       test: false
       push: true
-      base_image: inseefrlab/onyxia-sparkr:latest
-      base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
+      base_image: inseefrlab/onyxia-pyspark:latest
+      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu

@@ -101,14 +101,3 @@ jobs:
       - name: classic push
         if: ${{ inputs.push == 'true' }}
         run: docker push ${{ steps.meta.outputs.tags }}
-    
-     # - name: Build and push
-     #   if: ${{ inputs.push == 'true' }}
-     #   uses: docker/build-push-action@v3
-     #   with:
-     #      context: ${{ inputs.context }}/
-     #      build-args: |
-     #       BASE_IMAGE=${{ matrix.base_image }}
-     #       DEVICE_SUFFIX=${{ matrix.device_suffix }}
-     #      push: true
-     #      tags: ${{ steps.meta.outputs.tags }}
