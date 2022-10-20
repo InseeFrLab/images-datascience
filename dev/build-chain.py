@@ -5,6 +5,9 @@ import sys
 chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
     "rstudio-sparkr": ["base", "r-minimal", "spark", "rstudio"],
+    "python-minimal": ["base", "python-minimal"],
+    "python-datascience": ["base", "python-minimal", "python-datascience"],
+    "python-pyspark": ["base", "python-minimal", "spark"],
     "jupyter-r": ["base", "r-minimal", "r-datascience", "jupyter-r"],
     "jupyter-minimal": ["base", "python-minimal", "jupyter-python"],
     "jupyter-datascience": ["base", "python-minimal", "python-datascience", "jupyter-python"],
@@ -25,7 +28,10 @@ if len(sys.argv) == 3:
 for i, image in enumerate(chain):
 
     if image == "base":
-        previous_image = "ubuntu:20.04"
+        if GPU:
+            previous_image = "nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04"
+        else:
+            previous_image = "ubuntu:20.04"
     else:
         previous_image = chain[i-1]
 

@@ -1,6 +1,0 @@
-channels:
-  - conda-forge
-
-dependencies:
-  - cudatoolkit=11.6
-  - tensorflow==2.6.0=cuda112* # works with any cudatoolkit>=11.2

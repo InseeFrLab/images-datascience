@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: python-minimal
-        image: inseefrlab/python-minimal:latest-gpu
+        image: inseefrlab/onyxia-python-minimal:dev-gpu
         command: ["sleep", "10000"]
         imagePullPolicy: Always
         resources:
