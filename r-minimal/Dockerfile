@@ -10,17 +10,22 @@ ENV DEFAULT_USER="${USERNAME}"
 
 USER root
 
-# Install R using rocker's install scripts
-RUN git clone --branch R${R_VERSION} --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
-    cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
-    chmod -R 755 /rocker_scripts/ && \
-    /rocker_scripts/install_R_source.sh
+# Install R
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+ 		r-base=${R_VERSION}-* \
+ 		r-base-dev=${R_VERSION}-* \
+ 		r-recommended=${R_VERSION}-*
 
 # Use RStudio's package manager to download packages as binaries
 ENV CRAN="https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
 
-# Set up R (RSPM, OpenBLAS, littler, addtional packages)
-RUN /rocker_scripts/setup_R.sh && \
+# Set up R (RSPM, OpenBLAS, littler, addtional packages) using rocker's install scripts
+RUN git clone --branch R${R_VERSION} --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
+    cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
+    chmod -R 755 /rocker_scripts/ && \
+    # Set up R
+    /rocker_scripts/setup_R.sh && \
     # Re-install system libs that may have been removed by autoremove in rocker scripts
     /opt/install-system-libs.sh && \
     # Configure R for CUDA if parent image has CUDA
