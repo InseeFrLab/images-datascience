@@ -1,0 +1,21 @@
+[
+  {
+    "base_image": ":base_image",
+    "artefact_input_name": "python-minimal-delim-py:python_version_1",
+    "artefact_output_name": "python-pytorch-delim-py:python_version_1",
+    "python_version": ":python_version_1"
+  },
+  {
+    "base_image": ":base_image",
+    "artefact_input_name": "python-minimal-delim-py:python_version_1-gpu",
+    "artefact_output_name": "python-pytorch-delim-py:python_version_1-gpu",
+    "python_version": ":python_version_1",
+    "gpu": "true"
+  },
+  {
+    "base_image": ":base_image",
+    "artefact_input_name": "python-minimal-delim-py:python_version_2",
+    "artefact_output_name": "python-pytorch-delim-py:python_version_2",
+    "python_version": ":python_version_2"
+  }
+]
