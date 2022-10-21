@@ -16,7 +16,6 @@ ENV WORKSPACE_DIR="${HOME}/work"
 RUN groupmod -g ${GID} ${GROUPNAME} && \
     # Setup custom user with sudo rights
     useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
-    passwd -d ${USERNAME} && \
     # Create workspace
     mkdir ${WORKSPACE_DIR} && \
     # Disable default sudo message when opening shell
@@ -32,6 +31,8 @@ RUN chmod +x -R /opt/ && \
     /opt/install-system-libs.sh && \
     # Upgrade installed system libraries
     apt-get upgrade -y && \
+    # Make sudo passwordless
+    echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     # Generate locales
     locale-gen en_US.UTF-8 && \
     ## Install common binaries required for Onyxia
