@@ -2,23 +2,29 @@ name: Main manual workflow with artefacts
 
 on:
   workflow_dispatch:
+    inputs:
+      chain:
+        type: choice
+        description: Who to greet
+        required: true
+        options:
+          - all
+          - python
+          - r
   # schedule:
-    # every day at midnight for test
-    # - cron: "0 0 * * *"
-    
+  # every day at midnight for test
+  # - cron: "0 0 * * *"
+
 jobs:
   # init-variables:
   #   uses: ./.github/workflows/init-variables.yml
-    # with:
-    #    base_image: ubuntu:20.04
-    #    base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
-    #    python_version: "3.10.4,3.9.13"
-    #    r_version: "4.2.0,4.3.0"
-    #    spark_version: "3.2.1,3.3.0"
+  # with:
+  #    base_image: ubuntu:20.04
+  #    base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
+  #    python_version: "3.10.4,3.9.13"
+  #    r_version: "4.2.0,4.3.0"
+  #    spark_version: "3.2.1,3.3.0"
   base:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
       image: base
@@ -29,9 +35,7 @@ jobs:
       base_image_gpu: nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
       #debug: true
   python-minimal:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -40,13 +44,10 @@ jobs:
       test: false
       push: false
       base_image: base
-      #base_image_gpu: base-gpu
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   python-datascience:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -55,13 +56,10 @@ jobs:
       test: false
       push: false
       base_image: python-minimal
-      #base_image_gpu: base-gpu
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   python-pytorch:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -74,9 +72,7 @@ jobs:
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   python-tensorflow:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -89,9 +85,7 @@ jobs:
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   r-minimal:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -104,9 +98,7 @@ jobs:
       r_version_1: 4.1.2
       r_version_2: 4.2.3
   r-datascience:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -119,9 +111,7 @@ jobs:
       r_version_1: 4.1.2
       r_version_2: 4.2.3
   jupyter:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -133,9 +123,7 @@ jobs:
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   vscode:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -147,9 +135,7 @@ jobs:
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   pyspark:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -163,9 +149,7 @@ jobs:
       spark_version_1: 3.2.0
       spark_version_2: 3.3.0
   jupyter-pyspark:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -178,10 +162,32 @@ jobs:
       python_version_2: 3.10.4
       spark_version_1: 3.2.0
       spark_version_2: 3.3.0
+  jupyter-pytorch:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-pytorch]
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    with:
+      image: jupyter-python-pytorch
+      context: jupyter-python
+      test: false
+      push: false
+      base_image: python-pytorch
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
+  jupyter-tensorflow:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-pytorch]
+    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    with:
+      image: jupyter-python-tensorflow
+      context: jupyter-python
+      test: false
+      push: false
+      base_image: python-tensorflow
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
   r-studio:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -193,9 +199,7 @@ jobs:
       r_version_1: 4.1.2
       r_version_2: 4.2.3
   sparkr:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -209,9 +213,7 @@ jobs:
       spark_version_1: 3.2.0
       spark_version_2: 3.3.0
   rstudio-sparkr:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [sparkr]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -225,9 +227,7 @@ jobs:
       spark_version_1: 3.2.0
       spark_version_2: 3.3.0
   jupyter-r:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -243,7 +243,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [rstudio-sparkr,jupyter-pyspark, r-studio, vscode, jupyter]
+    needs: [rstudio-sparkr, jupyter-pyspark, r-studio, vscode, jupyter]
     uses: ./.github/workflows/tag-workflow-and-push-template.yml
     with:
       prefix: onyxia
