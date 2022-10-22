@@ -3,6 +3,7 @@ channels:
 
 dependencies:
   - boto3
+  - flake8
   - hvac
   - ipykernel
   - ipywidgets
