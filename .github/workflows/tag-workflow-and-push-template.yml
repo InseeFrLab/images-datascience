@@ -70,7 +70,8 @@ jobs:
         data=$(echo $data | sed  "s/:spark_version_2/${{inputs.spark_version_2}}/g" )
         matrix=$(echo $data| jq .) 
         echo $matrix                
-        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
+        echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+        #echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
 
   docker:
     runs-on: ubuntu-latest
@@ -127,7 +128,8 @@ jobs:
           docker tag ${{ matrix.image }} $final_name_tag
           docker tag ${{ matrix.image }} $final_name_tag_with_date
           docker images
-          echo ::set-output name=final_name::$final_name
+          echo "final_name=$final_name" >> $GITHUB_OUTPUT
+          #echo ::set-output name=final_name::$final_name
         shell: bash
 
       - name: Login to DockerHub
