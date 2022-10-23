@@ -58,11 +58,6 @@ on:
         description: spark version
         required: false
         type: string
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: false
-      DOCKERHUB_TOKEN:
-        required: false
 
 jobs:
   matrix_prep:
