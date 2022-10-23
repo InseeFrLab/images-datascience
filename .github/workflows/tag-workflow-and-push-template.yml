@@ -82,13 +82,20 @@ jobs:
     steps:
       - name: Check out code 
         uses: actions/checkout@v3
+        
+      - name: Make free space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
+          docker rmi -f $(docker images -aq)
+        shell: bash
       
       - name: buildargs docker command
         id: date
         run: |
             echo ${{matrix.image}}
-            date=$(date +%Y.%m.%d)              
-            echo ::set-output name=date::$date
+            date=$(date +%Y.%m.%d)
+            echo "date=$date" >> $GITHUB_OUTPUT
+            #echo ::set-output name=date::$date
         shell: bash
 
       - name: Load  image to Docker 📥
