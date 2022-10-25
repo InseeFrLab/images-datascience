@@ -58,11 +58,6 @@ on:
         description: spark version
         required: false
         type: string
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: false
-      DOCKERHUB_TOKEN:
-        required: false
 
 jobs:
   matrix_prep:
@@ -86,8 +81,9 @@ jobs:
         sed -i "s/:spark_version_1/${{inputs.spark_version_1}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:spark_version_2/${{inputs.spark_version_2}}/g" ./releases/${{ inputs.image }}.json
         matrix=$(cat ./releases/${{ inputs.image }}.json | jq .) 
-        echo $matrix                
-        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
+        echo $matrix          
+        echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+        #echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
   docker:
     runs-on: ubuntu-latest
     needs: matrix_prep
@@ -141,7 +137,8 @@ jobs:
                buildargs+=" --build-arg DEVICE_SUFFIX=-gpu"
             fi
             echo "${buildargs}"
-            echo ::set-output name=buildargs::${buildargs}
+            echo "buildargs=${buildargs}" >> $GITHUB_OUTPUT
+            #echo ::set-output name=buildargs::${buildargs}
         shell: bash
 
       - name: Build image 🛠
