@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: prepull
+spec:
+  selector:
+    matchLabels:
+      name: prepull 
+  template:
+    metadata:
+      labels:
+        name: prepull 
+    spec:
+      initContainers:
+      - name: prepull 
+        image: inseefrlab/onyxia-jupyter-python:py3.10.4
+        imagePullPolicy: Always
+        command: [ "/bin/bash" ]
+      containers:
+      - name: pause
+        image: gcr.io/google_containers/pause
