@@ -17,5 +17,12 @@
     "artefact_input_name": "python-minimal-delim-py:python_version_2",
     "artefact_output_name": "python-pytorch-delim-py:python_version_2",
     "python_version": ":python_version_2"
+  },
+  {
+    "base_image": ":base_image",
+    "artefact_input_name": "python-minimal-delim-py:python_version_2-gpu",
+    "artefact_output_name": "python-pytorch-delim-py:python_version_2-gpu",
+    "python_version": ":python_version_2",
+    "gpu": "true"
   }
 ]
