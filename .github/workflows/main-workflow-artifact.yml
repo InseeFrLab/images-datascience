@@ -16,14 +16,6 @@ on:
   # - cron: "0 0 * * *"
 
 jobs:
-  # init-variables:
-  #   uses: ./.github/workflows/init-variables.yml
-  # with:
-  #    base_image: ubuntu:20.04
-  #    base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
-  #    python_version: "3.10.4,3.9.13"
-  #    r_version: "4.2.0,4.3.0"
-  #    spark_version: "3.2.1,3.3.0"
   base:
     uses: ./.github/workflows/main-workflow-template-artifact.yml
     with:
@@ -33,7 +25,6 @@ jobs:
       push: false
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
-      #debug: true
   python-minimal:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [base]
@@ -68,7 +59,6 @@ jobs:
       test: false
       push: false
       base_image: python-minimal
-      #base_image_gpu: base-gpu
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   python-tensorflow:
@@ -81,7 +71,6 @@ jobs:
       test: false
       push: false
       base_image: python-minimal
-      #base_image_gpu: base-gpu
       python_version_1: 3.9.13
       python_version_2: 3.10.4
   r-minimal:
@@ -94,7 +83,6 @@ jobs:
       test: false
       push: false
       base_image: base
-      #base_image_gpu: base-gpu
       r_version_1: 4.1.3
       r_version_2: 4.2.1
   r-datascience:
@@ -107,7 +95,6 @@ jobs:
       test: false
       push: false
       base_image: r-minimal
-      #base_image_gpu: base-gpu
       r_version_1: 4.1.3
       r_version_2: 4.2.1
   jupyter:
@@ -146,8 +133,7 @@ jobs:
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      spark_version_1: 3.2.0
-      spark_version_2: 3.3.0
+      spark_version_1: 3.3.0
   jupyter-pyspark:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [pyspark]
@@ -160,8 +146,7 @@ jobs:
       base_image: pyspark
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      spark_version_1: 3.2.0
-      spark_version_2: 3.3.0
+      spark_version_1: 3.3.0
   vscode-pyspark:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [pyspark]
@@ -174,8 +159,7 @@ jobs:
       base_image: pyspark
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      spark_version_1: 3.2.0
-      spark_version_2: 3.3.0
+      spark_version_1: 3.3.0
   jupyter-pytorch:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-pytorch]
@@ -248,8 +232,7 @@ jobs:
       base_image: r-minimal
       r_version_1: 4.1.3
       r_version_2: 4.2.1
-      spark_version_1: 3.2.0
-      spark_version_2: 3.3.0
+      spark_version_1: 3.3.0
   rstudio-sparkr:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [sparkr]
@@ -262,8 +245,7 @@ jobs:
       base_image: sparkr
       r_version_1: 4.1.3
       r_version_2: 4.2.1
-      spark_version_1: 3.2.0
-      spark_version_2: 3.3.0
+      spark_version_1: 3.3.0
   jupyter-r:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-datascience]
@@ -287,7 +269,6 @@ jobs:
       prefix: onyxia
       r_version_1: 4.1.3
       r_version_2: 4.2.1
-      spark_version_1: 3.2.0
-      spark_version_2: 3.3.0
+      spark_version_1: 3.3.0
       python_version_1: 3.9.13
       python_version_2: 3.10.4
