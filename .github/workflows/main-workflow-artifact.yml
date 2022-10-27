@@ -11,9 +11,9 @@ on:
           - all
           - python
           - r
-  # schedule:
-  # every day at midnight for test
-  # - cron: "0 0 * * *"
+  schedule:
+  # every sunday at 2am
+    - cron: '0 2 * * 0'
 
 jobs:
   base:
