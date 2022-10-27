@@ -5,14 +5,7 @@
   ],
   "regexManagers": [
     {
-      "fileMatch": ["^vscode/Dockerfile$"],
-      "matchStrings": ["ARG CODE_SERVER_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "coder/code-server",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
-    },
-    {
-      "fileMatch": ["^r/Dockerfile$"],
+      "fileMatch": ["^r-minimal/Dockerfile$"],
       "matchStrings": ["ENV R_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",

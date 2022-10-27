@@ -10,9 +10,7 @@ ARG REMOTE_CONFIG_DIR="${HOME}/.local/share/code-server/Machine"
 
 USER root
 
-RUN wget -q https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VERSION}/code-server_${CODE_SERVER_VERSION}_amd64.deb -O code-server.deb && \
-    # Install code-server
-    dpkg -i code-server.deb && \
+RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     # Install extensions
     code-server --install-extension ms-python.python && \
     code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools && \
@@ -29,7 +27,6 @@ RUN wget -q https://github.com/coder/code-server/releases/download/v${CODE_SERVE
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    rm code-server.deb && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy custom VSCode User settings
