@@ -3,8 +3,6 @@ FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 
-ARG CODE_SERVER_VERSION="4.8.0"
-
 ARG USER_CONFIG_DIR="${HOME}/.local/share/code-server/User"
 ARG REMOTE_CONFIG_DIR="${HOME}/.local/share/code-server/Machine"
 
