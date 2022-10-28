@@ -3,7 +3,7 @@ FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 
-ARG PYTHON_VERSION="3.9"
+ARG PYTHON_VERSION="3.10.4"
 
 ENV MAMBA_DIR="/opt/mamba"
 ENV PATH="${MAMBA_DIR}/bin:${PATH}"

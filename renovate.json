@@ -6,10 +6,16 @@
   "regexManagers": [
     {
       "fileMatch": ["^r-minimal/Dockerfile$"],
-      "matchStrings": ["ENV R_VERSION=\"(?<currentValue>.*?)\""],
+      "matchStrings": ["ARG R_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^R(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["^python-minimal/Dockerfile$"],
+      "matchStrings": ["ARG R_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "conda-forge/python",
+      "datasourceTemplate": "conda"
     }
   ]
 }
