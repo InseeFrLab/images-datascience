@@ -13,7 +13,7 @@
     },
     {
       "fileMatch": ["^python-minimal/Dockerfile$"],
-      "matchStrings": ["ARG R_VERSION=\"(?<currentValue>.*?)\""],
+      "matchStrings": ["ARG PYTHON_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "conda-forge/python",
       "datasourceTemplate": "conda"
     }
