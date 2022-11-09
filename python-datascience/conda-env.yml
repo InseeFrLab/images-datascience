@@ -7,6 +7,7 @@ dependencies:
   - dask
   - gensim
   - geopandas
+  - jupyter-cache
   - matplotlib-base
   - nltk
   - numba
