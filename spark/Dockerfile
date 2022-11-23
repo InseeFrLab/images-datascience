@@ -32,8 +32,13 @@ RUN apt-get update && \
     # Get Spark/Hadoop/Hive binaries
     mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
     ${SHELL} /tmp/get-binaries.sh && \
-    # Get SparkR package if base image is R
-    if [[ "${BASE_IMAGE}" == *"onyxia-r"* ]]; then R -e "devtools::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; fi && \
+    # Install additional packages if base image is R
+    if [[ "${BASE_IMAGE}" == *"r-minimal"* ]]; then \
+        /rocker_scripts/install_tidyverse.sh && \
+        R -e "install.packages('arrow')" && \
+        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')" && \
+        R -e "install.packages('sparklyr')"; \
+    fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
     # Change log verbosity hadoop
