@@ -137,7 +137,7 @@ if [[ -e "/usr/local/lib/R/etc/" ]]; then
     env | grep "IMAGE_NAME" >> /usr/local/lib/R/etc/Renviron.site
     
     if [[ -n "$R_REPOSITORY" ]]; then
-        echo "configuration r (TODO)"
+        echo "configuration r (add local repository)"
         # To indent a heredoc, <<- and tabs are required (no spaces allowed)
         cat <<-EOF >> /usr/local/lib/R/etc/Rprofile.site
 		# Proxy repository for R
