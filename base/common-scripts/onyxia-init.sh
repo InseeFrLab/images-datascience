@@ -135,6 +135,19 @@ if [[ -e "/usr/local/lib/R/etc/" ]]; then
     fi
     env | grep "KUBERNETES" >> /usr/local/lib/R/etc/Renviron.site
     env | grep "IMAGE_NAME" >> /usr/local/lib/R/etc/Renviron.site
+    
+    if [[ -n "$R_REPOSITORY" ]]; then
+        echo "configuration r (TODO)"
+        # To indent a heredoc, <<- and tabs are required (no spaces allowed)
+        cat <<-EOF >> /usr/local/lib/R/etc/Rprofile.site
+		# Proxy repository for R
+		local({
+			r <- getOption("repos")
+			r["LocalRepository"] <- "${R_REPOSITORY}"
+			options(repos = r)
+		})
+		EOF
+    fi
 fi
 
 if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
@@ -148,6 +161,15 @@ if [[ -e "$HOME/work" ]]; then
   else
     echo "cd $HOME/work" >> $HOME/.bashrc
   fi
+fi
+
+if [[ -n "$PIP_REPOSITORY" ]]; then
+    echo "configuration pip (index-url)"
+    pip config set global.index-url $PIP_REPOSITORY
+fi
+if [[ -n "$CONDA_REPOSITORY" ]]; then
+    echo "configuration conda (add channels)"
+    conda config --add channels $CONDA_REPOSITORY
 fi
 
 echo "execution of $@"
