@@ -43,7 +43,7 @@ jobs:
       test: false
       push: false
       base_image: base
-      python_version_1: PYTHON_VERSION_1
+      python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
   python-datascience:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
