@@ -1,8 +1,8 @@
 channels:
-  - conda-forge
+  - pytorch
 
 dependencies:
-  - pytorch::cpuonly
-  - pytorch::pytorch
-  - pytorch::torchaudio
-  - pytorch::torchvision
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cpuonly
