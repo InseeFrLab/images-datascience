@@ -46,12 +46,8 @@ on:
         description: context of docker image
         required: false
         type: string
-      spark_version_1:
+      spark_version:
         description: context of docker image
-        required: false
-        type: string
-      spark_version_2:
-        description: spark version
         required: false
         type: string
       debug:
@@ -78,8 +74,7 @@ jobs:
         sed -i "s/:python_version_2/${{inputs.python_version_2}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:spark_version_1/${{inputs.spark_version_1}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:spark_version_2/${{inputs.spark_version_2}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:spark_version/${{inputs.spark_version}}/g" ./releases/${{ inputs.image }}.json
         matrix=$(cat ./releases/${{ inputs.image }}.json | jq .) 
         echo $matrix          
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
