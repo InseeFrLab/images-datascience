@@ -1,8 +1,9 @@
 channels:
-  - conda-forge
+  - pytorch
+  - nvidia
 
 dependencies:
-  - cudatoolkit=11.6
-  - pytorch::pytorch
-  - pytorch::torchaudio
-  - pytorch::torchvision 
+  - pytorch
+  - torchaudio
+  - torchvision
+  - pytorch-cuda=11.6
