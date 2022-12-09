@@ -123,13 +123,20 @@ jobs:
             if [ -n "${{ matrix.gpu }}" ]; then
               DEVICE_SUFFIX=-gpu
             fi
-            if [ "${{ matrix.base_image }}" = "base" ]; then
-              BASE_IMAGE=base:latest${DEVICE_SUFFIX}
+            base_image=${{ matrix.base_image }}
+            if [[ "$base_image" == *"-delim-"* ]]; then
+              image_name=$(echo $base_image | awk -F '-delim-' '{print $1}' )
+              tag=$(echo $base_image | awk -F '-delim-' '{print $2}' )
             else
-              BASE_IMAGE=${{ matrix.base_image }}${DEVICE_SUFFIX}
+              image_name=$(echo $base_image | awk -F ':' '{print $1}' )
+              tag=$(echo $image | awk -F ':' '{print $2}' )
             fi
+            owner=${{ env.OWNER }}
+            owner=$(echo "$owner" | awk '{print tolower($0)}')
+            final_name="$owner/${{ inputs.prefix}}-$image_name"
+            final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
             echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
-            echo "base_image=${BASE_IMAGE}" >> $GITHUB_OUTPUT
+            echo "base_image=${final_name_tag}" >> $GITHUB_OUTPUT
             echo ${BASE_IMAGE}
         shell: bash
 

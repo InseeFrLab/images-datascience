@@ -3,9 +3,8 @@
         "base_image":"ubuntu:20.04",
         "artefact_output_name":"base:latest"
     },
-   {
+    {
         "base_image":"nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu20.04",
-        "artefact_output_name":"base:latest",
-        "gpu":"true"
+        "artefact_output_name":"base:latest-gpu"
     }
 ]
