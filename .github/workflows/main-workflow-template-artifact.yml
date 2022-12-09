@@ -18,6 +18,11 @@ on:
         description: name of docker image
         required: false
         type: string
+      prefix:
+        description: prefix for docker images
+        required: false
+        type: string
+        default: 'onyxia'
       context:
         description: context of docker image
         required: false
