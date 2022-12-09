@@ -28,7 +28,7 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: base
       context: base
@@ -39,7 +39,7 @@ jobs:
   python-minimal:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [base]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-minimal
       context: python-minimal
@@ -51,7 +51,7 @@ jobs:
   python-datascience:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-datascience
       context: python-datascience
@@ -63,7 +63,7 @@ jobs:
   python-pytorch:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-pytorch
       context: python-pytorch
@@ -75,7 +75,7 @@ jobs:
   python-tensorflow:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-tensorflow
       context: python-tensorflow
@@ -87,7 +87,7 @@ jobs:
   r-minimal:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [base]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r-minimal
       context: r-minimal
@@ -99,7 +99,7 @@ jobs:
   r-datascience:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-minimal]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r-datascience
       context: r-datascience
@@ -111,7 +111,7 @@ jobs:
   jupyter:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-datascience]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-python
       context: jupyter-python
@@ -123,7 +123,7 @@ jobs:
   vscode:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-datascience]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-python
       context: vscode
@@ -135,7 +135,7 @@ jobs:
   pyspark:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
       context: spark
@@ -148,7 +148,7 @@ jobs:
   jupyter-pyspark:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [pyspark]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pyspark
       context: jupyter-python
@@ -161,7 +161,7 @@ jobs:
   vscode-pyspark:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [pyspark]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-pyspark
       context: vscode
@@ -174,7 +174,7 @@ jobs:
   jupyter-pytorch:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-pytorch]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pytorch
       context: jupyter-python
@@ -186,7 +186,7 @@ jobs:
   vscode-pytorch:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-pytorch]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-pytorch
       context: vscode
@@ -198,7 +198,7 @@ jobs:
   jupyter-tensorflow:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-tensorflow]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-tensorflow
       context: jupyter-python
@@ -210,7 +210,7 @@ jobs:
   vscode-tensorflow:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-tensorflow]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-tensorflow
       context: vscode
@@ -222,7 +222,7 @@ jobs:
   r-studio:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-datascience]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio
       context: rstudio
@@ -234,7 +234,7 @@ jobs:
   sparkr:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-minimal]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: sparkr
       context: spark
@@ -247,7 +247,7 @@ jobs:
   rstudio-sparkr:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [sparkr]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio-sparkr
       context: rstudio
@@ -260,7 +260,7 @@ jobs:
   jupyter-r:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-datascience]
-    uses: ./.github/workflows/main-workflow-template-artifact.yml
+    uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-r
       context: jupyter-r
