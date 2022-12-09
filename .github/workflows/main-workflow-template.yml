@@ -137,7 +137,7 @@ jobs:
             final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
             echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
             echo "base_image=${final_name_tag}" >> $GITHUB_OUTPUT
-            echo $base_image
+            echo $final_name_tag
         shell: bash
 
       - name: Generate output tags
