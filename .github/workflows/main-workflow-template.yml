@@ -113,18 +113,18 @@ jobs:
             r_version="${{ matrix.r_version}}"
             spark_version="${{ matrix.spark_version}}"
             gpu=${{ matrix.gpu }}
-            buildargs="--build-arg BASE_IMAGE=${{matrix.base_image}}"
+            buildargs="BASE_IMAGE=${{matrix.base_image}}"
             if [ -n "$python_version" ]; then
-              buildargs+=" --build-arg PYTHON_VERSION=$python_version"
+              buildargs+=" PYTHON_VERSION=$python_version"
             fi
             if [ -n "$r_version" ]; then
-              buildargs+=" --build-arg R_VERSION=$r_version"
+              buildargs+=" R_VERSION=$r_version"
             fi
             if [ -n "$spark_version" ]; then
-               buildargs+=" --build-arg SPARK_VERSION=$spark_version"
+               buildargs+=" SPARK_VERSION=$spark_version"
             fi
             if [ -n "$gpu" ]; then
-               buildargs+=" --build-arg DEVICE_SUFFIX=-gpu"
+               buildargs+=" DEVICE_SUFFIX=-gpu"
             fi
             echo "${buildargs}"
             echo "buildargs=${buildargs}" >> $GITHUB_OUTPUT
