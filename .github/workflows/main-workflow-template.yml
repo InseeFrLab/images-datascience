@@ -127,6 +127,7 @@ jobs:
               BASE_IMAGE=base:latest
             else
               BASE_IMAGE=${{ matrix.base_image }}
+            fi
             echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
             echo "base_image=${BASE_IMAGE}" >> $GITHUB_OUTPUT
         shell: bash
