@@ -144,5 +144,5 @@ jobs:
         with:
           push: true
           context: ${{ inputs.context }}/
-          tags: ${{ matrix.artefact_output_name}}
+          tags: inseefrlab/onyxia-${{ matrix.artefact_output_name}}
           build-args: ${{ steps.buildargs.outputs.buildargs }}
