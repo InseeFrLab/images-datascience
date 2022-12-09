@@ -1,4 +1,4 @@
-name: Template to build Docker images
+name: Template to build and push Docker images
 
 env:
   OWNER: ${{ github.repository_owner }}
