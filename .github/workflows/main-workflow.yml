@@ -1,23 +1,27 @@
-name: Main manual workflow
+name: Main manual workflow with artefacts
 
 on:
   workflow_dispatch:
     inputs:
       chain:
         type: choice
-        description: Who to greet
+        description: which chain to build
         required: true
+        default: 'all' 
         options:
           - all
           - python
           - r
-  # schedule:
-  # every day at midnight for test
-  # - cron: "0 0 * * *"
+  schedule:
+  # every sunday at 2am
+    - cron: '0 2 * * 0'
 
 env:
-  PUSH: true
-
+  PYTHON_VERSION_1: 3.9.13
+  PYTHON_VERSION_2: 3.10.4
+  R_VERSION_1: 4.1.3
+  R_VERSION_2: 4.2.1
+  SPARK_VERSION: 3.3.0
 
 jobs:
   base:
@@ -29,272 +33,239 @@ jobs:
       image: base
       context: base
       test: true
-      push: true
+      push: false
       base_image: ubuntu:20.04
-      base_image_gpu: nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
+      base_image_gpu: nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu20.04
   python-minimal:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-minimal
       context: python-minimal
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-base:latest
-      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+      push: false
+      base_image: base
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
   python-datascience:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-datascience
       context: python-datascience
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
+      push: false
+      base_image: python-minimal
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
   python-pytorch:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-pytorch
       context: python-pytorch
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
+      push: false
+      base_image: python-minimal
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
   python-tensorflow:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-tensorflow
       context: python-tensorflow
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
-  pyspark:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: pyspark
-      context: spark
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-python-minimal:latest-gpu
-  jupyter-python:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-datascience]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-python
-      context: jupyter-python
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-datascience:latest
-      base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
-  jupyter-python-pytorch:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-pytorch]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-python-pytorch
-      context: jupyter-python
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-pytorch:latest
-      base_image_gpu: inseefrlab/onyxia-python-pytorch:latest-gpu
-  jupyter-python-tensorflow:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-tensorflow]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-python-tensorflow
-      context: jupyter-python
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-tensorflow:latest
-      base_image_gpu: inseefrlab/onyxia-python-tensorflow:latest-gpu
-  jupyter-pyspark:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [pyspark]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-pyspark
-      context: jupyter-python
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-pyspark:latest
-      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
-  vscode-python:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-datascience]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-python
-      context: vscode
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-datascience:latest
-      base_image_gpu: inseefrlab/onyxia-python-datascience:latest-gpu
-  vscode-python-pytorch:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-pytorch]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-python-pytorch
-      context: vscode
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-pytorch:latest
-      base_image_gpu: inseefrlab/onyxia-python-pytorch:latest-gpu
-  vscode-python-tensorflow:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [python-tensorflow]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-python-tensorflow
-      context: vscode
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-python-tensorflow:latest
-      base_image_gpu: inseefrlab/onyxia-python-tensorflow:latest-gpu
-  vscode-pyspark:
-    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [pyspark]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-pyspark
-      context: vscode
-      test: false
-      push: true
-      base_image: inseefrlab/onyxia-pyspark:latest
-      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
+      push: false
+      base_image: python-minimal
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
   r-minimal:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r-minimal
       context: r-minimal
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-base:latest
-      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
+      push: false
+      base_image: base
+      r_version_1: $R_VERSION_1
+      r_version_2: $R_VERSION_2
   r-datascience:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r-datascience
       context: r-datascience
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-r-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
-  sparkr:
-    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r-datascience]
+      push: false
+      base_image: r-minimal
+      r_version_1: $R_VERSION_1
+      r_version_2: $R_VERSION_2
+  jupyter:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: sparkr
+      image: jupyter-python
+      context: jupyter-python
+      test: false
+      push: false
+      base_image: python-datascience
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
+  vscode:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-datascience]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-python
+      context: vscode
+      test: false
+      push: false
+      base_image: python-datascience
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
+  pyspark:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-minimal]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: pyspark
       context: spark
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-r-minimal:latest
-      base_image_gpu: inseefrlab/onyxia-r-minimal:latest-gpu
-  jupyter-r:
-    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [r-datascience]
+      push: false
+      base_image: python-minimal
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
+      spark_version: $SPARK_VERSION
+  jupyter-pyspark:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: jupyter-r
-      context: jupyter-r
+      image: jupyter-pyspark
+      context: jupyter-python
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-r-datascience:latest
-      base_image_gpu: inseefrlab/onyxia-r-datascience:latest-gpu
+      push: false
+      base_image: pyspark
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
+      spark_version: $SPARK_VERSION
+  vscode-pyspark:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [pyspark]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-pyspark
+      context: vscode
+      test: false
+      push: false
+      base_image: pyspark
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
+      spark_version: $SPARK_VERSION
+  jupyter-pytorch:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-pytorch]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-pytorch
+      context: jupyter-python
+      test: false
+      push: false
+      base_image: python-pytorch
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
+  vscode-pytorch:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-pytorch]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-pytorch
+      context: vscode
+      test: false
+      push: false
+      base_image: python-pytorch
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
+  jupyter-tensorflow:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-tensorflow]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-tensorflow
+      context: jupyter-python
+      test: false
+      push: false
+      base_image: python-tensorflow
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
+  vscode-tensorflow:
+    if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
+    needs: [python-tensorflow]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-tensorflow
+      context: vscode
+      test: false
+      push: false
+      base_image: python-tensorflow
+      python_version_1: $PYTHON_VERSION_1
+      python_version_2: $PYTHON_VERSION_2
   r-studio:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio
       context: rstudio
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-r-datascience:latest
-      base_image_gpu: inseefrlab/onyxia-r-datascience:latest-gpu
+      push: false
+      base_image: r-datascience
+      r_version_1: $R_VERSION_1
+      r_version_2: $R_VERSION_2
+  sparkr:
+    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
+    needs: [r-minimal]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: sparkr
+      context: spark
+      test: false
+      push: false
+      base_image: r-minimal
+      r_version_1: $R_VERSION_1
+      r_version_2: $R_VERSION_2
+      spark_version: $SPARK_VERSION
   rstudio-sparkr:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     needs: [sparkr]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio-sparkr
       context: rstudio
       test: false
-      push: true
-      base_image: inseefrlab/onyxia-sparkr:latest
-      base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
+      push: false
+      base_image: sparkr
+      r_version_1: $R_VERSION_1
+      r_version_2: $R_VERSION_2
+      spark_version: $SPARK_VERSION
+  jupyter-r:
+    if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
+    needs: [r-datascience]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-r
+      context: jupyter-r
+      test: false
+      push: false
+      base_image: r-datascience
+      r_version_1: $R_VERSION_1
+      r_version_2: $R_VERSION_2

@@ -1,23 +1,31 @@
-name: Build all images
+name: Download parent image, build new one, test it and upload to DockerHub
+
+env:
+  OWNER: ${{ github.repository_owner }}
 
 on:
   workflow_call:
     inputs:
       test:
         description: should test
-        required: true
+        required: false
         type: string
       push:
         description: should push
-        required: true
+        required: false
         type: string
       image:
         description: name of docker image
-        required: true
+        required: false
         type: string
+      prefix:
+        description: prefix for docker images
+        required: false
+        type: string
+        default: 'onyxia'
       context:
         description: context of docker image
-        required: true
+        required: false
         type: string
       base_image:
         description: context of docker image
@@ -25,40 +33,104 @@ on:
         type: string
       base_image_gpu:
         description: context of docker image
-        required: true
+        required: false
+        type: string
+      python_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      python_version_2:
+        description: context of docker image
+        required: false
+        type: string
+      r_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      r_version_2:
+        description: context of docker image
+        required: false
+        type: string
+      spark_version:
+        description: context of docker image
+        required: false
+        type: string
+      debug:
+        description: spark version
+        required: false
         type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: false
       DOCKERHUB_TOKEN:
         required: false
-        
 
 jobs:
+  matrix_prep:
+    #if: ${{ inputs.debug == 'true' }}
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: Check out code 
+      uses: actions/checkout@v3
+    - id: set-matrix
+      run: |
+        base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
+        base_image_gpu_escaped=$(echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g' )
+        sed -i "s/:base_image_gpu/$base_image_gpu_escaped/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:base_image/$base_image_escaped/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:python_version_1/${{inputs.python_version_1}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:python_version_2/${{inputs.python_version_2}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:spark_version/${{inputs.spark_version}}/g" ./releases/${{ inputs.image }}.json
+        matrix=$(cat ./releases/${{ inputs.image }}.json | jq .) 
+        echo $matrix          
+        echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+        #echo ::set-output name=matrix::{\"include\":$(echo $matrix)}
   docker:
     runs-on: ubuntu-latest
+    needs: matrix_prep
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - base_image: ${{ inputs.base_image }}
-            device_suffix: ""
-          - base_image: ${{ inputs.base_image_gpu }} 
-            device_suffix: "-gpu"
+      matrix: 
+        ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
-      - name: Checkout
+      - name: Check out code 
         uses: actions/checkout@v3
+        
+      # https://github.com/actions/virtual-environments/issues/2840
+      - name: Make free space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
+          docker rmi -f $(docker images -aq)
+        shell: bash
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: inseefrlab/onyxia-${{ inputs.image }}
-          tags: |
-            # set latest tag for main branch
-            type=raw,value=latest${{ matrix.device_suffix }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-            # propagate valid semver tags
-            type=semver,pattern={{raw}}${{ matrix.device_suffix }}
+      - name: buildargs docker command
+        id: buildargs
+        run: |
+            python_version="${{ matrix.python_version}}"
+            r_version="${{ matrix.r_version}}"
+            spark_version="${{ matrix.spark_version}}"
+            gpu=${{ matrix.gpu }}
+            buildargs="--build-arg BASE_IMAGE=${{matrix.base_image}}"
+            if [ -n "$python_version" ]; then
+              buildargs+=" --build-arg PYTHON_VERSION=$python_version"
+            fi
+            if [ -n "$r_version" ]; then
+              buildargs+=" --build-arg R_VERSION=$r_version"
+            fi
+            if [ -n "$spark_version" ]; then
+               buildargs+=" --build-arg SPARK_VERSION=$spark_version"
+            fi
+            if [ -n "$gpu" ]; then
+               buildargs+=" --build-arg DEVICE_SUFFIX=-gpu"
+            fi
+            echo "${buildargs}"
+            echo "buildargs=${buildargs}" >> $GITHUB_OUTPUT
+            #echo ::set-output name=buildargs::${buildargs}
+        shell: bash
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -66,38 +138,38 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # https://github.com/actions/virtual-environments/issues/2840
-      - name: Make free space
-        run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
-        shell: bash
-            
-      - name: Build and store
-        uses: docker/build-push-action@v3
-        with:
-          context: ${{ inputs.context }}/
-          file: ${{ inputs.context }}/Dockerfile
-          load: true
-          build-args: |
-            BASE_IMAGE=${{ matrix.base_image }}
-            DEVICE_SUFFIX=${{ matrix.device_suffix }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
-      
-      - name: run structure tests
-        if: ${{ inputs.test == 'true' }}
-        uses: plexsystems/container-structure-test-action@v0.2.0
-        with:
-          image: ${{ steps.meta.outputs.tags }}
-          config: ./${{ inputs.image }}/tests.yaml
-
-      - name: Login to DockerHub
-        if: ${{ inputs.push == 'true' }}
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
-      - name: classic push
-        if: ${{ inputs.push == 'true' }}
-        run: docker push ${{ steps.meta.outputs.tags }}
+
+      - name: Compute tags
+        id: compute-tags
+        run: |
+          image=${{ matrix.artefact_output_name }}
+          if [[ "$image" == *"-delim-"* ]]; then
+            image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
+            tag=$(echo $image | awk -F '-delim-' '{print $2}' )
+          else
+            image_name=$image
+            tag=latest${{ matrix.gpu }}
+          fi
+          date=$(date +%Y.%m.%d)
+          owner=${{ env.OWNER }}
+          owner=$(echo "$owner" | awk '{print tolower($0)}')
+          final_name="$owner/${{ inputs.prefix}}-$image_name"
+          final_name_tag="$final_name:$tag"
+          final_name_tag_with_date="$final_name_tag-$date"
+          tags=$final_name_tag,$final_name_tag_with_date
+          echo $tags
+          echo "tags=$tags" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          context: ${{ inputs.context }}/
+          tags: ${{ steps.compute-tags.outputs.tags }}
+          build-args: ${{ steps.buildargs.outputs.buildargs }}
