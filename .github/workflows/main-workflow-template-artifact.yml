@@ -139,10 +139,32 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Compute tags
+        id: compute-tags
+        run: |
+          image=${{ matrix.artefact_output_name }}
+          if [[ "$image" == *"-delim-"* ]]; then
+            image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
+            tag=$(echo $image | awk -F '-delim-' '{print $2}' )
+          else
+            image_name=$image
+            tag="latest"
+          fi
+          date=$(date +%Y.%m.%d)
+          owner=${{ env.OWNER }}
+          owner=$(echo "$owner" | awk '{print tolower($0)}')
+          final_name="$owner/${{ inputs.prefix}}-$image_name"
+          final_name_tag="$final_name:$tag"
+          final_name_tag_with_date="$final_name_tag-$date"
+          tags=$final_name_tag,$final_name_tag_with_date
+          echo $tags
+          echo "tags=$tags" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
           context: ${{ inputs.context }}/
-          tags: inseefrlab/onyxia-${{ matrix.artefact_output_name}}
+          tags: ${{ steps.compute-tags.outputs.tags }}
           build-args: ${{ steps.buildargs.outputs.buildargs }}
