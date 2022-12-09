@@ -98,24 +98,24 @@ jobs:
       - name: Check out code 
         uses: actions/checkout@v3
         
-      # https://github.com/actions/virtual-environments/issues/2840
-      - name: Make free space
-        run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
-          docker rmi -f $(docker images -aq)
-        shell: bash
+      # # https://github.com/actions/virtual-environments/issues/2840
+      # - name: Make free space
+      #   run: |
+      #     sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
+      #     docker rmi -f $(docker images -aq)
+      #   shell: bash
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v2
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: buildargs docker command
         id: buildargs
@@ -130,6 +130,7 @@ jobs:
             fi
             echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
             echo "base_image=${BASE_IMAGE}" >> $GITHUB_OUTPUT
+            echo ${BASE_IMAGE}
         shell: bash
 
       - name: Generate output tags
@@ -154,15 +155,15 @@ jobs:
           echo "tags=$tags" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          context: ${{ inputs.context }}/
-          tags: ${{ steps.compute-tags.outputs.tags }}
-          build-args: |
-            BASE_IMAGE=${{ steps.buildargs.outputs.base_image }}
-            PYTHON_VERSION=${{ matrix.python_version }}
-            R_VERSION=${{ matrix.r_version }}
-            SPARK_VERSION=${{ matrix.spark_version }}
-            DEVICE_SUFFIX=${{ steps.buildargs.outputs.device_suffix }}
+      # - name: Build and push
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     push: true
+      #     context: ${{ inputs.context }}/
+      #     tags: ${{ steps.compute-tags.outputs.tags }}
+      #     build-args: |
+      #       BASE_IMAGE=${{ steps.buildargs.outputs.base_image }}
+      #       PYTHON_VERSION=${{ matrix.python_version }}
+      #       R_VERSION=${{ matrix.r_version }}
+      #       SPARK_VERSION=${{ matrix.spark_version }}
+      #       DEVICE_SUFFIX=${{ steps.buildargs.outputs.device_suffix }}
