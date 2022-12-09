@@ -106,29 +106,6 @@ jobs:
           docker rmi -f $(docker images -aq)
         shell: bash
 
-      - name: buildargs docker command
-        id: buildargs
-        run: |
-            python_version="${{ matrix.python_version}}"
-            r_version="${{ matrix.r_version}}"
-            spark_version="${{ matrix.spark_version}}"
-            gpu=${{ matrix.gpu }}
-            buildargs="BASE_IMAGE=${{matrix.base_image}}"
-            if [ -n "$python_version" ]; then
-              buildargs+="\nPYTHON_VERSION=$python_version"
-            fi
-            if [ -n "$r_version" ]; then
-              buildargs+="\nR_VERSION=$r_version"
-            fi
-            if [ -n "$spark_version" ]; then
-               buildargs+="\nSPARK_VERSION=$spark_version"
-            fi
-            if [ -n "$gpu" ]; then
-               buildargs+="\nDEVICE_SUFFIX=-gpu"
-            fi
-            echo "buildargs=${buildargs}" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -163,10 +140,24 @@ jobs:
           echo "tags=$tags" >> $GITHUB_OUTPUT
         shell: bash
 
+      - name: buildargs docker command
+        id: buildargs
+        run: |
+            if [ -n "${{ matrix.gpu }}" ]; then
+               DEVICE_SUFFIX=-gpu
+            fi
+            echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
           context: ${{ inputs.context }}/
           tags: ${{ steps.compute-tags.outputs.tags }}
-          build-args: ${{ steps.buildargs.outputs.buildargs }}
+          build-args: |
+            BASE_IMAGE=${{ matrix.base_image }}
+            PYTHON_VERSION=${{ matrix.python_version }}
+            R_VERSION=${{ matrix.r_version }}
+            SPARK_VERSION=${{ matrix.spark_version }}
+            DEVICE_SUFFIX=${{ steps.buildargs.outputs.device_suffix }}

@@ -46,8 +46,8 @@ jobs:
       test: false
       push: false
       base_image: base
-      python_version_1: 3.9.13
-      python_version_2: 3.10.4
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -61,8 +61,8 @@ jobs:
       test: false
       push: false
       base_image: python-minimal
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -76,8 +76,8 @@ jobs:
       test: false
       push: false
       base_image: python-minimal
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -91,8 +91,8 @@ jobs:
       test: false
       push: false
       base_image: python-minimal
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -106,8 +106,8 @@ jobs:
       test: false
       push: false
       base_image: base
-      r_version_1: $R_VERSION_1
-      r_version_2: $R_VERSION_2
+      r_version_1: ${{ env.R_VERSION_1 }}
+      r_version_2: ${{ env.R_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -121,8 +121,8 @@ jobs:
       test: false
       push: false
       base_image: r-minimal
-      r_version_1: $R_VERSION_1
-      r_version_2: $R_VERSION_2
+      r_version_1: ${{ env.R_VERSION_1 }}
+      r_version_2: ${{ env.R_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -136,8 +136,8 @@ jobs:
       test: false
       push: false
       base_image: python-datascience
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -151,8 +151,8 @@ jobs:
       test: false
       push: false
       base_image: python-datascience
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -166,9 +166,9 @@ jobs:
       test: false
       push: false
       base_image: python-minimal
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
-      spark_version: $SPARK_VERSION
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
+      spark_version: ${{ env.SPARK_VERSION }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -182,9 +182,9 @@ jobs:
       test: false
       push: false
       base_image: pyspark
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
-      spark_version: $SPARK_VERSION
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
+      spark_version: ${{ env.SPARK_VERSION }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -198,9 +198,9 @@ jobs:
       test: false
       push: false
       base_image: pyspark
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
-      spark_version: $SPARK_VERSION
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
+      spark_version: ${{ env.SPARK_VERSION }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -214,8 +214,8 @@ jobs:
       test: false
       push: false
       base_image: python-pytorch
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -229,8 +229,8 @@ jobs:
       test: false
       push: false
       base_image: python-pytorch
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -244,8 +244,8 @@ jobs:
       test: false
       push: false
       base_image: python-tensorflow
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -259,8 +259,8 @@ jobs:
       test: false
       push: false
       base_image: python-tensorflow
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
+      python_version_1: ${{ env.PYTHON_VERSION_1 }}
+      python_version_2: ${{ env.PYTHON_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -274,8 +274,8 @@ jobs:
       test: false
       push: false
       base_image: r-datascience
-      r_version_1: $R_VERSION_1
-      r_version_2: $R_VERSION_2
+      r_version_1: ${{ env.R_VERSION_1 }}
+      r_version_2: ${{ env.R_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -289,9 +289,9 @@ jobs:
       test: false
       push: false
       base_image: r-minimal
-      r_version_1: $R_VERSION_1
-      r_version_2: $R_VERSION_2
-      spark_version: $SPARK_VERSION
+      r_version_1: ${{ env.R_VERSION_1 }}
+      r_version_2: ${{ env.R_VERSION_2 }}
+      spark_version: ${{ env.SPARK_VERSION }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -305,9 +305,9 @@ jobs:
       test: false
       push: false
       base_image: sparkr
-      r_version_1: $R_VERSION_1
-      r_version_2: $R_VERSION_2
-      spark_version: $SPARK_VERSION
+      r_version_1: ${{ env.R_VERSION_1 }}
+      r_version_2: ${{ env.R_VERSION_2 }}
+      spark_version: ${{ env.SPARK_VERSION }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -321,8 +321,8 @@ jobs:
       test: false
       push: false
       base_image: r-datascience
-      r_version_1: $R_VERSION_1
-      r_version_2: $R_VERSION_2
+      r_version_1: ${{ env.R_VERSION_1 }}
+      r_version_2: ${{ env.R_VERSION_2 }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
