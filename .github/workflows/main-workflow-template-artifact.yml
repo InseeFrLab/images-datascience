@@ -1,4 +1,4 @@
-name: Download parent image, build new one, test it and upload to GitHub artifacts
+name: Download parent image, build new one, test it and upload to DockerHub
 
 env:
   OWNER: ${{ github.repository_owner }}
@@ -87,8 +87,6 @@ jobs:
       matrix: 
         ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
-      #- name: Checkout
-      #  uses: actions/checkout@v3
       - name: Check out code 
         uses: actions/checkout@v3
         
@@ -99,26 +97,14 @@ jobs:
           docker rmi -f $(docker images -aq)
         shell: bash
 
-      - name: Load parent built image to Docker 📥
-        if: ${{ matrix.artefact_input_name != '' }}
-        uses: ./.github/actions/load-image
-        with:
-          image: ${{ matrix.artefact_input_name }}
-
       - name: buildargs docker command
         id: buildargs
         run: |
             python_version="${{ matrix.python_version}}"
             r_version="${{ matrix.r_version}}"
             spark_version="${{ matrix.spark_version}}"
-            artefact_input_name=${{ matrix.artefact_input_name }}
             gpu=${{ matrix.gpu }}
-            echo $artefact_input_name
-            if [ -n "$artefact_input_name" ]; then
-                buildargs+=" --build-arg BASE_IMAGE=$artefact_input_name"
-            else
-                buildargs="--build-arg BASE_IMAGE=${{matrix.base_image}}"
-            fi
+            buildargs="--build-arg BASE_IMAGE=${{matrix.base_image}}"
             if [ -n "$python_version" ]; then
               buildargs+=" --build-arg PYTHON_VERSION=$python_version"
             fi
@@ -136,30 +122,22 @@ jobs:
             #echo ::set-output name=buildargs::${buildargs}
         shell: bash
 
-      - name: Build image 🛠
-        run: docker build --rm --force-rm  ${{ steps.buildargs.outputs.buildargs }} --tag ${{ matrix.artefact_output_name}} ${{ inputs.context }}/
-        env:
-          DOCKER_BUILDKIT: 1
-          # Full logs for CI build
-          BUILDKIT_PROGRESS: plain
-        shell: bash
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
-      - name: Save image as a tar for later use 💾
-        run: |
-          #docker save ${{ matrix.artefact_output_name}} -o /tmp/${{ matrix.artefact_output_name}}.tar
-          docker save ${{ matrix.artefact_output_name}}  | gzip > /tmp/${{ matrix.artefact_output_name}}.tar.gz
-        shell: bash
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Upload image as artifact 💾
-        uses: actions/upload-artifact@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          name: ${{ matrix.artefact_output_name}}
-          path: /tmp/${{ matrix.artefact_output_name}}.tar.gz
-          retention-days: 3
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Self-hosted runners share a state (whole VM) between runs
-      - name: Cleanup artifacts 🗑️
-        run: |
-          rm -f /tmp/${{ matrix.artefact_output_name}}.tar.gz
-        shell: bash
-        if: always()
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          context: ${{ inputs.context }}/
+          tags: ${{ matrix.artefact_output_name}}
+          build-args: ${{ steps.buildargs.outputs.buildargs }}

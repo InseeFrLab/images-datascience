@@ -266,17 +266,3 @@ jobs:
       base_image: r-datascience
       r_version_1: $R_VERSION_1
       r_version_2: $R_VERSION_2
-  push-release:
-    if: ${{always()}}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs: [rstudio-sparkr, jupyter-pyspark, r-studio, vscode, jupyter]
-    uses: ./.github/workflows/tag-workflow-and-push-template.yml
-    with:
-      prefix: onyxia
-      r_version_1: $R_VERSION_1
-      r_version_2: $R_VERSION_2
-      spark_version: $SPARK_VERSION
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
