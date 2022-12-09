@@ -129,7 +129,7 @@ jobs:
               tag=$(echo $base_image | awk -F '-delim-' '{print $2}' )
             else
               image_name=$(echo $base_image | awk -F ':' '{print $1}' )
-              tag=$(echo $image | awk -F ':' '{print $2}' )
+              tag=$(echo $base_image | awk -F ':' '{print $2}' )
             fi
             owner=${{ env.OWNER }}
             owner=$(echo "$owner" | awk '{print tolower($0)}')
