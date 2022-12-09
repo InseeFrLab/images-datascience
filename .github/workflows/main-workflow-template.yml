@@ -148,7 +148,10 @@ jobs:
           owner=${{ env.OWNER }}
           owner=$(echo "$owner" | awk '{print tolower($0)}')
           final_name="$owner/${{ inputs.prefix}}-$image_name"
-          final_name_tag="$final_name:$tag"
+          if [ -n "${{ matrix.gpu }}" ]; then
+              DEVICE_SUFFIX=-gpu
+          fi
+          final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
           final_name_tag_with_date="$final_name_tag-$date"
           tags=$final_name_tag,$final_name_tag_with_date
           echo $tags
