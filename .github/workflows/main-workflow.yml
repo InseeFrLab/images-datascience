@@ -25,9 +25,6 @@ env:
 
 jobs:
   base:
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: base
@@ -36,10 +33,10 @@ jobs:
       push: false
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu20.04
-  python-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  python-minimal:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -49,12 +46,12 @@ jobs:
       test: false
       push: false
       base_image: base
-      python_version_1: $PYTHON_VERSION_1
-      python_version_2: $PYTHON_VERSION_2
-  python-datascience:
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  python-datascience:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -66,10 +63,10 @@ jobs:
       base_image: python-minimal
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  python-pytorch:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  python-pytorch:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -81,10 +78,10 @@ jobs:
       base_image: python-minimal
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  python-tensorflow:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  python-tensorflow:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -96,10 +93,10 @@ jobs:
       base_image: python-minimal
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  r-minimal:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  r-minimal:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -111,10 +108,10 @@ jobs:
       base_image: base
       r_version_1: $R_VERSION_1
       r_version_2: $R_VERSION_2
-  r-datascience:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  r-datascience:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -126,10 +123,10 @@ jobs:
       base_image: r-minimal
       r_version_1: $R_VERSION_1
       r_version_2: $R_VERSION_2
-  jupyter:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  jupyter:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -141,10 +138,10 @@ jobs:
       base_image: python-datascience
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  vscode:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  vscode:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -156,10 +153,10 @@ jobs:
       base_image: python-datascience
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  pyspark:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -172,10 +169,10 @@ jobs:
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
       spark_version: $SPARK_VERSION
-  jupyter-pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  jupyter-pyspark:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -188,10 +185,10 @@ jobs:
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
       spark_version: $SPARK_VERSION
-  vscode-pyspark:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  vscode-pyspark:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -204,10 +201,10 @@ jobs:
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
       spark_version: $SPARK_VERSION
-  jupyter-pytorch:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  jupyter-pytorch:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-pytorch]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -219,10 +216,10 @@ jobs:
       base_image: python-pytorch
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  vscode-pytorch:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  vscode-pytorch:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-pytorch]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -234,10 +231,10 @@ jobs:
       base_image: python-pytorch
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  jupyter-tensorflow:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  jupyter-tensorflow:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-tensorflow]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -249,10 +246,10 @@ jobs:
       base_image: python-tensorflow
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  vscode-tensorflow:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  vscode-tensorflow:
     if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-tensorflow]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -264,10 +261,10 @@ jobs:
       base_image: python-tensorflow
       python_version_1: $PYTHON_VERSION_1
       python_version_2: $PYTHON_VERSION_2
-  r-studio:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  r-studio:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -279,10 +276,10 @@ jobs:
       base_image: r-datascience
       r_version_1: $R_VERSION_1
       r_version_2: $R_VERSION_2
-  sparkr:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  sparkr:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -295,10 +292,10 @@ jobs:
       r_version_1: $R_VERSION_1
       r_version_2: $R_VERSION_2
       spark_version: $SPARK_VERSION
-  rstudio-sparkr:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  rstudio-sparkr:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [sparkr]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -311,10 +308,10 @@ jobs:
       r_version_1: $R_VERSION_1
       r_version_2: $R_VERSION_2
       spark_version: $SPARK_VERSION
-  jupyter-r:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  jupyter-r:
     if: ${{ inputs.chain == 'r' || inputs.chain == 'all'  }}
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -326,3 +323,6 @@ jobs:
       base_image: r-datascience
       r_version_1: $R_VERSION_1
       r_version_2: $R_VERSION_2
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
