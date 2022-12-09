@@ -1,4 +1,4 @@
-name: Download parent image, build new one, test it and upload to DockerHub
+name: Template to build Docker images
 
 env:
   OWNER: ${{ github.repository_owner }}

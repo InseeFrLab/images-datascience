@@ -1,4 +1,4 @@
-name: Main manual workflow with artefacts
+name: Main pipeline to build Docker images
 
 on:
   workflow_dispatch:
