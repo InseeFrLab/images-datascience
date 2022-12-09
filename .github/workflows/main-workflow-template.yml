@@ -135,12 +135,13 @@ jobs:
               image_name=$(echo $base_image | awk -F ':' '{print $1}' )
               tag=$(echo $base_image | awk -F ':' '{print $2}' )
             fi
-            if [[ -n "${{inputs.external_base_image}}" ]]; then
+            if [[ -n "${{ inputs.external_base_image }}" ]]; then
               final_name="${image_name}:${tag}"
             else
               owner=${{ env.OWNER }}
               owner=$(echo "$owner" | awk '{print tolower($0)}')
-              final_name="${owner}/${{ inputs.prefix}}-${image_name}:${tag}${DEVICE_SUFFIX}"
+              final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
+              echo $final_name
             fi
             echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
             echo "base_image=${final_name}" >> $GITHUB_OUTPUT
