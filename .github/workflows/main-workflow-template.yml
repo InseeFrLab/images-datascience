@@ -151,9 +151,8 @@ jobs:
             image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
             tag=$(echo $image | awk -F '-delim-' '{print $2}' )
           else
-            image_name=$image
-            if [ -n "${{ matrix.gpu }}" ]; then suffix=-gpu; fi
-            tag=latest${suffix}
+            image_name=$(echo $image | awk -F ':' '{print $1}' )
+            tag=$(echo $image | awk -F ':' '{print $2}' )
           fi
           date=$(date +%Y.%m.%d)
           owner=${{ env.OWNER }}
