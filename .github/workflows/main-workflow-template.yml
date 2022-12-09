@@ -95,8 +95,8 @@ jobs:
       matrix: 
         ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
-      - name: Check out code 
-        uses: actions/checkout@v3
+      # - name: Check out code 
+      #   uses: actions/checkout@v3
         
       # # https://github.com/actions/virtual-environments/issues/2840
       # - name: Make free space
@@ -124,9 +124,9 @@ jobs:
               DEVICE_SUFFIX=-gpu
             fi
             if [ "${{ matrix.base_image }}" = "base" ]; then
-              BASE_IMAGE=base:latest
+              BASE_IMAGE=base:latest${DEVICE_SUFFIX}
             else
-              BASE_IMAGE=${{ matrix.base_image }}
+              BASE_IMAGE=${{ matrix.base_image }}${DEVICE_SUFFIX}
             fi
             echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
             echo "base_image=${BASE_IMAGE}" >> $GITHUB_OUTPUT
