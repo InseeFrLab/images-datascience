@@ -117,8 +117,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: buildargs docker command
-        id: buildargs
+      - name: Generate build args
+        id: generate-build-args
         run: |
             if [ -n "${{ matrix.gpu }}" ]; then
               DEVICE_SUFFIX=-gpu
@@ -131,17 +131,19 @@ jobs:
               image_name=$(echo $base_image | awk -F ':' '{print $1}' )
               tag=$(echo $base_image | awk -F ':' '{print $2}' )
             fi
-            owner=${{ env.OWNER }}
-            owner=$(echo "$owner" | awk '{print tolower($0)}')
-            final_name="$owner/${{ inputs.prefix}}-$image_name"
-            final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
+            if [[ "$base_image" == *"-ubuntu-"* ]] || [[ "$base_image" == *"-nvidia-"* ]]; then
+              final_name="${image_name}:${tag}"
+            else
+              owner=${{ env.OWNER }}
+              owner=$(echo "$owner" | awk '{print tolower($0)}')
+              final_name="${owner}/${{ inputs.prefix}}-${image_name}:${tag}${DEVICE_SUFFIX}"
             echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
-            echo "base_image=${final_name_tag}" >> $GITHUB_OUTPUT
-            echo $final_name_tag
+            echo "base_image=${final_name}" >> $GITHUB_OUTPUT
+            echo $final_name
         shell: bash
 
       - name: Generate output tags
-        id: compute-tags
+        id: generate-tags
         run: |
           image=${{ matrix.artefact_output_name }}
           if [[ "$image" == *"-delim-"* ]]; then
@@ -170,10 +172,10 @@ jobs:
         with:
           push: true
           context: ${{ inputs.context }}/
-          tags: ${{ steps.compute-tags.outputs.tags }}
+          tags: ${{ steps.generate-tags.outputs.tags }}
           build-args: |
-            BASE_IMAGE=${{ steps.buildargs.outputs.base_image }}
+            BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
-            DEVICE_SUFFIX=${{ steps.buildargs.outputs.device_suffix }}
+            DEVICE_SUFFIX=${{ steps.generate-build-args.outputs.device_suffix }}
