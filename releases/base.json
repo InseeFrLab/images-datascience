@@ -5,6 +5,7 @@
     },
    {
         "base_image":":base_image_gpu",
-        "artefact_output_name":"base:latest-gpu"
+        "artefact_output_name":"base:latest-gpu",
+        "gpu":"true"
     }
 ]

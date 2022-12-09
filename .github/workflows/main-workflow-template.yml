@@ -67,7 +67,6 @@ on:
 
 jobs:
   matrix_prep:
-    #if: ${{ inputs.debug == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -85,8 +84,8 @@ jobs:
         sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:spark_version/${{inputs.spark_version}}/g" ./releases/${{ inputs.image }}.json
-        matrix=$(cat ./releases/${{ inputs.image }}.json | jq .) 
-        echo $matrix          
+        matrix=$(cat ./releases/${{ inputs.image }}.json | jq .)
+        echo $matrix
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
   docker:
     runs-on: ubuntu-latest
@@ -118,7 +117,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Compute tags
+      - name: buildargs docker command
+        id: buildargs
+        run: |
+            if [ -n "${{ matrix.gpu }}" ]; then
+              DEVICE_SUFFIX=-gpu
+            fi
+            if [ "${{ matrix.base_image }}" = "base" ]; then
+              BASE_IMAGE=base:latest
+            else
+              BASE_IMAGE=${{ matrix.base_image }}
+            echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
+            echo "base_image=${BASE_IMAGE}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Generate output tags
         id: compute-tags
         run: |
           image=${{ matrix.artefact_output_name }}
@@ -140,15 +153,6 @@ jobs:
           echo "tags=$tags" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: buildargs docker command
-        id: buildargs
-        run: |
-            if [ -n "${{ matrix.gpu }}" ]; then
-               DEVICE_SUFFIX=-gpu
-            fi
-            echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
@@ -156,7 +160,7 @@ jobs:
           context: ${{ inputs.context }}/
           tags: ${{ steps.compute-tags.outputs.tags }}
           build-args: |
-            BASE_IMAGE=${{ matrix.base_image }}
+            BASE_IMAGE=${{ steps.buildargs.outputs.base_image }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
