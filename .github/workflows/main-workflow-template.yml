@@ -115,20 +115,18 @@ jobs:
             gpu=${{ matrix.gpu }}
             buildargs="BASE_IMAGE=${{matrix.base_image}}"
             if [ -n "$python_version" ]; then
-              buildargs+=" PYTHON_VERSION=$python_version"
+              buildargs+="\nPYTHON_VERSION=$python_version"
             fi
             if [ -n "$r_version" ]; then
-              buildargs+=" R_VERSION=$r_version"
+              buildargs+="\nR_VERSION=$r_version"
             fi
             if [ -n "$spark_version" ]; then
-               buildargs+=" SPARK_VERSION=$spark_version"
+               buildargs+="\nSPARK_VERSION=$spark_version"
             fi
             if [ -n "$gpu" ]; then
-               buildargs+=" DEVICE_SUFFIX=-gpu"
+               buildargs+="\nDEVICE_SUFFIX=-gpu"
             fi
-            echo "${buildargs}"
             echo "buildargs=${buildargs}" >> $GITHUB_OUTPUT
-            #echo ::set-output name=buildargs::${buildargs}
         shell: bash
 
       - name: Set up QEMU
