@@ -10,13 +10,13 @@
         "python_version":":python_version_2"
     },
     {
-        "base_image":"base:latest-gpu",
+        "base_image":"base:latest",
         "artefact_output_name":"python-minimal-delim-py:python_version_1",
         "python_version":":python_version_1",
         "gpu":"true"
     },
    {
-        "base_image":"base:latest-gpu",
+        "base_image":"base:latest",
         "artefact_output_name":"python-minimal-delim-py:python_version_2",
         "python_version":":python_version_2",
         "gpu":"true"
