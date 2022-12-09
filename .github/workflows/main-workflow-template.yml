@@ -135,7 +135,7 @@ jobs:
               image_name=$(echo $base_image | awk -F ':' '{print $1}' )
               tag=$(echo $base_image | awk -F ':' '{print $2}' )
             fi
-            if [[ -n "${{ inputs.external_base_image }}" ]]; then
+            if [[ "${{ inputs.external_base_image }}" = true ]]; then
               final_name="${image_name}:${tag}"
             else
               owner=${{ env.OWNER }}
