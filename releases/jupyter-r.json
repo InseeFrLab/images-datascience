@@ -1,26 +1,24 @@
 [
     {
-        "base_image":":base_image",
-        "artefact_input_name":"r-datascience-delim-r:r_version_1",
-        "artefact_output_name":"jupyter-r-delim-r:r_version_1",
+        "base_image":"r-datascience-delim-r:r_version_1",
+        "output_image":"jupyter-r-delim-r:r_version_1",
         "r_version":":r_version_1"
     },
     {
-        "base_image":":base_image",
-        "artefact_input_name":"r-datascience-delim-r:r_version_2",
-        "artefact_output_name":"jupyter-r-delim-r:r_version_2",
+        "base_image":"r-datascience-delim-r:r_version_2",
+        "output_image":"jupyter-r-delim-r:r_version_2",
         "r_version":":r_version_2"
     },
      {
-        "base_image":":base_image",
-        "artefact_input_name":"r-datascience-delim-r:r_version_1-gpu",
-        "artefact_output_name":"jupyter-r-delim-r:r_version_1-gpu",
-        "r_version":":r_version_1"
+        "base_image":"r-datascience-delim-r:r_version_1",
+        "output_image":"jupyter-r-delim-r:r_version_1",
+        "r_version":":r_version_1",
+        "gpu":"true"
     },
       {
-        "base_image":":base_image",
-        "artefact_input_name":"r-datascience-delim-r:r_version_2-gpu",
-        "artefact_output_name":"jupyter-r-delim-r:r_version_2-gpu",
-        "r_version":":r_version_2"
+        "base_image":"r-datascience-delim-r:r_version_2",
+        "output_image":"jupyter-r-delim-r:r_version_2",
+        "r_version":":r_version_2",
+        "gpu":"true"
     }
 ]

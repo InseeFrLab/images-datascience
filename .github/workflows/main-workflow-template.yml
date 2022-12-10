@@ -35,6 +35,10 @@ on:
         description: context of docker image
         required: false
         type: string
+      external_base_image:
+        description: is base image from another organization
+        required: false
+        type: boolean
       python_version_1:
         description: context of docker image
         required: false
@@ -67,7 +71,6 @@ on:
 
 jobs:
   matrix_prep:
-    #if: ${{ inputs.debug == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -85,8 +88,8 @@ jobs:
         sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:spark_version/${{inputs.spark_version}}/g" ./releases/${{ inputs.image }}.json
-        matrix=$(cat ./releases/${{ inputs.image }}.json | jq .) 
-        echo $matrix          
+        matrix=$(cat ./releases/${{ inputs.image }}.json | jq .)
+        echo $matrix
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
   docker:
     runs-on: ubuntu-latest
@@ -106,29 +109,6 @@ jobs:
           docker rmi -f $(docker images -aq)
         shell: bash
 
-      - name: buildargs docker command
-        id: buildargs
-        run: |
-            python_version="${{ matrix.python_version}}"
-            r_version="${{ matrix.r_version}}"
-            spark_version="${{ matrix.spark_version}}"
-            gpu=${{ matrix.gpu }}
-            buildargs="BASE_IMAGE=${{matrix.base_image}}"
-            if [ -n "$python_version" ]; then
-              buildargs+="\nPYTHON_VERSION=$python_version"
-            fi
-            if [ -n "$r_version" ]; then
-              buildargs+="\nR_VERSION=$r_version"
-            fi
-            if [ -n "$spark_version" ]; then
-               buildargs+="\nSPARK_VERSION=$spark_version"
-            fi
-            if [ -n "$gpu" ]; then
-               buildargs+="\nDEVICE_SUFFIX=-gpu"
-            fi
-            echo "buildargs=${buildargs}" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -141,10 +121,36 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Compute tags
-        id: compute-tags
+      - name: Generate build args
+        id: generate-build-args
         run: |
-          image=${{ matrix.artefact_output_name }}
+            if [ -n "${{ matrix.gpu }}" ]; then
+              DEVICE_SUFFIX=-gpu
+            fi
+            base_image=${{ matrix.base_image }}
+            if [[ "$base_image" == *"-delim-"* ]]; then
+              image_name=$(echo $base_image | awk -F '-delim-' '{print $1}' )
+              tag=$(echo $base_image | awk -F '-delim-' '{print $2}' )
+            else
+              image_name=$(echo $base_image | awk -F ':' '{print $1}' )
+              tag=$(echo $base_image | awk -F ':' '{print $2}' )
+            fi
+            if [[ "${{ inputs.external_base_image }}" = true ]]; then
+              final_name="${image_name}:${tag}"
+            else
+              owner=${{ env.OWNER }}
+              owner=$(echo "$owner" | awk '{print tolower($0)}')
+              final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
+            fi
+            echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
+            echo "base_image=${final_name}" >> $GITHUB_OUTPUT
+            echo $final_name
+        shell: bash
+
+      - name: Generate output tags
+        id: generate-tags
+        run: |
+          image=${{ matrix.output_image }}
           if [[ "$image" == *"-delim-"* ]]; then
             image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
             tag=$(echo $image | awk -F '-delim-' '{print $2}' )
@@ -156,7 +162,10 @@ jobs:
           owner=${{ env.OWNER }}
           owner=$(echo "$owner" | awk '{print tolower($0)}')
           final_name="$owner/${{ inputs.prefix}}-$image_name"
-          final_name_tag="$final_name:$tag"
+          if [ -n "${{ matrix.gpu }}" ]; then
+              DEVICE_SUFFIX=-gpu
+          fi
+          final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
           final_name_tag_with_date="$final_name_tag-$date"
           tags=$final_name_tag,$final_name_tag_with_date
           echo $tags
@@ -168,5 +177,10 @@ jobs:
         with:
           push: true
           context: ${{ inputs.context }}/
-          tags: ${{ steps.compute-tags.outputs.tags }}
-          build-args: ${{ steps.buildargs.outputs.buildargs }}
+          tags: ${{ steps.generate-tags.outputs.tags }}
+          build-args: |
+            BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
+            PYTHON_VERSION=${{ matrix.python_version }}
+            R_VERSION=${{ matrix.r_version }}
+            SPARK_VERSION=${{ matrix.spark_version }}
+            DEVICE_SUFFIX=${{ steps.generate-build-args.outputs.device_suffix }}
