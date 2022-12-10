@@ -1,15 +1,13 @@
 [
     {
-        "base_image":":base_image",
-        "artefact_input_name":"pyspark-delim-py:python_version_1-spark:spark_version",
-        "artefact_output_name":"jupyter-pyspark-delim-py:python_version_1-spark:spark_version",
+        "base_image":"pyspark-delim-py:python_version_1-spark:spark_version",
+        "output_image":"jupyter-pyspark-delim-py:python_version_1-spark:spark_version",
         "python_version":":python_version_1",
         "spark_version":":spark_version"
     },
     {
-        "base_image":":base_image",
-        "artefact_input_name":"pyspark-delim-py:python_version_2-spark:spark_version",
-        "artefact_output_name":"jupyter-pyspark-delim-py:python_version_2-spark:spark_version",
+        "base_image":"pyspark-delim-py:python_version_2-spark:spark_version",
+        "output_image":"jupyter-pyspark-delim-py:python_version_2-spark:spark_version",
         "python_version":":python_version_2",
         "spark_version":":spark_version"
     }

@@ -141,7 +141,6 @@ jobs:
               owner=${{ env.OWNER }}
               owner=$(echo "$owner" | awk '{print tolower($0)}')
               final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
-              echo $final_name
             fi
             echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
             echo "base_image=${final_name}" >> $GITHUB_OUTPUT
@@ -151,7 +150,7 @@ jobs:
       - name: Generate output tags
         id: generate-tags
         run: |
-          image=${{ matrix.artefact_output_name }}
+          image=${{ matrix.output_image }}
           if [[ "$image" == *"-delim-"* ]]; then
             image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
             tag=$(echo $image | awk -F '-delim-' '{print $2}' )

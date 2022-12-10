@@ -1,26 +1,24 @@
 [
     {
-        "base_image":":base_image",
-        "artefact_input_name":"base",
-        "artefact_output_name":"r-minimal-delim-r:r_version_1",
+        "base_image":"base",
+        "output_image":"r-minimal-delim-r:r_version_1",
         "r_version":":r_version_1"
     },
    {
-        "base_image":":base_image",
-        "artefact_input_name":"base-delim-gpu",
-        "artefact_output_name":"r-minimal-delim-r:r_version_1-gpu",
-        "r_version":":r_version_1"
+        "base_image":"base-delim",
+        "output_image":"r-minimal-delim-r:r_version_1",
+        "r_version":":r_version_1",
+        "gpu":"true"
     },
     {
-        "base_image":":base_image",
-        "artefact_input_name":"base",
-        "artefact_output_name":"r-minimal-delim-r:r_version_2",
+        "base_image":"base",
+        "output_image":"r-minimal-delim-r:r_version_2",
         "r_version":":r_version_2"
     },
     {
-        "base_image":":base_image",
-        "artefact_input_name":"base-delim-gpu",
-        "artefact_output_name":"r-minimal-delim-r:r_version_2-gpu",
-        "r_version":":r_version_2"
+        "base_image":"base-delim",
+        "output_image":"r-minimal-delim-r:r_version_2",
+        "r_version":":r_version_2",
+        "gpu":"true"
     }
 ]
