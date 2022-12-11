@@ -13,8 +13,8 @@ on:
           - python
           - r
   schedule:
-  # every sunday at 2am
-    - cron: '0 2 * * 0'
+  # every monday at 2am
+    - cron: '0 2 * * 1'
 
 jobs:
   base:
