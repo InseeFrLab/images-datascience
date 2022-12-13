@@ -38,6 +38,17 @@ A collection of Docker images for ready-to-run datascience services
       classDef package fill:#3cb5f2 ,color:#000  ;
       classDef ide fill:#0072d9  ;
 ```
+## Environment variable
+
+List of environment variable you can use to pimp the container at init:
+
+
+|   environment variable   |   Example | Description |  helm chart support |   Onyxia region support   |
+|---    |:-:    |:-:    |:-:    |:-:     |
+| PIP_REPOSITORY   | "https://some.entreprise.mirror/repository/pypi-proxy/simple"   | Configure an externally managed pip repository manager   | ✔️   | not yet   |
+| CONDA_REPOSITORY | https://some.entreprise.mirror/repository/conda-proxy/main   |  Configure an externally managed conda repository manager   |✔️     |not yet     |
+| PATH_TO_CA_BUNDLE  | /etc/ssl/certs/ca-certificates.crt  | Configure a path to a ca bundle with autorities to support an auto-signed some.entreprise.mirror   | not yet    | not yet     |
+
 
 ## Freshness and rebuild
 

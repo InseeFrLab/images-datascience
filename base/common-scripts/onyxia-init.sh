@@ -172,5 +172,12 @@ if [[ -n "$CONDA_REPOSITORY" ]]; then
     conda config --add channels $CONDA_REPOSITORY
 fi
 
+if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
+    echo "configuration of pip and conda to a custom crt"
+    pip config set global.cert $PATH_TO_CA_BUNDLE
+    conda config --set ssl_verify $PATH_TO_CA_BUNDLE
+fi
+
+
 echo "execution of $@"
 exec "$@"
