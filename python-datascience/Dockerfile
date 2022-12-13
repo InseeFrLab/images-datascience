@@ -34,6 +34,6 @@ RUN mamba env update -n base -f conda-env.yml && \
     rm conda-env.yml julia.tar.gz quarto.deb && \ 
     mamba clean --all -f -y
 
-USER ${USERNAME}
+USER 1000
 
 CMD ["python3"]

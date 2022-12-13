@@ -11,6 +11,6 @@ RUN pip install tensorflow && \
     # Clean
     mamba clean --all -f -y
 
-USER ${USERNAME}
+USER 1000
 
 CMD ["python3"]

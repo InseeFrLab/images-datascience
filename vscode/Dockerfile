@@ -30,7 +30,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
 # Copy custom VSCode User settings
 COPY --chown=${USERNAME}:${GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/settings.json
 
-USER ${USERNAME}
+USER 1000
 
 EXPOSE 8080
 CMD ["code-server", "--bind-addr", "0.0.0.0:8080", "${WORKSPACE_DIR}"]
