@@ -51,7 +51,7 @@ If Onyxia support is checked, it means that the Onyxia product could inject auto
 
 |   environment variable   |   Example | Description |  helm chart support |   Onyxia support   |
 |---    |:-:    |:-:    |:-:    |:-:     |
-| PIP_REPOSITORY   | "https://some.entreprise.mirror/repository/pypi-proxy/simple"   | Configure an externally managed pip repository manager   | ✔️   | not yet (*)  |
+| PIP_REPOSITORY   | https://some.entreprise.mirror/repository/pypi-proxy/simple   | Configure an externally managed pip repository manager   | ✔️   | not yet (*)  |
 | CONDA_REPOSITORY | https://some.entreprise.mirror/repository/conda-proxy/main   |  Configure an externally managed conda repository manager   |✔️   | not yet  (*)   |
 | PATH_TO_CA_BUNDLE  | /etc/ssl/certs/ca-certificates.crt  | Configure a path to a ca bundle with autorities to support an auto-signed some.entreprise.mirror   | not yet    | not yet (*)    |
 
