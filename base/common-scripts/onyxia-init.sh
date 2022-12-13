@@ -62,6 +62,11 @@ fi
 
 
 if [  "`which git`" != "" ]; then
+    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
+        echo "configuration of git to a custom crt"
+        git config --global http.sslVerify true
+        git config --global http.sslCAInfo $PATH_TO_CA_BUNDLE
+    fi
     if [[ -n "$GIT_REPOSITORY" ]]; then
         if [[ -n "$GIT_PERSONAL_ACCESS_TOKEN" ]]; then
             REPO_DOMAIN=`echo "$GIT_REPOSITORY" | awk -F/ '{print $3}'`
@@ -162,14 +167,25 @@ if [[ -e "$HOME/work" ]]; then
     echo "cd $HOME/work" >> $HOME/.bashrc
   fi
 fi
-
-if [[ -n "$PIP_REPOSITORY" ]]; then
-    echo "configuration pip (index-url)"
-    pip config set global.index-url $PIP_REPOSITORY
+if [  "`which pip`" != "" ]; then
+    if [[ -n "$PIP_REPOSITORY" ]]; then
+        echo "configuration pip (index-url)"
+        pip config set global.index-url $PIP_REPOSITORY
+    fi
+    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
+        echo "configuration of pip to a custom crt"
+        pip config set global.cert $PATH_TO_CA_BUNDLE
+    fi
 fi
-if [[ -n "$CONDA_REPOSITORY" ]]; then
-    echo "configuration conda (add channels)"
-    conda config --add channels $CONDA_REPOSITORY
+if [  "`which conda`" != "" ]; then
+    if [[ -n "$CONDA_REPOSITORY" ]]; then
+        echo "configuration conda (add channels)"
+        conda config --add channels $CONDA_REPOSITORY
+    fi
+    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
+        echo "configuration of conda to a custom crt"
+        conda config --set ssl_verify $PATH_TO_CA_BUNDLE
+    fi
 fi
 
 echo "execution of $@"
