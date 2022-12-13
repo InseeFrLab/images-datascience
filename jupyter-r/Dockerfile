@@ -19,7 +19,7 @@ RUN if [ "`which pip3`" = "" ]; then \
     # Clean
     jupyter lab clean
 
-USER ${USERNAME}
+USER 1000
 
 EXPOSE 8888
 

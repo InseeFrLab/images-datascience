@@ -17,6 +17,6 @@ RUN mamba env update -n base -f conda-env${DEVICE_SUFFIX}.yml && \
     rm conda-env${DEVICE_SUFFIX}.yml && \ 
     mamba clean --all -f -y
 
-USER ${USERNAME}
+USER 1000
 
 CMD ["python3"]

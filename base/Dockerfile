@@ -69,6 +69,6 @@ RUN chmod +x -R /opt/ && \
 ENV LC_ALL="en_US.UTF-8"
 ENV LANG="en_US.UTF-8"
 
-USER ${USERNAME}
+USER 1000
 
 CMD ["/bin/bash"]

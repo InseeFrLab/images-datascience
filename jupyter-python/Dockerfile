@@ -21,7 +21,7 @@ RUN mamba install -y -c conda-forge \
     mamba clean --all -f -y && \
     jupyter lab clean
 
-USER ${USERNAME}
+USER 1000
 
 EXPOSE 8888
 

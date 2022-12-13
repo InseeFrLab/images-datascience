@@ -50,6 +50,6 @@ RUN apt-get update && \
 COPY --chown=${USERNAME}:${GROUPNAME} --chmod=755 spark-env.sh $SPARK_HOME/conf
 COPY --chown=${USERNAME}:${GROUPNAME} --chmod=755 entrypoint.sh /opt/entrypoint.sh
 
-USER ${USERNAME}
+USER 1000
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]

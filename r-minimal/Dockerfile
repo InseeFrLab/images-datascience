@@ -35,6 +35,6 @@ RUN /rocker_scripts/setup_R.sh && \
     # Clean
     rm -rf /var/lib/apt/lists/*
 
-USER ${USERNAME}
+USER 1000
 
 CMD ["R"]
