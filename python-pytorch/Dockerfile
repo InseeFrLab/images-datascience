@@ -11,6 +11,7 @@ RUN if [ -n "$CUDA_VERSION" ]; then \
         cuda_major=`echo $CUDA_VERSION | cut -d. -f1`; \
         cuda_minor=`echo $CUDA_VERSION | cut -d. -f2`; \
         echo "  - pytorch::magma-cuda${cuda_major}${cuda_minor}" >> conda-env.yml; \
+        cat conda-env.yml; \
     fi && \
     mamba env update -n base -f conda-env.yml && \
     git clone --recursive https://github.com/pytorch/pytorch && \
