@@ -11,7 +11,6 @@ dependencies:
   - mkl-include
   - ninja
   - numpy
-  - pytorch::magma-cuda118
   - pyyaml
   - requests
   - setuptools

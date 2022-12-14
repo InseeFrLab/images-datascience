@@ -3,9 +3,6 @@ FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 
-# CPU/GPU
-ARG DEVICE_SUFFIX
-
 USER root
 
 COPY conda-env.yml .
