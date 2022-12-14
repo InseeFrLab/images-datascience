@@ -7,7 +7,7 @@ USER root
 
 COPY conda-env.yml .
 
-RUN if command -v ncvv &> /dev/null; then \
+RUN if command -v nvidia-smi &> /dev/null; then \
         echo "  - pytorch::magma-cuda118" >> conda-env.yml; \
     fi && \
     mamba env update -n base -f conda-env.yml && \
