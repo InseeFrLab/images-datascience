@@ -7,7 +7,9 @@ USER root
 
 COPY conda-env.yml .
 
-RUN if [[ $(nvcc --version) ]]; then echo "  - pytorch::magma-cuda118" >> conda-env.yml; fi && \
+RUN if command -v ncvv &> /dev/null; then \
+        echo "  - pytorch::magma-cuda118" >> conda-env.yml; \
+    fi && \
     mamba env update -n base -f conda-env.yml && \
     git clone --recursive https://github.com/pytorch/pytorch && \
     cd pytorch && \
