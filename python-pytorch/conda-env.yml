@@ -1,8 +1,19 @@
 channels:
-  - pytorch
+  - conda-forge
 
 dependencies:
-  - pytorch
-  - torchvision
-  - torchaudio
-  - cpuonly
+  - astunparse
+  - cffi
+  - cmake
+  - dataclasses
+  - future
+  - mkl
+  - mkl-include
+  - ninja
+  - numpy
+  - pytorch::magma-cuda118
+  - pyyaml
+  - requests
+  - setuptools
+  - six
+  - typing_extensions

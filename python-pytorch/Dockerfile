@@ -8,9 +8,16 @@ ARG DEVICE_SUFFIX
 
 USER root
 
-COPY conda-env${DEVICE_SUFFIX}.yml .
+COPY conda-env.yml .
 
-RUN mamba env update -n base -f conda-env${DEVICE_SUFFIX}.yml && \
+RUN if [[ $(nvcc --version) ]]; then \
+        "  - pytorch::magma-cuda118" >> conda-env.yml \
+    fi && \
+    mamba env update -n base -f conda-env.yml && \
+    git clone --recursive https://github.com/pytorch/pytorch && \
+    cd pytorch && \
+    export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"} && \
+    python setup.py develop && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
