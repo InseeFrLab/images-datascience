@@ -77,11 +77,14 @@ allowPrivilegeEscalation: false
 
 - rebuild of images just to add certificates: you can also rebuild the images in your entreprise just to add ca certificates with this same recipe relying on a PATH_TO_CABUNDLE.
 
+As far as we know, if you target a non root environment with custom authorities bundle in the system store, onyxia can't do this you should rely on this kind of recipes out of the scope of onyxia.
+
 **full onyxia recipe:**
 
 Not developped yet we have 2 paths at least:
 - onyxia-api could show an endpoint like https://onyxiaurl/public/certs and let the onyxia-init.sh curl the certs in PATH_TO_CABUNDLE path.
 - we cloud also rely on a field on the region https://github.com/InseeFrLab/onyxia-api/blob/master/docs/region-configuration.md#certificateauthorityinjection-properties to let the encodedbase64 list of certificates going thrown the ui and be injected to puopulate a configmap and inject this certificates in a PATH_TO_CABUNDLE directory.
+
 
 ## Freshness and rebuild
 
