@@ -8,7 +8,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
 
 4 layers:
 - base layer ubuntu and nvidia's ubuntu-cuda adding some base binaries 
-- a layer to add on this base some python and R versions and python version (actually 2 versions supported)
+- a layer to add on this base some python and R versions (currently, 2 different versions supported for each programming language)
 - a layer to add on this python and R images some coherent bundle experience classic datascience packages, spark,  tensorflow and pytorch 
 - a layer to put on the top of that some ide like jupyter, rstudio or vscode
 
