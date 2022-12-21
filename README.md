@@ -2,12 +2,12 @@
 # images-datascience
 A collection of Docker images for ready-to-run datascience services.
 
-They could be used alone and are designed to work with Onyxia ecosystem.
+They can be used alone but are designed to work with the [Onyxia](https://github.com/InseeFrLab/onyxia-web) ecosystem.
 
-## conception of this images
+## Conception
 
 4 layers:
-- base layer ubuntu and ubuntu-gpu adding some base binaries 
+- base layer ubuntu and nvidia's ubuntu-cuda adding some base binaries 
 - a layer to add on this base some python and R versions and python version (actually 2 versions supported)
 - a layer to add on this python and R images some coherent bundle experience classic datascience packages, spark,  tensorflow and pytorch 
 - a layer to put on the top of that some ide like jupyter, rstudio or vscode
@@ -88,4 +88,4 @@ Not developped yet we have 2 paths at least:
 
 ## Freshness and rebuild
 
-This image are build every monday at 00:00
+A new set of images are built every monday at 02:00.
