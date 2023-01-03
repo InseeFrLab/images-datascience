@@ -39,13 +39,6 @@ RUN apt-get update && \
         RPostgreSQL \
         RSQLite \
         vaultr && \
-    # Install gouvdown
-    # Temporary set French locales to download French packages from GitHub
-    installGithub.r spyrales/gouvdown && \
-    installGithub.r spyrales/gouvdown.fonts && \
-    find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \
-    fc-cache && \
-    R -e "gouvdown::check_fonts_in_r()" && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean
