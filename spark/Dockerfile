@@ -24,7 +24,8 @@ USER root
 
 COPY get-binaries.sh /tmp/get-binaries.sh
 
-RUN apt-get update && \
+RUN --mount=type=secret,id=github_token \
+    apt-get update  && \
     # Install JDK
     apt-get install -y --no-install-recommends \
         ca-certificates-java \
@@ -35,8 +36,9 @@ RUN apt-get update && \
     # Install additional packages if base image is R
     if [[ "${BASE_IMAGE}" == *"r-minimal"* ]]; then \
         /rocker_scripts/install_tidyverse.sh && \
+        GITHUB_TOKEN=`cat /run/secrets/github_token` && \
         R -e "install.packages('arrow')" && \
-        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')" && \
+        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg', auth_token=${GITHUB_TOKEN})" && \
         R -e "install.packages('sparklyr')"; \
     fi && \
     # Fix permissions
