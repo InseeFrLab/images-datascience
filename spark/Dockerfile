@@ -37,13 +37,12 @@ RUN --mount=type=secret,id=github_token \
     if [[ "${BASE_IMAGE}" == *"r-minimal"* ]]; then \
         /rocker_scripts/install_tidyverse.sh && \
         GITHUB_TOKEN=`cat /run/secrets/github_token` && \
-        R -e "install.packages('arrow')" && \
-        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg', auth_token=${GITHUB_TOKEN})" && \
-        R -e "install.packages('sparklyr')"; \
+        R -e "install.packages(c('arrow', 'aws.s3', 'sparklyr'))" && \
+        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg', auth_token=${GITHUB_TOKEN})"; \
     fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
-    # Change log verbosity hadoop
+    # Change log verbosity of Hadoop
     sed -i -e "s/hadoop.root.logger=INFO,console/hadoop.root.logger=WARN,console/g" /opt/hadoop/etc/hadoop/log4j.properties && \
     # Clean
     rm -rf /tmp/* && \

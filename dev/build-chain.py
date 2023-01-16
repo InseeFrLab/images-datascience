@@ -43,7 +43,7 @@ for i, image in enumerate(chain):
     else:
         device_suffix = ""
 
-    cmd = ["DOCKER_BUILDKIT=1", "docker", "build", image, "-t", image,
+    cmd = ["docker", "build", image, "-t", image,
            "--build-arg", f"BASE_IMAGE={previous_image}",
            "--build-arg", f"DEVICE_SUFFIX={device_suffix}"]
     print(" ".join(cmd))
