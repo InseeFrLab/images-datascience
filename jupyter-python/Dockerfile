@@ -19,8 +19,6 @@ RUN mamba install -y \
     # Clean 
     rm -rf "${HOME}/.local" && \
     mamba clean --all -f -y && \
-    npm cache clean --force && \
-    rm -rf "/home/${USERNAME}/.cache/yarn" && \
     jupyter lab clean
 
 USER 1000
