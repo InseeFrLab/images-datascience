@@ -7,7 +7,7 @@ USER root
 
 # Install JupyterLab and Julia kernel
 RUN mamba install -y \
-        jupyterlab && \
+        jupyterlab \
         jupyterlab-git && \
     # If Julia is installed, make the kernel available in Jupyter
     if command -v julia ; then \
