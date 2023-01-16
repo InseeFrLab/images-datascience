@@ -6,8 +6,8 @@ SHELL ["/bin/bash", "-c"]
 USER root
 
 # Install JupyterLab and Julia kernel
-RUN mamba install -y -c conda-forge \
-        jupyterlab \
+RUN mamba install -y \
+        jupyterlab && \
         jupyterlab-git && \
     # If Julia is installed, make the kernel available in Jupyter
     if command -v julia ; then \
@@ -19,6 +19,8 @@ RUN mamba install -y -c conda-forge \
     # Clean 
     rm -rf "${HOME}/.local" && \
     mamba clean --all -f -y && \
+    npm cache clean --force && \
+    rm -rf "/home/${USERNAME}/.cache/yarn" && \
     jupyter lab clean
 
 USER 1000
