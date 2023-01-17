@@ -24,7 +24,8 @@ USER root
 
 COPY get-binaries.sh /tmp/get-binaries.sh
 
-RUN apt-get update && \
+RUN --mount=type=secret,id=github_token \
+    apt-get update  && \
     # Install JDK
     apt-get install -y --no-install-recommends \
         ca-certificates-java \
@@ -35,13 +36,13 @@ RUN apt-get update && \
     # Install additional packages if base image is R
     if [[ "${BASE_IMAGE}" == *"r-minimal"* ]]; then \
         /rocker_scripts/install_tidyverse.sh && \
-        R -e "install.packages('arrow')" && \
-        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')" && \
-        R -e "install.packages('sparklyr')"; \
+        export GITHUB_PAT=`cat /run/secrets/github_token` && \
+        R -e "install.packages(c('arrow', 'aws.s3', 'sparklyr'))" && \
+        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \
     fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
-    # Change log verbosity hadoop
+    # Change log verbosity of Hadoop
     sed -i -e "s/hadoop.root.logger=INFO,console/hadoop.root.logger=WARN,console/g" /opt/hadoop/etc/hadoop/log4j.properties && \
     # Clean
     rm -rf /tmp/* && \

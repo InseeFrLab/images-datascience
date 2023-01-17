@@ -68,6 +68,8 @@ on:
         required: false
       DOCKERHUB_TOKEN:
         required: false
+      GITHUB_PAT:
+        required: false
 
 jobs:
   matrix_prep:
@@ -184,3 +186,5 @@ jobs:
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
             DEVICE_SUFFIX=${{ steps.generate-build-args.outputs.device_suffix }}
+          secrets: |
+            "github_token=${{ secrets.GITHUB_PAT }}"
