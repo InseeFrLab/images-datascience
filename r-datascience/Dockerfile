@@ -10,7 +10,8 @@ ENV RETICULATE_AUTOCONFIGURE="0"
 USER root
 
 # Install additional libraries and R packages for datascience
-RUN apt-get update && \
+RUN --mount=type=secret,id=github_token \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
         language-pack-fr \
         libsecret-1-dev && \
@@ -40,6 +41,7 @@ RUN apt-get update && \
         RSQLite \
         vaultr && \
     # Install gouvdown
+    export GITHUB_PAT=`cat /run/secrets/github_token` && \
     installGithub.r spyrales/gouvdown && \
     installGithub.r spyrales/gouvdown.fonts && \
     find /usr/local/lib/R/site-library/gouvdown.fonts -name "*.ttf" -exec cp '{}' /usr/local/share/fonts \; && \

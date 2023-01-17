@@ -36,9 +36,9 @@ RUN --mount=type=secret,id=github_token \
     # Install additional packages if base image is R
     if [[ "${BASE_IMAGE}" == *"r-minimal"* ]]; then \
         /rocker_scripts/install_tidyverse.sh && \
-        GITHUB_TOKEN=`cat /run/secrets/github_token` && \
+        export GITHUB_PAT=`cat /run/secrets/github_token` && \
         R -e "install.packages(c('arrow', 'aws.s3', 'sparklyr'))" && \
-        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg', auth_token=${GITHUB_TOKEN})"; \
+        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \
     fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
