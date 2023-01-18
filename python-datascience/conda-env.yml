@@ -9,6 +9,7 @@ dependencies:
   - geopandas
   - jupyter-cache
   - matplotlib-base
+  - mlflow
   - nltk
   - numba
   - plotly
