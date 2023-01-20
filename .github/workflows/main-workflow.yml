@@ -121,13 +121,13 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  jupyter:
+  jupyter-python:
     # if: ${{ inputs.chain == 'python' || inputs.chain == 'all'  }}
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-python
-      context: jupyter-python
+      context: jupyter
       test: false
       push: false
       base_image: python-datascience
@@ -173,7 +173,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pyspark
-      context: jupyter-python
+      context: jupyter
       test: false
       push: false
       base_image: pyspark
@@ -205,7 +205,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pytorch
-      context: jupyter-python
+      context: jupyter
       test: false
       push: false
       base_image: python-pytorch
@@ -235,7 +235,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-tensorflow
-      context: jupyter-python
+      context: jupyter
       test: false
       push: false
       base_image: python-tensorflow
@@ -313,7 +313,7 @@ jobs:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-r
-      context: jupyter-r
+      context: jupyter
       test: false
       push: false
       base_image: r-datascience

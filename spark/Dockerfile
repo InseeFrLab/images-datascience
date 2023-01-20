@@ -33,8 +33,8 @@ RUN --mount=type=secret,id=github_token \
     # Get Spark/Hadoop/Hive binaries
     mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
     ${SHELL} /tmp/get-binaries.sh && \
-    # Install additional packages if base image is R
-    if [[ "${BASE_IMAGE}" == *"r-minimal"* ]]; then \
+    # Install additional packages if R is installed
+    if command -v R; then \
         /rocker_scripts/install_tidyverse.sh && \
         export GITHUB_PAT=`cat /run/secrets/github_token` && \
         R -e "install.packages(c('sparklyr', 'arrow'))" && \
