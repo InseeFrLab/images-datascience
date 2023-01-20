@@ -28,6 +28,7 @@ RUN /rocker_scripts/setup_R.sh && \
     if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
     # Install useful additional packages
     install2.r --error \
+        arrow \
         aws.s3 \
         devtools \
         paws \
