@@ -16,6 +16,13 @@
       "matchStrings": ["ARG PYTHON_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "conda-forge/python",
       "datasourceTemplate": "conda"
+    },
+    {
+      "fileMatch": ["^python-datascience/Dockerfile$"],
+      "matchStrings": ["ARG JULIA_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "JuliaLang/julia",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^(?<version>.*)$"
     }
   ]
 }
