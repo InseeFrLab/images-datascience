@@ -10,10 +10,6 @@ on:
         description: should test
         required: false
         type: string
-      push:
-        description: should push
-        required: false
-        type: string
       image:
         description: name of docker image
         required: false
