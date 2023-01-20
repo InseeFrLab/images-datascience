@@ -37,7 +37,7 @@ RUN --mount=type=secret,id=github_token \
     if [[ "${BASE_IMAGE}" == *"r-minimal"* ]]; then \
         /rocker_scripts/install_tidyverse.sh && \
         export GITHUB_PAT=`cat /run/secrets/github_token` && \
-        R -e "install.packages(c('arrow', 'aws.s3', 'sparklyr'))" && \
+        R -e "install.packages(c('sparklyr', 'arrow'))" && \
         R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \
     fi && \
     # Fix permissions
