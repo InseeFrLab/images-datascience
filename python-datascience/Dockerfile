@@ -12,8 +12,6 @@ USER root
 COPY conda-env.yml .
 
 RUN mamba env update -n base -f conda-env.yml && \
-    # Install Julia
-    /opt/install-julia.sh && \
     # Install Quarto latest version
     /opt/install-quarto.sh && \
     # Fix permissions
