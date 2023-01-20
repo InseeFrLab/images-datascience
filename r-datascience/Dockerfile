@@ -3,10 +3,6 @@ FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 
-# Python config for the `reticulate` package
-ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
-ENV RETICULATE_AUTOCONFIGURE="0"
-
 USER root
 
 # Install additional libraries and R packages for datascience

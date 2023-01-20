@@ -4,8 +4,7 @@ FROM $BASE_IMAGE
 SHELL ["/bin/bash", "-c"]
 
 # R Config
-ARG R_VERSION="4.2.1"
-ENV R_VERSION="${R_VERSION}"
+ENV R_VERSION="4.2.1"
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER="${USERNAME}"
 
