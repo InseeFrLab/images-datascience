@@ -29,17 +29,13 @@ RUN --mount=type=secret,id=github_token \
     /opt/install-system-libs.sh && \
     # Install additional R packages
     install2.r -e -s \
-        arrow \
-        aws.s3 \
         RJDemetra \
         keyring \
         odbc \
-        paws \
         quarto \
         Rglpk \
         RPostgreSQL \
-        RSQLite \
-        vaultr && \
+        RSQLite && \
     # Install gouvdown
     export GITHUB_PAT=`cat /run/secrets/github_token` && \
     installGithub.r spyrales/gouvdown && \
