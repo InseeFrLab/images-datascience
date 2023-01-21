@@ -189,7 +189,9 @@ jobs:
       - name: Test image using Google's Container Structure Test
         if: ${{ inputs.test == 'true' }}
         run: |
-          curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 && chmod +x container-structure-test-linux-amd64 && sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+          curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
           container-structure-test test --image ${{ steps.generate-tags.outputs.main_tag }} --config ./${{ inputs.context }}/tests.yaml
       
       - name: Push to DockerHub
