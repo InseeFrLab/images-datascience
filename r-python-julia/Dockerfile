@@ -14,6 +14,9 @@ ENV RETICULATE_AUTOCONFIGURE="0"
 COPY requirements.txt .
 
 RUN /rocker_scripts/install_python.sh && \
+    # Install base Python packages
+    pip install -r requirements.txt && \
+    # Install Julia
     /opt/install-julia.sh && \
     # Clean
     rm requirements.txt
