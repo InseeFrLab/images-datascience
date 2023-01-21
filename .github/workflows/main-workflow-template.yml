@@ -199,7 +199,7 @@ jobs:
         with:
           push: true
           context: ${{ inputs.context }}/
-          tags: ${{ steps.generate-tags.outputs.tags }}
+          tags: ${{ steps.generate-tags.outputs.tags[0] }}
           build-args: |
             BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
             PYTHON_VERSION=${{ matrix.python_version }}
