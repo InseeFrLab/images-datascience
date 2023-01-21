@@ -1,0 +1,15 @@
+boto3
+flake8
+hvac
+ipykernel
+ipywidgets
+nbclient
+nbformat
+numpy
+pandas
+pip
+pyarrow
+pylint
+requests
+s3fs
+wheel

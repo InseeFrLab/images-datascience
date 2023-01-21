@@ -9,7 +9,11 @@ dependencies:
   - ipywidgets
   - nbclient
   - nbformat
+  - numpy
+  - pandas
   - pip
+  - pyarrow
   - pylint
+  - requests
   - s3fs
   - wheel
