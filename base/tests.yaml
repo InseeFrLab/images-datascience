@@ -27,3 +27,9 @@ fileExistenceTests:
     permissions: "drwxr-xr-x"
     uid: 1000
     gid: 100
+  - name: "onyxia init script"
+    path: "/opt/onyxia-init.sh"
+    shouldExist: true
+    permissions: "drwxr-xr-x"
+    uid: 1000
+    gid: 100

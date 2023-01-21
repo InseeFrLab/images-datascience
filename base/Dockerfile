@@ -60,7 +60,7 @@ RUN chmod +x -R /opt/ && \
     chmod +x argo-linux-amd64 && \
     mv ./argo-linux-amd64 /usr/local/bin/argo && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} /opt/ && \
     # Clean
     rm get_helm.sh vault.zip && \
     rm -rf /var/lib/apt/lists/*

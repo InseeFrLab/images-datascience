@@ -170,7 +170,30 @@ jobs:
           echo "tags=$tags" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Build and push
+      - name: Build and load to the Docker client
+        uses: docker/build-push-action@v3
+        with:
+          load: true
+          push: false
+          context: ${{ inputs.context }}/
+          tags: ${{ steps.generate-tags.outputs.tags }}
+          build-args: |
+            BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
+            PYTHON_VERSION=${{ matrix.python_version }}
+            R_VERSION=${{ matrix.r_version }}
+            SPARK_VERSION=${{ matrix.spark_version }}
+            DEVICE_SUFFIX=${{ steps.generate-build-args.outputs.device_suffix }}
+          secrets: |
+            "github_token=${{ secrets.GITHUB_PAT }}"
+
+      - name: Test images
+        if: ${{ inputs.test == 'true' }}
+        uses: plexsystems/container-structure-test-action@v0.2.0
+        with:
+          image: ${{ steps.generate-tags.outputs.tags }}
+          config: ./${{ inputs.context }}/tests.yaml
+      
+      - name: Push to DockerHub
         uses: docker/build-push-action@v3
         with:
           push: true
