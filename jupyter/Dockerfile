@@ -10,12 +10,14 @@ COPY install-jupyterlab.sh /opt/install-jupyterlab.sh
 # Install JupyterLab
 RUN /opt/install-jupyterlab.sh && \
     # If using Conda and Julia is installed, make its kernel available in Jupyter
-    if command -v julia && [ -n "$MAMBA_DIR" ] ; then \
+    if command -v julia && [ -n "$MAMBA_DIR" ]; then \
         julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
         mv "${HOME}/.local/share/jupyter/kernels/julia"* "${MAMBA_DIR}/share/jupyter/kernels/"; \
     fi && \
     # If R is installed, make its kernel available in Jupyter
-    R -e "install.packages('IRkernel'); IRkernel::installspec()" && \
+    if command -v R; then \
+        R -e "install.packages('IRkernel'); IRkernel::installspec()"; \
+    fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean 

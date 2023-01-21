@@ -1,8 +1,8 @@
 #/bin/bash
 
 # If Conda is installed, use it to install Jupyterlab
-if command -v conda ; then
-    mamba install -y -c conda-forge jupyterlab jupyterlab-git
+if command -v mamba ; then
+    mamba install -y jupyterlab jupyterlab-git
 else
 # Else, install via pip
     if [ "`which pip3`" = "" ]; then
