@@ -75,6 +75,8 @@ jobs:
     steps:
     - name: Check out code 
       uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.branch }}
     - id: set-matrix
       run: |
         base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
@@ -99,6 +101,8 @@ jobs:
     steps:
       - name: Check out code 
         uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.branch }}
         
       # https://github.com/actions/virtual-environments/issues/2840
       - name: Make free space
@@ -193,7 +197,7 @@ jobs:
           config: ./${{ inputs.context }}/tests.yaml
       
       - name: Push to DockerHub
-        if: ${{ inputs.test == 'refs/heads/main' }}
+        if: ${{ inputs.branch == 'main' }}
         uses: docker/build-push-action@v3
         with:
           push: true
