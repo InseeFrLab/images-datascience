@@ -190,7 +190,7 @@ jobs:
         if: ${{ inputs.test == 'true' }}
         uses: plexsystems/container-structure-test-action@v0.2.0
         with:
-          image: ${{ steps.generate-tags.outputs.tags }}
+          image: ${{ steps.generate-tags.outputs.main_tag }}
           config: ./${{ inputs.context }}/tests.yaml
       
       - name: Push to DockerHub
@@ -199,7 +199,7 @@ jobs:
         with:
           push: true
           context: ${{ inputs.context }}/
-          tags: ${{ steps.generate-tags.outputs.main_tag }}
+          tags: ${{ steps.generate-tags.outputs.tags }}
           build-args: |
             BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
             PYTHON_VERSION=${{ matrix.python_version }}
