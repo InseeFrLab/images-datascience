@@ -5,8 +5,6 @@ SHELL ["/bin/bash", "-c"]
 
 USER root
 
-COPY install-jupyterlab.sh /opt/install-jupyterlab.sh
-
 # Install JupyterLab
 RUN /opt/install-jupyterlab.sh && \
     # If using Conda and Julia is installed, make its kernel available in Jupyter

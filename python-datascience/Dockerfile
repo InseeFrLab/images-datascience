@@ -11,6 +11,7 @@ USER root
 
 COPY conda-env.yml .
 
+RUN ls -larth /opt/
 RUN mamba env update -n base -f conda-env.yml && \
     # Install Julia
     /opt/install-julia.sh && \
