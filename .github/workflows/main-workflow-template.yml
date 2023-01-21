@@ -186,6 +186,9 @@ jobs:
           secrets: |
             "github_token=${{ secrets.GITHUB_PAT }}"
 
+      - name: Check images
+        run: docker images 
+
       - name: Test images
         if: ${{ inputs.test == 'true' }}
         uses: plexsystems/container-structure-test-action@v0.2.0
