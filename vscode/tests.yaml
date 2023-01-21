@@ -2,5 +2,5 @@ schemaVersion: "2.0.0"
 commandTests:
   - name: "Does the binary exists?"
     command: "which"
-    args: ["R"]
-    expectedOutput: ["/usr/local/bin/R"]
+    args: ["code-server"]
+    expectedOutput: ["/usr/lib/code-server/lib/vscode/bin/remote-cli/code-server"]
