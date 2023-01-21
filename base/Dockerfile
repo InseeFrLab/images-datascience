@@ -24,7 +24,7 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-ADD common-scripts /opt/
+COPY --chown=${USERNAME}:${GROUPNAME} --chmod=700 scripts/ /opt/
 
 RUN chmod +x -R /opt/ && \
     # Install system libraries

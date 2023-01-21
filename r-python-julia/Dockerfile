@@ -11,6 +11,8 @@ ENV PATH="${JULIA_DIR}/bin:${PATH}"
 ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
 ENV RETICULATE_AUTOCONFIGURE="0"
 
+USER root
+
 COPY requirements.txt .
 
 RUN /rocker_scripts/install_python.sh && \
