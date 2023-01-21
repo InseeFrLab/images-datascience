@@ -22,6 +22,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PM-->PYTORCH[python-pytorch]:::package;
       RM-->RDS[r-datascience]:::package;
       RM-->RSPARK[r-sparkr]:::package;
+      RM-->RPYJU[r-python-julia]:::package;
       PYSPARK--> JPYSPARK[jupyter-pyspark]:::ide;
       PYDS--> JPYDS[jupyter-python]:::ide;
       PYTENSORFLOW--> JPYTENSORFLOW[jupyter-tensorflow]:::ide;
@@ -34,6 +35,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       RDS--> JRDS[jupyter-r]:::ide;
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
+      RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
       classDef base fill:#d2f9ff,color:#000  ;
       classDef minimal fill:#C1D5DF,color:#000;
       classDef package fill:#3cb5f2 ,color:#000  ;
