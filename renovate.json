@@ -18,6 +18,13 @@
       "datasourceTemplate": "conda"
     },
     {
+      "fileMatch": ["^python-datascience/Dockerfile$"],
+      "matchStrings": ["ENV JULIA_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "JuliaLang/julia",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^(?<version>.*)$"
+    },
+    {
       "fileMatch": ["^r-python-julia/Dockerfile$"],
       "matchStrings": ["ENV JULIA_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "JuliaLang/julia",
