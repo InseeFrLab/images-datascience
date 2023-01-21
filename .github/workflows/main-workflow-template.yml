@@ -197,7 +197,7 @@ jobs:
           config: ./${{ inputs.context }}/tests.yaml
       
       - name: Push to DockerHub
-        if: ${{ inputs.branch == 'main' }}
+        if: ${{ inputs.branch == 'refs/heads/main' }}
         uses: docker/build-push-action@v3
         with:
           push: true

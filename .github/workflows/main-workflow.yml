@@ -16,7 +16,7 @@ jobs:
       base_image: ubuntu:20.04
       base_image_gpu: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
       external_base_image: true
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -31,7 +31,7 @@ jobs:
       base_image: base
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -46,7 +46,7 @@ jobs:
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -61,7 +61,7 @@ jobs:
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -76,7 +76,7 @@ jobs:
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -91,7 +91,7 @@ jobs:
       base_image: base
       r_version_1: 4.1.3
       r_version_2: 4.2.1
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -106,7 +106,7 @@ jobs:
       base_image: r-minimal
       r_version_1: 4.1.3
       r_version_2: 4.2.1
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -121,7 +121,7 @@ jobs:
       base_image: python-datascience
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -136,7 +136,7 @@ jobs:
       base_image: python-datascience
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -152,7 +152,7 @@ jobs:
       python_version_1: 3.9.13
       python_version_2: 3.10.4
       spark_version: 3.3.0
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -168,7 +168,7 @@ jobs:
       python_version_1: 3.9.13
       python_version_2: 3.10.4
       spark_version: 3.3.0
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -184,7 +184,7 @@ jobs:
       python_version_1: 3.9.13
       python_version_2: 3.10.4
       spark_version: 3.3.0
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -199,7 +199,7 @@ jobs:
       base_image: python-pytorch
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -214,7 +214,7 @@ jobs:
       base_image: python-pytorch
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -229,7 +229,7 @@ jobs:
       base_image: python-tensorflow
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -244,7 +244,7 @@ jobs:
       base_image: python-tensorflow
       python_version_1: 3.9.13
       python_version_2: 3.10.4
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -259,7 +259,7 @@ jobs:
       base_image: r-datascience
       r_version_1: 4.1.3
       r_version_2: 4.2.1
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -275,7 +275,7 @@ jobs:
       r_version_1: 4.1.3
       r_version_2: 4.2.1
       spark_version: 3.3.0
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -291,7 +291,7 @@ jobs:
       r_version_1: 4.1.3
       r_version_2: 4.2.1
       spark_version: 3.3.0
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -306,7 +306,7 @@ jobs:
       base_image: r-datascience
       r_version_1: 4.1.3
       r_version_2: 4.2.1
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -320,7 +320,7 @@ jobs:
       test: true
       base_image: r-minimal
       r_version_1: 4.2.1
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -334,7 +334,7 @@ jobs:
       test: true
       base_image: r-python-julia
       r_version_1: 4.2.1
-      branch: ${GITHUB_REF##*/}
+      branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
