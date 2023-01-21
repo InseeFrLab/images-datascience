@@ -55,8 +55,8 @@ on:
         description: context of docker image
         required: false
         type: string
-      debug:
-        description: spark version
+      branch:
+        description: branch that triggered the workflow
         required: false
         type: string
     secrets:
@@ -194,6 +194,7 @@ jobs:
           config: ./${{ inputs.context }}/tests.yaml
       
       - name: Push to DockerHub
+        if: ${{ inputs.test == 'refs/heads/main' }}
         uses: docker/build-push-action@v3
         with:
           push: true
