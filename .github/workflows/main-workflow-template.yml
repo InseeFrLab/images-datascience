@@ -186,15 +186,11 @@ jobs:
           secrets: |
             "github_token=${{ secrets.GITHUB_PAT }}"
 
-      - name: Check images
-        run: docker images 
-
-      - name: Test images
+      - name: Test image using Google's Container Structure Test
         if: ${{ inputs.test == 'true' }}
-        uses: plexsystems/container-structure-test-action@v0.2.0
-        with:
-          image: ${{ steps.generate-tags.outputs.main_tag }}
-          config: ./${{ inputs.context }}/tests.yaml
+        run: |
+          curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 && chmod +x container-structure-test-linux-amd64 && sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+          container-structure-test test --image ${{ steps.generate-tags.outputs.main_tag }} --config ./${{ inputs.context }}/tests.yaml
       
       - name: Push to DockerHub
         if: ${{ inputs.test == 'refs/heads/main' }}
