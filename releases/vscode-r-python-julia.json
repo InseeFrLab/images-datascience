@@ -1,0 +1,7 @@
+[
+    {
+        "base_image":"r-python-julia-delim-r:r_version_1",
+        "output_image":"vscode-r-python-julia-delim-r:r_version_1",
+        "r_version":":r_version_1"
+    }
+]

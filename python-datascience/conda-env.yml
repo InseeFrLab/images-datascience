@@ -12,7 +12,11 @@ dependencies:
   - mlflow
   - nltk
   - numba
+  - numpy
+  - pandas
   - plotly
+  - pyarrow
+  - requests
   - seaborn
   - scikit-learn
   - scipy

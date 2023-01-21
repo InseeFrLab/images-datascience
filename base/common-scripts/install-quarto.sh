@@ -5,5 +5,4 @@ QUARTO_DL_URL=$(wget -qO- https://quarto.org/docs/download/_download.json | grep
 wget -q ${QUARTO_DL_URL} -O quarto.deb
 dpkg -i quarto.deb
 quarto check install
-
 rm quarto.deb

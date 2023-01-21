@@ -6,16 +6,30 @@
   "regexManagers": [
     {
       "fileMatch": ["^r-minimal/Dockerfile$"],
-      "matchStrings": ["ARG R_VERSION=\"(?<currentValue>.*?)\""],
+      "matchStrings": ["ENV R_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^R(?<version>.*)$"
     },
     {
       "fileMatch": ["^python-minimal/Dockerfile$"],
-      "matchStrings": ["ARG PYTHON_VERSION=\"(?<currentValue>.*?)\""],
+      "matchStrings": ["ENV PYTHON_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "conda-forge/python",
       "datasourceTemplate": "conda"
+    },
+    {
+      "fileMatch": ["^python-datascience/Dockerfile$"],
+      "matchStrings": ["ENV JULIA_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "JuliaLang/julia",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["^r-python-julia/Dockerfile$"],
+      "matchStrings": ["ENV JULIA_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "JuliaLang/julia",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^(?<version>.*)$"
     }
   ]
 }

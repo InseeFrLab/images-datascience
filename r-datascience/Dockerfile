@@ -3,10 +3,6 @@ FROM $BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 
-# Python config for the `reticulate` package
-ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
-ENV RETICULATE_AUTOCONFIGURE="0"
-
 USER root
 
 # Install additional libraries and R packages for datascience
@@ -19,8 +15,6 @@ RUN --mount=type=secret,id=github_token \
     /opt/install-quarto.sh && \
     # Install Shiny Server
     /rocker_scripts/install_shiny_server.sh && \
-    # Install Python to use the `reticulate` package
-    # /rocker_scripts/install_python.sh && \
     # Install packages bundles from rocker
     /rocker_scripts/install_tidyverse.sh && \
     /rocker_scripts/install_verse.sh && \

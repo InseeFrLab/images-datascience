@@ -5,19 +5,22 @@ SHELL ["/bin/bash", "-c"]
 
 USER root
 
-# Install JupyterLab and Julia kernel
-RUN mamba install -y -c conda-forge \
-        jupyterlab \
-        jupyterlab-git && \
-    # If Julia is installed, make the kernel available in Jupyter
-    if command -v julia ; then \
+COPY install-jupyterlab.sh /opt/install-jupyterlab.sh
+
+# Install JupyterLab
+RUN /opt/install-jupyterlab.sh && \
+    # If using Conda and Julia is installed, make its kernel available in Jupyter
+    if command -v julia && [ -n "$MAMBA_DIR" ]; then \
         julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
         mv "${HOME}/.local/share/jupyter/kernels/julia"* "${MAMBA_DIR}/share/jupyter/kernels/"; \
+    fi && \
+    # If R is installed, make its kernel available in Jupyter
+    if command -v R; then \
+        R -e "install.packages('IRkernel'); IRkernel::installspec()"; \
     fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean 
-    rm -rf "${HOME}/.local" && \
     mamba clean --all -f -y && \
     jupyter lab clean
 

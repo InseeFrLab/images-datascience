@@ -9,15 +9,25 @@ ARG REMOTE_CONFIG_DIR="${HOME}/.local/share/code-server/Machine"
 USER root
 
 RUN curl -fsSL https://code-server.dev/install.sh | bash && \
-    # Install extensions
-    code-server --install-extension ms-python.python && \
+    # Install general VSCode extensions
     code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools && \
     code-server --install-extension ms-azuretools.vscode-docker && \
     code-server --install-extension njpwerner.autodocstring && \
     code-server --install-extension redhat.vscode-yaml && \
     code-server --install-extension mhutchie.git-graph && \
-    code-server --install-extension julialang.language-julia && \
-    code-server --install-extension quarto.quarto && \
+    # Install language specific VSCode extensions
+    if command -v python; then \
+        code-server --install-extension ms-python.python; \
+    fi && \
+    if command -v R; then \
+        code-server --install-extension njpwerner.reditorsupport.r; \
+    fi && \
+    if command -v julia; then \
+        code-server --install-extension julialang.language-julia; \
+    fi && \
+    if command -v quarto; then \
+        code-server --install-extension quarto.quarto; \
+    fi && \
     # Create directories to store custom VSCode settings
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR} && \
     # Set Conda binary path in remote settings to auto activate base env when running Python code
