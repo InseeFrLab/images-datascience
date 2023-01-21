@@ -1,22 +1,22 @@
 schemaVersion: "2.0.0"
 commandTests:
-  - name: "is helm present"
+  - name: "Does the binary exists?"
     command: "which"
     args: ["helm"]
     expectedOutput: ["/usr/local/bin/helm"]
-  - name: "is kubectl present"
+  - name: "Does the binary exists?"
     command: "which"
     args: ["kubectl"]
     expectedOutput: ["/usr/local/bin/kubectl"]
-  - name: "is minio present"
+  - name: "Does the binary exists?"
     command: "which"
     args: ["mc"]
     expectedOutput: ["/usr/local/bin/mc"]
-  - name: "is vault present"
+  - name: "Does the binary exists?"
     command: "which"
     args: ["vault"]
     expectedOutput: ["/usr/local/bin/vault"]
-  - name: "is argo-workflows cli present"
+  - name: "Does the binary exists?"
     command: "which"
     args: ["argo"]
     expectedOutput: ["/usr/local/bin/argo"]
@@ -27,4 +27,3 @@ fileExistenceTests:
     permissions: "drwxr-xr-x"
     uid: 1000
     gid: 100
-    #isExecutableBy: "group"
