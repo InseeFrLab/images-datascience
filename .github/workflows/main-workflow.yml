@@ -27,7 +27,7 @@ jobs:
     with:
       image: python-minimal
       context: python-minimal
-      test: false
+      test: true
       base_image: base
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -42,7 +42,7 @@ jobs:
     with:
       image: python-datascience
       context: python-datascience
-      test: false
+      test: true
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -57,7 +57,7 @@ jobs:
     with:
       image: python-pytorch
       context: python-pytorch
-      test: false
+      test: true
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -72,7 +72,7 @@ jobs:
     with:
       image: python-tensorflow
       context: python-tensorflow
-      test: false
+      test: true
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -87,7 +87,7 @@ jobs:
     with:
       image: r-minimal
       context: r-minimal
-      test: false
+      test: true
       base_image: base
       r_version_1: 4.1.3
       r_version_2: 4.2.1
@@ -102,7 +102,7 @@ jobs:
     with:
       image: r-datascience
       context: r-datascience
-      test: false
+      test: true
       base_image: r-minimal
       r_version_1: 4.1.3
       r_version_2: 4.2.1
@@ -117,7 +117,7 @@ jobs:
     with:
       image: jupyter-python
       context: jupyter
-      test: false
+      test: true
       base_image: python-datascience
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -132,7 +132,7 @@ jobs:
     with:
       image: vscode-python
       context: vscode
-      test: false
+      test: true
       base_image: python-datascience
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -147,7 +147,7 @@ jobs:
     with:
       image: pyspark
       context: spark
-      test: false
+      test: true
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -163,7 +163,7 @@ jobs:
     with:
       image: jupyter-pyspark
       context: jupyter
-      test: false
+      test: true
       base_image: pyspark
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -179,7 +179,7 @@ jobs:
     with:
       image: vscode-pyspark
       context: vscode
-      test: false
+      test: true
       base_image: pyspark
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -195,7 +195,7 @@ jobs:
     with:
       image: jupyter-pytorch
       context: jupyter
-      test: false
+      test: true
       base_image: python-pytorch
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -210,7 +210,7 @@ jobs:
     with:
       image: vscode-pytorch
       context: vscode
-      test: false
+      test: true
       base_image: python-pytorch
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -225,7 +225,7 @@ jobs:
     with:
       image: jupyter-tensorflow
       context: jupyter
-      test: false
+      test: true
       base_image: python-tensorflow
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -240,7 +240,7 @@ jobs:
     with:
       image: vscode-tensorflow
       context: vscode
-      test: false
+      test: true
       base_image: python-tensorflow
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -255,7 +255,7 @@ jobs:
     with:
       image: rstudio
       context: rstudio
-      test: false
+      test: true
       base_image: r-datascience
       r_version_1: 4.1.3
       r_version_2: 4.2.1
@@ -270,7 +270,7 @@ jobs:
     with:
       image: sparkr
       context: spark
-      test: false
+      test: true
       base_image: r-minimal
       r_version_1: 4.1.3
       r_version_2: 4.2.1
@@ -286,7 +286,7 @@ jobs:
     with:
       image: rstudio-sparkr
       context: rstudio
-      test: false
+      test: true
       base_image: sparkr
       r_version_1: 4.1.3
       r_version_2: 4.2.1
@@ -302,7 +302,7 @@ jobs:
     with:
       image: jupyter-r
       context: jupyter
-      test: false
+      test: true
       base_image: r-datascience
       r_version_1: 4.1.3
       r_version_2: 4.2.1
@@ -317,7 +317,7 @@ jobs:
     with:
       image: r-python-julia
       context: r-python-julia
-      test: false
+      test: true
       base_image: r-minimal
       r_version_1: 4.2.1
       branch: ${{ github.ref }}
@@ -331,7 +331,7 @@ jobs:
     with:
       image: vscode-r-python-julia
       context: vscode
-      test: false
+      test: true
       base_image: r-python-julia
       r_version_1: 4.2.1
       branch: ${{ github.ref }}
