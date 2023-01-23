@@ -10,7 +10,7 @@ USER root
 
 COPY conda-env${DEVICE_SUFFIX}.yml .
 
-RUN mamba env update -n base -f conda-env${DEVICE_SUFFIX}.yml && \
+RUN pip install torch torchvision torchaudio && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
