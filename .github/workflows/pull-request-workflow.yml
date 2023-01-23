@@ -50,8 +50,8 @@ jobs:
       context: base
       test: true
       push: $env.PUSH
-      base_image: ubuntu:20.04
-      base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu20.04
+      base_image: ubuntu:22.04
+      base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu22.04
   python:
     needs: [base]
     if: always() && needs.tests.outputs.python == 'true'

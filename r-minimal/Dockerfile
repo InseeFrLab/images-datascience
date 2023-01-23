@@ -4,14 +4,14 @@ FROM $BASE_IMAGE
 SHELL ["/bin/bash", "-c"]
 
 # R Config
-ENV R_VERSION="4.2.1"
+ENV R_VERSION="4.2.2"
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER="${USERNAME}"
 
 USER root
 
 # Install R using rocker's install scripts
-RUN git clone --branch R4.2.1 --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
+RUN git clone --branch R4.2.2 --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chown -R ${USERNAME}:${GROUPNAME} /rocker_scripts/ && \
     chmod -R 700 /rocker_scripts/ && \
