@@ -7,4 +7,4 @@ commandTests:
   - name: "Does the binary exists?"
     command: "which"
     args: ["rstudio-server"]
-    expectedOutput: [/usr/lib/rstudio-server/bin/rstudio-server"]
+    expectedOutput: ["/usr/lib/rstudio-server/bin/rstudio-server"]
