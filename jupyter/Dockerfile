@@ -18,9 +18,12 @@ RUN /opt/install-jupyterlab.sh && \
     fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
-    # Clean 
-    mamba clean --all -f -y && \
-    jupyter lab clean
+    # Clean
+    jupyter lab clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    if command -v mamba; then \
+        mamba clean --all -f -y \
+    fi
 
 USER 1000
 
