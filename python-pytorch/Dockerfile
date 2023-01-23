@@ -5,7 +5,12 @@ SHELL ["/bin/bash", "-c"]
 
 USER root
 
-RUN pip install torch torchvision torchaudio && \
+RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
+        # CUDA support
+        pip install torch torchvision torchaudio; fi && \
+    else \
+        # CPU only
+        pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
