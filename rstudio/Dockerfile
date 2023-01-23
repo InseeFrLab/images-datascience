@@ -25,7 +25,9 @@ RUN git clone --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp
     echo "session-default-working-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_CONF_FILE} && \
     echo "session-default-new-project-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_CONF_FILE} && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8787
 

@@ -21,7 +21,8 @@ RUN mamba env update -n base -f conda-env.yml && \
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} ${JULIA_DIR} && \
     # Clean
     rm conda-env.yml && \ 
-    mamba clean --all -f -y
+    mamba clean --all -f -y && \
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 

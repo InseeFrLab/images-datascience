@@ -9,7 +9,8 @@ RUN pip install torch torchvision torchaudio && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    mamba clean --all -f -y
+    mamba clean --all -f -y && \
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 

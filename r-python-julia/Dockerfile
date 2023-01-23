@@ -21,7 +21,8 @@ RUN wget -O - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/R4.
     # Install Julia
     /opt/install-julia.sh && \
     # Clean
-    rm requirements.txt
+    rm requirements.txt && \
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 
