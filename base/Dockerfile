@@ -24,7 +24,7 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-COPY --chown=${USERNAME}:${GROUPNAME} --chmod=700 scripts/ /opt/
+COPY --chmod=774 scripts/ /opt/
 
 RUN /opt/install-system-libs.sh && \
     apt-get upgrade -y && \
