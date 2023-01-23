@@ -24,12 +24,9 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-ADD common-scripts /opt/
+COPY --chown=${USERNAME}:${GROUPNAME} --chmod=700 scripts/ /opt/
 
-RUN chmod +x -R /opt/ && \
-    # Install system libraries
-    /opt/install-system-libs.sh && \
-    # Upgrade installed system libraries
+RUN /opt/install-system-libs.sh && \
     apt-get upgrade -y && \
     # Make sudo passwordless
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
