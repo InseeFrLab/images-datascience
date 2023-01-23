@@ -11,14 +11,16 @@ chains = {
     "python-pytorch": ["base", "python-minimal", "python-pytorch"],
     "python-tensorflow": ["base", "python-minimal", "python-tensorflow"],
     "python-pyspark": ["base", "python-minimal", "spark"],
-    "jupyter-r": ["base", "r-minimal", "r-datascience", "jupyter-r"],
+    "jupyter-r": ["base", "r-minimal", "r-datascience", "jupyter"],
     "jupyter-minimal": ["base", "python-minimal", "jupyter"],
     "jupyter-datascience": ["base", "python-minimal", "python-datascience", "jupyter"],
     "jupyter-pytorch": ["base", "python-minimal", "python-pytorch", "jupyter"],
     "jupyter-tensorflow": ["base", "python-minimal", "python-tensorflow", "jupyter"],
     "jupyter-pyspark": ["base", "python-minimal", "spark", "jupyter"],
     "vscode": ["base", "python-minimal", "python-datascience", "vscode"],
-    "vscode-minimal": ["base", "python-minimal", "vscode"]
+    "vscode-minimal": ["base", "python-minimal", "vscode"],
+    "r-python-julia": ["base", "r-minimal", "r-python-julia"],
+    "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"]
 }
 
 chain = chains[sys.argv[1]]
