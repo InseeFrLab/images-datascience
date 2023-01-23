@@ -55,8 +55,8 @@ on:
         description: context of docker image
         required: false
         type: string
-      debug:
-        description: spark version
+      branch:
+        description: branch that triggered the workflow
         required: false
         type: string
     secrets:
@@ -75,6 +75,8 @@ jobs:
     steps:
     - name: Check out code 
       uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.branch }}
     - id: set-matrix
       run: |
         base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
@@ -99,6 +101,8 @@ jobs:
     steps:
       - name: Check out code 
         uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.branch }}
         
       # https://github.com/actions/virtual-environments/issues/2840
       - name: Make free space
@@ -166,11 +170,34 @@ jobs:
           final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
           final_name_tag_with_date="$final_name_tag-$date"
           tags=$final_name_tag,$final_name_tag_with_date
-          echo $tags
+          echo "main_tag=$final_name_tag" >> $GITHUB_OUTPUT
           echo "tags=$tags" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Build and push
+      - name: Build and load to the Docker client
+        uses: docker/build-push-action@v3
+        with:
+          load: true
+          push: false
+          context: ${{ inputs.context }}/
+          tags: ${{ steps.generate-tags.outputs.tags }}
+          build-args: |
+            BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
+            PYTHON_VERSION=${{ matrix.python_version }}
+            R_VERSION=${{ matrix.r_version }}
+            SPARK_VERSION=${{ matrix.spark_version }}
+            DEVICE_SUFFIX=${{ steps.generate-build-args.outputs.device_suffix }}
+          secrets: |
+            "github_token=${{ secrets.GITHUB_PAT }}"
+
+      - name: Test image using Google's Container Structure Test
+        uses: ./.github/actions/container-structure-test
+        with:
+          image: ${{ steps.generate-tags.outputs.main_tag }}
+          config: ./${{ inputs.context }}/tests.yaml
+      
+      - name: Push to DockerHub
+        if: ${{ inputs.branch == 'refs/heads/main' }}
         uses: docker/build-push-action@v3
         with:
           push: true

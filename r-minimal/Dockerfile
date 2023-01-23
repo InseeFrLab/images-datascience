@@ -13,7 +13,8 @@ USER root
 # Install R using rocker's install scripts
 RUN git clone --branch R4.2.1 --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
-    chmod -R 755 /rocker_scripts/ && \
+    chown -R ${USERNAME}:${GROUPNAME} /rocker_scripts/ && \
+    chmod -R 700 /rocker_scripts/ && \
     /rocker_scripts/install_R_source.sh
 
 # Use RStudio's package manager to download packages as binaries

@@ -1,0 +1,22 @@
+schemaVersion: "2.0.0"
+commandTests:
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["mamba"]
+    expectedOutput: ["/opt/mamba/bin/mamba"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["python"]
+    expectedOutput: ["/opt/mamba/bin/python"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["pip"]
+    expectedOutput: ["/opt/mamba/bin/pip"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["julia"]
+    expectedOutput: ["/opt/julia/bin/julia"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["quarto"]
+    expectedOutput: ["/usr/local/bin/quarto"]

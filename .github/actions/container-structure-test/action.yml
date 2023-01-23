@@ -1,0 +1,24 @@
+name: Container Structure Test
+description: Use Google's Container Structure Test to test a Docker image
+
+inputs:
+  image:
+    description: Image name
+    required: true
+  config:
+    description: Configuration file for the tests
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Download Container Structure Test
+      shell: bash
+      run: |
+        curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
+        chmod +x container-structure-test-linux-amd64
+        sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+    - name: Test container
+      shell: bash
+      run: |
+        container-structure-test test --image ${{ inputs.image }} --config ${{ inputs.config }}

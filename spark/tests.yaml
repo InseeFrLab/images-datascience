@@ -1,0 +1,20 @@
+schemaVersion: "2.0.0"
+fileExistenceTests:
+  - name: 'Hadoop Home'
+    path: '/opt/hadoop'
+    shouldExist: true
+    permissions: 'drwxr-xr-x'
+    uid: 1000
+    gid: 100
+  - name: 'Spark Home'
+    path: '/opt/spark'
+    shouldExist: true
+    permissions: 'drwxr-xr-x'
+    uid: 1000
+    gid: 100
+  - name: 'Hive Home'
+    path: '/opt/hive'
+    shouldExist: true
+    permissions: 'drwxr-xr-x'
+    uid: 1000
+    gid: 100

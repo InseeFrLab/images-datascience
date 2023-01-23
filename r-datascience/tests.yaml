@@ -1,0 +1,10 @@
+schemaVersion: "2.0.0"
+commandTests:
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["R"]
+    expectedOutput: ["/usr/local/bin/R"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["quarto"]
+    expectedOutput: ["/usr/local/bin/quarto"]
