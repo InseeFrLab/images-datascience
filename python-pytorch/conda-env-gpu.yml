@@ -1,9 +1,0 @@
-channels:
-  - pytorch
-  - nvidia
-
-dependencies:
-  - pytorch
-  - torchaudio
-  - torchvision
-  - pytorch-cuda=11.7
