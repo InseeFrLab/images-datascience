@@ -57,7 +57,7 @@ jobs:
     with:
       image: python-pytorch
       context: python-pytorch
-      test: false
+      test: true
       base_image: python-minimal
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -195,7 +195,7 @@ jobs:
     with:
       image: jupyter-pytorch
       context: jupyter
-      test: false
+      test: true
       base_image: python-pytorch
       python_version_1: 3.9.13
       python_version_2: 3.10.4
@@ -210,7 +210,7 @@ jobs:
     with:
       image: vscode-pytorch
       context: vscode
-      test: false
+      test: true
       base_image: python-pytorch
       python_version_1: 3.9.13
       python_version_2: 3.10.4
