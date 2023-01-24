@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 # If Conda is installed, use it to install Jupyterlab
 if command -v mamba ; then
