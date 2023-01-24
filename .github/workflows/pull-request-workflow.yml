@@ -13,27 +13,17 @@ jobs:
       pull-requests: read
     outputs:
       base: ${{ steps.filter.outputs.base }}
-      python-minimal: ${{ steps.filter.outputs.python-minimal }}
+      jupyter: ${{ steps.filter.outputs.jupyter }}
       python-datascience: ${{ steps.filter.outputs.python-datascience }}
+      python-minimal: ${{ steps.filter.outputs.python-minimal }}
       python-pytorch: ${{ steps.filter.outputs.python-pytorch }}
       python-tensorflow: ${{ steps.filter.outputs.python-tensorflow }}
-      r-minimal: ${{ steps.filter.outputs.r-minimal }}
       r-datascience: ${{ steps.filter.outputs.r-datascience }}
-      jupyter-python: ${{ steps.filter.outputs.jupyter-python }}
-      vscode-python: ${{ steps.filter.outputs.vscode }}
-      pyspark: ${{ steps.filter.outputs.pyspark }}
-      jupyter-pyspark: ${{ steps.filter.outputs.jupyter-pyspark }}
-      vscode-pyspark: ${{ steps.filter.outputs.vscode-pyspark }}
-      jupyter-pytorch: ${{ steps.filter.outputs.jupyter-pytorch }}
-      vscode-pytorch: ${{ steps.filter.outputs.vscode-pytorch }}
-      jupyter-tensorflow: ${{ steps.filter.outputs.jupyter-tensorflow }}
-      vscode-tensorflow: ${{ steps.filter.outputs.vscode-tensorflow }}
-      rstudio: ${{ steps.filter.outputs.rstudio }}
-      sparkr: ${{ steps.filter.outputs.sparkr }}
-      rstudio-sparkr: ${{ steps.filter.outputs.rstudio-sparkr }}
-      jupyter-r: ${{ steps.filter.outputs.jupyter-r }}
+      r-minimal: ${{ steps.filter.outputs.r-minimal }}
       r-python-julia: ${{ steps.filter.outputs.r-python-julia }}
-      vscode-r-python-julia: ${{ steps.filter.outputs.vscode-r-python-julia }}
+      rstudio: ${{ steps.filter.outputs.rstudio }}
+      spark: ${{ steps.filter.outputs.spark }}
+      vscode: ${{ steps.filter.outputs.vscode }}
     steps:
     - uses: dorny/paths-filter@v2
       id: filter
@@ -149,7 +139,7 @@ jobs:
       branch: ${{ github.ref }}
   jupyter-python:
     needs: changes
-    if: ${{ needs.changes.outputs.jupyter-python == 'true' }}
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-python
@@ -161,7 +151,7 @@ jobs:
       branch: ${{ github.ref }}
   vscode-python:
     needs: changes
-    if: ${{ needs.changes.outputs.vscode-python == 'true' }}
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-python
@@ -173,7 +163,7 @@ jobs:
       branch: ${{ github.ref }}
   pyspark:
     needs: changes
-    if: ${{ needs.changes.outputs.pyspark == 'true' }}
+    if: ${{ needs.changes.outputs.spark == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
@@ -186,7 +176,7 @@ jobs:
       branch: ${{ github.ref }}
   jupyter-pyspark:
     needs: changes
-    if: ${{ needs.changes.outputs.jupyter-pyspark == 'true' }}
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pyspark
@@ -199,7 +189,7 @@ jobs:
       branch: ${{ github.ref }}
   vscode-pyspark:
     needs: changes
-    if: ${{ needs.changes.outputs.vscode-pyspark == 'true' }}
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-pyspark
@@ -212,7 +202,7 @@ jobs:
       branch: ${{ github.ref }}
   jupyter-pytorch:
     needs: changes
-    if: ${{ needs.changes.outputs.jupyter-pytorch == 'true' }}
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pytorch
@@ -224,7 +214,7 @@ jobs:
       branch: ${{ github.ref }}
   vscode-pytorch:
     needs: changes
-    if: ${{ needs.changes.outputs.vscode-pytorch == 'true' }}
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-pytorch
@@ -236,7 +226,7 @@ jobs:
       branch: ${{ github.ref }}
   jupyter-tensorflow:
     needs: changes
-    if: ${{ needs.changes.outputs.jupyter-tensorflow == 'true' }}
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-tensorflow
@@ -248,7 +238,7 @@ jobs:
       branch: ${{ github.ref }}
   vscode-tensorflow:
     needs: changes
-    if: ${{ needs.changes.outputs.vscode-tensorflow == 'true' }}
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-tensorflow
@@ -272,7 +262,7 @@ jobs:
       branch: ${{ github.ref }}
   sparkr:
     needs: changes
-    if: ${{ needs.changes.outputs.sparkr == 'true' }}
+    if: ${{ needs.changes.outputs.spark == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: sparkr
@@ -285,7 +275,7 @@ jobs:
       branch: ${{ github.ref }}
   rstudio-sparkr:
     needs: changes
-    if: ${{ needs.changes.outputs.rstudio-sparkr == 'true' }}
+    if: ${{ needs.changes.outputs.rstudio == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio-sparkr
@@ -298,7 +288,7 @@ jobs:
       branch: ${{ github.ref }}
   jupyter-r:
     needs: changes
-    if: ${{ needs.changes.outputs.jupyter-r == 'true' }}
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-r
@@ -321,7 +311,7 @@ jobs:
       branch: ${{ github.ref }}
   vscode-r-python-julia:
     needs: changes
-    if: ${{ needs.changes.outputs.vscode-r-python-julia == 'true' }}
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-r-python-julia
