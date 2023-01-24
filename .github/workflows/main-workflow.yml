@@ -6,6 +6,10 @@ on:
   # every monday at 2am
     - cron: '0 2 * * 1'
 
+env:
+  BASE_IMAGE: ubuntu:20.04
+  BASE_IMAGE_GPU: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
+
 jobs:
   base:
     uses: ./.github/workflows/main-workflow-template.yml
@@ -13,8 +17,8 @@ jobs:
       image: base
       context: base
       test: true
-      base_image: ubuntu:20.04
-      base_image_gpu: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
+      base_image: ${{ env.BASE_IMAGE }}
+      base_image_gpu: ${{ env.BASE_IMAGE_GPU }}
       external_base_image: true
       branch: ${{ github.ref }}
     secrets:
