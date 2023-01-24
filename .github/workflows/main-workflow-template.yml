@@ -144,7 +144,6 @@ jobs:
               owner=$(echo "$owner" | awk '{print tolower($0)}')
               final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
             fi
-            echo "device_suffix=${DEVICE_SUFFIX}" >> $GITHUB_OUTPUT
             echo "base_image=${final_name}" >> $GITHUB_OUTPUT
             echo $final_name
         shell: bash
@@ -186,7 +185,6 @@ jobs:
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
-            DEVICE_SUFFIX=${{ steps.generate-build-args.outputs.device_suffix }}
           secrets: |
             "github_token=${{ secrets.GITHUB_PAT }}"
 
@@ -208,6 +206,5 @@ jobs:
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
-            DEVICE_SUFFIX=${{ steps.generate-build-args.outputs.device_suffix }}
           secrets: |
             "github_token=${{ secrets.GITHUB_PAT }}"
