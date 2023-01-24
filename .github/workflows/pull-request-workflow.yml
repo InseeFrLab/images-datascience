@@ -1,4 +1,4 @@
-name: Build and push Docker images
+name: Build and test Docker images on pull request
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ on:
 
 jobs:
   changes:
+    if: ${{ github.actor != 'renovate[bot]' }}
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
