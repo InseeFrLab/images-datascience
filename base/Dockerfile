@@ -58,6 +58,7 @@ RUN /opt/install-system-libs.sh && \
     mv ./argo-linux-amd64 /usr/local/bin/argo && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    chmod +x /opt/onyxia-init.sh && \
     # Clean
     rm get_helm.sh vault.zip && \
     rm -rf /var/lib/apt/lists/*
