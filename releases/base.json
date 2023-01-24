@@ -1,8 +1,7 @@
 [
     {
         "base_image": "ubuntu:20.04",
-        "output_image": "base:latest",
-        "gpu": "false"
+        "output_image": "base:latest"
     },
     {
         "base_image": "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04",
