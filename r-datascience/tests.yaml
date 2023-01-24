@@ -12,7 +12,7 @@ fileExistenceTests:
   - name: "onyxia init script"
     path: "/opt/onyxia-init.sh"
     shouldExist: true
-    permissions: "-rwxrwxr--"
+    permissions: "-rwxr-xr-x"
     uid: 0
     gid: 0
 commandTests:
