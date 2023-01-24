@@ -6,35 +6,15 @@ on:
   # every monday at 2am
     - cron: '0 2 * * 1'
 
-env:
-  base_image: ubuntu:20.04
-  base_image_gpu: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
-  python_version_1: 3.9.13
-  python_version_2: 3.10.4
-  r_version_1: 4.1.3
-  r_version_2: 4.2.1
-  spark_version: 3.3.0
-
 jobs:
-  vars:
-    runs-on: ubuntu-latest
-    outputs:
-      base_image: ${{ env.base_image }}
-      base_image_gpu: ${{ env.base_image_gpu }}
-      python_version_1: ${{ env.python_version_1 }}
-      python_version_2: ${{ env.python_version_2 }}
-      r_version_1: ${{ env.r_version_1 }}
-      r_version_2: ${{ env.r_version_2 }}
-      spark_version: ${{ env.spark_version }}
   base:
     uses: ./.github/workflows/main-workflow-template.yml
-    needs: vars
     with:
       image: base
       context: base
       test: true
-      base_image: ${{ needs.vars.outputs.base_image }}
-      base_image_gpu: ${{ needs.vars.outputs.base_image_gpu }}
+      base_image: ubuntu:20.04
+      base_image_gpu: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
       external_base_image: true
       branch: ${{ github.ref }}
     secrets:
@@ -42,15 +22,15 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   python-minimal:
-    needs: [vars, base]
+    needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-minimal
       context: python-minimal
       test: true
       base_image: base
-      python_version_1: ${{ needs.vars.outputs.python_version_1 }}
-      python_version_2: ${{ needs.vars.outputs.python_version_2 }}
+      python_version_1: 3.9.13
+      python_version_2: 3.10.4
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
