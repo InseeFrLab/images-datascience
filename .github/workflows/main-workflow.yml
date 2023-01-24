@@ -126,7 +126,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  vscode:
+  vscode-python:
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
@@ -249,7 +249,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  r-studio:
+  rstudio:
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
