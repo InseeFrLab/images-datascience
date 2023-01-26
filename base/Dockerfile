@@ -24,9 +24,10 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-COPY --chmod=775 scripts/ /opt/
+COPY scripts/ /opt/
 
-RUN /opt/install-system-libs.sh && \
+RUN chmod -R +x /opt/ && \
+    /opt/install-system-libs.sh && \
     apt-get upgrade -y && \
     # Make sudo passwordless
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
