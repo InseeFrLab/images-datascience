@@ -169,7 +169,7 @@ jobs:
 
       - name: Build and load to the Docker client
         if: ${{ matrix.gpu != 'true' }}
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           load: true
           push: false
@@ -199,7 +199,7 @@ jobs:
       
       - name: Push to DockerHub
         if: ${{ inputs.branch == 'refs/heads/main' }}
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           push: true
           context: ${{ inputs.context }}/
