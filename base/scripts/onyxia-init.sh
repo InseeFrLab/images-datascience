@@ -208,7 +208,7 @@ fi
 
 if [  "`which python`" != "" ]; then
     if [ -n "$PATH_TO_CA_BUNDLE" ]; then
-        python certifi_ca.py
+        python /opt/certifi_ca.py
     fi 
 fi
 
