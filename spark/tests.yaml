@@ -1,20 +1,56 @@
 schemaVersion: "2.0.0"
+metadataTest:
+  user: 1000
+  workdir: "/home/onyxia/work"
 fileExistenceTests:
+  - name: "user home"
+    path: "/home/onyxia"
+    shouldExist: true
+    permissions: "drwxr-x---"
+    uid: 1000
+    gid: 100
+  - name: "onyxia init script"
+    path: "/opt/onyxia-init.sh"
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    uid: 0
+    gid: 0
   - name: 'Hadoop Home'
     path: '/opt/hadoop'
     shouldExist: true
-    permissions: 'drwxr-xr-x'
+    permissions: 'drwxr-x---'
     uid: 1000
     gid: 100
   - name: 'Spark Home'
     path: '/opt/spark'
     shouldExist: true
-    permissions: 'drwxr-xr-x'
+    permissions: 'drwxr-x---'
     uid: 1000
     gid: 100
   - name: 'Hive Home'
     path: '/opt/hive'
     shouldExist: true
-    permissions: 'drwxr-xr-x'
+    permissions: 'drwxr-x---'
     uid: 1000
     gid: 100
+commandTests:
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["helm"]
+    expectedOutput: ["/usr/local/bin/helm"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["kubectl"]
+    expectedOutput: ["/usr/local/bin/kubectl"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["mc"]
+    expectedOutput: ["/usr/local/bin/mc"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["vault"]
+    expectedOutput: ["/usr/local/bin/vault"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["argo"]
+    expectedOutput: ["/usr/local/bin/argo"]

@@ -193,5 +193,24 @@ if [  "`which conda`" != "" ]; then
     fi
 fi
 
+if [  "`which conda`" != "" ]; then
+    if [[ -n "$CONDA_REPOSITORY" ]]; then
+        echo "configuration conda (add channels)"
+        conda config --add channels $CONDA_REPOSITORY
+        conda config --remove channels conda-forge
+        conda config --remove channels conda-forge --file /opt/mamba/.condarc
+    fi
+    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
+        echo "configuration of conda to a custom crt"
+        conda config --set ssl_verify $PATH_TO_CA_BUNDLE
+    fi
+fi
+
+if [  "`which python`" != "" ]; then
+    if [ -n "$PATH_TO_CA_BUNDLE" ]; then
+        python /opt/certifi_ca.py
+    fi 
+fi
+
 echo "execution of $@"
 exec "$@"

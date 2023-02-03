@@ -1,4 +1,4 @@
-name: Main workflow on pull request
+name: Build and test Docker images on pull request
 
 on:
   workflow_dispatch:
@@ -6,148 +6,318 @@ on:
     branches:
     - main
 
-env:
-  PUSH: false
-
 jobs:
-  tests:
+  changes:
+    if: ${{ github.actor != 'renovate[bot]' }}
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     outputs:
       base: ${{ steps.filter.outputs.base }}
-      python: ${{ steps.filter.outputs.python }}
-      r: ${{ steps.filter.outputs.r }}
-      vscode: ${{ steps.filter.outputs.vscode }}
       jupyter: ${{ steps.filter.outputs.jupyter }}
-      sparkr: ${{ steps.filter.outputs.sparkr }}
-      pyspark: ${{ steps.filter.outputs.pyspark }}
+      python-datascience: ${{ steps.filter.outputs.python-datascience }}
+      python-minimal: ${{ steps.filter.outputs.python-minimal }}
+      python-pytorch: ${{ steps.filter.outputs.python-pytorch }}
+      python-tensorflow: ${{ steps.filter.outputs.python-tensorflow }}
+      r-datascience: ${{ steps.filter.outputs.r-datascience }}
+      r-minimal: ${{ steps.filter.outputs.r-minimal }}
+      r-python-julia: ${{ steps.filter.outputs.r-python-julia }}
+      rstudio: ${{ steps.filter.outputs.rstudio }}
+      spark: ${{ steps.filter.outputs.spark }}
+      vscode: ${{ steps.filter.outputs.vscode }}
     steps:
-    - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
       id: filter
       with:
         filters: |
           base:
             - 'base/**'
-          python:
-            - 'python/**'
-          r:
-            - 'r/**'
-          vscode:
-            - 'vscode/**'
           jupyter:
             - 'jupyter/**'
-          spark:
-            - 'sparkr/**'
+          python-datascience:
+            - 'python-datascience/**'
+          python-minimal:
+            - 'python-minimal/**'
+          python-pytorch:
+            - 'python-pytorch/**'
+          python-tensorflow:
+            - 'python-tensorflow/**'
+          r-datascience:
+            - 'r-datascience/**'
+          r-minimal:
+            - 'r-minimal/**'
+          r-python-julia:
+            - 'r-python-julia/**'
           rstudio:
             - 'rstudio/**'
-            
+          spark:
+            - 'spark/**'
+          vscode:
+            - 'vscode/**'
   base:
+    needs: changes
+    if: ${{ needs.changes.outputs.base == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
-    if: always() && needs.tests.outputs.base == 'true'
-    needs: tests
     with:
       image: base
       context: base
       test: true
-      push: $env.PUSH
       base_image: ubuntu:22.04
-      base_image_gpu: nvidia/cuda:11.3.1-base-ubuntu22.04
-  python:
-    needs: [base]
-    if: always() && needs.tests.outputs.python == 'true'
+      base_image_gpu: nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
+      external_base_image: true
+      branch: ${{ github.ref }}
+  python-minimal:
+    needs: changes
+    if: ${{ needs.changes.outputs.python-minimal == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: python
-      context: python
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-base:latest
-      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
-  r:
-    needs: [base]
-    uses: ./.github/workflows/main-workflow-template.yml
-    if: always() && needs.tests.outputs.r == 'true'
-    with:
-      image: r
-      context: r
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-base:latest
-      base_image_gpu: inseefrlab/onyxia-base:latest-gpu
-  jupyter:
-    needs: [python]
-    if: always() && needs.tests.outputs.jupyter == 'true'
+      image: python-minimal
+      context: python-minimal
+      test: true
+      base_image: base
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  python-datascience:
+    needs: changes
+    if: ${{ needs.changes.outputs.python-datascience == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      image: jupyter
+      image: python-datascience
+      context: python-datascience
+      test: true
+      base_image: python-minimal
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  python-pytorch:
+    needs: changes
+    if: ${{ needs.changes.outputs.python-pytorch == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: python-pytorch
+      context: python-pytorch
+      test: true
+      base_image: python-minimal
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  python-tensorflow:
+    needs: changes
+    if: ${{ needs.changes.outputs.python-tensorflow == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: python-tensorflow
+      context: python-tensorflow
+      test: true
+      base_image: python-minimal
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  r-minimal:
+    needs: changes
+    if: ${{ needs.changes.outputs.r-minimal == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: r-minimal
+      context: r-minimal
+      test: true
+      base_image: base
+      r_version_1: 4.1.3
+      r_version_2: 4.2.1
+      branch: ${{ github.ref }}
+  r-datascience:
+    needs: changes
+    if: ${{ needs.changes.outputs.r-datascience == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: r-datascience
+      context: r-datascience
+      test: true
+      base_image: r-minimal
+      r_version_1: 4.1.3
+      r_version_2: 4.2.1
+      branch: ${{ github.ref }}
+  jupyter-python:
+    needs: changes
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-python
       context: jupyter
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
-  vscode:
-    needs: [python]
-    if: always() && needs.tests.outputs.vscode == 'true'
+      test: true
+      base_image: python-datascience
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  vscode-python:
+    needs: changes
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-python
       context: vscode
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      test: true
+      base_image: python-datascience
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
   pyspark:
-    needs: [python]
-    if: always() && needs.tests.outputs.spark == 'true'
+    needs: changes
+    if: ${{ needs.changes.outputs.spark == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
       context: spark
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-python:latest
-      base_image_gpu: inseefrlab/onyxia-python:latest-gpu
+      test: true
+      base_image: python-minimal
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      spark_version: 3.3.0
+      branch: ${{ github.ref }}
   jupyter-pyspark:
-    needs: [pyspark]
+    needs: changes
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
-    if: always() && needs.tests.outputs.jupyter == 'true'
     with:
       image: jupyter-pyspark
       context: jupyter
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-pyspark:latest
-      base_image_gpu: inseefrlab/onyxia-pyspark:latest-gpu
-  r-studio:
-    needs: [r]
-    if: always() &&  needs.tests.outputs.rstudio == 'true'
+      test: true
+      base_image: pyspark
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      spark_version: 3.3.0
+      branch: ${{ github.ref }}
+  vscode-pyspark:
+    needs: changes
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-pyspark
+      context: vscode
+      test: true
+      base_image: pyspark
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      spark_version: 3.3.0
+      branch: ${{ github.ref }}
+  jupyter-pytorch:
+    needs: changes
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-pytorch
+      context: jupyter
+      test: true
+      base_image: python-pytorch
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  vscode-pytorch:
+    needs: changes
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-pytorch
+      context: vscode
+      test: true
+      base_image: python-pytorch
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  jupyter-tensorflow:
+    needs: changes
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-tensorflow
+      context: jupyter
+      test: true
+      base_image: python-tensorflow
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  vscode-tensorflow:
+    needs: changes
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-tensorflow
+      context: vscode
+      test: true
+      base_image: python-tensorflow
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      branch: ${{ github.ref }}
+  rstudio:
+    needs: changes
+    if: ${{ needs.changes.outputs.rstudio == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio
       context: rstudio
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-r:latest
-      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+      test: true
+      base_image: r-datascience
+      r_version_1: 4.1.3
+      r_version_2: 4.2.1
+      branch: ${{ github.ref }}
   sparkr:
-    needs: [r]
+    needs: changes
+    if: ${{ needs.changes.outputs.spark == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
-    if: always() && needs.tests.outputs.spark == 'true'
     with:
       image: sparkr
       context: spark
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-r:latest
-      base_image_gpu: inseefrlab/onyxia-r:latest-gpu
+      test: true
+      base_image: r-minimal
+      r_version_1: 4.1.3
+      r_version_2: 4.2.1
+      spark_version: 3.3.0
+      branch: ${{ github.ref }}
   rstudio-sparkr:
-    needs: [sparkr]
+    needs: changes
+    if: ${{ needs.changes.outputs.rstudio == 'true' }}
     uses: ./.github/workflows/main-workflow-template.yml
-    if: always() && needs.tests.outputs.rstudio == 'true'
     with:
       image: rstudio-sparkr
       context: rstudio
-      test: false
-      push: $env.PUSH
-      base_image: inseefrlab/onyxia-sparkr:latest
-      base_image_gpu: inseefrlab/onyxia-sparkr:latest-gpu
+      test: true
+      base_image: sparkr
+      r_version_1: 4.1.3
+      r_version_2: 4.2.1
+      spark_version: 3.3.0
+      branch: ${{ github.ref }}
+  jupyter-r:
+    needs: changes
+    if: ${{ needs.changes.outputs.jupyter == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: jupyter-r
+      context: jupyter
+      test: true
+      base_image: r-datascience
+      r_version_1: 4.1.3
+      r_version_2: 4.2.1
+      branch: ${{ github.ref }}
+  r-python-julia:
+    needs: changes
+    if: ${{ needs.changes.outputs.r-python-julia == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: r-python-julia
+      context: r-python-julia
+      test: true
+      base_image: r-minimal
+      r_version_1: 4.2.1
+      branch: ${{ github.ref }}
+  vscode-r-python-julia:
+    needs: changes
+    if: ${{ needs.changes.outputs.vscode == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-r-python-julia
+      context: vscode
+      test: true
+      base_image: r-python-julia
+      r_version_1: 4.2.1
+      branch: ${{ github.ref }}

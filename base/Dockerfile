@@ -24,9 +24,10 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-COPY --chmod=774 scripts/ /opt/
+COPY scripts/ /opt/
 
-RUN /opt/install-system-libs.sh && \
+RUN chmod -R +x /opt/ && \
+    /opt/install-system-libs.sh && \
     apt-get upgrade -y && \
     # Make sudo passwordless
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
@@ -58,6 +59,7 @@ RUN /opt/install-system-libs.sh && \
     mv ./argo-linux-amd64 /usr/local/bin/argo && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    chmod +x /opt/onyxia-init.sh && \
     # Clean
     rm get_helm.sh vault.zip && \
     rm -rf /var/lib/apt/lists/*

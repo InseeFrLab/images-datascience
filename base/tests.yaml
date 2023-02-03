@@ -1,4 +1,20 @@
 schemaVersion: "2.0.0"
+metadataTest:
+  user: 1000
+  workdir: "/home/onyxia/work"
+fileExistenceTests:
+  - name: "user home"
+    path: "/home/onyxia"
+    shouldExist: true
+    permissions: "drwxr-x---"
+    uid: 1000
+    gid: 100
+  - name: "onyxia init script"
+    path: "/opt/onyxia-init.sh"
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    uid: 0
+    gid: 0
 commandTests:
   - name: "Does the binary exists?"
     command: "which"
@@ -20,16 +36,3 @@ commandTests:
     command: "which"
     args: ["argo"]
     expectedOutput: ["/usr/local/bin/argo"]
-fileExistenceTests:
-  - name: "user home"
-    path: "/home/onyxia"
-    shouldExist: true
-    permissions: "drwxr-x---"
-    uid: 1000
-    gid: 100
-  - name: "onyxia init script"
-    path: "/opt/onyxia-init.sh"
-    shouldExist: true
-    permissions: "-rwxrwxr--"
-    uid: 0
-    gid: 0

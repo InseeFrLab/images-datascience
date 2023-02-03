@@ -29,7 +29,7 @@ jobs:
       context: python-minimal
       test: true
       base_image: base
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
@@ -44,7 +44,7 @@ jobs:
       context: python-datascience
       test: true
       base_image: python-minimal
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
@@ -59,7 +59,7 @@ jobs:
       context: python-pytorch
       test: true
       base_image: python-minimal
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
@@ -74,7 +74,7 @@ jobs:
       context: python-tensorflow
       test: true
       base_image: python-minimal
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
@@ -119,14 +119,14 @@ jobs:
       context: jupyter
       test: true
       base_image: python-datascience
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  vscode:
+  vscode-python:
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
@@ -134,7 +134,7 @@ jobs:
       context: vscode
       test: true
       base_image: python-datascience
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
@@ -149,7 +149,7 @@ jobs:
       context: spark
       test: true
       base_image: python-minimal
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       spark_version: 3.3.1
       branch: ${{ github.ref }}
@@ -165,7 +165,7 @@ jobs:
       context: jupyter
       test: true
       base_image: pyspark
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       spark_version: 3.3.1
       branch: ${{ github.ref }}
@@ -181,7 +181,7 @@ jobs:
       context: vscode
       test: true
       base_image: pyspark
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       spark_version: 3.3.1
       branch: ${{ github.ref }}
@@ -197,7 +197,7 @@ jobs:
       context: jupyter
       test: true
       base_image: python-pytorch
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
@@ -212,7 +212,7 @@ jobs:
       context: vscode
       test: true
       base_image: python-pytorch
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
@@ -227,7 +227,7 @@ jobs:
       context: jupyter
       test: true
       base_image: python-tensorflow
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
@@ -242,14 +242,14 @@ jobs:
       context: vscode
       test: true
       base_image: python-tensorflow
-      python_version_1: 3.9.15
+      python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  r-studio:
+  rstudio:
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
