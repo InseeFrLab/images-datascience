@@ -34,9 +34,9 @@ for i, image in enumerate(chain):
 
     if image == "base":
         if GPU:
-            previous_image = "nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04"
+            previous_image = "nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04"
         else:
-            previous_image = "ubuntu:20.04"
+            previous_image = "ubuntu:22.04"
     else:
         previous_image = chain[i-1]
 
