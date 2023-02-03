@@ -19,7 +19,7 @@ RUN git clone --branch R4.2.2 --depth 1 https://github.com/rocker-org/rocker-ver
     /rocker_scripts/install_R_source.sh
 
 # Use RStudio's package manager to download packages as binaries
-ENV CRAN="https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
+ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
 RUN /rocker_scripts/setup_R.sh && \
