@@ -20,7 +20,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
         code-server --install-extension ms-python.python; \
     fi && \
     if command -v R; then \
-        code-server --install-extension njpwerner.reditorsupport.r; \
+        code-server --install-extension reditorsupport.r; \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
