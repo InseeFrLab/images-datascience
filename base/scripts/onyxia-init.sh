@@ -212,5 +212,12 @@ if [  "`which python`" != "" ]; then
     fi 
 fi
 
+if [[ -n "$FAUXPILOT_SERVER" ]]; then
+    dir="$HOME/.local/share/code-server/User"
+    file="settings.json"
+    jq --arg key "fauxpilot.server" --arg value "$FAUXPILOT_SERVER" --indent 4 '. += {($key): $value}'  $dir/$file > $dir/$file.tmp && mv $dir/$file.tmp $dir/$file
+    jq --arg key "fauxpilot.enabled" --argjson value "true" --indent 4 '. += {($key): $value}'  $dir/$file > $dir/$file.tmp && mv $dir/$file.tmp $dir/$file
+fi
+
 echo "execution of $@"
 exec "$@"

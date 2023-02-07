@@ -138,6 +138,43 @@ jobs:
       r_version_1: 4.1.3
       r_version_2: 4.2.2
       branch: ${{ github.ref }}
+  pyspark:
+    needs: changes
+    if: ${{ needs.changes.outputs.spark == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: pyspark
+      context: spark
+      test: true
+      base_image: python-minimal
+      python_version_1: 3.9.16
+      python_version_2: 3.10.8
+      spark_version: 3.3.1
+      branch: ${{ github.ref }}
+  sparkr:
+    needs: changes
+    if: ${{ needs.changes.outputs.spark == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: sparkr
+      context: spark
+      test: true
+      base_image: r-minimal
+      r_version_1: 4.1.3
+      r_version_2: 4.2.2
+      spark_version: 3.3.1
+      branch: ${{ github.ref }}
+  r-python-julia:
+    needs: changes
+    if: ${{ needs.changes.outputs.r-python-julia == 'true' }}
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: r-python-julia
+      context: r-python-julia
+      test: true
+      base_image: r-minimal
+      r_version_1: 4.2.2
+      branch: ${{ github.ref }}
   jupyter-python:
     needs: changes
     if: ${{ needs.changes.outputs.jupyter == 'true' }}
@@ -162,93 +199,6 @@ jobs:
       python_version_1: 3.9.16
       python_version_2: 3.10.8
       branch: ${{ github.ref }}
-  pyspark:
-    needs: changes
-    if: ${{ needs.changes.outputs.spark == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: pyspark
-      context: spark
-      test: true
-      base_image: python-minimal
-      python_version_1: 3.9.16
-      python_version_2: 3.10.8
-      spark_version: 3.3.1
-      branch: ${{ github.ref }}
-  jupyter-pyspark:
-    needs: changes
-    if: ${{ needs.changes.outputs.jupyter == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-pyspark
-      context: jupyter
-      test: true
-      base_image: pyspark
-      python_version_1: 3.9.16
-      python_version_2: 3.10.8
-      spark_version: 3.3.1
-      branch: ${{ github.ref }}
-  vscode-pyspark:
-    needs: changes
-    if: ${{ needs.changes.outputs.vscode == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-pyspark
-      context: vscode
-      test: true
-      base_image: pyspark
-      python_version_1: 3.9.16
-      python_version_2: 3.10.8
-      spark_version: 3.3.1
-      branch: ${{ github.ref }}
-  jupyter-pytorch:
-    needs: changes
-    if: ${{ needs.changes.outputs.jupyter == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-pytorch
-      context: jupyter
-      test: true
-      base_image: python-pytorch
-      python_version_1: 3.9.16
-      python_version_2: 3.10.8
-      branch: ${{ github.ref }}
-  vscode-pytorch:
-    needs: changes
-    if: ${{ needs.changes.outputs.vscode == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-pytorch
-      context: vscode
-      test: true
-      base_image: python-pytorch
-      python_version_1: 3.9.16
-      python_version_2: 3.10.8
-      branch: ${{ github.ref }}
-  jupyter-tensorflow:
-    needs: changes
-    if: ${{ needs.changes.outputs.jupyter == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-tensorflow
-      context: jupyter
-      test: true
-      base_image: python-tensorflow
-      python_version_1: 3.9.16
-      python_version_2: 3.10.8
-      branch: ${{ github.ref }}
-  vscode-tensorflow:
-    needs: changes
-    if: ${{ needs.changes.outputs.vscode == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-tensorflow
-      context: vscode
-      test: true
-      base_image: python-tensorflow
-      python_version_1: 3.9.16
-      python_version_2: 3.10.8
-      branch: ${{ github.ref }}
   rstudio:
     needs: changes
     if: ${{ needs.changes.outputs.rstudio == 'true' }}
@@ -260,64 +210,4 @@ jobs:
       base_image: r-datascience
       r_version_1: 4.1.3
       r_version_2: 4.2.2
-      branch: ${{ github.ref }}
-  sparkr:
-    needs: changes
-    if: ${{ needs.changes.outputs.spark == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: sparkr
-      context: spark
-      test: true
-      base_image: r-minimal
-      r_version_1: 4.1.3
-      r_version_2: 4.2.2
-      spark_version: 3.3.1
-      branch: ${{ github.ref }}
-  rstudio-sparkr:
-    needs: changes
-    if: ${{ needs.changes.outputs.rstudio == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: rstudio-sparkr
-      context: rstudio
-      test: true
-      base_image: sparkr
-      r_version_1: 4.1.3
-      r_version_2: 4.2.2
-      spark_version: 3.3.1
-      branch: ${{ github.ref }}
-  jupyter-r:
-    needs: changes
-    if: ${{ needs.changes.outputs.jupyter == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-r
-      context: jupyter
-      test: true
-      base_image: r-datascience
-      r_version_1: 4.1.3
-      r_version_2: 4.2.2
-      branch: ${{ github.ref }}
-  r-python-julia:
-    needs: changes
-    if: ${{ needs.changes.outputs.r-python-julia == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: r-python-julia
-      context: r-python-julia
-      test: true
-      base_image: r-minimal
-      r_version_1: 4.2.2
-      branch: ${{ github.ref }}
-  vscode-r-python-julia:
-    needs: changes
-    if: ${{ needs.changes.outputs.vscode == 'true' }}
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-r-python-julia
-      context: vscode
-      test: true
-      base_image: r-python-julia
-      r_version_1: 4.2.2
       branch: ${{ github.ref }}

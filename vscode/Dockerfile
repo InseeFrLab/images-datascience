@@ -10,6 +10,8 @@ USER root
 
 RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     # Install general VSCode extensions
+    wget https://github.com/Venthe/vscode-fauxpilot/releases/download/1.0.0/fauxpilot-1.0.0.vsix -O fauxpilot.vsix && \
+    code-server --install-extension fauxpilot.vsix && \
     code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools && \
     code-server --install-extension ms-azuretools.vscode-docker && \
     code-server --install-extension njpwerner.autodocstring && \
@@ -35,7 +37,8 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    rm fauxpilot.vsix
 
 # Copy custom VSCode User settings
 COPY --chown=${USERNAME}:${GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/settings.json
