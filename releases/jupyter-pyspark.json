@@ -6,6 +6,13 @@
         "spark_version":":spark_version"
     },
     {
+        "base_image":"pyspark-delim-py:python_version_1-spark:spark_version",
+        "output_image":"jupyter-pyspark-delim-py:python_version_1-spark:spark_version",
+        "python_version":":python_version_1",
+        "spark_version":":spark_version",
+        "gpu":"true"
+    },
+    {
         "base_image":"pyspark-delim-py:python_version_2-spark:spark_version",
         "output_image":"jupyter-pyspark-delim-py:python_version_2-spark:spark_version",
         "python_version":":python_version_2",
