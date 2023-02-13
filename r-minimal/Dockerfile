@@ -31,8 +31,10 @@ RUN /rocker_scripts/setup_R.sh && \
     install2.r --error \
         aws.s3 \
         devtools \
+        lintr \
         paws \
         renv \
+        styler \
         vaultr && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
