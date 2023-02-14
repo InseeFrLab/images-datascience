@@ -36,6 +36,8 @@ RUN /rocker_scripts/setup_R.sh && \
         renv \
         styler \
         vaultr && \
+    # Configure renv to use RSPM to download packages by default
+    echo 'options(renv.config.repos.override = getOption("repos"))' >> ${R_HOME}/etc/Rprofile.site && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean
