@@ -23,17 +23,16 @@ ENV PATH="${JAVA_HOME}/bin:${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 
 USER root
 
-COPY get-binaries.sh /tmp/get-binaries.sh
-
 RUN --mount=type=secret,id=github_token \
     apt-get update  && \
     # Install JDK
     apt-get install -y --no-install-recommends \
         ca-certificates-java \
         openjdk-11-jre-headless && \
-    # Get Spark/Hadoop/Hive binaries
-    mkdir -p $HADOOP_HOME $SPARK_HOME $HIVE_HOME && \
-    ${SHELL} /tmp/get-binaries.sh && \
+    # Install Spark/Hadoop/Hive
+    /opt/install-spark-hadoop-hive.sh && \
+    # Put Spark config in the right place
+    cp /opt/spark-env.sh $SPARK_HOME/conf && \
     # Install additional packages if R is installed
     if command -v R; then \
         /rocker_scripts/install_tidyverse.sh && \
@@ -49,9 +48,6 @@ RUN --mount=type=secret,id=github_token \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --chown=${USERNAME}:${GROUPNAME} --chmod=755 spark-env.sh $SPARK_HOME/conf
-COPY --chown=${USERNAME}:${GROUPNAME} --chmod=755 entrypoint.sh /opt/entrypoint.sh
-
 USER 1000
 
-ENTRYPOINT [ "/opt/entrypoint.sh" ]
+ENTRYPOINT [ "/opt/spark-entrypoint.sh" ]
