@@ -103,6 +103,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ inputs.branch }}
+
+      - name: Pass scripts to base image at build time
+        if: ${{ inputs.context == 'base' }}
+        run: cp -r scripts/ base/scripts/
         
       # https://github.com/actions/virtual-environments/issues/2840
       - name: Make free space
