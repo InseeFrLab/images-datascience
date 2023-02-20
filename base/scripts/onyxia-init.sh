@@ -144,7 +144,7 @@ if [[ -e "/usr/local/lib/R/etc/" ]]; then
     if [[ -n "$R_REPOSITORY" ]]; then
         echo "configuration r (add local repository)"
         # To indent a heredoc, <<- and tabs are required (no spaces allowed)
-        cat <<-EOF > /usr/local/lib/R/etc/Rprofile.site
+        cat <<-EOF > ${R_HOME}/etc/Rprofile.site
 		# https://docs.rstudio.com/rspm/admin/serving-binaries/#binaries-r-configuration-linux
 		options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))
 		# Proxy repository for R
@@ -156,6 +156,9 @@ if [[ -e "/usr/local/lib/R/etc/" ]]; then
 		EOF
 
     fi
+
+    # Configure renv to use the specified package repository
+    echo 'options(renv.config.repos.override = getOption("repos"))' >> ${R_HOME}/etc/Rprofile.site && \
 fi
 
 if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
