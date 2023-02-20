@@ -23,13 +23,14 @@ RUN --mount=type=secret,id=github_token \
     /opt/install-system-libs.sh && \
     # Install additional R packages
     install2.r -e -s \
-        RJDemetra \
         keyring \
         odbc \
         quarto \
         Rglpk \
+        RJDemetra \
         RPostgreSQL \
-        RSQLite && \
+        RSQLite \
+        targets && \
     # Install gouvdown
     export GITHUB_PAT=`cat /run/secrets/github_token` && \
     installGithub.r spyrales/gouvdown && \
