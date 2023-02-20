@@ -33,8 +33,8 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
         echo $i
         export $i=$(eval echo $(jq -r ".data.data.$i" <<< "$JSON"))
         sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> /etc/environment"
-        if [[ -e "/usr/local/lib/R/etc/" ]]; then
-            sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> /usr/local/lib/R/etc/Renviron.site"
+        if [[ -e "${R_HOME}/etc/" ]]; then
+            sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> ${R_HOME}/etc/Renviron.site"
         fi
     done
 fi
@@ -126,20 +126,20 @@ if [  "`which git`" != "" ]; then
     fi
 fi
 
-if [[ -e "/usr/local/lib/R/etc/" ]]; then
+if command -v R; then
     echo "Renviron.site detected"
-    echo -e "MC_HOST_s3=$MC_HOST_s3\nAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID\nAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY\nAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN\nAWS_DEFAULT_REGION=$AWS_DEFAULT_REGION\nAWS_S3_ENDPOINT=$AWS_S3_ENDPOINT\nAWS_EXPIRATION=$AWS_EXPIRATION" >> /usr/local/lib/R/etc/Renviron.site
-    echo -e "VAULT_ADDR=$VAULT_ADDR\nVAULT_TOKEN=$VAULT_TOKEN" >> /usr/local/lib/R/etc/Renviron.site
-    echo -e "SPARK_HOME=$SPARK_HOME" >> /usr/local/lib/R/etc/Renviron.site
-    echo -e "HADOOP_HOME=$HADOOP_HOME" >> /usr/local/lib/R/etc/Renviron.site
-    echo -e "HADOOP_OPTIONAL_TOOLS=$HADOOP_OPTIONAL_TOOLS" >> /usr/local/lib/R/etc/Renviron.site
+    echo -e "MC_HOST_s3=$MC_HOST_s3\nAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID\nAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY\nAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN\nAWS_DEFAULT_REGION=$AWS_DEFAULT_REGION\nAWS_S3_ENDPOINT=$AWS_S3_ENDPOINT\nAWS_EXPIRATION=$AWS_EXPIRATION" >> ${R_HOME}/etc/Renviron.site
+    echo -e "VAULT_ADDR=$VAULT_ADDR\nVAULT_TOKEN=$VAULT_TOKEN" >> ${R_HOME}/etc/Renviron.site
+    echo -e "SPARK_HOME=$SPARK_HOME" >> ${R_HOME}/etc/Renviron.site
+    echo -e "HADOOP_HOME=$HADOOP_HOME" >> ${R_HOME}/etc/Renviron.site
+    echo -e "HADOOP_OPTIONAL_TOOLS=$HADOOP_OPTIONAL_TOOLS" >> ${R_HOME}/etc/Renviron.site
     echo -e "PATH=$JAVA_HOME/bin:$SPARK_HOME/bin:$HADOOP_HOME/bin:$PATH" >> /etc/environment
     echo -e "export PATH=$JAVA_HOME/bin:$SPARK_HOME/bin:$HADOOP_HOME/bin:$PATH" >> /etc/profile
     if [[ -e "/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" ]]; then
-        echo -e "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" >> /usr/local/lib/R/etc/Renviron.site
+        echo -e "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" >> ${R_HOME}/etc/Renviron.site
     fi
-    env | grep "KUBERNETES" >> /usr/local/lib/R/etc/Renviron.site
-    env | grep "IMAGE_NAME" >> /usr/local/lib/R/etc/Renviron.site
+    env | grep "KUBERNETES" >> ${R_HOME}/etc/Renviron.site
+    env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
     
     if [[ -n "$R_REPOSITORY" ]]; then
         echo "configuration r (add local repository)"
@@ -161,11 +161,6 @@ if [[ -e "/usr/local/lib/R/etc/" ]]; then
     echo 'options(renv.config.repos.override = getOption("repos"))' >> ${R_HOME}/etc/Rprofile.site && \
 fi
 
-if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
-    echo "download $PERSONAL_INIT_SCRIPT"
-    curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
-fi
-
 if [[ -e "$HOME/work" ]]; then
   if [[ $(id -u) = 0 ]]; then
     echo "cd $HOME/work" >> /etc/profile
@@ -173,6 +168,7 @@ if [[ -e "$HOME/work" ]]; then
     echo "cd $HOME/work" >> $HOME/.bashrc
   fi
 fi
+
 if [  "`which pip`" != "" ]; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
         echo "configuration pip (index-url)"
@@ -181,18 +177,6 @@ if [  "`which pip`" != "" ]; then
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
         echo "configuration of pip to a custom crt"
         pip config set global.cert $PATH_TO_CA_BUNDLE
-    fi
-fi
-if [  "`which conda`" != "" ]; then
-    if [[ -n "$CONDA_REPOSITORY" ]]; then
-        echo "configuration conda (add channels)"
-        conda config --add channels $CONDA_REPOSITORY
-        conda config --remove channels conda-forge
-        conda config --remove channels conda-forge --file /opt/mamba/.condarc
-    fi
-    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
-        echo "configuration of conda to a custom crt"
-        conda config --set ssl_verify $PATH_TO_CA_BUNDLE
     fi
 fi
 
@@ -220,6 +204,11 @@ if [[ -n "$FAUXPILOT_SERVER" ]]; then
     file="settings.json"
     jq --arg key "fauxpilot.server" --arg value "$FAUXPILOT_SERVER" --indent 4 '. += {($key): $value}'  $dir/$file > $dir/$file.tmp && mv $dir/$file.tmp $dir/$file
     jq --arg key "fauxpilot.enabled" --argjson value "true" --indent 4 '. += {($key): $value}'  $dir/$file > $dir/$file.tmp && mv $dir/$file.tmp $dir/$file
+fi
+
+if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
+    echo "download $PERSONAL_INIT_SCRIPT"
+    curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
 fi
 
 echo "execution of $@"
