@@ -1,5 +1,9 @@
 #!/bin/bash
 
+HADOOP_VERSION="3.3.4"
+HIVE_VERSION="2.3.9"
+HIVE_LISTENER_VERSION="0.0.3"
+
 export SPARK_BUILD_S3_BUCKET="https://minio.lab.sspcloud.fr/projet-onyxia/build"
 export SPARK_BUILD_NAME="spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}"
 export HADOOP_URL="https://downloads.apache.org/hadoop/common/hadoop-${HADOOP_VERSION}"

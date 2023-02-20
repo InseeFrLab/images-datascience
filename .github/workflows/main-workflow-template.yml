@@ -177,7 +177,7 @@ jobs:
         with:
           load: true
           push: false
-          context: ${{ inputs.context }}/
+          context: ${{ inputs.context }}
           tags: ${{ steps.generate-tags.outputs.tags }}
           build-args: |
             BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
@@ -206,7 +206,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          context: ${{ inputs.context }}/
+          context: ${{ inputs.context }}
           tags: ${{ steps.generate-tags.outputs.tags }}
           build-args: |
             BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}

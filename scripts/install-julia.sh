@@ -1,5 +1,7 @@
 #!/bin/bash
 
+JULIA_VERSION="1.8.5"
+
 # Install Julia
 julia_major_minor=$(echo "${JULIA_VERSION}" | cut -d. -f 1,2)
 wget -q "https://julialang-s3.julialang.org/bin/linux/x64/${julia_major_minor}/julia-${JULIA_VERSION}-linux-x86_64.tar.gz" -O julia.tar.gz
