@@ -23,9 +23,6 @@ RUN wget -O - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/R4.
     rm requirements.txt && \
     rm -rf /var/lib/apt/lists/*
 
-# Required for R support to work in VSCode
-RUN R -e "install.packages('languageserver')"
-
 USER 1000
 
 CMD ["/bin/bash"]
