@@ -7,7 +7,7 @@ dependencies:
   - hvac
   - ipykernel
   - ipywidgets
-  - kubernetes
+  - python-kubernetes
   - nbclient
   - nbformat
   - pip
