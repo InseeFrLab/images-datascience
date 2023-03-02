@@ -158,7 +158,7 @@ if command -v R; then
     fi
 
     # Configure renv to use the specified package repository
-    echo 'options(renv.config.repos.override = getOption("repos"))' >> ${R_HOME}/etc/Rprofile.site && \
+    echo 'options(renv.config.repos.override = getOption("repos"))' >> ${R_HOME}/etc/Rprofile.site
 fi
 
 if [[ -e "$HOME/work" ]]; then
