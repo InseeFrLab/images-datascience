@@ -47,7 +47,6 @@ They can be used alone but are designed to work with the [Onyxia](https://github
 ```mermaid
   graph TD;
       B[base]:::base-->PM[python-minimal]:::minimal;
-      B-->RM[r-minimal]:::minimal;
       PM-->PYDS[python-datascience]:::package;
       PM-->PYSPARK[python-pyspark]:::package;
       PM-->PYTENSORFLOW[python-tensorflow]:::package;
@@ -60,7 +59,6 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PYDS--> VSCODEPYDS[vscode-python]:::ide;
       PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow]:::ide;
       PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
-      RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
       classDef base fill:#d2f9ff,color:#000  ;
       classDef minimal fill:#C1D5DF,color:#000;
       classDef package fill:#3cb5f2 ,color:#000  ;
