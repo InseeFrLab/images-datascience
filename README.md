@@ -43,24 +43,6 @@ They can be used alone but are designed to work with the [Onyxia](https://github
 ```
 
 
-
-```mermaid
-  graph TD;
-      B[base]:::base-->PM[python-minimal]:::minimal;
-      PM-->PYDS[python-datascience]:::package;
-      PM-->PYSPARK[python-pyspark]:::package;
-      PM-->PYTORCH[python-pytorch]:::package;
-      PYSPARK--> JPYSPARK[jupyter-pyspark]:::ide;
-      PYDS--> JPYDS[jupyter-python]:::ide;
-      PYTORCH--> JPYTORCH[jupyter-pytorch]:::ide;
-      PYSPARK--> VSCODEPYSPARK[vscode-pyspark]:::ide;
-      PYDS--> VSCODEPYDS[vscode-python]:::ide;
-      PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
-      classDef base fill:#d2f9ff,color:#000  ;
-      classDef minimal fill:#C1D5DF,color:#000;
-      classDef package fill:#3cb5f2 ,color:#000  ;
-      classDef ide fill:#0072d9  ;
-```
 ## Environment variable
 
 List of environment variable you can use to pimp the container at init:
