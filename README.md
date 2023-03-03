@@ -13,7 +13,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
 - a layer to put on the top of that some ide like jupyter, rstudio or vscode
 
 ```mermaid
-  graph TD;
+  graph LR;
       B[base]:::base-->PM[python-minimal]:::minimal;
       B-->RM[r-minimal]:::minimal;
       PM-->PYDS[python-datascience]:::package;
@@ -35,6 +35,31 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       RDS--> JRDS[jupyter-r]:::ide;
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
+      RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
+      classDef base fill:#d2f9ff,color:#000  ;
+      classDef minimal fill:#C1D5DF,color:#000;
+      classDef package fill:#3cb5f2 ,color:#000  ;
+      classDef ide fill:#0072d9  ;
+```
+
+
+
+```mermaid
+  graph TD;
+      B[base]:::base-->PM[python-minimal]:::minimal;
+      B-->RM[r-minimal]:::minimal;
+      PM-->PYDS[python-datascience]:::package;
+      PM-->PYSPARK[python-pyspark]:::package;
+      PM-->PYTENSORFLOW[python-tensorflow]:::package;
+      PM-->PYTORCH[python-pytorch]:::package;
+      PYSPARK--> JPYSPARK[jupyter-pyspark]:::ide;
+      PYDS--> JPYDS[jupyter-python]:::ide;
+      PYTENSORFLOW--> JPYTENSORFLOW[jupyter-tensorflow]:::ide;
+      PYTORCH--> JPYTORCH[jupyter-pytorch]:::ide;
+      PYSPARK--> VSCODEPYSPARK[vscode-pyspark]:::ide;
+      PYDS--> VSCODEPYDS[vscode-python]:::ide;
+      PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow]:::ide;
+      PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
       RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
       classDef base fill:#d2f9ff,color:#000  ;
       classDef minimal fill:#C1D5DF,color:#000;
