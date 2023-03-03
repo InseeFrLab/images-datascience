@@ -13,7 +13,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
 - a layer to put on the top of that some ide like jupyter, rstudio or vscode
 
 ```mermaid
-  graph LR;
+  graph TD;
       B[base]:::base-->PM[python-minimal]:::minimal;
       B-->RM[r-minimal]:::minimal;
       PM-->PYDS[python-datascience]:::package;
