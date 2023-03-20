@@ -7,7 +7,7 @@ USER root
 
 RUN pip install tensorflow && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
     mamba clean --all -f -y && \
     rm -rf /var/lib/apt/lists/*

@@ -13,7 +13,7 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu; \
     fi && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
     mamba clean --all -f -y && \
     rm -rf /var/lib/apt/lists/*
