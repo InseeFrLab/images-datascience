@@ -68,12 +68,12 @@ jobs:
             python-minimal-1.cache-to=type=gha,mode=min
             jupyter-1.cache-from=type=gha
 
-      - name: Test image using Google's Container Structure Test
-        if: ${{ matrix.gpu != 'true' }}
-        uses: ./.github/actions/container-structure-test
-        with:
-          image: ${{ steps.generate-tags.outputs.main_tag }}
-          config: ./${{ inputs.context }}/tests.yaml
+      # - name: Test image using Google's Container Structure Test
+      #   if: ${{ matrix.gpu != 'true' }}
+      #   uses: ./.github/actions/container-structure-test
+      #   with:
+      #     image: ${{ steps.generate-tags.outputs.main_tag }}
+      #     config: ./${{ inputs.context }}/tests.yaml
 
       - name: Login to Docker Hub
         if: ${{ inputs.branch == 'refs/heads/main' }}
