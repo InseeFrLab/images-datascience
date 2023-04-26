@@ -28,11 +28,22 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  jupyter-1:
+  pytorch-1:
     needs: [python-minimal-1] 
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-target: jupyter-1
+      bake-target: pytorch-1
+      test: true
+      branch: ${{ github.ref }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  jupyter-pytorch-1:
+    needs: [pytorch-1] 
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      bake-target: jupyter-pytorch-1
       test: true
       branch: ${{ github.ref }}
     secrets:
