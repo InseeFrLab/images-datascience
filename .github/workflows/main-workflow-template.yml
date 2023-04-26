@@ -68,45 +68,13 @@ on:
         required: false
 
 jobs:
-  matrix_prep:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-    - name: Check out code 
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ inputs.branch }}
-    - id: set-matrix
-      run: |
-        base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
-        base_image_gpu_escaped=$(echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g' )
-        sed -i "s/:base_image_gpu/$base_image_gpu_escaped/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:base_image/$base_image_escaped/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:python_version_1/${{inputs.python_version_1}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:python_version_2/${{inputs.python_version_2}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:spark_version/${{inputs.spark_version}}/g" ./releases/${{ inputs.image }}.json
-        matrix=$(cat ./releases/${{ inputs.image }}.json | jq .)
-        echo $matrix
-        echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
   docker:
     runs-on: ubuntu-latest
-    needs: matrix_prep
-    strategy:
-      fail-fast: false
-      matrix: 
-        ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
       - name: Check out code 
         uses: actions/checkout@v3
         with:
           ref: ${{ inputs.branch }}
-
-      - name: Pass scripts to base image at build time
-        if: ${{ inputs.context == 'base' }}
-        run: cp -r scripts/ base/scripts/
         
       # https://github.com/actions/virtual-environments/issues/2840
       - name: Make free space
@@ -121,69 +89,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Generate build args
-        id: generate-build-args
-        run: |
-            if [ -n "${{ matrix.gpu }}" ]; then
-              DEVICE_SUFFIX=-gpu
-            fi
-            base_image=${{ matrix.base_image }}
-            if [[ "$base_image" == *"-delim-"* ]]; then
-              image_name=$(echo $base_image | awk -F '-delim-' '{print $1}' )
-              tag=$(echo $base_image | awk -F '-delim-' '{print $2}' )
-            else
-              image_name=$(echo $base_image | awk -F ':' '{print $1}' )
-              tag=$(echo $base_image | awk -F ':' '{print $2}' )
-            fi
-            if [[ "${{ inputs.external_base_image }}" = true ]]; then
-              final_name="${image_name}:${tag}"
-            else
-              owner=${{ env.OWNER }}
-              owner=$(echo "$owner" | awk '{print tolower($0)}')
-              final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
-            fi
-            echo "base_image=${final_name}" >> $GITHUB_OUTPUT
-            echo $final_name
-        shell: bash
-
-      - name: Generate output tags
-        id: generate-tags
-        run: |
-          image=${{ matrix.output_image }}
-          if [[ "$image" == *"-delim-"* ]]; then
-            image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
-            tag=$(echo $image | awk -F '-delim-' '{print $2}' )
-          else
-            image_name=$(echo $image | awk -F ':' '{print $1}' )
-            tag=$(echo $image | awk -F ':' '{print $2}' )
-          fi
-          date=$(date +%Y.%m.%d)
-          owner=${{ env.OWNER }}
-          owner=$(echo "$owner" | awk '{print tolower($0)}')
-          final_name="$owner/${{ inputs.prefix}}-$image_name"
-          if [ -n "${{ matrix.gpu }}" ]; then
-              DEVICE_SUFFIX=-gpu
-          fi
-          final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
-          final_name_tag_with_date="$final_name_tag-$date"
-          tags=$final_name_tag,$final_name_tag_with_date
-          echo "main_tag=$final_name_tag" >> $GITHUB_OUTPUT
-          echo "tags=$tags" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Build and load to the Docker client
         if: ${{ matrix.gpu != 'true' }}
-        uses: docker/build-push-action@v4
+        uses: docker/bake-action@v3
         with:
           load: true
           push: false
-          context: ${{ inputs.context }}
-          tags: ${{ steps.generate-tags.outputs.tags }}
-          build-args: |
-            BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
-            PYTHON_VERSION=${{ matrix.python_version }}
-            R_VERSION=${{ matrix.r_version }}
-            SPARK_VERSION=${{ matrix.spark_version }}
           secrets: |
             "github_token=${{ secrets.GITHUB_PAT }}"
 
@@ -201,17 +112,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: Push to DockerHub
-        if: ${{ inputs.branch == 'refs/heads/main' }}
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          context: ${{ inputs.context }}
-          tags: ${{ steps.generate-tags.outputs.tags }}
-          build-args: |
-            BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
-            PYTHON_VERSION=${{ matrix.python_version }}
-            R_VERSION=${{ matrix.r_version }}
-            SPARK_VERSION=${{ matrix.spark_version }}
-          secrets: |
-            "github_token=${{ secrets.GITHUB_PAT }}"
+      # - name: Push to DockerHub
+      #   if: ${{ inputs.branch == 'refs/heads/main' }}
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     push: true
+      #     context: ${{ inputs.context }}
+      #     tags: ${{ steps.generate-tags.outputs.tags }}
+      #     build-args: |
+      #       BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
+      #       PYTHON_VERSION=${{ matrix.python_version }}
+      #       R_VERSION=${{ matrix.r_version }}
+      #       SPARK_VERSION=${{ matrix.spark_version }}
+      #     secrets: |
+      #       "github_token=${{ secrets.GITHUB_PAT }}"
