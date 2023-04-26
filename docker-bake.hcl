@@ -31,7 +31,7 @@ target "base" {
   contexts = {
     scripts = "./scripts"
   }
-  cache-to = ["type=gha", "mode=max"]
+  cache-to = ["type=gha,mode=max"]
   args = {
     BASE_IMAGE = "${BASE_IMAGE}"
   }
@@ -43,7 +43,8 @@ target "base-gpu" {
   contexts = {
     scripts = "./scripts"
   }
-  cache-to = ["type=gha", "mode=max"]
+  cache-from = ["type=gha"]
+  cache-to = ["type=gha,mode=max"]
   args = {
     BASE_IMAGE = "${BASE_IMAGE_GPU}"
   }
@@ -53,7 +54,7 @@ target "base-gpu" {
 target "python-minimal-1" {
   dockerfile = "python-minimal/Dockerfile"
   cache-from = ["type=gha"]
-  cache-to = ["type=gha", "mode=max"]
+  cache-to = ["type=gha,mode=max"]
   contexts = {
     base_image = "target:base-gpu"
     conda_env = "./python-minimal"
@@ -66,7 +67,7 @@ target "python-minimal-1" {
 
 target "pytorch-1" {
   cache-from = ["type=gha"]
-  cache-to = ["type=gha", "mode=max"]
+  cache-to = ["type=gha,mode=max"]
   dockerfile = "python-pytorch/Dockerfile"
   contexts = {
     base_image = "target:python-minimal-1"
@@ -76,7 +77,7 @@ target "pytorch-1" {
 
 target "jupyter-pytorch-1" {
   cache-from = ["type=gha"]
-  cache-to = ["type=gha", "mode=max"]
+  cache-to = ["type=gha,mode=max"]
   dockerfile = "jupyter/Dockerfile"
   contexts = {
     base_image = "target:pytorch-1"
