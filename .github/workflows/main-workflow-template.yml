@@ -59,6 +59,10 @@ on:
         description: branch that triggered the workflow
         required: false
         type: string
+      bake-target:
+        description: branch that triggered the workflow
+        required: false
+        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: false
@@ -93,6 +97,7 @@ jobs:
         if: ${{ matrix.gpu != 'true' }}
         uses: docker/bake-action@v3
         with:
+          target: ${{ inputs.bake-target }}
           load: true
           push: false
           secrets: |
