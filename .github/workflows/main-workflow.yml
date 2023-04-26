@@ -10,7 +10,7 @@ jobs:
   base:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-context: base
+      bake-target: base
       test: true
       branch: ${{ github.ref }}
     secrets:
@@ -20,7 +20,7 @@ jobs:
   python-minimal-1:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-context: python-minimal-1
+      bake-target: python-minimal-1
       test: true
       branch: ${{ github.ref }}
     secrets:
@@ -30,7 +30,7 @@ jobs:
   jupyter-1:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-context: jupyter-1
+      bake-target: jupyter-1
       test: true
       branch: ${{ github.ref }}
     secrets:
