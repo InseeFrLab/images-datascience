@@ -31,9 +31,7 @@ target "base" {
   contexts = {
     scripts = "./scripts"
   }
-  cache-to = {
-    type = "gha"
-  }
+  cache-to = ["type=gha"]
   args = {
     BASE_IMAGE = "${BASE_IMAGE}"
   }
@@ -53,12 +51,8 @@ target "base-gpu" {
 
 target "python-minimal-1" {
   dockerfile = "python-minimal/Dockerfile"
-  cache-to = {
-    type = "gha"
-  }
-  cache-from = {
-    type = "gha"
-  }
+  cache-to = ["type=gha"]
+  cache-from = ["type=gha"]
   contexts = {
     base_image = "target:base"
     conda_env = "./python-minimal"
@@ -70,9 +64,7 @@ target "python-minimal-1" {
 }
 
 target "jupyter-1" {
-  cache-from = {
-    type = "gha"
-  }
+  cache-from = ["type=gha"]
   dockerfile = "jupyter/Dockerfile"
   contexts = {
     base_image = "target:python-minimal-1"
