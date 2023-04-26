@@ -7,10 +7,10 @@ on:
     - cron: '0 1 * * 1'
 
 jobs:
-  base:
+  base-gpu:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-target: base
+      bake-target: base-gpu
       test: true
       branch: ${{ github.ref }}
     secrets:
@@ -18,7 +18,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   python-minimal-1:
-    needs: [base] 
+    needs: [base-gpu] 
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       bake-target: python-minimal-1

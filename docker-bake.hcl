@@ -31,7 +31,7 @@ target "base" {
   contexts = {
     scripts = "./scripts"
   }
-  cache-to = ["type=gha"]
+  cache-to = ["type=gha", "mode=max"]
   args = {
     BASE_IMAGE = "${BASE_IMAGE}"
   }
