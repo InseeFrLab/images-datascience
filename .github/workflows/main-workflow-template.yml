@@ -62,11 +62,9 @@ jobs:
           push: false
           secrets: |
             "github_token=${{ secrets.GITHUB_PAT }}"
-          # set: |
-          #   base.cache-to=type=gha,mode=min
-          #   python-minimal-1.cache-from=type=gha
-          #   python-minimal-1.cache-to=type=gha,mode=min
-          #   jupyter-1.cache-from=type=gha
+          set: |
+            *.cache-from=type=gha
+            *.cache-to=type=gha,mode=max
 
       # - name: Test image using Google's Container Structure Test
       #   if: ${{ matrix.gpu != 'true' }}
