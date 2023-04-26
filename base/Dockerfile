@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG BASE_IMAGE=ubuntu:22.04
 FROM $BASE_IMAGE
 
@@ -24,7 +25,7 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-COPY scripts/ /opt/
+COPY --from=scripts . /opt/
 
 RUN chmod -R +x /opt/ && \
     /opt/install-system-libs.sh && \

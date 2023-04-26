@@ -1,5 +1,5 @@
-ARG BASE_IMAGE=inseefrlab/onyxia-base
-FROM $BASE_IMAGE
+# syntax=docker/dockerfile:1
+FROM base
 
 SHELL ["/bin/bash", "-c"]
 
@@ -11,7 +11,7 @@ ENV PATH="${MAMBA_DIR}/bin:${PATH}"
 
 USER root
 
-COPY conda-env.yml .
+COPY --from=conda_env conda-env.yml .
 
 RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh -O mambaforge.sh && \
     # Install mambaforge latest version
