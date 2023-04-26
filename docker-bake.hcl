@@ -51,7 +51,7 @@ target "base-gpu" {
 target "python-minimal-1" {
   dockerfile = "python-minimal/Dockerfile"
   contexts = {
-    BASE_IMAGE = "target:base"
+    base_image = "target:base"
     conda_env = "./python-minimal"
   }
   args = {
@@ -63,7 +63,7 @@ target "python-minimal-1" {
 target "jupyter-1" {
   dockerfile = "jupyter/Dockerfile"
   contexts = {
-    BASE_IMAGE = "target:python-minimal-1"
+    base_image = "target:python-minimal-1"
   }
   tags = ["buildx-jupyter1-${PYTHON_VERSION_1}:${DATETIME}", "buildx-jupyter1-${PYTHON_VERSION_1}:latest"]
 }
