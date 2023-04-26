@@ -18,6 +18,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   python-minimal-1:
+    needs: [base] 
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       bake-target: python-minimal-1
@@ -28,6 +29,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   jupyter-1:
+    needs: [python-minimal-1] 
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       bake-target: jupyter-1
