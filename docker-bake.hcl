@@ -1,5 +1,5 @@
 variable "DATETIME" {
-  default = "latest"
+  default = "2023-04-26"
 }
 
 variable "PYTHON_VERSION_1" {
@@ -51,11 +51,19 @@ target "base-gpu" {
 target "python-minimal-1" {
   dockerfile = "python-minimal/Dockerfile"
   contexts = {
-    base = "target:base"
+    BASE_IMAGE = "target:base"
     conda_env = "./python-minimal"
   }
   args = {
     PYTHON_VERSION = "${PYTHON_VERSION_1}"
   }
   tags = ["buildx-pythonminimal-${PYTHON_VERSION_1}:${DATETIME}", "buildx-pythonminimal-${PYTHON_VERSION_1}:latest"]
+}
+
+target "jupyter-1" {
+  dockerfile = "jupyter/Dockerfile"
+  contexts = {
+    BASE_IMAGE = "target:python-minimal-1"
+  }
+  tags = ["buildx-jupyter1-${PYTHON_VERSION_1}:${DATETIME}", "buildx-jupyter1-${PYTHON_VERSION_1}:latest"]
 }

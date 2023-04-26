@@ -1,5 +1,5 @@
-ARG BASE_IMAGE=inseefrlab/onyxia-python-datascience
-FROM $BASE_IMAGE
+# syntax=docker/dockerfile:1
+FROM BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 

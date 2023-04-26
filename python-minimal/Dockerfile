@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM base
+FROM BASE_IMAGE
 
 SHELL ["/bin/bash", "-c"]
 
