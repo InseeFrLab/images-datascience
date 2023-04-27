@@ -56,7 +56,7 @@ target "python-minimal-1" {
   cache-from = ["type=gha,scope=build-base"]
   cache-to = ["type=gha,mode=max,scope=build-python-minimal-1"]
   contexts = {
-    base_image = "target:base-gpu"
+    base_image = "target:base"
     conda_env = "./python-minimal"
   }
   args = {
