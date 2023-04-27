@@ -84,3 +84,67 @@ target "jupyter-pytorch-1" {
   }
   tags = ["buildx-jupyter-pytorch1-${PYTHON_VERSION_1}:${DATETIME}", "buildx-jupyter-pytorch1-${PYTHON_VERSION_1}:latest"]
 }
+
+target "r-minimal-1" {
+  cache-from = ["type=gha"]
+  cache-to = ["type=gha,mode=max"]
+  dockerfile = "r-minimal/Dockerfile"
+  contexts = {
+    base_image = "target:base"
+  }
+  args = {
+    R_VERSION = "${R_VERSION_1}"
+  }
+  tags = ["buildx-r-minimal-${R_VERSION_1}:${DATETIME}", "buildx-r-minimal-${R_VERSION_1}:latest"]
+}
+
+target "r-datascience-1" {
+  cache-from = ["type=gha"]
+  cache-to = ["type=gha,mode=max"]
+  dockerfile = "r-datascience/Dockerfile"
+  contexts = {
+    base_image = "target:r-minimal-1"
+  }
+  tags = ["buildx-r-datascience-${R_VERSION_1}:${DATETIME}", "buildx-r-datascience-${R_VERSION_1}:latest"]
+}
+
+target "jupyter-r-1" {
+  cache-from = ["type=gha"]
+  dockerfile = "jupyter/Dockerfile"
+  contexts = {
+    base_image = "target:r-datascience-1"
+  }
+  tags = ["buildx-jupyter-r-${R_VERSION_1}:${DATETIME}", "buildx-jupyter-r-${R_VERSION_1}:latest"]
+}
+
+target "r-minimal-2" {
+  cache-from = ["type=gha"]
+  cache-to = ["type=gha,mode=max"]
+  dockerfile = "r-minimal/Dockerfile"
+  contexts = {
+    base_image = "target:base"
+  }
+  args = {
+    R_VERSION = "${R_VERSION_2}"
+  }
+  tags = ["buildx-r-minimal-${R_VERSION_2}:${DATETIME}", "buildx-r-minimal-${R_VERSION_2}:latest"]
+}
+
+target "r-datascience-2" {
+  cache-from = ["type=gha"]
+  cache-to = ["type=gha,mode=max"]
+  dockerfile = "r-datascience/Dockerfile"
+  contexts = {
+    base_image = "target:r-minimal-2"
+  }
+  tags = ["buildx-r-datascience-${R_VERSION_2}:${DATETIME}", "buildx-r-datascience-${R_VERSION_2}:latest"]
+}
+
+target "jupyter-r-2" {
+  cache-from = ["type=gha"]
+  dockerfile = "jupyter/Dockerfile"
+  contexts = {
+    base_image = "target:r-datascience-2"
+  }
+  tags = ["buildx-jupyter-r-${R_VERSION_2}:${DATETIME}", "buildx-jupyter-r-${R_VERSION_2}:latest"]
+}

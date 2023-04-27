@@ -7,46 +7,122 @@ on:
     - cron: '0 1 * * 1'
 
 jobs:
-  base-gpu:
+  base:
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-target: base-gpu
+      bake-target: base
       test: true
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  python-minimal-1:
-    needs: [base-gpu] 
+  r-minimal-1:
+    needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-target: python-minimal-1
+      bake-target: r-minimal-1
       test: true
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  pytorch-1:
-    needs: [python-minimal-1] 
+  r-datascience-1:
+    needs: [r-minimal-1]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-target: pytorch-1
+      bake-target: r-datascience-1
       test: true
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  jupyter-pytorch-1:
-    needs: [pytorch-1] 
+  jupyter-r-1:
+    needs: [r-datascience-1]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
-      bake-target: jupyter-pytorch-1
+      bake-target: jupyter-r-1
       test: true
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  r-minimal-2:
+    needs: [base]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      bake-target: r-minimal-2
+      test: true
+      branch: ${{ github.ref }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  r-datascience-2:
+    needs: [r-minimal-2]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      bake-target: r-datascience-2
+      test: true
+      branch: ${{ github.ref }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  jupyter-r-2:
+    needs: [r-datascience-2]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      bake-target: jupyter-r-2
+      test: true
+      branch: ${{ github.ref }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  # base-gpu:
+  #   uses: ./.github/workflows/main-workflow-template.yml
+  #   with:
+  #     bake-target: base-gpu
+  #     test: true
+  #     branch: ${{ github.ref }}
+  #   secrets:
+  #     DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  # python-minimal-1:
+  #   needs: [base-gpu] 
+  #   uses: ./.github/workflows/main-workflow-template.yml
+  #   with:
+  #     bake-target: python-minimal-1
+  #     test: true
+  #     branch: ${{ github.ref }}
+  #   secrets:
+  #     DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  # pytorch-1:
+  #   needs: [python-minimal-1] 
+  #   uses: ./.github/workflows/main-workflow-template.yml
+  #   with:
+  #     bake-target: pytorch-1
+  #     test: true
+  #     branch: ${{ github.ref }}
+  #   secrets:
+  #     DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  # jupyter-pytorch-1:
+  #   needs: [pytorch-1] 
+  #   uses: ./.github/workflows/main-workflow-template.yml
+  #   with:
+  #     bake-target: jupyter-pytorch-1
+  #     test: true
+  #     branch: ${{ github.ref }}
+  #   secrets:
+  #     DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

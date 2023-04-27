@@ -1,5 +1,6 @@
+# syntax=docker/dockerfile:1
 ARG BASE_IMAGE=inseefrlab/onyxia-base
-FROM $BASE_IMAGE
+FROM base_image
 
 SHELL ["/bin/bash", "-c"]
 
