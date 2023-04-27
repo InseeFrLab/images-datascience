@@ -31,11 +31,31 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PYDS--> VSCODEPYDS[vscode-python]:::ide;
       PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow]:::ide;
       PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
-      RSPARK -->JSPARKR[jupyter-sparkr]:::ide;
       RDS--> JRDS[jupyter-r]:::ide;
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
       RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
+      classDef base fill:#d2f9ff,color:#000  ;
+      classDef minimal fill:#C1D5DF,color:#000;
+      classDef package fill:#3cb5f2 ,color:#000  ;
+      classDef ide fill:#0072d9  ;
+```
+
+```mermaid
+  graph LR;
+      B[base-gpu]:::base-->PM[python-minimal-gpu]:::minimal;
+      B-->RM[r-minimal-gpu]:::minimal;
+      PM-->PYDS[python-datascience-gpu]:::package;
+      PM-->PYTENSORFLOW[python-tensorflow-gpu]:::package;
+      PM-->PYTORCH[python-pytorch-gpu]:::package;
+      RM-->RDS[r-datascience-gpu]:::package;
+      PYDS--> JPYDS[jupyter-python-gpu]:::ide;
+      PYTENSORFLOW--> JPYTENSORFLOW[jupyter-tensorflow-gpu]:::ide;
+      PYTORCH--> JPYTORCH[jupyter-pytorch-gpu]:::ide;
+      PYDS--> VSCODEPYDS[vscode-python-gpu]:::ide;
+      PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow-gpu]:::ide;
+      PYTORCH--> VSCODEPYTORCH[vscode-pytorch-gpu]:::ide;
+      RDS--> RSTUDIORDS[rstudio-r-gpu]:::ide;
       classDef base fill:#d2f9ff,color:#000  ;
       classDef minimal fill:#C1D5DF,color:#000;
       classDef package fill:#3cb5f2 ,color:#000  ;
