@@ -31,7 +31,7 @@ target "base" {
   contexts = {
     scripts = "./scripts"
   }
-  cache-to = ["type=gha,mode=max"]
+  cache-to = ["type=gha,mode=max,scope=build-base"]
   args = {
     BASE_IMAGE = "${BASE_IMAGE}"
   }
@@ -53,8 +53,8 @@ target "base-gpu" {
 
 target "python-minimal-1" {
   dockerfile = "python-minimal/Dockerfile"
-  cache-from = ["type=gha"]
-  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-to = ["type=gha,mode=max,scope=build-python-minimal-1"]
   contexts = {
     base_image = "target:base-gpu"
     conda_env = "./python-minimal"
@@ -66,8 +66,9 @@ target "python-minimal-1" {
 }
 
 target "pytorch-1" {
-  cache-from = ["type=gha"]
-  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-from = ["type=gha,scope=build-python-minimal-1"]
+  cache-to = ["type=gha,mode=max,scope=build-pytorch-1"]
   dockerfile = "python-pytorch/Dockerfile"
   contexts = {
     base_image = "target:python-minimal-1"
@@ -76,8 +77,9 @@ target "pytorch-1" {
 }
 
 target "jupyter-pytorch-1" {
-  cache-from = ["type=gha"]
-  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-from = ["type=gha,scope=build-python-minimal-1"]
+  cache-from = ["type=gha,scope=build-pytorch-1"]
   dockerfile = "jupyter/Dockerfile"
   contexts = {
     base_image = "target:pytorch-1"
@@ -86,8 +88,8 @@ target "jupyter-pytorch-1" {
 }
 
 target "r-minimal-1" {
-  cache-from = ["type=gha"]
-  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-to = ["type=gha,mode=max,scope=build-r-minimal-1"]
   dockerfile = "r-minimal/Dockerfile"
   contexts = {
     base_image = "target:base"
@@ -99,8 +101,9 @@ target "r-minimal-1" {
 }
 
 target "r-datascience-1" {
-  cache-from = ["type=gha"]
-  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-from = ["type=gha,scope=build-r-minimal-1"]
+  cache-to = ["type=gha,mode=max,scope=build-r-datascience-1"]
   dockerfile = "r-datascience/Dockerfile"
   contexts = {
     base_image = "target:r-minimal-1"
@@ -109,7 +112,9 @@ target "r-datascience-1" {
 }
 
 target "jupyter-r-1" {
-  cache-from = ["type=gha"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-from = ["type=gha,scope=build-r-minimal-1"]
+  cache-from = ["type=gha,scope=build-r-datascience-1"]
   dockerfile = "jupyter/Dockerfile"
   contexts = {
     base_image = "target:r-datascience-1"
@@ -118,8 +123,8 @@ target "jupyter-r-1" {
 }
 
 target "r-minimal-2" {
-  cache-from = ["type=gha"]
-  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-to = ["type=gha,mode=max,scope=build-r-minimal-2"]
   dockerfile = "r-minimal/Dockerfile"
   contexts = {
     base_image = "target:base"
@@ -131,8 +136,9 @@ target "r-minimal-2" {
 }
 
 target "r-datascience-2" {
-  cache-from = ["type=gha"]
-  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-from = ["type=gha,scope=build-r-minimal-2"]
+  cache-to = ["type=gha,mode=max,scope=build-r-datascience-2"]
   dockerfile = "r-datascience/Dockerfile"
   contexts = {
     base_image = "target:r-minimal-2"
@@ -141,7 +147,9 @@ target "r-datascience-2" {
 }
 
 target "jupyter-r-2" {
-  cache-from = ["type=gha"]
+  cache-from = ["type=gha,scope=build-base"]
+  cache-from = ["type=gha,scope=build-r-minimal-2"]
+  cache-from = ["type=gha,scope=build-r-datascience-2"]
   dockerfile = "jupyter/Dockerfile"
   contexts = {
     base_image = "target:r-datascience-2"
