@@ -18,11 +18,11 @@ variable "BASE_IMAGE_GPU" {
   default = "nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04"
 }
 
-VARIABLE "R_VERSION_1" {
+variable "R_VERSION_1" {
   default = "4.2.3"
 }
 
-VARIABLE "R_VERSION_2" {
+variable "R_VERSION_2" {
   default = "4.1.3"
 }
 
