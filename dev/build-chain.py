@@ -1,5 +1,6 @@
 import subprocess
 import sys
+from distutils.dir_util import copy_tree
 
 
 chains = {
@@ -35,6 +36,7 @@ if len(sys.argv) == 3:
 for i, image in enumerate(chain):
 
     if image == "base":
+        copy_tree("scripts", "base/scripts")
         if GPU:
             previous_image = "nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04"
         else:

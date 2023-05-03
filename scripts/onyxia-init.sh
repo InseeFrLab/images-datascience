@@ -115,11 +115,6 @@ if [  "`which git`" != "" ]; then
     if [ -n "$GIT_CREDENTIALS_CACHE_DURATION" ]; then
         git config --"$git_config" credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
     fi
-    # Deal with the error appearing in Git 2.29 when no default pull strategy is defined
-    # See : https://salferrarello.com/git-warning-pulling-without-specifying-how-to-reconcile-divergent-branches-is-discouraged/
-    if [ -n "$GIT_MERGE_STRATEGY" ]; then
-        git config --"$git_config" pull.ff "$GIT_MERGE_STRATEGY"
-    fi
 fi
 
 if command -v R; then
