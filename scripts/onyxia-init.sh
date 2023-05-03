@@ -117,8 +117,8 @@ if [  "`which git`" != "" ]; then
     fi
     # Deal with the error appearing in Git 2.29 when no default pull strategy is defined
     # See : https://salferrarello.com/git-warning-pulling-without-specifying-how-to-reconcile-divergent-branches-is-discouraged/
-    if [ -n "$GIT_PULL_STRATEGY" ]; then
-        git config --"$git_config" pull.ff "$GIT_PULL_STRATEGY"
+    if [ -n "$GIT_MERGE_STRATEGY" ]; then
+        git config --"$git_config" pull.ff "$GIT_MERGE_STRATEGY"
     fi
 fi
 
