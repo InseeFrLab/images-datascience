@@ -99,30 +99,26 @@ if [  "`which git`" != "" ]; then
 
         fi
     fi
+
+    # Git config
     if [[ $(id -u) = 0 ]]; then
-        echo "git config --system"
-        if [ -n "$GIT_USER_NAME" ]; then
-            git config --system user.name "$GIT_USER_NAME"
-        fi
-    
-        if [ -n "$GIT_USER_MAIL" ]; then
-            git config --system user.email "$GIT_USER_MAIL"
-        fi
-        if [ -n "$GIT_CREDENTIALS_CACHE_DURATION" ]; then
-            git config --system credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
-        fi
+        git_config="system"
     else
-        echo "git config --global"
-        if [ -n "$GIT_USER_NAME" ]; then
-            git config --global user.name "$GIT_USER_NAME"
-        fi
-    
-        if [ -n "$GIT_USER_MAIL" ]; then
-            git config --global user.email "$GIT_USER_MAIL"
-        fi
-        if [ -n "$GIT_CREDENTIALS_CACHE_DURATION" ]; then
-            git config --global credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
-        fi    
+        git_config="global"
+    fi
+    if [ -n "$GIT_USER_NAME" ]; then
+        git config --"$git_config" user.name "$GIT_USER_NAME"
+    fi
+    if [ -n "$GIT_USER_MAIL" ]; then
+        git config --"$git_config" user.email "$GIT_USER_MAIL"
+    fi
+    if [ -n "$GIT_CREDENTIALS_CACHE_DURATION" ]; then
+        git config --"$git_config" credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
+    fi
+    # Deal with the error appearing in Git 2.29 when no default pull strategy is defined
+    # See : https://salferrarello.com/git-warning-pulling-without-specifying-how-to-reconcile-divergent-branches-is-discouraged/
+    if [ -n "$GIT_PULL_STRATEGY" ]; then
+        git config --"$git_config" pull.ff "$GIT_PULL_STRATEGY"
     fi
 fi
 
