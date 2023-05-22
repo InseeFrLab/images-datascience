@@ -19,6 +19,8 @@ RUN wget -O - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/R4.
     pip install -r requirements.txt && \
     # Install Julia
     /opt/install-julia.sh && \
+    # Install quarto
+    /opt/install-quarto.sh && \
     # Clean
     rm requirements.txt && \
     rm -rf /var/lib/apt/lists/*
