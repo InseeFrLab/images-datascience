@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 HADOOP_VERSION="3.3.4"
 HIVE_VERSION="2.3.9"

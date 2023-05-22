@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Install latest version of quarto
 QUARTO_DL_URL=$(wget -qO- https://quarto.org/docs/download/_download.json | grep -oP '(?<=\"download_url\":\s\")https.*linux-amd64.deb')

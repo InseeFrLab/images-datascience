@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 JULIA_VERSION="1.9.0"
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 echo "start of onyxia-init.sh script en tant que :"
 whoami
 

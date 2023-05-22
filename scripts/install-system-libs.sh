@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # a function to install apt packages only if they are not installed
 # source : https://github.com/rocker-org/rocker-versioned2/blob/master/scripts
