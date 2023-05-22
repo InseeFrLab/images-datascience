@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JULIA_VERSION="1.8.5"
+JULIA_VERSION="1.9.0"
 
 # Install Julia
 julia_major_minor=$(echo "${JULIA_VERSION}" | cut -d. -f 1,2)
