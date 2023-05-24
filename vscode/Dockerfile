@@ -12,6 +12,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     # Install general VSCode extensions
     wget https://github.com/Venthe/vscode-fauxpilot/releases/download/1.0.0/fauxpilot-1.0.0.vsix -O fauxpilot.vsix && \
     code-server --install-extension fauxpilot.vsix && \
+    code-server --install-extension ms-toolsai.jupyter && \
     code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools && \
     code-server --install-extension ms-azuretools.vscode-docker && \
     code-server --install-extension njpwerner.autodocstring && \
