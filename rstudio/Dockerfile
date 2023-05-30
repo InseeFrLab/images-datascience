@@ -16,8 +16,6 @@ USER root
 # Install Rstudio using rocker's install scripts
 RUN /rocker_scripts/install_rstudio.sh && \
     /rocker_scripts/install_pandoc.sh && \
-    # Ensure consistency between installed quarto CLI and RStudio's bundled version
-    /rocker_scripts/install_quarto.sh && \
     # Set default working directory for R sessions and R projects
     echo "session-default-working-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_CONF_FILE} && \
     echo "session-default-new-project-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_CONF_FILE} && \
