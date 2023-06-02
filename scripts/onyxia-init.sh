@@ -3,6 +3,15 @@
 echo "start of onyxia-init.sh script en tant que :"
 whoami
 
+sudo true -nv 2>&1
+if [ $? -eq 0 ]; then
+  echo "sudo_allowed"
+  SUDO=0
+else
+  echo "no_sudo"
+  SUDO=1
+fi
+
 if [[ -n "$REGION_INIT_SCRIPT" ]]; then
     echo "download $REGION_INIT_SCRIPT"
     # The insecure flag is used as a temporary fix to accomodate Onyxia instances
@@ -31,9 +40,18 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
     do 
         echo $i
         export $i=$(eval echo $(jq -r ".data.data.$i" <<< "$JSON"))
-        sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> /etc/environment"
-        if [[ -e "${R_HOME}/etc/" ]]; then
-            sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> ${R_HOME}/etc/Renviron.site"
+        if [[ $SUDO -eq 0 ]]; then
+            echo "sudo alternative"
+            sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> /etc/environment"
+            if [[ -e "${R_HOME}/etc/" ]]; then
+                sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> ${R_HOME}/etc/Renviron.site"
+            fi
+        else
+            echo "not sudo alternative"
+            sh -c "echo export $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> ~/.bashrc"
+            if [[ -e "${R_HOME}/etc/" ]]; then
+                sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> ${R_HOME}/etc/Renviron.site"
+            fi
         fi
     done
 fi
