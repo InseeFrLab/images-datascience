@@ -16,6 +16,8 @@ RUN /opt/install-jupyterlab.sh && \
     if command -v R; then \
         R -e "install.packages('IRkernel'); IRkernel::installspec()"; \
     fi && \
+    # Generate jupyter server config
+    jupyter server --generate-config && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
