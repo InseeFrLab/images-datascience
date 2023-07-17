@@ -143,7 +143,7 @@ jobs:
               final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
             fi
             echo "base_image=${final_name}" >> $GITHUB_OUTPUT
-            echo $final_name
+            echo "Base image : ${final_name}"
         shell: bash
 
       - name: Generate output tags
@@ -172,6 +172,7 @@ jobs:
           tags=$final_name_tag,$final_name_tag_with_date
           echo "main_tag=$final_name_tag" >> $GITHUB_OUTPUT
           echo "tags=$tags" >> $GITHUB_OUTPUT
+          echo "Output tags : ${tags}"
         shell: bash
 
       - name: Build and load to the Docker client
