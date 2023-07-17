@@ -149,7 +149,7 @@ jobs:
       base_image: python-minimal
       python_version_1: 3.11.4
       python_version_2: 3.10.12
-      spark_version: 3.4.0
+      spark_version: 3.4.1
       branch: ${{ github.ref }}
   sparkr:
     needs: changes
@@ -162,7 +162,7 @@ jobs:
       base_image: r-minimal
       r_version_1: 4.3.1
       r_version_2: 4.2.3
-      spark_version: 3.4.0
+      spark_version: 3.4.1
       branch: ${{ github.ref }}
   r-python-julia:
     needs: changes

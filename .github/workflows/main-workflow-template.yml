@@ -105,11 +105,12 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Pass scripts to base image at build time
+        # Just to put the `scripts` folder at the root of the project
         if: ${{ inputs.context == 'base' }}
         run: cp -r scripts/ base/scripts/
-        
-      # https://github.com/actions/virtual-environments/issues/2840
+    
       - name: Make free space
+        # https://github.com/actions/virtual-environments/issues/2840
         run: |
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
           docker rmi -f $(docker images -aq)
@@ -121,62 +122,61 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Generate build args
-        id: generate-build-args
+      - name: Generate input and output image names
+        # Generate the full name of the input and output images
+        id: generate-image-names
         run: |
-            base_image=${{ matrix.base_image }}
-            if [[ "$base_image" == *"-delim-"* ]]; then
-              image_name=$(echo $base_image | awk -F '-delim-' '{print $1}' )
-              tag=$(echo $base_image | awk -F '-delim-' '{print $2}' )
-            else
-              image_name=$(echo $base_image | awk -F ':' '{print $1}' )
-              tag=$(echo $base_image | awk -F ':' '{print $2}' )
-            fi
-
-            if [ -n "${{ matrix.gpu }}" ]; then
-              DEVICE_SUFFIX=-gpu
-            fi
-            if [[ "${{ inputs.branch }}" == 'refs/heads/dev' ]]; then
-              BRANCH_SUFFIX=-dev
-            fi
-            if [[ "${{ inputs.external_base_image }}" = true ]]; then
-              final_name="${image_name}:${tag}"
-            else
-              owner=${{ env.OWNER }}
-              owner=$(echo "$owner" | awk '{print tolower($0)}')
-              final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}${BRANCH_SUFFIX}"
-            fi
-            echo "base_image=${final_name}" >> $GITHUB_OUTPUT
-            echo "Base image : ${final_name}"
-        shell: bash
-
-      - name: Generate output tags
-        id: generate-tags
-        run: |
-          image=${{ matrix.output_image }}
-          if [[ "$image" == *"-delim-"* ]]; then
-            image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
-            tag=$(echo $image | awk -F '-delim-' '{print $2}' )
-          else
-            image_name=$(echo $image | awk -F ':' '{print $1}' )
-            tag=$(echo $image | awk -F ':' '{print $2}' )
-          fi
-          date=$(date +%Y.%m.%d)
+          # General parameters to build image names
           owner=${{ env.OWNER }}
           owner=$(echo "$owner" | awk '{print tolower($0)}')
-          final_name="$owner/${{ inputs.prefix}}-$image_name"
+          date=$(date +%Y.%m.%d)
           if [ -n "${{ matrix.gpu }}" ]; then
               DEVICE_SUFFIX=-gpu
           fi
           if [[ "${{ inputs.branch }}" == 'refs/heads/dev' ]]; then
               BRANCH_SUFFIX=-dev
           fi
-          final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}${BRANCH_SUFFIX}"
-          final_name_tag_with_date="$final_name_tag-$date"
-          tags=$final_name_tag,$final_name_tag_with_date
-          echo "main_tag=$final_name_tag" >> $GITHUB_OUTPUT
-          echo "tags=$tags" >> $GITHUB_OUTPUT
-          echo "Output tags : ${tags}"
+
+          # Compute input image name
+          base_image=${{ matrix.base_image }}
+          if [[ "$base_image" == *"-delim-"* ]]; then
+            image_name=$(echo $base_image | awk -F '-delim-' '{print $1}' )
+            tag=$(echo $base_image | awk -F '-delim-' '{print $2}' )
+          else
+            image_name=$(echo $base_image | awk -F ':' '{print $1}' )
+            tag=$(echo $base_image | awk -F ':' '{print $2}' )
+          fi
+          if [[ "${{ inputs.external_base_image }}" = true ]]; then
+            # If external (ubuntu or nvidia) : as is
+            base_image_final="${image_name}:${tag}"
+          else
+            # If internal (custom built) : add inseefrlab/onyxia-*
+            owner=${{ env.OWNER }}
+            owner=$(echo "$owner" | awk '{print tolower($0)}')
+            base_image_final="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}${BRANCH_SUFFIX}"
+          fi
+
+          # Compute output image name  
+          output_image=${{ matrix.output_image }}
+          if [[ "$output_image" == *"-delim-"* ]]; then
+            image_name=$(echo $output_image | awk -F '-delim-' '{print $1}' )
+            tag=$(echo $output_image | awk -F '-delim-' '{print $2}' )
+          else
+            image_name=$(echo $output_image | awk -F ':' '{print $1}' )
+            tag=$(echo $output_image | awk -F ':' '{print $2}' )
+          fi
+          output_image_final="$owner/${{ inputs.prefix}}-$image_name:${tag}${DEVICE_SUFFIX}${BRANCH_SUFFIX}"
+          output_image_final_with_date="$output_image_final-$date"
+          output_tags=$output_image_final,$output_image_final_with_date
+
+          # Make image names available to next steps
+          echo "base_image=${base_image_final}" >> $GITHUB_OUTPUT
+          echo "main_tag=$output_image_final" >> $GITHUB_OUTPUT
+          echo "tags=$output_tags" >> $GITHUB_OUTPUT
+
+          # Logging
+          echo "Base image : ${base_image_final}"
+          echo "Image tags : ${tags}"
         shell: bash
 
       - name: Build and load to the Docker client
@@ -186,9 +186,9 @@ jobs:
           load: true
           push: false
           context: ${{ inputs.context }}
-          tags: ${{ steps.generate-tags.outputs.tags }}
+          tags: ${{ steps.generate-image-names.outputs.tags }}
           build-args: |
-            BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
+            BASE_IMAGE=${{ steps.generate-image-names.outputs.base_image }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
@@ -199,7 +199,7 @@ jobs:
         if: ${{ matrix.gpu != 'true' }}
         uses: ./.github/actions/container-structure-test
         with:
-          image: ${{ steps.generate-tags.outputs.main_tag }}
+          image: ${{ steps.generate-image-names.outputs.main_tag }}
           config: ./${{ inputs.context }}/tests.yaml
 
       - name: Login to Docker Hub
@@ -215,9 +215,9 @@ jobs:
         with:
           push: true
           context: ${{ inputs.context }}
-          tags: ${{ steps.generate-tags.outputs.tags }}
+          tags: ${{ steps.generate-image-names.outputs.tags }}
           build-args: |
-            BASE_IMAGE=${{ steps.generate-build-args.outputs.base_image }}
+            BASE_IMAGE=${{ steps.generate-image-names.outputs.base_image }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
