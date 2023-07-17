@@ -14,7 +14,7 @@ USER root
 
 COPY requirements.txt .
 
-RUN wget -O - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/R4.2.2/scripts/install_python.sh | bash && \
+RUN wget -O - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/R${R_VERSION}/scripts/install_python.sh | bash && \
     # Install base Python packages
     pip install -r requirements.txt && \
     # Install Julia
