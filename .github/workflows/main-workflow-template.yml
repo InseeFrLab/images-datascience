@@ -165,7 +165,7 @@ jobs:
               DEVICE_SUFFIX=-gpu
           fi
           final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
-          if [[ "${{ inputs.branch }}" == "dev" ]]; then
+          if [[ "${{ inputs.branch }}" == 'refs/heads/main' ]]; then
               final_name_tag=${final_name_tag}-dev
           fi
           final_name_tag_with_date="$final_name_tag-$date"
