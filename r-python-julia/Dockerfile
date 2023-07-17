@@ -1,6 +1,9 @@
 ARG BASE_IMAGE=inseefrlab/onyxia-r-minimal
 FROM $BASE_IMAGE
 
+ARG R_VERSION="4.2.2"
+ENV R_VERSION=${R_VERSION}
+
 SHELL ["/bin/bash", "-c"]
 
 ENV JULIA_DIR="/opt/julia"
@@ -14,7 +17,7 @@ USER root
 
 COPY requirements.txt .
 
-RUN wget -O - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/R4.2.2/scripts/install_python.sh | bash && \
+RUN wget -O - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/R${R_VERSION}/scripts/install_python.sh | bash && \
     # Install base Python packages
     pip install -r requirements.txt && \
     # Install Julia

@@ -10,5 +10,11 @@
         "output_image":"sparkr-delim-r:r_version_2-spark:spark_version",
         "r_version":":r_version_2",
         "spark_version":":spark_version"
+    },
+    {
+        "base_image":"r-minimal-delim-r:r_version_3",
+        "output_image":"sparkr-delim-r:r_version_3-spark:spark_version",
+        "r_version":":r_version_3",
+        "spark_version":":spark_version"
     }
 ]

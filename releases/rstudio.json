@@ -20,5 +20,16 @@
         "output_image":"rstudio-delim-r:r_version_2",
         "r_version":":r_version_2",
         "gpu":"true"
+    },
+    {
+        "base_image":"r-datascience-delim-r:r_version_3",
+        "output_image":"rstudio-delim-r:r_version_3",
+        "r_version":":r_version_3"
+    },
+    {
+        "base_image":"r-datascience-delim-r:r_version_3",
+        "output_image":"rstudio-delim-r:r_version_3",
+        "r_version":":r_version_3",
+        "gpu":"true"
     }
 ]
