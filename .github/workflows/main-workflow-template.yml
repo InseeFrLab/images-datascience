@@ -176,7 +176,7 @@ jobs:
 
           # Logging
           echo "Base image : ${base_image_final}"
-          echo "Image tags : ${tags}"
+          echo "Output image tags : ${output_tags}"
         shell: bash
 
       - name: Build and load to the Docker client
