@@ -165,6 +165,9 @@ jobs:
               DEVICE_SUFFIX=-gpu
           fi
           final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
+          if [[ "${{ inputs.branch }}" == "dev" ]]; then
+              final_name_tag=${final_name_tag}-dev
+          fi
           final_name_tag_with_date="$final_name_tag-$date"
           tags=$final_name_tag,$final_name_tag_with_date
           echo "main_tag=$final_name_tag" >> $GITHUB_OUTPUT
@@ -202,7 +205,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Push to DockerHub
-        if: ${{ inputs.branch == 'refs/heads/main' }}
+        if: ${{ inputs.branch == 'refs/heads/main' || inputs.branch == 'refs/heads/dev' }}
         uses: docker/build-push-action@v4
         with:
           push: true
