@@ -124,9 +124,6 @@ jobs:
       - name: Generate build args
         id: generate-build-args
         run: |
-            if [ -n "${{ matrix.gpu }}" ]; then
-              DEVICE_SUFFIX=-gpu
-            fi
             base_image=${{ matrix.base_image }}
             if [[ "$base_image" == *"-delim-"* ]]; then
               image_name=$(echo $base_image | awk -F '-delim-' '{print $1}' )
@@ -135,12 +132,19 @@ jobs:
               image_name=$(echo $base_image | awk -F ':' '{print $1}' )
               tag=$(echo $base_image | awk -F ':' '{print $2}' )
             fi
+
+            if [ -n "${{ matrix.gpu }}" ]; then
+              DEVICE_SUFFIX=-gpu
+            fi
+            if [[ "${{ inputs.branch }}" == 'refs/heads/dev' ]]; then
+              BRANCH_SUFFIX=-dev
+            fi
             if [[ "${{ inputs.external_base_image }}" = true ]]; then
               final_name="${image_name}:${tag}"
             else
               owner=${{ env.OWNER }}
               owner=$(echo "$owner" | awk '{print tolower($0)}')
-              final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
+              final_name="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}${BRANCH_SUFFIX}"
             fi
             echo "base_image=${final_name}" >> $GITHUB_OUTPUT
             echo "Base image : ${final_name}"
@@ -164,10 +168,10 @@ jobs:
           if [ -n "${{ matrix.gpu }}" ]; then
               DEVICE_SUFFIX=-gpu
           fi
-          final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}"
           if [[ "${{ inputs.branch }}" == 'refs/heads/dev' ]]; then
-              final_name_tag=${final_name_tag}-dev
+              BRANCH_SUFFIX=-dev
           fi
+          final_name_tag="${final_name}:${tag}${DEVICE_SUFFIX}${BRANCH_SUFFIX}"
           final_name_tag_with_date="$final_name_tag-$date"
           tags=$final_name_tag,$final_name_tag_with_date
           echo "main_tag=$final_name_tag" >> $GITHUB_OUTPUT
