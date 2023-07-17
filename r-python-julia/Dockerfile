@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=inseefrlab/onyxia-r-minimal
 FROM $BASE_IMAGE
 
-ARG R_VERSION="4.2.2"
+ARG R_VERSION="4.3.1"
 ENV R_VERSION=${R_VERSION}
 
 SHELL ["/bin/bash", "-c"]
