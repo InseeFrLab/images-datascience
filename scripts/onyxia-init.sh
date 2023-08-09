@@ -39,7 +39,7 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
     for i in $KEYS; 
     do 
         echo $i
-        export $i=$(eval echo $(jq -r ".data.data.$i" <<< "$JSON"))
+        export "$i=$(eval echo $(jq -r ".data.data.$i" <<< "$JSON"))"
         if [[ $SUDO -eq 0 ]]; then
             echo "sudo alternative"
             sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> /etc/environment"
