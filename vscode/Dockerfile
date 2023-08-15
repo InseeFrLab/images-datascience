@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=inseefrlab/onyxia-python-datascience
 FROM $BASE_IMAGE
 
-SHELL ["/bin/bash", "-c"]
+LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 ARG USER_CONFIG_DIR="${HOME}/.local/share/code-server/User"
 ARG REMOTE_CONFIG_DIR="${HOME}/.local/share/code-server/Machine"

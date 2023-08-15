@@ -1,6 +1,8 @@
 ARG BASE_IMAGE=ubuntu:22.04
 FROM $BASE_IMAGE
 
+LABEL maintainer="InseeFrLab <innovation@insee.fr>"
+
 # System-wide configuration
 SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"

@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=inseefrlab/onyxia-r-minimal
 FROM $BASE_IMAGE
 
-SHELL ["/bin/bash", "-c"]
+LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 

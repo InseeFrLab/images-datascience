@@ -195,6 +195,8 @@ jobs:
           secrets: |
             "github_token=${{ secrets.GITHUB_PAT }}"
 
+      - run: docker inspect inseefrlab/onyxia-base:latest
+
       - name: Test image using Google's Container Structure Test
         if: ${{ matrix.gpu != 'true' }}
         uses: ./.github/actions/container-structure-test
