@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=inseefrlab/onyxia-base
 FROM $BASE_IMAGE
 
-SHELL ["/bin/bash", "-c"]
+LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 # R Config
 ARG R_VERSION="4.3.1"

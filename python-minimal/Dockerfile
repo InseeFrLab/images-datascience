@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=inseefrlab/onyxia-base
 FROM $BASE_IMAGE
 
-SHELL ["/bin/bash", "-c"]
+LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 ARG PYTHON_VERSION="3.11.4"
 ENV PYTHON_VERSION=${PYTHON_VERSION}

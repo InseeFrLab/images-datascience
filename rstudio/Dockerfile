@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=inseefrlab/onyxia-r-datascience
 FROM $BASE_IMAGE
 
-SHELL ["/bin/bash", "-c"]
+LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 ENV DEFAULT_USER=${USERNAME}
 ENV USERID=${UID}

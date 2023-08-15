@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=inseefrlab/onyxia-python-minimal
 FROM $BASE_IMAGE
 
-SHELL ["/bin/bash", "-c"]
+LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 ARG JULIA_VERSION="1.8.5"
 ENV JULIA_VERSION=${JULIA_VERSION}
