@@ -17,7 +17,7 @@ jobs:
                  'inseefrlab/onyxia-sparkr:latest', 'inseefrlab/onyxia-sparkr:latest-gpu',
                  'inseefrlab/onyxia-rstudio-sparkr:latest', 'inseefrlab/onyxia-rstudio-sparkr:latest-gpu']
     name: scan images
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
