@@ -217,6 +217,7 @@ jobs:
           context: ${{ inputs.context }}
           tags: ${{ steps.generate-image-names.outputs.tags }}
           build-args: |
+            BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
             BASE_IMAGE=${{ steps.generate-image-names.outputs.base_image }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}

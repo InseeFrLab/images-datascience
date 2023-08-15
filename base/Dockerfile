@@ -1,6 +1,11 @@
 ARG BASE_IMAGE=ubuntu:22.04
 FROM $BASE_IMAGE
 
+# Image labels
+ARG BUILD_DATE
+LABEL org.label-schema.build-date=$BUILD_DATE
+LABEL maintainer="InseeFrLab <innovation@insee.fr>"
+
 # System-wide configuration
 SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
