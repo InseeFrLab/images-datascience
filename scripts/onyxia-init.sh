@@ -148,25 +148,6 @@ if command -v R; then
     fi
     env | grep "KUBERNETES" >> ${R_HOME}/etc/Renviron.site
     env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
-    
-    if [[ -n "$R_REPOSITORY" ]]; then
-        echo "configuration r (add local repository)"
-        # To indent a heredoc, <<- and tabs are required (no spaces allowed)
-        cat <<-EOF > ${R_HOME}/etc/Rprofile.site
-		# https://docs.rstudio.com/rspm/admin/serving-binaries/#binaries-r-configuration-linux
-		options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))
-		# Proxy repository for R
-		local({
-			r <- getOption("repos")
-			r["LocalRepository"] <- "${R_REPOSITORY}"
-			options(repos = r)
-		})
-		EOF
-
-    fi
-
-    # Configure renv to use the specified package repository
-    echo 'options(renv.config.repos.override = getOption("repos"))' >> ${R_HOME}/etc/Rprofile.site
 fi
 
 if [[ -e "$HOME/work" ]]; then
@@ -175,36 +156,6 @@ if [[ -e "$HOME/work" ]]; then
   else
     echo "cd $HOME/work" >> $HOME/.bashrc
   fi
-fi
-
-if [  "`which pip`" != "" ]; then
-    if [[ -n "$PIP_REPOSITORY" ]]; then
-        echo "configuration pip (index-url)"
-        pip config set global.index-url $PIP_REPOSITORY
-    fi
-    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
-        echo "configuration of pip to a custom crt"
-        pip config set global.cert $PATH_TO_CA_BUNDLE
-    fi
-fi
-
-if [  "`which conda`" != "" ]; then
-    if [[ -n "$CONDA_REPOSITORY" ]]; then
-        echo "configuration conda (add channels)"
-        conda config --add channels $CONDA_REPOSITORY
-        conda config --remove channels conda-forge
-        conda config --remove channels conda-forge --file /opt/mamba/.condarc
-    fi
-    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
-        echo "configuration of conda to a custom crt"
-        conda config --set ssl_verify $PATH_TO_CA_BUNDLE
-    fi
-fi
-
-if [  "`which python`" != "" ]; then
-    if [ -n "$PATH_TO_CA_BUNDLE" ]; then
-        python /opt/certifi_ca.py
-    fi 
 fi
 
 if [[ -n "$FAUXPILOT_SERVER" ]]; then
@@ -218,6 +169,10 @@ if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
     echo "download $PERSONAL_INIT_SCRIPT"
     curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
 fi
+
+# The commands related to setting the various repositories (R/CRAN, pip, conda)
+# are located in specific script
+source onyxia-set-repositories.sh
 
 echo "execution of $@"
 exec "$@"
