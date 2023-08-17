@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [  "`which pip`" != "" ]; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
         echo "configuration pip (index-url)"
@@ -47,7 +47,7 @@ if command -v R; then
       if [[ -n "$R_REPOSITORY" ]]; then
           echo "  r[\"LocalRepository\"] <- \"${R_REPOSITORY}\"" >> ${R_HOME}/etc/Rprofile.site
       fi 
-      
+
       echo '  options(repos = r)' >> ${R_HOME}/etc/Rprofile.site
       echo '})' >> ${R_HOME}/etc/Rprofile.site
 
