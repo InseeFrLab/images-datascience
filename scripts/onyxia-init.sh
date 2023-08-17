@@ -165,14 +165,14 @@ if [[ -n "$FAUXPILOT_SERVER" ]]; then
     jq --arg key "fauxpilot.enabled" --argjson value "true" --indent 4 '. += {($key): $value}'  $dir/$file > $dir/$file.tmp && mv $dir/$file.tmp $dir/$file
 fi
 
+# The commands related to setting the various repositories (R/CRAN, pip, conda)
+# are located in specific script
+source onyxia-set-repositories.sh
+
 if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
     echo "download $PERSONAL_INIT_SCRIPT"
     curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
 fi
-
-# The commands related to setting the various repositories (R/CRAN, pip, conda)
-# are located in specific script
-source onyxia-set-repositories.sh
 
 echo "execution of $@"
 exec "$@"
