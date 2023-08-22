@@ -167,7 +167,7 @@ fi
 
 # The commands related to setting the various repositories (R/CRAN, pip, conda)
 # are located in specific script
-source onyxia-set-repositories.sh
+source /opt/onyxia-set-repositories.sh
 
 if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
     echo "download $PERSONAL_INIT_SCRIPT"
