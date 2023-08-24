@@ -18,6 +18,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     code-server --install-extension njpwerner.autodocstring && \
     code-server --install-extension redhat.vscode-yaml && \
     code-server --install-extension mhutchie.git-graph && \
+    code-server --install-extension GordonSmith.observable-js && \
     # Install language specific VSCode extensions
     if command -v python; then \
         code-server --install-extension ms-python.python; \
