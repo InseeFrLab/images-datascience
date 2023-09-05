@@ -74,7 +74,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
     - name: Check out code 
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
     - id: set-matrix
@@ -100,7 +100,7 @@ jobs:
         ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
       - name: Check out code 
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
 
