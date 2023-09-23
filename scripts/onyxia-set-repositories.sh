@@ -27,6 +27,9 @@ fi
 
 if [  "`which python`" != "" ]; then
     python /opt/certifi_ca.py
+    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
+        export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
+    fi
 fi
 
 if command -v R; then
