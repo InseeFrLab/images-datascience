@@ -6,8 +6,10 @@ if [  "`which pip`" != "" ]; then
     fi
 
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
-        echo "configuration of pip to a custom crt"
+        echo "configuration of python and pip to use a custom crt"
         pip config set global.cert $PATH_TO_CA_BUNDLE
+        python /opt/certifi_ca.py
+        export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
     fi
 fi
 
@@ -22,13 +24,6 @@ if [  "`which conda`" != "" ]; then
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
         echo "configuration of conda to a custom crt"
         conda config --set ssl_verify $PATH_TO_CA_BUNDLE
-    fi
-fi
-
-if [  "`which python`" != "" ]; then
-    python /opt/certifi_ca.py
-    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
-        export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
     fi
 fi
 
