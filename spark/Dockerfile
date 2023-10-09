@@ -5,7 +5,7 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 ARG BASE_IMAGE
 
-ARG SPARK_VERSION="3.4.1"
+ARG SPARK_VERSION="3.5.0"
 ENV SPARK_VERSION=${SPARK_VERSION}
 
 ENV HADOOP_HOME="/opt/hadoop"
