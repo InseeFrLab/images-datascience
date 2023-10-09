@@ -10,7 +10,7 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         pip install torch torchvision torchaudio; \
     else \
         # CPU only
-        pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu; \
+        pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118; \
     fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
