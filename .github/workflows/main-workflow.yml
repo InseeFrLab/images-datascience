@@ -274,7 +274,7 @@ jobs:
       base_image: r-minimal
       r_version_1: 4.3.1
       r_version_2: 4.2.3
-      spark_version: 3.4.1
+      spark_version: 3.5.0
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
