@@ -1,0 +1,44 @@
+# https://docs.rstudio.com/rspm/admin/serving-binaries/#binaries-r-configuration-linux
+options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))
+
+if (Sys.getenv('PACKAGE_MANAGER_URL')!='' || Sys.getenv('R_REPOSITORY')!=''){
+    
+    # Proxy repository for R
+    local({
+    r <- getOption("repos")
+    if (Sys.getenv('PACKAGE_MANAGER_URL')!='') {
+        
+        # Read the /etc/lsb-release file into R
+        file_content <- readLines("/etc/lsb-release")
+        
+        # Filter lines that contain "DISTRIB_CODENAME"
+        filtered_line <- grep("DISTRIB_CODENAME", file_content, value = TRUE)
+        
+        # Split the line by '=' and retrieve the second part
+        UBUNTU_CODENAME <- unlist(strsplit(filtered_line, "="))[2]
+        
+        r["PackageManager"] <- paste0(Sys.getenv('PACKAGE_MANAGER_URL'),'/', UBUNTU_CODENAME, '/latest')
+        
+    }
+    
+    if (Sys.getenv('R_REPOSITORY')!=''){
+        r["LocalRepository"] <- "${R_REPOSITORY}"
+    }
+    
+    options(repos = r)
+    })
+    
+    # Configure renv to use the specified package repository
+    options(renv.config.repos.override = getOption("repos"))
+    
+} else {
+    options(repos = c(CRAN = 'https://packagemanager.posit.co/cran/__linux__/jammy/latest'), download.file.method = 'libcurl')
+}
+
+
+if (Sys.getenv('DARK_MODE')=='TRUE'){
+    setHook('rstudio.sessionInit', function(newSession) {
+    rstudioapi::applyTheme("Dracula")
+    }, action = 'append')
+}
+

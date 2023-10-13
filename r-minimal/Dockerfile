@@ -40,7 +40,10 @@ RUN /rocker_scripts/setup_R.sh && \
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean
     rm -rf /var/lib/apt/lists/*
+    
+ADD Rprofile.site ${R_HOME}/etc/
 
 USER 1000
 
 CMD ["R"]
+   
