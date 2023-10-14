@@ -93,3 +93,10 @@ Not developped yet we have 2 paths at least:
 ## Freshness and rebuild
 
 A new set of images are built every monday at 02:00.
+
+## Governance references
+
+- [GOVERNANCE.md](https://github.com/InseeFrLab/onyxia/blob/main/GOVERNANCE.md)
+- [CODE_OF_CONDUCT.md](https://github.com/InseeFrLab/onyxia/blob/main/CODE_OF_CONDUCT.md)
+- [ROADMAP.md](https://github.com/InseeFrLab/onyxia/blob/main/ROADMAP.md)
+- [SECURITY.md](https://github.com/InseeFrLab/onyxia/blob/main/SECURITY.md)
