@@ -152,7 +152,7 @@ fi
 
 if [[ -n "$DARK_MODE" ]]; then 
     if command -v jupyter lab; then
-        echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > /opt/mamba/share/jupyter/lab/settings/overrides.json;
+        echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${MAMBA_DIR}/share/jupyter/lab/settings/overrides.json;
     fi
 fi
 
