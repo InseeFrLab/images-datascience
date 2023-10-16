@@ -150,6 +150,23 @@ if command -v R; then
     env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
 fi
 
+if [[ -n "$DARK_MODE" ]]; then 
+    if command -v jupyter lab; then
+        echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${MAMBA_DIR}/share/jupyter/lab/settings/overrides.json;
+    fi
+    if command -v vscode; then
+        jq '.|= . + {"workbench.colorTheme": "Default Dark Modern", }' ${HOME}/.local/share/code-server/User/settings.json  
+    fi
+    if command -v R; then
+        touch ${R_HOME}/etc/Rprofile.site
+        echo "if (Sys.getenv('DARK_MODE')=='TRUE'){
+            setHook('rstudio.sessionInit', function(newSession) {
+            rstudioapi::applyTheme("Vibrant Ink")
+            }, action = 'append')
+        }" >> ${R_HOME}/etc/Rprofile.site
+    fi
+fi
+
 if [[ -e "$HOME/work" ]]; then
   if [[ $(id -u) = 0 ]]; then
     echo "cd $HOME/work" >> /etc/profile

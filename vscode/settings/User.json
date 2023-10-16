@@ -1,5 +1,4 @@
 {
-    "workbench.colorTheme": "Default Dark+", 
     "security.workspace.trust.enabled": false,
     "security.workspace.trust.startupPrompt": "never",
     "terminal.integrated.inheritEnv": false,
