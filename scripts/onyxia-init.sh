@@ -150,12 +150,12 @@ if command -v R; then
     env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
 fi
 
-if [[ -n "$DARK_MODE" ]]; then 
+if [[ "$DARK_MODE" == "true" ]]; then 
     if command -v jupyter lab; then
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${MAMBA_DIR}/share/jupyter/lab/settings/overrides.json;
     fi
     if command -v vscode; then
-        jq '.|= . + {"workbench.colorTheme": "Default Dark Modern", }' ${HOME}/.local/share/code-server/User/settings.json  
+        jq '. + {"workbench.colorTheme": "Default Dark Modern" }' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
     fi
     if command -v R; then
         touch ${R_HOME}/etc/Rprofile.site
