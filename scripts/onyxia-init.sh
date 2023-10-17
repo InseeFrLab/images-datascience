@@ -150,7 +150,7 @@ if command -v R; then
     env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
 fi
 
-if [[ "$DARK_MODE"=="true" ]]; then 
+if [[ "$DARK_MODE" == "true" ]]; then 
     if command -v jupyter lab; then
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${MAMBA_DIR}/share/jupyter/lab/settings/overrides.json;
     fi
