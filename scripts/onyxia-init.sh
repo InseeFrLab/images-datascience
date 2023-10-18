@@ -151,13 +151,13 @@ if command -v R; then
 fi
 
 if [[ "$DARK_MODE" == "true" ]]; then 
-    if command -v jupyter lab; then
+    if command -v jupyter-lab; then
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${MAMBA_DIR}/share/jupyter/lab/settings/overrides.json;
-    fi
-    if command -v vscode; then
+    fi 
+    if command -v code-server; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern" }' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
     fi
-    if command -v R; then
+    if command -v rstudio-server; then
         touch ${R_HOME}/etc/Rprofile.site
         echo "if (Sys.getenv('DARK_MODE')=='TRUE'){
             setHook('rstudio.sessionInit', function(newSession) {
