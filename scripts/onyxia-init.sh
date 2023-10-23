@@ -152,6 +152,7 @@ fi
 
 if [[ "$DARK_MODE" == "true" ]]; then 
     if command -v jupyter-lab; then
+        mkdir ${MAMBA_DIR}/share/jupyter/lab/settings
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${MAMBA_DIR}/share/jupyter/lab/settings/overrides.json;
     fi 
     if command -v code-server; then
@@ -161,7 +162,7 @@ if [[ "$DARK_MODE" == "true" ]]; then
         touch ${R_HOME}/etc/Rprofile.site
         echo "if (Sys.getenv('DARK_MODE')=='TRUE'){
             setHook('rstudio.sessionInit', function(newSession) {
-            rstudioapi::applyTheme("Vibrant Ink")
+            rstudioapi::applyTheme(\"Vibrant Ink\")
             }, action = 'append')
         }" >> ${R_HOME}/etc/Rprofile.site
     fi
