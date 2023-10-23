@@ -160,7 +160,7 @@ if [[ "$DARK_MODE" == "true" ]]; then
     fi
     if command -v rstudio-server; then
         touch ${R_HOME}/etc/Rprofile.site
-        echo "if (Sys.getenv('DARK_MODE')=='TRUE'){
+        echo "if (Sys.getenv('DARK_MODE')=='true'){
             setHook('rstudio.sessionInit', function(newSession) {
             rstudioapi::applyTheme(\"Vibrant Ink\")
             }, action = 'append')
