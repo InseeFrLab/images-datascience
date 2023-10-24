@@ -21,7 +21,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     code-server --install-extension GordonSmith.observable-js && \
     # Install language specific VSCode extensions
     if command -v python; then \
-        code-server --install-extension ms-python.python; \
+        code-server --install-extension ms-python.python && \
         code-server --install-extension ms-python.flake8; \
     fi && \
     if command -v R; then \
