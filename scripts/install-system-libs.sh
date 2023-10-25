@@ -18,12 +18,13 @@ apt_install \
     ca-certificates \
     curl \
     git \
+    gnupg2 \
     jq \
     less \
     locales \
+    lsb-core \
     nano \
     openssh-client \
-    postgresql-client \
     sudo \
     tini \
     unzip \
