@@ -36,56 +36,30 @@ RUN chmod -R +x /opt/ && \
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     # Generate locales
     locale-gen en_US.UTF-8 && \
-    ## Install common binaries required for Onyxia
+    ## Install common clients required for Onyxia
     # kubectl
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
-    chmod +x ./kubectl && \
-    mv ./kubectl /usr/local/bin/kubectl && \
+    /opt/install-kubectl.sh && \
     echo 'source <(kubectl completion bash)' >> /home/${USERNAME}/.bashrc && \
     # kubectl krew plugin
-    set -x && \
-    TMPDIR="$(mktemp -d)" && \
-    cd $TMPDIR && \
-    OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
-    ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && \
-    KREW="krew-${OS}_${ARCH}" && \
-    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && \
-    tar zxvf "${KREW}.tar.gz" && \
-    ./"${KREW}" install krew && \
-    cd ${WORKSPACE_DIR} && \
-    rm -rf $TMPDIR && \
+    /opt/install-kubectl-krew.sh && \
     echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> /home/${USERNAME}/.bashrc && \
     # helm
-    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
-    chmod +x get_helm.sh && \
-    ./get_helm.sh && \
+    /opt/install-helm.sh && \
     echo 'source <(helm completion bash)' >> /home/${USERNAME}/.bashrc && \
-    # mc
-    wget -q https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
-    chmod +x /usr/local/bin/mc && \
-    # vault
-    VAULT_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/hashicorp/vault/releases/latest" | grep -Po '"tag_name": "v\K.*?(?=")') && \
-    wget -q https://releases.hashicorp.com/vault/${VAULT_LATEST_VERSION}/vault_${VAULT_LATEST_VERSION}_linux_amd64.zip -O vault.zip  && \
-    unzip vault.zip -d /usr/local/bin/ && \
-    vault -autocomplete-install && \
+    # minio cli
+    /opt/install-mc.sh && \
+    # vault cli
+    /opt/install-vault-cli.sh && \
     # argo-workflows cli
-    curl -sLO https://github.com/argoproj/argo-workflows/releases/latest/download/argo-linux-amd64.gz && \
-    gunzip argo-linux-amd64.gz && \
-    chmod +x argo-linux-amd64 && \
-    mv ./argo-linux-amd64 /usr/local/bin/argo && \
+    /opt/install-argo-workflows-cli.sh && \
     # postgresql cli
-    echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && \
-    apt-get update && \
-    apt-get -y install postgresql-client && \
+    /opt/install-postgresql-cli.sh && \
     # duckdb cli
-    wget -q https://github.com/duckdb/duckdb/releases/latest/download/duckdb_cli-linux-amd64.zip && \
-    unzip duckdb_cli-linux-amd64.zip -d /usr/local/bin/ && \
+    /opt/install-duckdb-cli.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     chmod +x /opt/onyxia-init.sh && \
     # Clean
-    rm get_helm.sh vault.zip duckdb_cli-linux-amd64.zip && \
     rm -rf /var/lib/apt/lists/*
 
 # Set locales
