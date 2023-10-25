@@ -18,6 +18,7 @@ apt_install \
     ca-certificates \
     curl \
     git \
+    gnupg2 \
     jq \
     less \
     locales \
