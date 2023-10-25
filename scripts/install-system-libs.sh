@@ -22,6 +22,7 @@ apt_install \
     jq \
     less \
     locales \
+    lsb-core \
     nano \
     openssh-client \
     sudo \
