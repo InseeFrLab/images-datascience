@@ -29,6 +29,7 @@ USER root
 COPY scripts/ /opt/
 
 RUN chmod -R +x /opt/ && \
+    # Install essential system libraries
     /opt/install-system-libs.sh && \
     apt-get upgrade -y && \
     # Make sudo passwordless
@@ -72,6 +73,11 @@ RUN chmod -R +x /opt/ && \
     gunzip argo-linux-amd64.gz && \
     chmod +x argo-linux-amd64 && \
     mv ./argo-linux-amd64 /usr/local/bin/argo && \
+    # postgresql cli
+    echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && \
+    apt-get update && \
+    apt-get -y install postgresql-client && \
     # duckdb cli
     wget -q https://github.com/duckdb/duckdb/releases/latest/download/duckdb_cli-linux-amd64.zip && \
     unzip duckdb_cli-linux-amd64.zip -d /usr/local/bin/ && \

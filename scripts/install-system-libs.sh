@@ -23,7 +23,6 @@ apt_install \
     locales \
     nano \
     openssh-client \
-    postgresql-client \
     sudo \
     tini \
     unzip \
