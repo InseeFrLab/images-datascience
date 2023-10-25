@@ -1,4 +1,4 @@
-#!/bin/bashsh
+#!/bin/bash
 set -e
 
 TMPDIR="$(mktemp -d)"
