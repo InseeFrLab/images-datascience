@@ -36,25 +36,17 @@ RUN chmod -R +x /opt/ && \
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     # Generate locales
     locale-gen en_US.UTF-8 && \
-    ## Install common clients required for Onyxia
-    # kubectl
+    # Install common clients useful for Onyxia
     /opt/install-kubectl.sh && \
     echo 'source <(kubectl completion bash)' >> /home/${USERNAME}/.bashrc && \
-    # kubectl krew plugin
     /opt/install-kubectl-krew.sh && \
     echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> /home/${USERNAME}/.bashrc && \
-    # helm
     /opt/install-helm.sh && \
     echo 'source <(helm completion bash)' >> /home/${USERNAME}/.bashrc && \
-    # minio cli
     /opt/install-mc.sh && \
-    # vault cli
     /opt/install-vault-cli.sh && \
-    # argo-workflows cli
     /opt/install-argo-workflows-cli.sh && \
-    # postgresql cli
     /opt/install-postgresql-cli.sh && \
-    # duckdb cli
     /opt/install-duckdb-cli.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
