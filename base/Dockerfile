@@ -72,11 +72,14 @@ RUN chmod -R +x /opt/ && \
     gunzip argo-linux-amd64.gz && \
     chmod +x argo-linux-amd64 && \
     mv ./argo-linux-amd64 /usr/local/bin/argo && \
+    # duckdb cli
+    wget -q https://github.com/duckdb/duckdb/releases/latest/download/duckdb_cli-linux-amd64.zip && \
+    unzip duckdb_cli-linux-amd64.zip -d /usr/local/bin/ && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     chmod +x /opt/onyxia-init.sh && \
     # Clean
-    rm get_helm.sh vault.zip && \
+    rm get_helm.sh vault.zip duckdb_cli-linux-amd64.zip && \
     rm -rf /var/lib/apt/lists/*
 
 # Set locales
