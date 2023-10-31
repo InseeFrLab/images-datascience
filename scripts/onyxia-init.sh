@@ -168,6 +168,14 @@ if [[ "$DARK_MODE" == "true" ]]; then
     fi
 fi
 
+if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
+    echo "-- Duck head prompt
+    .prompt '🦆 '
+    -- Set s3 context
+    CALL load_aws_credentials();
+    SET s3_endpoint='$AWS_S3_ENDPOINT';" > ${HOME}/.duckdbrc
+fi
+
 if [[ -e "$HOME/work" ]]; then
   if [[ $(id -u) = 0 ]]; then
     echo "cd $HOME/work" >> /etc/profile
