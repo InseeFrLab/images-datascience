@@ -38,7 +38,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     # Create directories to store custom VSCode settings
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR} && \
     # Set Conda binary path in remote settings to auto activate base env when running Python code
-    echo "{\"python.condaPath\": \"${MAMBA_DIR}/bin/conda\"}" > ${REMOTE_CONFIG_DIR}/settings.json && \
+    echo "{\"python.defaultInterpreterPath\": \"${MAMBA_DIR}/bin/conda\"}" > ${REMOTE_CONFIG_DIR}/settings.json && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
