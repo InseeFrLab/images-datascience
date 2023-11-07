@@ -14,6 +14,8 @@ COPY conda-env.yml .
 
 RUN ls -larth /opt/
 RUN mamba env update -n base -f conda-env.yml && \
+    # Install Python packages not available on conda-forge
+    pip install opencv-python-headless && \
     # Install Julia
     /opt/install-julia.sh && \
     # Install Quarto latest version
