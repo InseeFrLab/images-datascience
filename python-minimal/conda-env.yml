@@ -7,11 +7,12 @@ dependencies:
   - hvac
   - ipykernel
   - ipywidgets
-  - python-kubernetes
+  - mypy
   - nbclient
   - nbformat
   - pip
   - pylint
+  - python-kubernetes
   - requests
   - s3fs
   - wheel
