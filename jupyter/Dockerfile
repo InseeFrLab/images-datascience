@@ -7,7 +7,7 @@ USER root
 
 RUN /opt/install-jupyterlab.sh && \
     # Install JupyterLab extensions
-    pip install --pre jupyterlab-git==0.50.0rc0 && \
+    pip3 install --pre jupyterlab-git==0.50.0rc0 && \
     # If using Conda and Julia is installed, make its kernel available in Jupyter
     if command -v julia && [ -n "$MAMBA_DIR" ]; then \
         julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
