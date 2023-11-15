@@ -9,9 +9,7 @@ ARG REMOTE_CONFIG_DIR="${HOME}/.local/share/code-server/Machine"
 USER root
 
 RUN curl -fsSL https://code-server.dev/install.sh | bash && \
-    # Install general VSCode extensions
-    wget https://github.com/Venthe/vscode-fauxpilot/releases/download/1.0.0/fauxpilot-1.0.0.vsix -O fauxpilot.vsix && \
-    code-server --install-extension fauxpilot.vsix && \
+    # Install VSCode extensions
     code-server --install-extension ms-toolsai.jupyter && \
     code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools && \
     code-server --install-extension ms-azuretools.vscode-docker && \
@@ -42,8 +40,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    rm -rf /var/lib/apt/lists/* && \
-    rm fauxpilot.vsix
+    rm -rf /var/lib/apt/lists/*
 
 # Copy custom VSCode User settings
 COPY --chown=${USERNAME}:${GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/settings.json
