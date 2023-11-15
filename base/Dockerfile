@@ -48,6 +48,7 @@ RUN chmod -R +x /opt/ && \
     /opt/install-argo-workflows-cli.sh && \
     /opt/install-postgresql-cli.sh && \
     /opt/install-duckdb-cli.sh && \
+    /opt/install-yq.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     chmod +x /opt/onyxia-init.sh && \
