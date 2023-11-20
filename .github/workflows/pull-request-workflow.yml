@@ -123,7 +123,7 @@ jobs:
       context: r-minimal
       test: true
       base_image: base
-      r_version_1: 4.3.1
+      r_version_1: 4.3.2
       r_version_2: 4.2.3
       branch: ${{ github.ref }}
   r-datascience:
@@ -135,7 +135,7 @@ jobs:
       context: r-datascience
       test: true
       base_image: r-minimal
-      r_version_1: 4.3.1
+      r_version_1: 4.3.2
       r_version_2: 4.2.3
       branch: ${{ github.ref }}
   pyspark:
@@ -160,7 +160,7 @@ jobs:
       context: spark
       test: true
       base_image: r-minimal
-      r_version_1: 4.3.1
+      r_version_1: 4.3.2
       r_version_2: 4.2.3
       spark_version: 3.5.0
       branch: ${{ github.ref }}
@@ -173,7 +173,7 @@ jobs:
       context: r-python-julia
       test: true
       base_image: r-minimal
-      r_version_1: 4.3.1
+      r_version_1: 4.3.2
       branch: ${{ github.ref }}
   jupyter-python:
     needs: changes
@@ -208,6 +208,6 @@ jobs:
       context: rstudio
       test: true
       base_image: r-datascience
-      r_version_1: 4.3.1
+      r_version_1: 4.3.2
       r_version_2: 4.2.3
       branch: ${{ github.ref }}
