@@ -133,9 +133,6 @@ jobs:
           if [ -n "${{ matrix.gpu }}" ]; then
               DEVICE_SUFFIX=-gpu
           fi
-          if [[ "${{ inputs.branch }}" == 'refs/heads/dev' ]]; then
-              BRANCH_SUFFIX=-dev
-          fi
 
           # Compute input image name
           base_image=${{ matrix.base_image }}
@@ -153,7 +150,7 @@ jobs:
             # If internal (custom built) : add inseefrlab/onyxia-*
             owner=${{ env.OWNER }}
             owner=$(echo "$owner" | awk '{print tolower($0)}')
-            base_image_final="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}${BRANCH_SUFFIX}"
+            base_image_final="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
           fi
 
           # Compute output image name  
@@ -165,7 +162,7 @@ jobs:
             image_name=$(echo $output_image | awk -F ':' '{print $1}' )
             tag=$(echo $output_image | awk -F ':' '{print $2}' )
           fi
-          output_image_final="$owner/${{ inputs.prefix}}-$image_name:${tag}${DEVICE_SUFFIX}${BRANCH_SUFFIX}"
+          output_image_final="$owner/${{ inputs.prefix}}-$image_name:${tag}${DEVICE_SUFFIX}"
           output_image_final_with_date="$output_image_final-$date"
           output_tags=$output_image_final,$output_image_final_with_date
 
@@ -180,7 +177,7 @@ jobs:
         shell: bash
 
       - name: Build and load to the Docker client
-        if: ${{ matrix.gpu != 'true' }}
+        if: ${{ matrix.gpu != 'true' || inputs.branch == 'refs/heads/dev' }}
         uses: docker/build-push-action@v5
         with:
           load: true
@@ -203,14 +200,14 @@ jobs:
           config: ./${{ inputs.context }}/tests.yaml
 
       - name: Login to Docker Hub
-        if: ${{ inputs.branch == 'refs/heads/main' || inputs.branch == 'refs/heads/dev' }}
+        if: ${{ inputs.branch == 'refs/heads/main' }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Push to DockerHub
-        if: ${{ inputs.branch == 'refs/heads/main' || inputs.branch == 'refs/heads/dev' }}
+        if: ${{ inputs.branch == 'refs/heads/main' }}
         uses: docker/build-push-action@v5
         with:
           push: true
