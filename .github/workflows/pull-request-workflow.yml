@@ -63,7 +63,7 @@ jobs:
       context: base
       test: true
       base_image: ubuntu:22.04
-      base_image_gpu: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+      base_image_gpu: nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
       external_base_image: true
       branch: ${{ github.ref }}
   python-minimal:
