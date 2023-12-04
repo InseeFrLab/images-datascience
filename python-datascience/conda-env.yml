@@ -16,7 +16,6 @@ dependencies:
   - pandas
   - plotly
   - polars
-  - pyarrow
   - requests
   - seaborn
   - scikit-learn

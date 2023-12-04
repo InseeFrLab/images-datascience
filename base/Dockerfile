@@ -38,11 +38,8 @@ RUN chmod -R +x /opt/ && \
     locale-gen en_US.UTF-8 && \
     # Install common clients useful for Onyxia
     /opt/install-kubectl.sh && \
-    echo 'source <(kubectl completion bash)' >> /home/${USERNAME}/.bashrc && \
     /opt/install-kubectl-krew.sh && \
-    echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> /home/${USERNAME}/.bashrc && \
     /opt/install-helm.sh && \
-    echo 'source <(helm completion bash)' >> /home/${USERNAME}/.bashrc && \
     /opt/install-mc.sh && \
     /opt/install-vault-cli.sh && \
     /opt/install-argo-workflows-cli.sh && \
