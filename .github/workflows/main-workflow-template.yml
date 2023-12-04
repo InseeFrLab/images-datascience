@@ -177,7 +177,7 @@ jobs:
         shell: bash
 
       - name: Build and load to the Docker client
-        if: ${{ matrix.gpu != 'true' || inputs.branch == 'refs/heads/dev' }}
+        if: ${{ matrix.gpu != 'true' }}
         uses: docker/build-push-action@v5
         with:
           load: true
