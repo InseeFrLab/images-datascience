@@ -20,7 +20,7 @@ chains = {
     "jupyter-pytorch": ["base", "python-minimal", "python-pytorch", "jupyter"],
     "jupyter-tensorflow": ["base", "python-minimal", "python-tensorflow", "jupyter"],
     "jupyter-pyspark": ["base", "python-minimal", "spark", "jupyter"],
-    "vscode": ["base", "python-minimal", "python-datascience", "vscode"],
+    "vscode-python": ["base", "python-minimal", "python-datascience", "vscode"],
     "vscode-minimal": ["base", "python-minimal", "vscode"],
     "r-python-julia": ["base", "r-minimal", "r-python-julia"],
     "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"]
@@ -49,7 +49,12 @@ for i, image in enumerate(chain):
     else:
         device_suffix = ""
 
-    cmd = ["docker", "build", image, "-t", image,
+    if i < len(chain) - 1:
+        tag = image
+    else:
+        tag = f"inseefrlab/onyxia-{chain}:dev"
+
+    cmd = ["docker", "build", image, "-t", tag,
            "--build-arg", f"BASE_IMAGE={previous_image}",
            "--build-arg", f"DEVICE_SUFFIX={device_suffix}"]
     print(" ".join(cmd))

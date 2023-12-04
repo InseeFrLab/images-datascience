@@ -6,12 +6,7 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 USER root
 
 # Install additional libraries and R packages for datascience
-RUN napt-get update && \
-    apt-get install -y --no-install-recommends \
-        language-pack-fr \
-        libsecret-1-dev && \
-    # Install quarto
-    /opt/install-quarto.sh && \
+RUN /opt/install-quarto.sh && \
     # Install Shiny Server
     /rocker_scripts/install_shiny_server.sh && \
     # Install packages bundles from rocker
