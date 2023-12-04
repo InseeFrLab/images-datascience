@@ -25,6 +25,7 @@ ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 RUN /rocker_scripts/setup_R.sh && \
     # Re-install system libs that may have been removed by autoremove in rocker scripts
     /opt/install-system-libs.sh && \
+    apt-get install -y --no-install-recommends libpq-dev && \
     # Configure R for CUDA if parent image has CUDA
     if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
     # Install useful additional packages
