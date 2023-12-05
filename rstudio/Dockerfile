@@ -3,12 +3,10 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
+# Config for RStudio 
 ENV DEFAULT_USER=${USERNAME}
 ENV USERID=${UID}
 ENV GROUPID=${GID}
-
-ENV PATH="/usr/lib/rstudio-server/bin:$PATH"
-
 ARG RSTUDIO_CONF_FILE="/etc/rstudio/rsession.conf"
 
 USER root 

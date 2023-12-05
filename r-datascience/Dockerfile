@@ -20,6 +20,9 @@ RUN /opt/install-quarto.sh && \
     # Clean
     rm -rf /var/lib/apt/lists/*
 
+# Add TexLive to PATH
+ENV PATH="${PATH}:/usr/local/texlive/bin/linux"
+
 USER 1000
 
 CMD ["R"]

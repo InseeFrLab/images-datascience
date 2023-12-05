@@ -11,5 +11,3 @@ tar zxvf "${KREW}.tar.gz"
 ./"${KREW}" install krew
 cd ..
 rm -rf $TMPDIR
-
-echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> /home/${USERNAME}/.bashrc
