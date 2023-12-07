@@ -4,4 +4,7 @@
     "terminal.integrated.inheritEnv": false,
     "python.testing.pytestEnabled": true,
     "fauxpilot.enabled": false
+    "python.linting.flake8Args": [
+    "--max-line-length=100",
+]
 }
