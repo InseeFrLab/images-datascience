@@ -13,9 +13,9 @@ USER root
 
 COPY conda-env.yml .
 
-RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh -O mambaforge.sh && \
+RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O miniforge.sh && \
     # Install mambaforge latest version
-    /bin/bash mambaforge.sh -b -p "${MAMBA_DIR}" && \
+    /bin/bash miniforge.sh -b -p "${MAMBA_DIR}" && \
     # Set specified Python version in base Conda env
     mamba install python=="${PYTHON_VERSION}" && \
     # Pin Python version to prevent Conda from upgrading it
