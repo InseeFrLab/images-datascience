@@ -8,6 +8,7 @@ ENV DEFAULT_USER=${USERNAME}
 ENV USERID=${UID}
 ENV GROUPID=${GID}
 ARG RSTUDIO_CONF_FILE="/etc/rstudio/rsession.conf"
+ENV PATH="${PATH}:/usr/lib/rstudio-server/bin"
 
 USER root 
 
