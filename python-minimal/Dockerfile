@@ -15,22 +15,7 @@ COPY conda-env.yml .
 
 RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O miniforge.sh && \
     # Install mambaforge latest version
-    /bin/bash miniforge.sh -b -p "${MAMBA_DIR}" && \
-    # Set specified Python version in base Conda env
-    mamba install python=="${PYTHON_VERSION}" && \
-    # Pin Python version to prevent Conda from upgrading it
-    touch ${MAMBA_DIR}/conda-meta/pinned && \
-    echo "python==${PYTHON_VERSION}" >> ${MAMBA_DIR}/conda-meta/pinned && \
-    # Install essential Python packages
-    mamba env update -n base -f conda-env.yml && \
-    # Activate custom Conda env by default in shell
-    echo ". ${MAMBA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
-    # Clean
-    rm miniforge.sh conda-env.yml && \ 
-    mamba clean --all -f -y && \
-    rm -rf /var/lib/apt/lists/*
+    /bin/bash miniforge.sh -b -p "${MAMBA_DIR}"
 
 USER 1000
 
