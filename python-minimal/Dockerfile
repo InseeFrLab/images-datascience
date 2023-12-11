@@ -28,7 +28,7 @@ RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Mi
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
-    rm mambaforge.sh conda-env.yml && \ 
+    rm miniforge.sh conda-env.yml && \ 
     mamba clean --all -f -y && \
     rm -rf /var/lib/apt/lists/*
 
