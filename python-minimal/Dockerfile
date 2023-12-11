@@ -31,7 +31,6 @@ RUN touch ${MAMBA_DIR}/conda-meta/pinned && \
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
     rm miniforge.sh conda-env.yml && \ 
-    mamba clean --all -f -y && \
     rm -rf /var/lib/apt/lists/*
 
 USER 1000
