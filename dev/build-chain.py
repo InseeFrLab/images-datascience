@@ -26,7 +26,8 @@ chains = {
     "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"]
 }
 
-chain = chains[sys.argv[1]]
+chain_name = sys.argv[1]
+chain = chains[chain_name]
 
 GPU = False
 if len(sys.argv) == 3:
@@ -52,7 +53,7 @@ for i, image in enumerate(chain):
     if i < len(chain) - 1:
         tag = image
     else:
-        tag = f"inseefrlab/onyxia-{chain}:dev"
+        tag = f"inseefrlab/onyxia-{chain_name}:dev"
 
     cmd = ["docker", "build", image, "-t", tag,
            "--build-arg", f"BASE_IMAGE={previous_image}",
