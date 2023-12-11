@@ -15,7 +15,7 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
     # Clean
-    mamba clean --all -f -y && \
+    conda clean --all -f -y && \
     rm -rf /var/lib/apt/lists/*
 
 USER 1000

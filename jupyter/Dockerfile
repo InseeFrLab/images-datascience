@@ -25,7 +25,7 @@ RUN /opt/install-jupyterlab.sh && \
     jupyter lab clean && \
     rm -rf /var/lib/apt/lists/* && \
     if command -v mamba; then \
-        mamba clean --all -f -y; \
+        conda clean --all -f -y; \
     fi
 
 USER 1000
