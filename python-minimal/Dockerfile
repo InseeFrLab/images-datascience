@@ -33,7 +33,7 @@ RUN touch ${MAMBA_DIR}/conda-meta/pinned && \
     rm miniforge.sh conda-env.yml && \ 
     rm -rf /var/lib/apt/lists/*
 
-RUN mamba clean --all -f -y
+RUN conda clean --all -f -y
 
 USER 1000
 
