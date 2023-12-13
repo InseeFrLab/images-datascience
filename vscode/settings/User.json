@@ -3,8 +3,7 @@
     "security.workspace.trust.startupPrompt": "never",
     "terminal.integrated.inheritEnv": false,
     "python.testing.pytestEnabled": true,
-    "fauxpilot.enabled": false
-    "python.linting.flake8Args": [
-    "--max-line-length=100",
-]
+    "flake8.args": [
+        "--max-line-length=100"
+    ]
 }
