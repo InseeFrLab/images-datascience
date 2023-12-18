@@ -5,5 +5,8 @@
     "python.testing.pytestEnabled": true,
     "flake8.args": [
         "--max-line-length=100"
-    ]
+    ],
+    "redhat.telemetry.enabled": false,
+    "julia.symbolCacheDownload": true,
+    "julia.enableTelemetry": false
 }
