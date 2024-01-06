@@ -23,6 +23,8 @@ RUN wget -q "https://github.com/conda-forge/miniforge/releases/latest/download/M
     echo "python==${PYTHON_VERSION}" >> ${MAMBA_DIR}/conda-meta/pinned && \
     # Install essential Python packages
     mamba env update -n base -f conda-env.yml && \
+    # Install duckdb extensions
+    mamba run -n base python /opt/install-duckdb-extensions.py && \
     # Activate custom Conda env by default in shell
     echo ". ${MAMBA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc && \
     # Fix permissions

@@ -166,6 +166,7 @@ if [[ "$DARK_MODE" == "true" ]]; then
     fi
 fi
 
+# Configure duckdb CLI
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
 cat <<EOF > ${HOME}/.duckdbrc
 -- Duck head prompt
