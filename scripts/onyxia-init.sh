@@ -177,16 +177,6 @@ SET s3_endpoint='$AWS_S3_ENDPOINT';
 EOF
 fi
 
-# Configure duckdb Python API
-if [[ -n $AWS_S3_ENDPOINT ]] && command -v python ; then
-    mamba run -n base python opt/configure-dubkdb.py
-fi
-
-# Configure duckdb R API
-if [[ -n $AWS_S3_ENDPOINT ]] && command -v R ; then
-    Rscript opt/configure-duckdb.R
-fi
-
 if [[ -e "$HOME/work" ]]; then
   if [[ $(id -u) = 0 ]]; then
     echo "cd $HOME/work" >> /etc/profile

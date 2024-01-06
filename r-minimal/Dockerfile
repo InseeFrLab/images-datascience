@@ -47,7 +47,7 @@ RUN /rocker_scripts/setup_R.sh && \
         targets \
         vaultr && \
     # Install duckdb extensions
-    Rscript opt/install-duckdb-extensions.R && \
+    Rscript /opt/install-duckdb-extensions.R && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean
