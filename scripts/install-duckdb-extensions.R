@@ -1,8 +1,5 @@
-library(glue)
-library(duckdb)
+con <- DBI::dbConnect(duckdb::duckdb())
 
-con <- dbConnect(duckdb())
-
-dbExecute(con, glue('SET extension_directory=\"{Sys.getenv("HOME")}\"'))
-dbExecute(con, 'INSTALL httpfs')
-dbExecute(con, 'INSTALL aws')
+DBI::dbExecute(con, glue::glue('SET extension_directory=\"{Sys.getenv("HOME")}\"'))
+DBI::dbExecute(con, 'INSTALL httpfs')
+DBI::dbExecute(con, 'INSTALL aws')
