@@ -29,6 +29,10 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
+    elif command -v R; then \
+        apt update && apt install python3-pip -y && \
+        pip install -U radian && \
+        export PATH=${PATH}:${HOME}/.local/bin; \
     fi && \
     if command -v quarto; then \
         code-server --install-extension quarto.quarto; \
