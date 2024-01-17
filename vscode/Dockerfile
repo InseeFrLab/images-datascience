@@ -36,13 +36,20 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
+    fi && \
     if command -v quarto; then \
         code-server --install-extension quarto.quarto; \
     fi && \
     # Create directories to store custom VSCode settings
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR} && \
-    # Set Conda binary path in remote settings to auto activate base env when running Python code
-    echo "{\"python.defaultInterpreterPath\": \"${MAMBA_DIR}/bin/python\"}" > ${REMOTE_CONFIG_DIR}/settings.json && \
+    # Language specific config
+    touch ${REMOTE_CONFIG_DIR}/settings.json && \
+    if command -v python; then \
+        echo "{\"python.defaultInterpreterPath\": \"${MAMBA_DIR}/bin/python\"}" >> ${REMOTE_CONFIG_DIR}/settings.json; \
+    fi && \
+    if command -v R; then \
+        echo "{\"r.rterm.linux\": \"${HOME}/.local/bin/radian\"}" >> ${REMOTE_CONFIG_DIR}/settings.json; \
+    fi && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
