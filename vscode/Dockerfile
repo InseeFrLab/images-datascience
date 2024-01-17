@@ -30,9 +30,9 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
         R -e "install.packages(c('languageserver', 'rmarkdown', 'httpgd'))" && \
         R -e "remotes::install_github('ManuelHentschel/vscDebugger')" && \
         # Install Radian terminal for R
-        apt-get update && apt-get install python3-pip -y && \
+        apt-get update && apt-get install -y --no-install-recommends python3-pip && \
         pip install -U radian && \
-        apt-get autoremove python3-pip; \
+        apt-get autoremove -y python3-pip; \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
