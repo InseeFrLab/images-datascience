@@ -24,19 +24,18 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
         code-server --install-extension ms-python.flake8; \
     fi && \
     if command -v R; then \
+        # Install relevnat VSCode extensions for R
         code-server --install-extension reditorsupport.r && \
-        R -e "install.packages('languageserver')"; \
+        code-server --install-extension RDebugger.r-debugger && \
+        R -e "install.packages(c('languageserver', 'rmarkdown', 'httpgd'))" && \
+        R -e "remotes::install_github('ManuelHentschel/vscDebugger')" && \
+        # Install Radian terminal for R
+        apt-get update && apt-get install python3-pip -y && \
+        pip install -U radian && \
+        apt-get autoremove python3-pip; \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
-    elif command -v R; then \
-        code-server --install-extension RDebugger.r-debugger && \
-        R -e "install.packages(c('rmarkdown', 'httpgd'))" && \
-        R -e "remotes::install_github('ManuelHentschel/vscDebugger')" && \
-        apt update && apt install python3-pip -y && \
-        pip install -U radian && \
-        export PATH=${PATH}:${HOME}/.local/bin; \
-    fi && \
     if command -v quarto; then \
         code-server --install-extension quarto.quarto; \
     fi && \
