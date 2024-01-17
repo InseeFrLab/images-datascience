@@ -25,6 +25,7 @@ apt_install \
     lsb-core \
     nano \
     openssh-client \
+    python3-pip \
     sudo \
     tini \
     unzip \

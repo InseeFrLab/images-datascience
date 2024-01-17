@@ -24,15 +24,11 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
         code-server --install-extension ms-python.flake8; \
     fi && \
     if command -v R; then \
-        # Install relevnat VSCode extensions for R
         code-server --install-extension reditorsupport.r && \
         code-server --install-extension RDebugger.r-debugger && \
         R -e "install.packages(c('languageserver', 'rmarkdown', 'httpgd'))" && \
         R -e "remotes::install_github('ManuelHentschel/vscDebugger')" && \
-        # Install Radian terminal for R
-        apt-get update && apt-get install -y --no-install-recommends python3-pip && \
-        pip install -U radian && \
-        apt-get autoremove -y python3-pip; \
+        pip install radian; \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
@@ -42,14 +38,10 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     fi && \
     # Create directories to store custom VSCode settings
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR} && \
-    # Language specific config
+    # Language specific config (ignored by VSCode if not installed)
     touch ${REMOTE_CONFIG_DIR}/settings.json && \
-    if command -v python; then \
-        echo "{\"python.defaultInterpreterPath\": \"${MAMBA_DIR}/bin/python\"}" >> ${REMOTE_CONFIG_DIR}/settings.json; \
-    fi && \
-    if command -v R; then \
-        echo "{\"r.rterm.linux\": \"${HOME}/.local/bin/radian\"}" >> ${REMOTE_CONFIG_DIR}/settings.json; \
-    fi && \
+    echo "{\"python.defaultInterpreterPath\": \"${MAMBA_DIR}/bin/python\"}" >> ${REMOTE_CONFIG_DIR}/settings.json && \
+    echo "{\"r.rterm.linux\": \"/usr/local/bin/radian\"}" >> ${REMOTE_CONFIG_DIR}/settings.json && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
