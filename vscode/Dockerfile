@@ -29,6 +29,13 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
+    elif command -v R; then \
+        code-server --install-extension RDebugger.r-debugger && \
+        R -e "install.packages(c('rmarkdown', 'httpgd'))" && \
+        R -e "remotes::install_github('ManuelHentschel/vscDebugger')" && \
+        apt update && apt install python3-pip -y && \
+        pip install -U radian && \
+        export PATH=${PATH}:${HOME}/.local/bin; \
     fi && \
     if command -v quarto; then \
         code-server --install-extension quarto.quarto; \

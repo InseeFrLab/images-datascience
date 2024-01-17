@@ -338,3 +338,18 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  vscode-r:
+    needs: [r-datascience]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: vscode-r
+      test: true
+      context: vscode
+      base_image: r-datascience
+      r_version_1: 4.3.2
+      r_version_2: 4.2.3
+      branch: ${{ github.ref }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
