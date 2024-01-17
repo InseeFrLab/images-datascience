@@ -38,10 +38,9 @@ RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     fi && \
     # Create directories to store custom VSCode settings
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR} && \
-    # Language specific config (ignored by VSCode if not installed)
+    # Language specific config
     touch ${REMOTE_CONFIG_DIR}/settings.json && \
     echo "{\"python.defaultInterpreterPath\": \"${MAMBA_DIR}/bin/python\"}" >> ${REMOTE_CONFIG_DIR}/settings.json && \
-    echo "{\"r.rterm.linux\": \"/usr/local/bin/radian\"}" >> ${REMOTE_CONFIG_DIR}/settings.json && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean

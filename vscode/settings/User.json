@@ -9,6 +9,6 @@
     "redhat.telemetry.enabled": false,
     "julia.symbolCacheDownload": true,
     "julia.enableTelemetry": false,
-    "r.rterm.linux": "/home/onyxia/.local/bin/radian",
-    "r.backetedPaste": true
+    "r.rterm.linux": "/usr/local/bin/radian",
+    "r.bracketedPaste": true
 }
