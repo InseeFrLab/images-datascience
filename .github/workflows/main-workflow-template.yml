@@ -220,3 +220,4 @@ jobs:
             SPARK_VERSION=${{ matrix.spark_version }}
           secrets: |
             "github_token=${{ secrets.GITHUB_PAT }}"
+          platforms: linux/amd64,linux/arm64
