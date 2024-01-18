@@ -43,7 +43,7 @@ RUN code-server --install-extension ms-toolsai.jupyter && \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
-    && \
+    fi && \
     if command -v quarto; then \
         code-server --install-extension quarto.quarto; \
     fi && \
