@@ -12,11 +12,9 @@ USER root
 RUN curl -fsSL https://code-server.dev/install.sh | bash && \
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR}
 
-USER 1000
-
 # Copy custom VSCode settings
-COPY settings/User.json ${USER_CONFIG_DIR}/settings.json
-COPY settings/Remote.json ${REMOTE_CONFIG_DIR}/settings.json
+COPY --chown=${USERNAME}:${GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/settings.json
+COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/settings.json
 
 # VSCode extensions and configuration
 RUN code-server --install-extension ms-toolsai.jupyter && \
@@ -45,6 +43,7 @@ RUN code-server --install-extension ms-toolsai.jupyter && \
     fi && \
     if command -v julia; then \
         code-server --install-extension julialang.language-julia; \
+    && \
     if command -v quarto; then \
         code-server --install-extension quarto.quarto; \
     fi && \
@@ -52,6 +51,8 @@ RUN code-server --install-extension ms-toolsai.jupyter && \
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
     rm -rf /var/lib/apt/lists/*
+
+USER 1000
 
 EXPOSE 8080
 
