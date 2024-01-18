@@ -3,9 +3,23 @@ set -e
 
 JULIA_VERSION="1.10.0"
 
+ARCH=$(uname -m)
+
+case $ARCH in
+    "x86_64")
+        ARCHITECTURE="x64"
+        ;;
+    "aarch64")
+        ARCHITECTURE="aarch64"
+        ;;
+    *)
+        echo "Unsupported architecture: $ARCH"
+        exit 1
+        ;;
+esac
 # Install Julia
 julia_major_minor=$(echo "${JULIA_VERSION}" | cut -d. -f 1,2)
-wget -q "https://julialang-s3.julialang.org/bin/linux/x64/${julia_major_minor}/julia-${JULIA_VERSION}-linux-x86_64.tar.gz" -O julia.tar.gz
+wget -q "https://julialang-s3.julialang.org/bin/linux/${ARCHITECTURE}/${julia_major_minor}/julia-${JULIA_VERSION}-linux-${ARCH}.tar.gz" -O julia.tar.gz
 mkdir "${JULIA_DIR}"
 tar xzf julia.tar.gz -C "${JULIA_DIR}" --strip-components=1
 rm julia.tar.gz
