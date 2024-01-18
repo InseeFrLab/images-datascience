@@ -21,7 +21,7 @@ chains = {
     "jupyter-tensorflow": ["base", "python-minimal", "python-tensorflow", "jupyter"],
     "jupyter-pyspark": ["base", "python-minimal", "spark", "jupyter"],
     "vscode-python": ["base", "python-minimal", "python-datascience", "vscode"],
-    "vscode-minimal": ["base", "python-minimal", "vscode"],
+    "vscode-python-minimal": ["base", "python-minimal", "vscode"],
     "r-python-julia": ["base", "r-minimal", "r-python-julia"],
     "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"],
     "vscode-r": ["base", "r-minimal", "r-datascience", "vscode"]
