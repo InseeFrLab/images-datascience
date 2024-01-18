@@ -10,7 +10,7 @@ USER root
 
 # Install VSCode
 RUN curl -fsSL https://code-server.dev/install.sh | bash && \
-    mkdir ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR}
+    mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR}
 
 USER 1000
 
