@@ -4,9 +4,10 @@ set -e
 HADOOP_VERSION="3.3.6"
 HIVE_VERSION="2.3.9"
 HIVE_LISTENER_VERSION="0.0.3"
+JAVA_VERSION="17"
 
 export SPARK_BUILD_S3_BUCKET="https://minio.lab.sspcloud.fr/projet-onyxia/build"
-export SPARK_BUILD_NAME="spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}"
+export SPARK_BUILD_NAME="spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}-java-${JAVA_VERSION}"
 export HADOOP_URL="https://downloads.apache.org/hadoop/common/hadoop-${HADOOP_VERSION}"
 export HADOOP_AWS_URL="https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws"
 export HIVE_URL="https://archive.apache.org/dist/hive/hive-${HIVE_VERSION}"
