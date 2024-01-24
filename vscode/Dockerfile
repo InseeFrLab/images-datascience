@@ -25,6 +25,7 @@ RUN code-server --install-extension ms-toolsai.jupyter && \
     code-server --install-extension mhutchie.git-graph && \
     code-server --install-extension GordonSmith.observable-js && \
     code-server --install-extension rangav.vscode-thunder-client && \
+    code-server --install-extension hediet.vscode-drawio && \
     # Language specific VSCode extensions and config
     if command -v python; then \
         code-server --install-extension ms-python.python && \
