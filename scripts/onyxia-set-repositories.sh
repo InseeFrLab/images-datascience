@@ -31,7 +31,7 @@ if command -v R; then
   if [[ -n "$R_REPOSITORY" ]] || [[ -n "$PACKAGE_MANAGER_URL" ]]; then
       echo "configuration r (add local repository)"
 
-      echo '# https://docs.rstudio.com/rspm/admin/serving-binaries/#binaries-r-configuration-linux' > ${R_HOME}/etc/Rprofile.site
+      echo '# https://docs.rstudio.com/rspm/admin/serving-binaries/#binaries-r-configuration-linux' >> ${R_HOME}/etc/Rprofile.site
       echo 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))' >> ${R_HOME}/etc/Rprofile.site
       echo '# Proxy repository for R' >> ${R_HOME}/etc/Rprofile.site
       echo 'local({' >> ${R_HOME}/etc/Rprofile.site
