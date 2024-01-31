@@ -9,5 +9,11 @@
     "redhat.telemetry.enabled": false,
     "julia.symbolCacheDownload": true,
     "julia.enableTelemetry": false,
-    "r.bracketedPaste": true
+    "r.bracketedPaste": true,
+    "cSpell.language": "en,fr",
+    "cSpell.enableFiletypes": [
+        "quarto",
+        "r",
+        "tex"
+    ]
 }
