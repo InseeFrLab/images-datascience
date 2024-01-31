@@ -26,7 +26,8 @@ RUN code-server --install-extension ms-toolsai.jupyter && \
     code-server --install-extension GordonSmith.observable-js && \
     code-server --install-extension rangav.vscode-thunder-client && \
     code-server --install-extension hediet.vscode-drawio && \
-    code-server --install-extension valentjn.vscode-ltex && \
+    code-server --install-extension streetsidesoftware.code-spell-checker && \
+    code-server --install-extension streetsidesoftware.code-spell-checker-french && \
     # Language specific VSCode extensions and config
     if command -v python; then \
         code-server --install-extension ms-python.python && \
