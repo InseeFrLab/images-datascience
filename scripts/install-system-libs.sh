@@ -30,4 +30,5 @@ apt_install \
     tini \
     unzip \
     vim \
-    wget
+    wget \
+    libbz2-dev # for jdk

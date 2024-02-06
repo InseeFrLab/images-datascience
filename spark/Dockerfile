@@ -6,26 +6,27 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ARG BASE_IMAGE
 
 ARG SPARK_VERSION="3.5.0"
+ARG JAVA_VERSION="17"
+
 ENV SPARK_VERSION=${SPARK_VERSION}
+ENV JAVA_VERSION=${JAVA_VERSION}
 
 ENV HADOOP_HOME="/opt/hadoop"
 ENV SPARK_HOME="/opt/spark"
 ENV HIVE_HOME="/opt/hive"
 ENV PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.7-src.zip"
 ENV SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M"
-ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+
 ENV HADOOP_OPTIONAL_TOOLS="hadoop-aws"
 
-ENV PATH="${JAVA_HOME}/bin:${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
+ENV PATH="${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 
 USER root
 
 RUN --mount=type=secret,id=github_token \
     apt-get update  && \
     # Install JDK
-    apt-get install -y --no-install-recommends \
-        ca-certificates-java \
-        openjdk-17-jre-headless && \
+    /opt/install-java.sh && \
     # Install Spark/Hadoop/Hive
     /opt/install-spark-hadoop-hive.sh && \
     # Put Spark config in the right place
