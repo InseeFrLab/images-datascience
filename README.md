@@ -21,7 +21,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PM-->PYTENSORFLOW[python-tensorflow]:::package;
       PM-->PYTORCH[python-pytorch]:::package;
       RM-->RDS[r-datascience]:::package;
-      RM-->RSPARK[r-sparkr]:::package;
+      RM-->RSPARK[sparkr]:::package;
       RM-->RPYJU[r-python-julia]:::package;
       PYSPARK--> JPYSPARK[jupyter-pyspark]:::ide;
       PYDS--> JPYDS[jupyter-python]:::ide;
@@ -31,7 +31,6 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PYDS--> VSCODEPYDS[vscode-python]:::ide;
       PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow]:::ide;
       PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
-      RSPARK -->JSPARKR[jupyter-sparkr]:::ide;
       RDS--> JRDS[jupyter-r]:::ide;
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
