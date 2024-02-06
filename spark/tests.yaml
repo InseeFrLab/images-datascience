@@ -54,3 +54,7 @@ commandTests:
     command: "which"
     args: ["argo"]
     expectedOutput: ["/usr/local/bin/argo"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["java"]
+    expectedOutput: ["/bin/java"]

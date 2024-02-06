@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "start of onyxia-init.sh script en tant que :"
+echo "start of onyxia-init.sh script as user :"
 whoami
 
 sudo true -nv 2>&1
@@ -141,8 +141,8 @@ if command -v R; then
     echo -e "SPARK_HOME=$SPARK_HOME" >> ${R_HOME}/etc/Renviron.site
     echo -e "HADOOP_HOME=$HADOOP_HOME" >> ${R_HOME}/etc/Renviron.site
     echo -e "HADOOP_OPTIONAL_TOOLS=$HADOOP_OPTIONAL_TOOLS" >> ${R_HOME}/etc/Renviron.site
-    if [[ -e "/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" ]]; then
-        echo -e "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" >> ${R_HOME}/etc/Renviron.site
+    if [[ -e "$JAVA_HOME" ]]; then
+        echo -e "JAVA_HOME=$JAVA_HOME" >> ${R_HOME}/etc/Renviron.site
     fi
     env | grep "KUBERNETES" >> ${R_HOME}/etc/Renviron.site
     env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
