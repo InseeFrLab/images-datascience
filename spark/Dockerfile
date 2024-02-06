@@ -23,6 +23,9 @@ ENV PATH="${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 
 USER root
 
+# temporary just to see if it builds when the scripts are in /opt
+COPY scripts/ /opt/ 
+
 RUN --mount=type=secret,id=github_token \
     apt-get update  && \
     # Install JDK
