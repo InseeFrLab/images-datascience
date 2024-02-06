@@ -18,7 +18,7 @@ RUN git clone --branch R${R_VERSION} --depth 1 https://github.com/rocker-org/roc
     chmod -R 700 /rocker_scripts/ && \
     /rocker_scripts/install_R_source.sh
 
-# Use RStudio's package manager to download packages as binaries 
+# Use RStudio's package manager to download packages as binaries
 ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
