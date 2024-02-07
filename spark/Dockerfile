@@ -21,14 +21,7 @@ ENV HADOOP_OPTIONAL_TOOLS="hadoop-aws"
 
 ENV PATH="${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 
-
-# temporary just to see if it builds when the scripts are in /opt
-ENV WORKSPACE_DIR="${HOME}/work"
-WORKDIR ${WORKSPACE_DIR}
 USER root
-RUN ls -lha /opt
-COPY scripts/ /opt/
-# temporary just to see if it builds when the scripts are in /opt
 
 RUN --mount=type=secret,id=github_token \
     apt-get update  && \

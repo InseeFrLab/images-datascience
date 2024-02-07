@@ -106,7 +106,7 @@ jobs:
 
       - name: Pass scripts to base image at build time
         # Just to put the `scripts` folder at the root of the project
-        if: ${{ inputs.context == 'base' }}
+        # if: ${{ inputs.context == 'base'}}
         run: cp -r scripts/ base/scripts/
     
       - name: Make free space
