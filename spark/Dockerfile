@@ -23,6 +23,10 @@ ENV PATH="${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${PATH}"
 
 USER root
 
+# temporary to POC instal-java.sh
+COPY ../scripts/ /opt/
+RUN chmod -R +x /opt/
+
 RUN --mount=type=secret,id=github_token \
     apt-get update  && \
     # Install JDK
