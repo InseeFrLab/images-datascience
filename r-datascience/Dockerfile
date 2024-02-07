@@ -3,6 +3,9 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
+ARG JAVA_VERSION="17"
+ENV JAVA_VERSION=${JAVA_VERSION}
+
 USER root
 
 # temporary to POC instal-java.sh
