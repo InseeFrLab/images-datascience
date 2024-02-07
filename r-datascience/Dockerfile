@@ -8,10 +8,6 @@ ENV JAVA_VERSION=${JAVA_VERSION}
 
 USER root
 
-# temporary to POC instal-java.sh
-COPY scripts/ /opt/
-RUN chmod -R +x /opt/
-
 # Install additional libraries and R packages for datascience
 RUN apt-get update && \
     # Install JDK
