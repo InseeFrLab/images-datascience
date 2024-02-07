@@ -5,6 +5,10 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
+# temporary to POC instal-java.sh
+COPY scripts/ /opt/
+RUN chmod -R +x /opt/
+
 # Install additional libraries and R packages for datascience
 RUN /opt/install-quarto.sh && \
     # Install JDK
