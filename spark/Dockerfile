@@ -6,10 +6,12 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ARG BASE_IMAGE
 
 ARG SPARK_VERSION="3.5.0"
-ARG JAVA_VERSION="17"
 
 ENV SPARK_VERSION=${SPARK_VERSION}
-ENV JAVA_VERSION=${JAVA_VERSION}
+ENV JAVA_VERSION="17"
+
+ENV JAVA_HOME="/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64"
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 ENV HADOOP_HOME="/opt/hadoop"
 ENV SPARK_HOME="/opt/spark"

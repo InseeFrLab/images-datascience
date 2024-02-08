@@ -47,4 +47,4 @@ commandTests:
   - name: "Does the binary exists?"
     command: "which"
     args: ["java"]
-    expectedOutput: ["/bin/java"]
+    expectedOutput: ["/usr/lib/jvm/java-17-openjdk-amd64/bin/java"]
