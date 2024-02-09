@@ -4,16 +4,12 @@ FROM $BASE_IMAGE
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 ARG JAVA_VERSION="17"
-ENV JAVA_VERSION=${JAVA_VERSION}
 ENV JAVA_HOME="/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64"
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 USER root
 
 # Install additional libraries and R packages for datascience
-RUN apt-get update && \
-    # Install JDK
-    /opt/install-java.sh && \
+RUN /opt/install-java.sh && \
     /opt/install-quarto.sh && \
     # Install Shiny Server
     /rocker_scripts/install_shiny_server.sh && \
