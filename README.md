@@ -21,7 +21,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PM-->PYTENSORFLOW[python-tensorflow]:::package;
       PM-->PYTORCH[python-pytorch]:::package;
       RM-->RDS[r-datascience]:::package;
-      RM-->RSPARK[r-sparkr]:::package;
+      RM-->RSPARK[sparkr]:::package;
       RM-->RPYJU[r-python-julia]:::package;
       PYSPARK--> JPYSPARK[jupyter-pyspark]:::ide;
       PYDS--> JPYDS[jupyter-python]:::ide;
@@ -31,7 +31,6 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PYDS--> VSCODEPYDS[vscode-python]:::ide;
       PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow]:::ide;
       PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
-      RSPARK -->JSPARKR[jupyter-sparkr]:::ide;
       RDS--> JRDS[jupyter-r]:::ide;
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
@@ -65,7 +64,7 @@ If Onyxia support is checked, it means that the Onyxia product could inject auto
 There is multiple recipes:
 
 **Your user has non root capabilities:**
-- use an init script : https://github.com/InseeFrLab/images-datascience/blob/main/base/common-scripts/onyxia-init.sh#L7
+- use an init script : https://github.com/InseeFrLab/images-datascience/blob/main/scripts/onyxia-init.sh#L7
 - you can use an init region script location injected by Onyxia with a curl to an endpoint with your certiticates and put it in a path let's say /tmp/ca-certificates:
 - put this path in env variable PATH_TO_CABUNDLE then onyxia-init.sh script will configure git, pip and conda to user this certificates.
 
