@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-JULIA_VERSION="1.10.0"
+JULIA_VERSION="1.10.1"
 
 ARCH=$(uname -m)
 
