@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
 
-apt-get install -y --no-install-recommends \
+apt-get update
+apt_install \
     ca-certificates-java \
-    openjdk-${JAVA_VERSION}-jre-headless \
+    libbz2-dev \
     openjdk-${JAVA_VERSION}-jdk-headless \
-    libbz2-dev # for jdk
+    openjdk-${JAVA_VERSION}-jre-headless
 
 if command -v R; then
     R CMD javareconf

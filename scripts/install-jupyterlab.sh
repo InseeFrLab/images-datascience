@@ -1,12 +1,13 @@
 #!/bin/bash
 set -e
 
+source ./utils.sh
+
 if command -v mamba ; then
     mamba install -y jupyterlab
 else
     if [ "`which pip3`" = "" ]; then
-        apt-get update
-        apt-get install -y --no-install-recommends python3-pip
+        apt_install python3-pip
     fi
     pip3 install jupyterlab
 fi
