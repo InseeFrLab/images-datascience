@@ -108,20 +108,9 @@ jobs:
         # Just to put the `scripts` folder at the root of the project
         if: ${{ inputs.context == 'base' }}
         run: cp -r scripts/ base/scripts/
-    
-      - name: Make free space
-        # https://github.com/actions/virtual-environments/issues/2840
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-          sudo rm -rf /opt/hostedtoolcache/CodeQL
-          docker image prune --all --force
-          echo "Free space:"
-          df -h
-        shell: bash
+
+      - name: Make free space on GHA VM
+        uses: ./.github/actions/make-free-space
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
