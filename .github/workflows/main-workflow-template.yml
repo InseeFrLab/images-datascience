@@ -112,8 +112,15 @@ jobs:
       - name: Make free space
         # https://github.com/actions/virtual-environments/issues/2840
         run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
-          docker rmi -f $(docker images -aq)
+          rm -rf /usr/share/dotnet
+          rm -rf /usr/local/lib/android
+          rm -rf /opt/ghc
+          rm -rf "/usr/local/share/boost"
+          rm -rf "$AGENT_TOOLSDIRECTORY"
+          rm -rf /opt/hostedtoolcache/CodeQL
+          docker image prune --all --force
+          echo "Free space:"
+          df -h
         shell: bash
 
       - name: Set up QEMU
