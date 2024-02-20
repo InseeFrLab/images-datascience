@@ -26,7 +26,7 @@ jobs:
       spark: ${{ steps.filter.outputs.spark }}
       vscode: ${{ steps.filter.outputs.vscode }}
     steps:
-    - uses: dorny/paths-filter@v2
+    - uses: dorny/paths-filter@v3
       id: filter
       with:
         filters: |
