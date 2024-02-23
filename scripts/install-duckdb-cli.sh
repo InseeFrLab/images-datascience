@@ -19,4 +19,4 @@ esac
 wget -q https://github.com/duckdb/duckdb/releases/latest/download/$FILENAME
 unzip $FILENAME -d /usr/local/bin/
 rm $FILENAME
-duckdb -c "SET extension_directory=\"${HOME}\" ; INSTALL httpfs; INSTALL aws; INSTALL postgres;"
+duckdb -c "SET extension_directory=\"${HOME}\" ; INSTALL httpfs; INSTALL aws; INSTALL postgres; INSTALL spatial;"
