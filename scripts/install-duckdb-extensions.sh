@@ -1,8 +1,10 @@
 #!/bin/bash
 set -e
 
-duckdb -c "SET extension_directory=\"${HOME}/.duckdb/extensions\";"
-duckdb -c "INSTALL httpfs;"
-duckdb -c "INSTALL aws;"
-duckdb -c "INSTALL postgres;"
-duckdb -c "INSTALL spatial;"
+duckdb -c << EOF 
+SET extension_directory=\"${HOME}/.duckdb/extensions\"; 
+INSTALL httpfs; 
+INSTALL aws; 
+INSTALL postgres; 
+INSTALL spatial;
+EOF
