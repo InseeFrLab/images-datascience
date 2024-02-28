@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 ARCH=$(uname -m)
 
 case $ARCH in

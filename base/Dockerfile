@@ -26,8 +26,6 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
-RUN echo $USERNAME
-
 COPY scripts/ /opt/
 
 RUN chmod -R +x /opt/ && \
