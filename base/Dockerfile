@@ -26,6 +26,8 @@ WORKDIR ${WORKSPACE_DIR}
 
 USER root
 
+RUN echo $USERNAME
+
 COPY scripts/ /opt/
 
 RUN chmod -R +x /opt/ && \
@@ -45,6 +47,7 @@ RUN chmod -R +x /opt/ && \
     /opt/install-argo-workflows-cli.sh && \
     /opt/install-postgresql-cli.sh && \
     /opt/install-duckdb-cli.sh && \
+    /opt/install-duckdb-extensions.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     chmod +x /opt/onyxia-init.sh && \
