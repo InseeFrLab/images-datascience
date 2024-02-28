@@ -1,5 +1,3 @@
-import os
-
 import duckdb
 
 duckdb.sql("INSTALL httpfs")

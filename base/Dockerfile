@@ -45,18 +45,19 @@ RUN chmod -R +x /opt/ && \
     /opt/install-argo-workflows-cli.sh && \
     /opt/install-postgresql-cli.sh && \
     /opt/install-duckdb-cli.sh && \
+    /opt/install-duckdb-extensions.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     chmod +x /opt/onyxia-init.sh && \
     # Clean
     rm -rf /var/lib/apt/lists/*
 
+# Add Krew to PATH
+ENV PATH="${PATH}:${HOME}/.krew/bin"
+
 # Set locales
 ENV LC_ALL="en_US.UTF-8"
 ENV LANG="en_US.UTF-8"
-
-# Add Krew to PATH
-ENV PATH="${PATH}:${HOME}/.krew/bin"
 
 USER 1000
 
