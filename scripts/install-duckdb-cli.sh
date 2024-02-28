@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+
 ARCH=$(uname -m)
 
 case $ARCH in
@@ -19,4 +20,3 @@ esac
 wget -q https://github.com/duckdb/duckdb/releases/latest/download/$FILENAME
 unzip $FILENAME -d /usr/local/bin/
 rm $FILENAME
-duckdb -c "INSTALL httpfs; INSTALL aws; INSTALL postgres; INSTALL spatial;"

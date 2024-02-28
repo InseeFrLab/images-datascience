@@ -51,12 +51,12 @@ RUN chmod -R +x /opt/ && \
     # Clean
     rm -rf /var/lib/apt/lists/*
 
+# Add Krew to PATH
+ENV PATH="${PATH}:${HOME}/.krew/bin"
+
 # Set locales
 ENV LC_ALL="en_US.UTF-8"
 ENV LANG="en_US.UTF-8"
-
-# Add Krew to PATH
-ENV PATH="${PATH}:${HOME}/.krew/bin"
 
 USER 1000
 
