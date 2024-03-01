@@ -9,6 +9,8 @@ ENV R_VERSION=${R_VERSION}
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER="${USERNAME}"
 
+ARG PINNED_APT_PACKAGES="$(apt-mark showmanual)"
+
 USER root
 
 # Install R using rocker's install scripts
@@ -23,6 +25,8 @@ ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
 RUN /rocker_scripts/setup_R.sh && \
+    # Reinstall potentially removed system libs by autoremove in R scripts
+    /opt/reinstall-pinned-packages.sh && \
     # Install additional system libs needed by R packages
     /opt/install-system-libs-R.sh && \
     # Configure R for CUDA if parent image has CUDA
