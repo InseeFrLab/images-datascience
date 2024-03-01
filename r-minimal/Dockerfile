@@ -9,24 +9,23 @@ ENV R_VERSION=${R_VERSION}
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER="${USERNAME}"
 
-ARG PINNED_APT_PACKAGES="$(apt-mark showmanual)"
-
 USER root
+
+# Use RStudio's package manager to download packages as binaries
+ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 # Install R using rocker's install scripts
 RUN git clone --branch R${R_VERSION} --depth 1 https://github.com/rocker-org/rocker-versioned2.git /tmp/rocker-versioned2 && \
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chown -R ${USERNAME}:${GROUPNAME} /rocker_scripts/ && \
     chmod -R 700 /rocker_scripts/ && \
+    PINNED_APT_PACKAGES=$(apt-mark showmanual) && \
     echo $PINNED_APT_PACKAGES && \
+    # Install R
     /rocker_scripts/install_R_source.sh && \
-    echo $PINNED_APT_PACKAGES
-
-# Use RStudio's package manager to download packages as binaries
-ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
-
-# Set up R (RSPM, OpenBLAS, littler, addtional packages)
-RUN /rocker_scripts/setup_R.sh && \
+    echo $PINNED_APT_PACKAGES && \
+    # Set up R (RSPM, OpenBLAS, littler, addtional packages)
+    /rocker_scripts/setup_R.sh && \
     # Reinstall potentially removed system libs by autoremove in R scripts
     /opt/reinstall-pinned-packages.sh && \
     # Install additional system libs needed by R packages
