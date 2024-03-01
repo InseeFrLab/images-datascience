@@ -23,8 +23,6 @@ ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
 RUN /rocker_scripts/setup_R.sh && \
-    # Re-install system libs that may have been removed by autoremove in rocker scripts
-    /opt/install-system-libs.sh && \
     # Install additional system libs needed by R packages
     /opt/install-system-libs-R.sh && \
     # Configure R for CUDA if parent image has CUDA
