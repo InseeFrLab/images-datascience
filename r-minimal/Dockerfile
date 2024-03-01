@@ -18,7 +18,9 @@ RUN git clone --branch R${R_VERSION} --depth 1 https://github.com/rocker-org/roc
     cp -r /tmp/rocker-versioned2/scripts/ /rocker_scripts/ && \
     chown -R ${USERNAME}:${GROUPNAME} /rocker_scripts/ && \
     chmod -R 700 /rocker_scripts/ && \
-    /rocker_scripts/install_R_source.sh
+    echo $PINNED_APT_PACKAGES && \
+    /rocker_scripts/install_R_source.sh && \
+    echo $PINNED_APT_PACKAGES
 
 # Use RStudio's package manager to download packages as binaries
 ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
