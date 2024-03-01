@@ -11,7 +11,6 @@ function apt_install() {
             apt-get update
         fi
         apt-get install -y --no-install-recommends "$@"
-        apt-mark manual "$@"
     fi
 }
 
