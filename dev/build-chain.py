@@ -56,7 +56,7 @@ for i, image in enumerate(chain):
     else:
         tag = f"inseefrlab/onyxia-{chain_name}:dev"
 
-    cmd = ["docker", "build", image, "-t", tag,
+    cmd = ["docker", "build", "--progress=plain", image, "-t", tag,
            "--build-arg", f"BASE_IMAGE={previous_image}",
            "--build-arg", f"DEVICE_SUFFIX={device_suffix}"]
     print(" ".join(cmd))
