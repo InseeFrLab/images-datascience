@@ -41,3 +41,7 @@ commandTests:
     command: "which"
     args: ["jupyter-lab"]
     expectedOutput: ["/usr/local/bin/jupyter-lab|/opt/mamba/bin/jupyter-lab"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["duckdb"]
+    expectedOutput: ["/usr/local/bin/duckdb"]

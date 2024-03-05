@@ -56,3 +56,7 @@ commandTests:
     command: "which"
     args: ["quarto"]
     expectedOutput: ["/usr/local/bin/quarto"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["duckdb"]
+    expectedOutput: ["/usr/local/bin/duckdb"]
