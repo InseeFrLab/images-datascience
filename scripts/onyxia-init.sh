@@ -173,8 +173,8 @@ cat <<EOF > ${HOME}/.duckdbrc
 .prompt '🦆 '
 -- Set s3 context
 CALL load_aws_credentials();
-SET s3_endpoint='$AWS_S3_ENDPOINT';
 EOF
+export DUCKDB_S3_ENDPOINT=$AWS_S3_ENDPOINT
 fi
 
 if [[ -e "$HOME/work" ]]; then
