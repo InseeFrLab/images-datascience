@@ -174,6 +174,9 @@ cat <<EOF > ${HOME}/.duckdbrc
 -- Set s3 context
 CALL load_aws_credentials();
 EOF
+if [[ $S3_URL_STYLE_PATH == 'true' ]] ; then  
+echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
+fi
 export DUCKDB_S3_ENDPOINT=$AWS_S3_ENDPOINT
 fi
 
