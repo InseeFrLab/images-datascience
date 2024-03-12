@@ -16,5 +16,5 @@ dependencies:
   - python-duckdb
   - python-kubernetes
   - requests
-  - s3fs
+  - s3fs >= 2024.2.0
   - wheel
