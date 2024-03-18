@@ -158,7 +158,7 @@ if [[ "$DARK_MODE" == "true" ]]; then
     fi
     if command -v rstudio-server; then
         mkdir -p ${HOME}/.config/rstudio/
-        echo "{\"editor_theme\": \"Dracula\" }" > ${HOME}/.config/rstudio/rstudio-prefs.json
+        echo "{\"editor_theme\": \"Vibrant Ink\" }" > ${HOME}/.config/rstudio/rstudio-prefs.json
     fi
 fi
 
