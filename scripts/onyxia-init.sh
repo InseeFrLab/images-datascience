@@ -157,12 +157,8 @@ if [[ "$DARK_MODE" == "true" ]]; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern" }' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
     fi
     if command -v rstudio-server; then
-        touch ${R_HOME}/etc/Rprofile.site
-        echo "if (Sys.getenv('DARK_MODE')=='true'){
-            setHook('rstudio.sessionInit', function(newSession) {
-            rstudioapi::applyTheme(\"Vibrant Ink\")
-            }, action = 'append')
-        }" >> ${R_HOME}/etc/Rprofile.site
+        mkdir -p ${HOME}/.config/rstudio/
+        echo "{\"editor_theme\": \"Vibrant Ink\" }" > ${HOME}/.config/rstudio/rstudio-prefs.json
     fi
 fi
 
