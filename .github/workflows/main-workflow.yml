@@ -150,7 +150,7 @@ jobs:
       base_image: python-minimal
       python_version_1: 3.11.6
       python_version_2: 3.10.13
-      spark_version: 3.5.0
+      spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -166,7 +166,7 @@ jobs:
       base_image: pyspark
       python_version_1: 3.11.6
       python_version_2: 3.10.13
-      spark_version: 3.5.0
+      spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -182,7 +182,7 @@ jobs:
       base_image: pyspark
       python_version_1: 3.11.6
       python_version_2: 3.10.13
-      spark_version: 3.5.0
+      spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -273,7 +273,7 @@ jobs:
       base_image: r-minimal
       r_version_1: 4.3.2
       r_version_2: 4.2.3
-      spark_version: 3.5.0
+      spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -289,7 +289,7 @@ jobs:
       base_image: sparkr
       r_version_1: 4.3.2
       r_version_2: 4.2.3
-      spark_version: 3.5.0
+      spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
