@@ -23,37 +23,45 @@ fi
 
 if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
 
-    JSON=$(wget -qO- \
-        --header="X-Vault-Token: $VAULT_TOKEN" \
-        $VAULT_ADDR/v1/$VAULT_MOUNT/data/$VAULT_TOP_DIR/$VAULT_RELATIVE_PATH )
-
-    KEYS=""
-
-    if [ "$(jq -r '.data.data.".onyxia"' <<< "$JSON")" == "null" ]
-    then
-        KEYS=$(jq -r '.data.data | keys | .[]' <<< "$JSON")
-    else
-        KEYS=$(jq -r '.data.data.".onyxia".keysOrdering | .[]' <<< "$JSON")
+    if [[ "$VAULT_INJECTION_SA_ENABLED" = "true" && "$VAULT_INJECTION_SA_MODE" = "jwt" ]]; then
+        echo "using service account injection jwt to get vault token"
+        VAULT_TOKEN=$(vault write -field="token" auth/$VAULT_INJECTION_SA_AUTH_PATH/login role=$VAULT_INJECTION_SA_AUTH_ROLE jwt=@/var/run/secrets/kubernetes.io/serviceaccount/token)
     fi
 
-    for i in $KEYS; 
-    do 
-        echo $i
-        export "$i=$(eval echo $(jq -r ".data.data.$i" <<< "$JSON"))"
-        if [[ $SUDO -eq 0 ]]; then
-            echo "sudo alternative"
-            sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> /etc/environment"
-            if [[ -e "${R_HOME}/etc/" ]]; then
-                sudo sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> ${R_HOME}/etc/Renviron.site"
-            fi
+    # If a token is available (either personal Token injected by Onyxia UI, or SA token
+    # obtained in the previous paragraph), proceed to read secrets and export them as envvars
+    if  [[ -n "$VAULT_TOKEN" ]]; then
+        JSON=$(wget -qO- \
+            --header="X-Vault-Token: $VAULT_TOKEN" \
+            $VAULT_ADDR/v1/$VAULT_MOUNT/data/$VAULT_TOP_DIR/$VAULT_RELATIVE_PATH )
+
+        KEYS=""
+
+        if [ "$(jq -r '.data.data.".onyxia"' <<< "$JSON")" == "null" ]
+        then
+            KEYS=$(jq -r '.data.data | keys | .[]' <<< "$JSON")
         else
-            echo "not sudo alternative"
-            sh -c "echo export $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> ~/.bashrc"
-            if [[ -e "${R_HOME}/etc/" ]]; then
-                sh -c "echo $i=\"`jq -r \".data.data.$i\" <<< \"$JSON\"`\" >> ${R_HOME}/etc/Renviron.site"
-            fi
+            KEYS=$(jq -r '.data.data.".onyxia".keysOrdering | .[]' <<< "$JSON")
         fi
-    done
+
+        for i in $KEYS; 
+        do 
+            echo $i
+            value=$(jq -r .data.data.$i <<< $JSON)
+            export $i="${value}"
+            if [[ $SUDO -eq 0 ]]; then
+                sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> /etc/environment"
+                if command -v R; then
+                    sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
+                fi
+            else
+                sh -c "printf 'export %s=\"%s\"\n' $i \"$value\" >> ~/.bashrc"
+                if command -v R; then
+                    sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
+                fi
+            fi
+        done
+    fi
 fi
 
 if [  "`which kubectl`" != "" ]; then
