@@ -28,8 +28,8 @@ jobs:
       context: python-minimal
       test: true
       base_image: base
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -43,8 +43,8 @@ jobs:
       context: python-datascience
       test: true
       base_image: python-minimal
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -58,8 +58,8 @@ jobs:
       context: python-pytorch
       test: true
       base_image: python-minimal
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -73,8 +73,8 @@ jobs:
       context: python-tensorflow
       test: true
       base_image: python-minimal
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -118,8 +118,8 @@ jobs:
       context: jupyter
       test: true
       base_image: python-datascience
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -133,8 +133,8 @@ jobs:
       context: vscode
       test: true
       base_image: python-datascience
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -148,8 +148,8 @@ jobs:
       context: spark
       test: true
       base_image: python-minimal
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
@@ -164,8 +164,8 @@ jobs:
       context: jupyter
       test: true
       base_image: pyspark
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
@@ -180,8 +180,8 @@ jobs:
       context: vscode
       test: true
       base_image: pyspark
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
@@ -196,8 +196,8 @@ jobs:
       context: jupyter
       test: true
       base_image: python-pytorch
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -211,8 +211,8 @@ jobs:
       context: vscode
       test: true
       base_image: python-pytorch
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -226,8 +226,8 @@ jobs:
       context: jupyter
       test: true
       base_image: python-tensorflow
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -241,8 +241,8 @@ jobs:
       context: vscode
       test: true
       base_image: python-tensorflow
-      python_version_1: 3.11.6
-      python_version_2: 3.10.13
+      python_version_1: 3.12.2
+      python_version_2: 3.11.8
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
