@@ -17,5 +17,8 @@
         "!r",
         "!json",
         "!yaml"
-    ]
+    ],
+    "[latex]":  {
+		"editor.wordWrap": "on",
+	}
 }
