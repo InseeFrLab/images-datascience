@@ -23,7 +23,6 @@ RUN code-server --install-extension ms-toolsai.jupyter && \
     code-server --install-extension njpwerner.autodocstring && \
     code-server --install-extension redhat.vscode-yaml && \
     code-server --install-extension mhutchie.git-graph && \
-    code-server --install-extension GordonSmith.observable-js && \
     code-server --install-extension rangav.vscode-thunder-client && \
     code-server --install-extension hediet.vscode-drawio && \
     code-server --install-extension streetsidesoftware.code-spell-checker && \
