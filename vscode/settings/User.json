@@ -19,6 +19,6 @@
         "!yaml"
     ],
     "[latex]":  {
-		"editor.wordWrap": "on",
+		"editor.wordWrap": "on"
 	}
 }
