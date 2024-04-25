@@ -17,8 +17,9 @@ COPY requirements.txt .
 RUN /opt/install-julia.sh && \
     # Install common Python packages
     pip3 install -r requirements.txt && \
-    # Install reticulate to use Python in R
+    # Install and configure reticulate to use Python in R
     install2.r --error reticulate && \
+    R -q -e 'reticulate::py_discover_config(required_module = NULL, use_environment = NULL)' && \
     # Install quarto
     /opt/install-quarto.sh && \
     # Clean
