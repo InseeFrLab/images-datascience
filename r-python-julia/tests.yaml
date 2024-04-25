@@ -42,8 +42,8 @@ commandTests:
     expectedOutput: ["/usr/local/bin/R"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["python"]
-    expectedOutput: ["/usr/local/bin/python"]
+    args: ["python3"]
+    expectedOutput: ["/usr/bin/python3"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["julia"]

@@ -4,7 +4,7 @@ FROM $BASE_IMAGE
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 ENV JULIA_DIR="/opt/julia"
-ENV PATH="${JULIA_DIR}/bin:${PATH}"
+ENV PATH="${HOME}/.local/bin:${JULIA_DIR}/bin:${PATH}"
 
 # Python config for the `reticulate` package
 ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
@@ -14,11 +14,11 @@ USER root
 
 COPY requirements.txt .
 
-RUN wget -O - https://raw.githubusercontent.com/rocker-org/rocker-versioned2/R${R_VERSION}/scripts/install_python.sh | bash && \
-    # Install base Python packages
+RUN /opt/install-julia.sh && \
+    # Install common Python packages
     pip3 install -r requirements.txt && \
-    # Install Julia
-    /opt/install-julia.sh && \
+    # Install reticulate to use Python in R
+    install2.r --error reticulate && \
     # Install quarto
     /opt/install-quarto.sh && \
     # Clean
