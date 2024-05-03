@@ -4,7 +4,7 @@ FROM $BASE_IMAGE
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 # R Config
-ARG R_VERSION="4.3.3"
+ARG R_VERSION="4.4.0"
 ENV R_VERSION=${R_VERSION}
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER="${USERNAME}"
