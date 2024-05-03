@@ -3,7 +3,7 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-ARG PYTHON_VERSION="3.12.2"
+ARG PYTHON_VERSION="3.12.3"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 ENV MAMBA_DIR="/opt/mamba"
