@@ -88,8 +88,8 @@ jobs:
       context: r-minimal
       test: true
       base_image: base
-      r_version_1: 4.3.3
-      r_version_2: 4.2.3
+      r_version_1: 4.4.0
+      r_version_2: 4.3.3
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -103,8 +103,8 @@ jobs:
       context: r-datascience
       test: true
       base_image: r-minimal
-      r_version_1: 4.3.3
-      r_version_2: 4.2.3
+      r_version_1: 4.4.0
+      r_version_2: 4.3.3
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -256,8 +256,8 @@ jobs:
       context: rstudio
       test: true
       base_image: r-datascience
-      r_version_1: 4.3.3
-      r_version_2: 4.2.3
+      r_version_1: 4.4.0
+      r_version_2: 4.3.3
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -271,8 +271,8 @@ jobs:
       context: spark
       test: true
       base_image: r-minimal
-      r_version_1: 4.3.3
-      r_version_2: 4.2.3
+      r_version_1: 4.4.0
+      r_version_2: 4.3.3
       spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
@@ -287,8 +287,8 @@ jobs:
       context: rstudio
       test: true
       base_image: sparkr
-      r_version_1: 4.3.3
-      r_version_2: 4.2.3
+      r_version_1: 4.4.0
+      r_version_2: 4.3.3
       spark_version: 3.5.1
       branch: ${{ github.ref }}
     secrets:
@@ -303,8 +303,8 @@ jobs:
       context: jupyter
       test: true
       base_image: r-datascience
-      r_version_1: 4.3.3
-      r_version_2: 4.2.3
+      r_version_1: 4.4.0
+      r_version_2: 4.3.3
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -318,7 +318,7 @@ jobs:
       context: r-python-julia
       test: true
       base_image: r-minimal
-      r_version_1: 4.3.3
+      r_version_1: 4.4.0
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -332,7 +332,7 @@ jobs:
       context: vscode
       test: true
       base_image: r-python-julia
-      r_version_1: 4.3.3
+      r_version_1: 4.4.0
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -346,8 +346,8 @@ jobs:
       test: true
       context: vscode
       base_image: r-datascience
-      r_version_1: 4.3.3
-      r_version_2: 4.2.3
+      r_version_1: 4.4.0
+      r_version_2: 4.3.3
       branch: ${{ github.ref }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
