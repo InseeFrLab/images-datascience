@@ -162,11 +162,10 @@ if [[ "$DARK_MODE" == "true" ]]; then
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${MAMBA_DIR}/share/jupyter/lab/settings/overrides.json;
     fi 
     if command -v code-server; then
-        jq '. + {"workbench.colorTheme": "Default Dark Modern" }' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
+        jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
     fi
     if command -v rstudio-server; then
-        mkdir -p ${HOME}/.config/rstudio/
-        echo "{\"editor_theme\": \"Vibrant Ink\" }" > ${HOME}/.config/rstudio/rstudio-prefs.json
+        jq '. + {"editor_theme": "Vibrant Ink"}' ${HOME}/.config/rstudio/rstudio-prefs.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.config/rstudio/rstudio-prefs.json
     fi
 fi
 
