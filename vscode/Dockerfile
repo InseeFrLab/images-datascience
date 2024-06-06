@@ -25,6 +25,7 @@ RUN code-server --install-extension ms-toolsai.jupyter && \
     code-server --install-extension mhutchie.git-graph && \
     code-server --install-extension rangav.vscode-thunder-client && \
     code-server --install-extension hediet.vscode-drawio && \
+    code-server --install-extension pomdtr.excalidraw-editor && \
     code-server --install-extension streetsidesoftware.code-spell-checker && \
     code-server --install-extension streetsidesoftware.code-spell-checker-french && \
     # Language specific VSCode extensions and config
