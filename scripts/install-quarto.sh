@@ -9,4 +9,4 @@ quarto check install
 rm quarto.deb
 
 # Install TinyTeX to enable rendering PDF documents via quarto
-quarto install tinytex --update-path 1> /dev/null
+quarto install tinytex --update-path --quiet
