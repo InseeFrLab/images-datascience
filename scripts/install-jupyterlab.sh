@@ -10,8 +10,8 @@ function apt_install() {
     fi
 }
 
-if command -v mamba ; then
-    mamba install -y jupyterlab
+if command -v conda ; then
+    conda install -y jupyterlab
 else
     if [ "`which pip3`" = "" ]; then
         apt_install python3-pip

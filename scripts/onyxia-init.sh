@@ -158,8 +158,8 @@ fi
 
 if [[ "$DARK_MODE" == "true" ]]; then 
     if command -v jupyter-lab; then
-        mkdir ${MAMBA_DIR}/share/jupyter/lab/settings
-        echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${MAMBA_DIR}/share/jupyter/lab/settings/overrides.json;
+        mkdir ${CONDA_DIR}/share/jupyter/lab/settings
+        echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${CONDA_DIR}/share/jupyter/lab/settings/overrides.json;
     fi 
     if command -v code-server; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json

@@ -6,31 +6,29 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ARG PYTHON_VERSION="3.12.4"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
-ENV MAMBA_DIR="/opt/mamba"
-ENV PATH="${MAMBA_DIR}/bin:${PATH}"
+ENV CONDA_DIR="/opt/conda"
+ENV PATH="${CONDA_DIR}/bin:${PATH}"
 
 USER root
 
 COPY conda-env.yml .
 
-RUN wget -q "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh" -O miniforge.sh && \
-    # Install mambaforge latest version
-    /bin/bash miniforge.sh -b -p "${MAMBA_DIR}" && \
+RUN /opt/install-conda.sh && \
     # Set specified Python version in base Conda env
-    mamba install python=="${PYTHON_VERSION}" && \
+    conda install python=="${PYTHON_VERSION}" && \
     # Pin Python version to prevent Conda from upgrading it
-    touch ${MAMBA_DIR}/conda-meta/pinned && \
-    echo "python==${PYTHON_VERSION}" >> ${MAMBA_DIR}/conda-meta/pinned && \
+    touch ${CONDA_DIR}/conda-meta/pinned && \
+    echo "python==${PYTHON_VERSION}" >> ${CONDA_DIR}/conda-meta/pinned && \
     # Install essential Python packages
-    mamba env update -n base -f conda-env.yml && \
+    conda env update -n base -f conda-env.yml && \
     # Install duckdb extensions
-    mamba run -n base python /opt/install-duckdb-extensions.py && \
+    conda run -n base python /opt/install-duckdb-extensions.py && \
     # Activate custom Conda env by default in shell
-    echo ". ${MAMBA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc && \
+    echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
     # Clean
-    rm miniforge.sh conda-env.yml && \ 
+    rm conda-env.yml && \ 
     conda clean --all -f -y && \
     rm -rf /var/lib/apt/lists/*
 

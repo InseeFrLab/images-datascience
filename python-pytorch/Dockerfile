@@ -13,7 +13,7 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
     fi && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${MAMBA_DIR} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
     # Clean
     conda clean --all -f -y && \
     rm -rf /var/lib/apt/lists/*
