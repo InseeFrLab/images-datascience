@@ -18,7 +18,7 @@ if [  "`which conda`" != "" ]; then
         echo "configuration conda (add channels)"
         conda config --add channels $CONDA_REPOSITORY
         conda config --remove channels conda-forge
-        conda config --remove channels conda-forge --file /opt/mamba/.condarc
+        conda config --remove channels conda-forge --file /opt/conda/.condarc
     fi
 
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then

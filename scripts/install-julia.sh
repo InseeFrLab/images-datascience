@@ -25,9 +25,9 @@ tar xzf julia.tar.gz -C "${JULIA_DIR}" --strip-components=1
 rm julia.tar.gz
 
 # Show Julia where conda libraries are
-if command -v mamba ; then \
+if command -v conda ; then \
     mkdir /etc/julia && \
-    echo "push!(Libdl.DL_LOAD_PATH, \"${MAMBA_DIR}/lib\")" >> /etc/julia/juliarc.jl; \
+    echo "push!(Libdl.DL_LOAD_PATH, \"${CONDA_DIR}/lib\")" >> /etc/julia/juliarc.jl; \
 fi
 
 # Update and install basic Julia packages
