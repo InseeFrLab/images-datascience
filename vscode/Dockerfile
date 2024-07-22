@@ -21,6 +21,7 @@ RUN code-server --install-extension ms-toolsai.jupyter && \
     code-server --install-extension ms-kubernetes-tools.vscode-kubernetes-tools && \
     code-server --install-extension ms-azuretools.vscode-docker && \
     code-server --install-extension njpwerner.autodocstring && \
+    code-server --install-extension oderwat.indent-rainbow && \
     code-server --install-extension mhutchie.git-graph && \
     code-server --install-extension rangav.vscode-thunder-client && \
     code-server --install-extension hediet.vscode-drawio && \
