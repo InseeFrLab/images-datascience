@@ -3,8 +3,6 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-ARG JULIA_VERSION="1.8.5"
-ENV JULIA_VERSION=${JULIA_VERSION}
 ENV JULIA_DIR="/opt/julia"
 ENV PATH="${JULIA_DIR}/bin:${PATH}"
 
