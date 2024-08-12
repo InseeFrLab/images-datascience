@@ -3,22 +3,18 @@ channels:
 
 dependencies:
   - beautifulsoup4
-  - bokeh
-  - dask
   - gensim
   - geopandas
-  - jupyter-cache
   - matplotlib-base
   - mlflow
   - nltk
-  - numba
   - numpy
   - pandas
   - plotly
   - polars
-  - requests
   - seaborn
   - scikit-learn
   - scipy
+  - spacy
   - statsmodels
   - xgboost

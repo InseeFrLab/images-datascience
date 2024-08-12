@@ -3,18 +3,10 @@ channels:
 
 dependencies:
   - boto3
-  - flake8
-  - hvac
   - ipykernel
-  - ipywidgets
-  - mypy
-  - nbclient
-  - nbformat
   - pip
   - pyarrow
-  - pylint
   - python-duckdb
-  - python-kubernetes
   - requests
   - s3fs
   - wheel
