@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-JULIA_VERSION="1.10.4"
-
 ARCH=$(uname -m)
 
 case $ARCH in
@@ -17,9 +15,11 @@ case $ARCH in
         exit 1
         ;;
 esac
+
 # Install Julia
-julia_major_minor=$(echo "${JULIA_VERSION}" | cut -d. -f 1,2)
-wget -q "https://julialang-s3.julialang.org/bin/linux/${ARCHITECTURE}/${julia_major_minor}/julia-${JULIA_VERSION}-linux-${ARCH}.tar.gz" -O julia.tar.gz
+JULIA_LATEST_VERSION=$(curl --silent "https://api.github.com/repos/JuliaLang/julia/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' | sed 's/^v//')
+julia_major_minor=$(echo "${JULIA_LATEST_VERSION}" | cut -d. -f 1,2)
+wget -q "https://julialang-s3.julialang.org/bin/linux/${ARCHITECTURE}/${julia_major_minor}/julia-${JULIA_LATEST_VERSION}-linux-${ARCH}.tar.gz" -O julia.tar.gz
 mkdir "${JULIA_DIR}"
 tar xzf julia.tar.gz -C "${JULIA_DIR}" --strip-components=1
 rm julia.tar.gz
