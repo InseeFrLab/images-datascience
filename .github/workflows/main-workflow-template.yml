@@ -1,8 +1,7 @@
-name: Template to build and push Docker images
+name: Template for each build job
 
 env:
-  OWNER: ${{ github.repository_owner }}
-  BRANCH: ${{ github.ref }}
+  DOCKERHUB_ORGANIZATION: ${{ github.repository_owner }}
 
 on:
   workflow_call:
@@ -55,6 +54,7 @@ on:
         type: string
 
 jobs:
+
   matrix_prep:
     runs-on: ubuntu-latest
     outputs:
@@ -63,7 +63,7 @@ jobs:
     - name: Check out code 
       uses: actions/checkout@v4
       with:
-        ref: ${{ env.BRANCH }}
+        ref: ${{ github.ref }}
     - id: set-matrix
       run: |
         base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
@@ -78,6 +78,7 @@ jobs:
         matrix=$(cat ./releases/${{ inputs.image }}.json | jq .)
         echo $matrix
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+
   docker:
     runs-on: ubuntu-latest
     needs: matrix_prep
@@ -86,10 +87,11 @@ jobs:
       matrix: 
         ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
+
       - name: Check out code 
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.BRANCH }}
+          ref: ${{ github.ref }}
 
       - name: Pass scripts to base image at build time
         # Just to put the `scripts` folder at the root of the project
@@ -110,8 +112,8 @@ jobs:
         id: generate-image-names
         run: |
           # General parameters to build image names
-          owner=${{ env.OWNER }}
-          owner=$(echo "$owner" | awk '{print tolower($0)}')
+          dh_orga=${{ env.DOCKERHUB_ORGANIZATION }}
+          dh_orga=$(echo "$dh_orga" | awk '{print tolower($0)}')
           date=$(date +%Y.%m.%d)
           if [ -n "${{ matrix.gpu }}" ]; then
               DEVICE_SUFFIX=-gpu
@@ -131,9 +133,9 @@ jobs:
             base_image_final="${image_name}:${tag}"
           else
             # Base image is internal (custom built) : add organization and prefix
-            owner=${{ env.OWNER }}
-            owner=$(echo "$owner" | awk '{print tolower($0)}')
-            base_image_final="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
+            dh_orga=${{ env.DOCKERHUB_ORGANIZATION }}
+            dh_orga=$(echo "$dh_orga" | awk '{print tolower($0)}')
+            base_image_final="${dh_orga}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
           fi
 
           # Compute output image name  
@@ -145,7 +147,7 @@ jobs:
             image_name=$(echo $output_image | awk -F ':' '{print $1}' )
             tag=$(echo $output_image | awk -F ':' '{print $2}' )
           fi
-          output_image_final="$owner/${{ inputs.prefix}}-$image_name:${tag}${DEVICE_SUFFIX}"
+          output_image_final="$dh_orga/${{ inputs.prefix}}-$image_name:${tag}${DEVICE_SUFFIX}"
           output_image_final_with_date="$output_image_final-$date"
           output_tags=$output_image_final,$output_image_final_with_date
 
