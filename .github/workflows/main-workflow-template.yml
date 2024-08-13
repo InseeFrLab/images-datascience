@@ -54,7 +54,6 @@ on:
         type: string
 
 jobs:
-
   matrix_prep:
     runs-on: ubuntu-latest
     outputs:
@@ -62,8 +61,7 @@ jobs:
     steps:
     - name: Check out code 
       uses: actions/checkout@v4
-      with:
-        ref: ${{ github.ref }}
+
     - id: set-matrix
       run: |
         base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
@@ -87,11 +85,8 @@ jobs:
       matrix: 
         ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
-
       - name: Check out code 
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
 
       - name: Pass scripts to base image at build time
         # Just to put the `scripts` folder at the root of the project
