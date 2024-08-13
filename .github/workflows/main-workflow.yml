@@ -11,345 +11,160 @@ jobs:
     with:
       image: base
       context: base
-      test: true
       base_image: ubuntu:22.04
       base_image_gpu: nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
-      external_base_image: true
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      initial_build_step: true
   python-minimal:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-minimal
       context: python-minimal
-      test: true
       base_image: base
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   python-datascience:
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-datascience
       context: python-datascience
-      test: true
       base_image: python-minimal
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   python-pytorch:
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-pytorch
       context: python-pytorch
-      test: true
       base_image: python-minimal
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   python-tensorflow:
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: python-tensorflow
       context: python-tensorflow
-      test: true
       base_image: python-minimal
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   r-minimal:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r-minimal
       context: r-minimal
-      test: true
       base_image: base
-      r_version_1: 4.4.1
-      r_version_2: 4.3.3
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   r-datascience:
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r-datascience
       context: r-datascience
-      test: true
       base_image: r-minimal
-      r_version_1: 4.4.1
-      r_version_2: 4.3.3
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   jupyter-python:
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-python
       context: jupyter
-      test: true
       base_image: python-datascience
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   vscode-python:
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-python
       context: vscode
-      test: true
       base_image: python-datascience
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   pyspark:
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: pyspark
       context: spark
-      test: true
       base_image: python-minimal
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      spark_version: 3.5.1
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   jupyter-pyspark:
     needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pyspark
       context: jupyter
-      test: true
       base_image: pyspark
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      spark_version: 3.5.1
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   vscode-pyspark:
     needs: [pyspark]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-pyspark
       context: vscode
-      test: true
       base_image: pyspark
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      spark_version: 3.5.1
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   jupyter-pytorch:
     needs: [python-pytorch]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-pytorch
       context: jupyter
-      test: true
       base_image: python-pytorch
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   vscode-pytorch:
     needs: [python-pytorch]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-pytorch
       context: vscode
-      test: true
       base_image: python-pytorch
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   jupyter-tensorflow:
     needs: [python-tensorflow]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-tensorflow
       context: jupyter
-      test: true
       base_image: python-tensorflow
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   vscode-tensorflow:
     needs: [python-tensorflow]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-tensorflow
       context: vscode
-      test: true
       base_image: python-tensorflow
-      python_version_1: 3.12.5
-      python_version_2: 3.11.9
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   rstudio:
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio
       context: rstudio
-      test: true
       base_image: r-datascience
-      r_version_1: 4.4.1
-      r_version_2: 4.3.3
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   sparkr:
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: sparkr
       context: spark
-      test: true
       base_image: r-minimal
-      r_version_1: 4.4.1
-      r_version_2: 4.3.3
-      spark_version: 3.5.1
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   rstudio-sparkr:
     needs: [sparkr]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: rstudio-sparkr
       context: rstudio
-      test: true
       base_image: sparkr
-      r_version_1: 4.4.1
-      r_version_2: 4.3.3
-      spark_version: 3.5.1
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   jupyter-r:
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: jupyter-r
       context: jupyter
-      test: true
       base_image: r-datascience
-      r_version_1: 4.4.1
-      r_version_2: 4.3.3
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   r-python-julia:
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r-python-julia
       context: r-python-julia
-      test: true
       base_image: r-minimal
-      r_version_1: 4.4.1
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   vscode-r-python-julia:
     needs: [r-python-julia]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-r-python-julia
       context: vscode
-      test: true
       base_image: r-python-julia
-      r_version_1: 4.4.1
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   vscode-r:
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: vscode-r
-      test: true
       context: vscode
       base_image: r-datascience
-      r_version_1: 4.4.1
-      r_version_2: 4.3.3
-      branch: ${{ github.ref }}
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
