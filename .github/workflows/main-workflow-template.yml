@@ -2,70 +2,57 @@ name: Template to build and push Docker images
 
 env:
   OWNER: ${{ github.repository_owner }}
+  BRANCH: ${{ github.ref }}
 
 on:
   workflow_call:
     inputs:
-      test:
-        description: should test
-        required: false
-        type: string
-      image:
-        description: name of docker image
-        required: false
-        type: string
       prefix:
-        description: prefix for docker images
+        description: Prefix for docker images
         required: false
         type: string
         default: 'onyxia'
-      context:
-        description: context of docker image
+      first_build_step:
+        description: Is this the first step of the build pipeline ?
         required: false
+        type: boolean
+        default: false
+      image:
+        description: Final release name
+        required: true
+        type: string
+      context:
+        description: Build context
+        required: true
         type: string
       base_image:
-        description: context of docker image
+        description: Name of the base image
         required: true
         type: string
       base_image_gpu:
-        description: context of docker image
+        description: Name of the GPU base image
         required: false
         type: string
-      external_base_image:
-        description: is base image from another organization
-        required: false
-        type: boolean
       python_version_1:
-        description: context of docker image
+        description: First version of Python (latest)
         required: false
         type: string
       python_version_2:
-        description: context of docker image
+        description: Second version of Python
         required: false
         type: string
       r_version_1:
-        description: context of docker image
+        description: First version of R (latest)
         required: false
         type: string
       r_version_2:
-        description: context of docker image
+        description: Second version of R
         required: false
         type: string
       spark_version:
-        description: context of docker image
+        description: Version of Spark
         required: false
         type: string
-      branch:
-        description: branch that triggered the workflow
-        required: false
-        type: string
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: false
-      DOCKERHUB_TOKEN:
-        required: false
-      GITHUB_PAT:
-        required: false
 
 jobs:
   matrix_prep:
@@ -76,7 +63,7 @@ jobs:
     - name: Check out code 
       uses: actions/checkout@v4
       with:
-        ref: ${{ inputs.branch }}
+        ref: ${{ env.BRANCH }}
     - id: set-matrix
       run: |
         base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
@@ -102,7 +89,7 @@ jobs:
       - name: Check out code 
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.branch }}
+          ref: ${{ env.BRANCH }}
 
       - name: Pass scripts to base image at build time
         # Just to put the `scripts` folder at the root of the project
@@ -139,11 +126,11 @@ jobs:
             image_name=$(echo $base_image | awk -F ':' '{print $1}' )
             tag=$(echo $base_image | awk -F ':' '{print $2}' )
           fi
-          if [[ "${{ inputs.external_base_image }}" = true ]]; then
-            # If external (ubuntu or nvidia) : as is
+          if [[ "${{ inputs.first_build_step }}" = true ]]; then
+            # First build step : base image is external (ubuntu or nvidia)
             base_image_final="${image_name}:${tag}"
           else
-            # If internal (custom built) : add inseefrlab/onyxia-*
+            # Base image is internal (custom built) : add organization and prefix
             owner=${{ env.OWNER }}
             owner=$(echo "$owner" | awk '{print tolower($0)}')
             base_image_final="${owner}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
