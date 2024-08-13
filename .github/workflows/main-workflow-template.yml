@@ -2,15 +2,11 @@ name: Template for each build job
 
 env:
   DOCKERHUB_ORGANIZATION: ${{ github.repository_owner }}
+  IMAGE_PREFIX: 'onyxia'
 
 on:
   workflow_call:
     inputs:
-      prefix:
-        description: Prefix for docker images
-        required: false
-        type: string
-        default: 'onyxia'
       first_build_step:
         description: Is this the first step of the build pipeline ?
         required: false
@@ -111,7 +107,7 @@ jobs:
           dh_orga=$(echo "$dh_orga" | awk '{print tolower($0)}')
           date=$(date +%Y.%m.%d)
           if [ -n "${{ matrix.gpu }}" ]; then
-              DEVICE_SUFFIX=-gpu
+              TAG_SUFFIX=-gpu
           fi
 
           # Compute input image name
@@ -130,7 +126,7 @@ jobs:
             # Base image is internal (custom built) : add organization and prefix
             dh_orga=${{ env.DOCKERHUB_ORGANIZATION }}
             dh_orga=$(echo "$dh_orga" | awk '{print tolower($0)}')
-            base_image_final="${dh_orga}/${{ inputs.prefix }}-${image_name}:${tag}${DEVICE_SUFFIX}"
+            base_image_final="${dh_orga}/${{ env.IMAGE_PREFIX }}-${image_name}:${tag}${TAG_SUFFIX}"
           fi
 
           # Compute output image name  
@@ -142,7 +138,7 @@ jobs:
             image_name=$(echo $output_image | awk -F ':' '{print $1}' )
             tag=$(echo $output_image | awk -F ':' '{print $2}' )
           fi
-          output_image_final="$dh_orga/${{ inputs.prefix}}-$image_name:${tag}${DEVICE_SUFFIX}"
+          output_image_final="$dh_orga/${{ env.IMAGE_PREFIX}}-$image_name:${tag}${TAG_SUFFIX}"
           output_image_final_with_date="$output_image_final-$date"
           output_tags=$output_image_final,$output_image_final_with_date
 
