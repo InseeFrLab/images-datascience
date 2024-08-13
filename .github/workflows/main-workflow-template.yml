@@ -94,7 +94,7 @@ jobs:
 
           # Function to compute image name from json release files
           compute_image_name() {
-          local image_value="$1"
+          local image="$1"
           if [[ "$image" == *"-delim-"* ]]; then
             # Images that have tags based on versions
             image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
@@ -103,8 +103,8 @@ jobs:
             # onyxia-base
             image_name=$(echo $image | awk -F ':' '{print $1}' )
             tag=$(echo $image | awk -F ':' '{print $2}' )
-          echo "${image_name}:${tag}"
           fi
+          echo "${image_name}:${tag}"
           }
 
           # Compute input image name
