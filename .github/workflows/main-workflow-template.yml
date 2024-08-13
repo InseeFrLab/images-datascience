@@ -16,6 +16,14 @@ on:
         description: Build context
         required: true
         type: string
+      base_image:
+        description: Name of the base image
+        required: true
+        type: string
+      base_image_gpu:
+        description: Name of the GPU base image
+        required: false
+        type: string
 
 jobs:
   matrix_prep:
