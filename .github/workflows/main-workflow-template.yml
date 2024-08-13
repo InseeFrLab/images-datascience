@@ -1,5 +1,7 @@
 name: Template for each build job
 
+# It would make more sense to define this in the `main-workflow.yml`, but it's not possible yet
+# See : https://github.com/orgs/community/discussions/23107
 env:
   python_version_1: 3.12.5
   python_version_2: 3.11.9
