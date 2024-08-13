@@ -12,22 +12,42 @@
       "extractVersionTemplate": "^R(?<version>.*)$"
     },
     {
+      "fileMatch": [".github/workflows/main-workflow-template.yml"],
+      "matchStrings": ["r_version_1: (?<currentValue>.*?)"],
+      "depNameTemplate": "rocker-org/rocker-versioned2",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^R(?<version>.*)$"
+    },
+    {
       "fileMatch": ["python-minimal/Dockerfile"],
       "matchStrings": ["ARG PYTHON_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "conda-forge/python",
       "datasourceTemplate": "conda"
     },
     {
-      "fileMatch": ["scripts/install-julia.sh"],
-      "matchStrings": ["JULIA_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "JuliaLang/julia",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
+      "fileMatch": [".github/workflows/main-workflow-template.yml"],
+      "matchStrings": ["python_version_1: (?<currentValue>.*?)"],
+      "depNameTemplate": "conda-forge/python",
+      "datasourceTemplate": "conda"
     },
     {
       "fileMatch": ["spark/Dockerfile"],
       "matchStrings": ["ARG SPARK_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "apache/spark",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "fileMatch": [".github/workflows/main-workflow-template.yml"],
+      "matchStrings": ["spark_version: (?<currentValue>.*?)"],
+      "depNameTemplate": "apache/spark",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["scripts/install-julia.sh"],
+      "matchStrings": ["JULIA_VERSION=\"(?<currentValue>.*?)\""],
+      "depNameTemplate": "JuliaLang/julia",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
     }
