@@ -45,8 +45,8 @@ jobs:
 
     - id: set-matrix
       run: |
-        base_image_escaped=$(echo ${{env.base_image}} | sed 's/\//\\\//g' )
-        base_image_gpu_escaped=$(echo ${{env.base_image_gpu}} | sed 's/\//\\\//g' )
+        base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
+        base_image_gpu_escaped=$(echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g' )
         sed -i "s/:base_image_gpu/$base_image_gpu_escaped/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:base_image/$base_image_escaped/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:python_version_1/${{env.python_version_1}}/g" ./releases/${{ inputs.image }}.json
@@ -151,7 +151,7 @@ jobs:
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
           secrets: |
-            "github_token=${{ secrets.GITHUB_PAT }}"
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
 
       - name: Test image using Google's Container Structure Test
         if: ${{ matrix.gpu != 'true' }}
@@ -180,4 +180,4 @@ jobs:
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
           secrets: |
-            "github_token=${{ secrets.GITHUB_PAT }}"
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
