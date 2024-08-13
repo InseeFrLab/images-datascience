@@ -14,11 +14,6 @@ env:
 on:
   workflow_call:
     inputs:
-      initial_build_step:
-        description: Is this the first step of the build pipeline ?
-        required: false
-        type: boolean
-        default: false
       image:
         description: Final release name
         required: true
@@ -97,35 +92,36 @@ jobs:
               TAG_SUFFIX=-gpu
           fi
 
+          # Function to compute image name from json release files
+          compute_image_name() {
+          local image_value="$1"
+          if [[ "$image" == *"-delim-"* ]]; then
+            # Images that have tags based on versions
+            image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
+            tag=$(echo $image | awk -F '-delim-' '{print $2}' )
+          else
+            # onyxia-base
+            image_name=$(echo $image | awk -F ':' '{print $1}' )
+            tag=$(echo $image | awk -F ':' '{print $2}' )
+          echo "${image_name}:${tag}"
+          fi
+          }
+
           # Compute input image name
           base_image=${{ matrix.base_image }}
-          if [[ "$base_image" == *"-delim-"* ]]; then
-            image_name=$(echo $base_image | awk -F '-delim-' '{print $1}' )
-            tag=$(echo $base_image | awk -F '-delim-' '{print $2}' )
+          if [[ "$base_image" == *"ubuntu"* ]]; then
+            # Base image is external (ubuntu or nvidia) -> no change to do
+            base_image_final=$base_image
           else
-            image_name=$(echo $base_image | awk -F ':' '{print $1}' )
-            tag=$(echo $base_image | awk -F ':' '{print $2}' )
-          fi
-          if [[ "${{ inputs.initial_build_step }}" = true ]]; then
-            # Initial build step : base image is external (ubuntu or nvidia)
-            base_image_final="${image_name}:${tag}"
-          else
-            # Subsequent steps : base image is internal -> add organization and prefix
-            dh_orga=${{ env.DOCKERHUB_ORGANIZATION }}
-            dh_orga=$(echo "$dh_orga" | awk '{print tolower($0)}')
-            base_image_final="${dh_orga}/${{ env.IMAGE_PREFIX }}-${image_name}:${tag}${TAG_SUFFIX}"
+            # Base image is internal -> compute relevant name
+            base_image_computed=$(compute_image_name $base_image)
+            base_image_final="${dh_orga}/${{ env.IMAGE_PREFIX }}-${base_image_computed}${TAG_SUFFIX}"
           fi
 
-          # Compute output image name  
+          # Compute output image name
           output_image=${{ matrix.output_image }}
-          if [[ "$output_image" == *"-delim-"* ]]; then
-            image_name=$(echo $output_image | awk -F '-delim-' '{print $1}' )
-            tag=$(echo $output_image | awk -F '-delim-' '{print $2}' )
-          else
-            image_name=$(echo $output_image | awk -F ':' '{print $1}' )
-            tag=$(echo $output_image | awk -F ':' '{print $2}' )
-          fi
-          output_image_final="$dh_orga/${{ env.IMAGE_PREFIX}}-$image_name:${tag}${TAG_SUFFIX}"
+          output_image_computed=$(compute_image_name $output_image)
+          output_image_final="$dh_orga/${{ env.IMAGE_PREFIX}}-${output_image_computed}${TAG_SUFFIX}"
           output_image_final_with_date="$output_image_final-$date"
           output_tags=$output_image_final,$output_image_final_with_date
 

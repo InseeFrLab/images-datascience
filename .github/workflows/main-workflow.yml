@@ -13,7 +13,6 @@ jobs:
       context: base
       base_image: ubuntu:22.04
       base_image_gpu: nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
-      initial_build_step: true
     secrets: inherit
   python-minimal:
     needs: [base]
