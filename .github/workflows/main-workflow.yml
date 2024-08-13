@@ -5,15 +5,6 @@ on:
   schedule:
     - cron: '0 1 * * 1'
 
-env:
-  python_version_1: 3.12.5
-  python_version_2: 3.11.9
-  r_version_1: 4.4.1
-  r_version_2: 4.3.3
-  spark_version: 3.5.1
-  DOCKERHUB_ORGANIZATION: ${{ github.repository_owner }}
-  IMAGE_PREFIX: onyxia
-
 jobs:
   base:
     uses: ./.github/workflows/main-workflow-template.yml
