@@ -6,8 +6,6 @@ on:
     - cron: '0 1 * * 1'
 
 env:
-  base_image: ubuntu:22.04
-  base_image_gpu: nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
   python_version_1: 3.12.5
   python_version_2: 3.11.9
   r_version_1: 4.4.1
@@ -22,6 +20,8 @@ jobs:
     with:
       image: base
       context: base
+      base_image: ubuntu:22.04
+      base_image_gpu: nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
       initial_build_step: true
   python-minimal:
     needs: [base]
