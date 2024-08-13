@@ -1,13 +1,9 @@
 name: Template for each build job
 
-env:
-  DOCKERHUB_ORGANIZATION: ${{ github.repository_owner }}
-  IMAGE_PREFIX: 'onyxia'
-
 on:
   workflow_call:
     inputs:
-      first_build_step:
+      initial_build_step:
         description: Is this the first step of the build pipeline ?
         required: false
         type: boolean
@@ -19,34 +15,6 @@ on:
       context:
         description: Build context
         required: true
-        type: string
-      base_image:
-        description: Name of the base image
-        required: true
-        type: string
-      base_image_gpu:
-        description: Name of the GPU base image
-        required: false
-        type: string
-      python_version_1:
-        description: First version of Python (latest)
-        required: false
-        type: string
-      python_version_2:
-        description: Second version of Python
-        required: false
-        type: string
-      r_version_1:
-        description: First version of R (latest)
-        required: false
-        type: string
-      r_version_2:
-        description: Second version of R
-        required: false
-        type: string
-      spark_version:
-        description: Version of Spark
-        required: false
         type: string
 
 jobs:
@@ -60,15 +28,15 @@ jobs:
 
     - id: set-matrix
       run: |
-        base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
-        base_image_gpu_escaped=$(echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g' )
+        base_image_escaped=$(echo ${{env.base_image}} | sed 's/\//\\\//g' )
+        base_image_gpu_escaped=$(echo ${{env.base_image_gpu}} | sed 's/\//\\\//g' )
         sed -i "s/:base_image_gpu/$base_image_gpu_escaped/g" ./releases/${{ inputs.image }}.json
         sed -i "s/:base_image/$base_image_escaped/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:python_version_1/${{inputs.python_version_1}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:python_version_2/${{inputs.python_version_2}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:r_version_1/${{inputs.r_version_1}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:r_version_2/${{inputs.r_version_2}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:spark_version/${{inputs.spark_version}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:python_version_1/${{env.python_version_1}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:python_version_2/${{env.python_version_2}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:r_version_1/${{env.r_version_1}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:r_version_2/${{env.r_version_2}}/g" ./releases/${{ inputs.image }}.json
+        sed -i "s/:spark_version/${{env.spark_version}}/g" ./releases/${{ inputs.image }}.json
         matrix=$(cat ./releases/${{ inputs.image }}.json | jq .)
         echo $matrix
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
@@ -119,11 +87,11 @@ jobs:
             image_name=$(echo $base_image | awk -F ':' '{print $1}' )
             tag=$(echo $base_image | awk -F ':' '{print $2}' )
           fi
-          if [[ "${{ inputs.first_build_step }}" = true ]]; then
-            # First build step : base image is external (ubuntu or nvidia)
+          if [[ "${{ inputs.initial_build_step }}" = true ]]; then
+            # Initial build step : base image is external (ubuntu or nvidia)
             base_image_final="${image_name}:${tag}"
           else
-            # Base image is internal (custom built) : add organization and prefix
+            # Subsequent steps : base image is internal -> add organization and prefix
             dh_orga=${{ env.DOCKERHUB_ORGANIZATION }}
             dh_orga=$(echo "$dh_orga" | awk '{print tolower($0)}')
             base_image_final="${dh_orga}/${{ env.IMAGE_PREFIX }}-${image_name}:${tag}${TAG_SUFFIX}"
