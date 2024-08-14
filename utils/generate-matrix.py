@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("--r_version2", type=str, nargs="?", const="")
     parser.add_argument("--spark_version", type=str, nargs="?", const="")
     parser.add_argument("--build_gpu", type=str, nargs="?")
-    parser.add_argument("--base_image_gpu", type=str, type=str, nargs="?", const="")
+    parser.add_argument("--base_image_gpu", type=str, nargs="?", const="")
 
     args = parser.parse_args()
 
