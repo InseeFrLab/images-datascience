@@ -128,7 +128,7 @@ jobs:
         shell: bash
 
       - name: Build and load to the Docker client
-        if: ${{ matrix.gpu != 'true' }}
+        if: ${{ matrix.build_gpu != 'true' }}
         uses: docker/build-push-action@v6
         with:
           load: true
@@ -144,7 +144,7 @@ jobs:
             "github_token=${{ secrets.GITHUB_TOKEN }}"
 
       - name: Test image using Google's Container Structure Test
-        if: ${{ matrix.gpu != 'true' }}
+        if: ${{ matrix.build_gpu != 'true' }}
         uses: ./.github/actions/container-structure-test
         with:
           image: ${{ steps.generate-tags.outputs.main_tag }}
