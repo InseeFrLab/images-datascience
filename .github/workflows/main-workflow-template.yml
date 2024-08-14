@@ -103,7 +103,7 @@ jobs:
           date=$(date +%Y.%m.%d)
 
           # Compute full input image tag
-          base_image_tag="${dh_orga}/onyxia-${{ matrix.base_image }}""
+          base_image_tag="${dh_orga}/onyxia-${{ matrix.base_image }}"
 
           # Compute full output image tags
           output_image_tag="${dh_orga}/onyxia-${{ matrix.output_image }}"
