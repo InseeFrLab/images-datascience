@@ -5,6 +5,20 @@ import argparse
 
 def generate_matrix(versions, input_image, output_image, spark_version,
                     gpu_options, version_prefix):
+    """
+    Generate the build matrix for the given versions and options.
+
+    Args:
+        versions (list): A list of version strings (Python or R versions).
+        input_image (str): The base image name.
+        output_image (str): The output image name.
+        spark_version (str): The Spark version to include in the output image tag.
+        gpu_options (list): A list of booleans indicating whether to build GPU-enabled images.
+        version_prefix (str): A prefix to denote the language version (e.g., "py" for Python, "r" for R).
+
+    Returns:
+        list: A list of dictionaries, each representing a build configuration.
+    """
     matrix = []
     for version in versions:
         base = f"{input_image}:latest" if input_image == "base" else f"{input_image}:{version_prefix}{version}"
