@@ -1,0 +1,1 @@
+python generate-matrix.py --input_image r-minimal --output_image sparkr --python_version1 --python_version2 --r_version1 4.4.1 --r_version2 4.3.3 --spark_version 3.5.1 --build_gpu false --base_image_gpu nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
