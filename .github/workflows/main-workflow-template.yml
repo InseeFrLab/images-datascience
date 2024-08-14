@@ -103,15 +103,15 @@ jobs:
           date=$(date +%Y.%m.%d)
 
           # Compute full input image tag
-          base_image_tag="${dh_orga}/onyxia-${{ matrix.base_image }}
+          base_image_tag="${dh_orga}/onyxia-${{ matrix.base_image }}""
 
           # Compute full output image tags
           output_image_tag="${dh_orga}/onyxia-${{ matrix.output_image }}"
           output_image_tag_with_date="$output_image_tag-$date"
-          output_image_tags=$output_image_tag,$output_image_tag_with_date
+          output_image_tags="$output_image_tag,$output_image_tag_with_date"
 
           # Make image names available to next steps
-          echo "base_image=${base_image_tag}" >> $GITHUB_OUTPUT
+          echo "base_image=$base_image_tag" >> $GITHUB_OUTPUT
           echo "main_tag=$output_image_tag" >> $GITHUB_OUTPUT
           echo "tags=$output_image_tags" >> $GITHUB_OUTPUT
 
