@@ -103,7 +103,13 @@ jobs:
           date=$(date +%Y.%m.%d)
 
           # Compute full input image tag
+          if [[ "$base_image" == *"ubuntu"* ]]; then
+            # Base image is external (ubuntu or nvidia) -> no change to do
+            base_image_tag=$base_image
+          else
+            # Base image is internal -> compute relevant tag
           base_image_tag="${dh_orga}/onyxia-${{ matrix.base_image }}"
+          fi
 
           # Compute full output image tags
           output_image_tag="${dh_orga}/onyxia-${{ matrix.output_image }}"
