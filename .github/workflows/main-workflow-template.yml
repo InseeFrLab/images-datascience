@@ -61,9 +61,9 @@ jobs:
 
     - id: set-matrix
       run: |
-        matrix=$(python utils/generate-matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }}
-                 --python_version1 ${{ inputs.python_version1 }} --python_version2 ${{ inputs.python_version2 }} 
-                 --r_version1 ${{ inputs.r_version1 }} --r_version2 ${{ inputs.r_version2 }} --spark_version ${{ inputs.spark_version }} 
+        matrix=$(python utils/generate-matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }} \
+                 --python_version1 ${{ inputs.python_version1 }} --python_version2 ${{ inputs.python_version2 }} \
+                 --r_version1 ${{ inputs.r_version1 }} --r_version2 ${{ inputs.r_version2 }} --spark_version ${{ inputs.spark_version }} \
                  --build_gpu ${{ inputs.base_image_gpu }} --base_image_gpu)
         echo $matrix
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
