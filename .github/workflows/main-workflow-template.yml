@@ -23,7 +23,7 @@ on:
         description: If true, build GPU versions of the images
         required: false
         type: boolean
-        default: false
+        default: true
       python_version_1:
         description: context of docker image
         required: false
