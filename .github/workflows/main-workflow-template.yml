@@ -113,7 +113,7 @@ jobs:
         if: ${{ !contains(matrix.output_image_tags, 'gpu') }}
         uses: ./.github/actions/container-structure-test
         with:
-          image: ${{ matrix.output_image_tags }}
+          image: ${{ matrix.output_image_main_tag }}
           config: ./${{ inputs.context }}/tests.yaml
 
       - name: Login to Docker Hub
