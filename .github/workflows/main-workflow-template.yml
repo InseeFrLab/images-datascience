@@ -64,7 +64,7 @@ jobs:
         matrix=$(python utils/generate-matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }} \
                  --python_version_1 ${{ inputs.python_version_1 }} --python_version_2 ${{ inputs.python_version_2 }} \
                  --r_version_1 ${{ inputs.r_version_1 }} --r_version_2 ${{ inputs.r_version_2 }} --spark_version ${{ inputs.spark_version }} \
-                 --build_gpu ${{ inputs.build_gpu }} --base_image_gpu ${{ inputs.base_image_gpu }})
+                 --build_gpu ${{ inputs.build_gpu }} --base_image_gpu ${{ inputs.base_image_gpu }}) --dh_orga ${{ github.repository_owner }}
         echo $matrix
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
@@ -93,50 +93,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Generate input and output image tags
-        # Generate the full tags of the input and output images
-        id: generate-tags
-        run: |
-          # General parameters to build image tags
-          dh_orga=${{ github.repository_owner }}
-          dh_orga=$(echo "$dh_orga" | awk '{print tolower($0)}')
-          date=$(date +%Y.%m.%d)
-
-          # Compute full input image tag
-          base_image=${{ matrix.base_image }}
-          if [[ "$base_image" == *"ubuntu"* ]]; then
-            # Base image is external (ubuntu or nvidia) -> no change
-            base_image_tag=$base_image
-          else
-            # Base image is internal -> compute relevant tag
-            base_image_tag="${dh_orga}/onyxia-${base_image}"
-          fi
-
-          # Compute full output image tags
-          output_image_tag="${dh_orga}/onyxia-${{ matrix.output_image }}"
-          output_image_tag_with_date="$output_image_tag-$date"
-          output_image_tags="$output_image_tag,$output_image_tag_with_date"
-
-          # Make image names available to next steps
-          echo "base_image=$base_image_tag" >> $GITHUB_OUTPUT
-          echo "main_tag=$output_image_tag" >> $GITHUB_OUTPUT
-          echo "tags=$output_image_tags" >> $GITHUB_OUTPUT
-
-          # Logging
-          echo "Base image : ${base_image_tag}"
-          echo "Output image tags : ${output_image_tags}"
-        shell: bash
-
       - name: Build and load to the Docker client
-        if: ${{ matrix.build_gpu != 'true' }}
+        if: contains(matrix.output_image_tags, 'gpu')
         uses: docker/build-push-action@v6
         with:
           load: true
           push: false
           context: ${{ inputs.context }}
-          tags: ${{ steps.generate-tags.outputs.tags }}
+          tags: ${{ matrix.output_image_tags }}
           build-args: |
-            BASE_IMAGE=${{ steps.generate-tags.outputs.base_image }}
+            BASE_IMAGE=${{ matrix.base_image_tag }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
@@ -144,10 +110,10 @@ jobs:
             "github_token=${{ secrets.GITHUB_TOKEN }}"
 
       - name: Test image using Google's Container Structure Test
-        if: ${{ matrix.build_gpu != 'true' }}
+        if: contains(matrix.output_image_tags, 'gpu')
         uses: ./.github/actions/container-structure-test
         with:
-          image: ${{ steps.generate-tags.outputs.main_tag }}
+          image: ${{ matrix.output_image_tags }}
           config: ./${{ inputs.context }}/tests.yaml
 
       - name: Login to Docker Hub
@@ -163,9 +129,9 @@ jobs:
         with:
           push: true
           context: ${{ inputs.context }}
-          tags: ${{ steps.generate-tags.outputs.tags }}
+          tags: ${{ matrix.output_image_tags }}
           build-args: |
-            BASE_IMAGE=${{ steps.generate-tags.outputs.base_image }}
+            BASE_IMAGE=${{ matrix.base_image_tag }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}

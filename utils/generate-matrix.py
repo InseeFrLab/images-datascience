@@ -1,6 +1,7 @@
 """Generate the matrix for each job of the build pipeline."""
 import json
 import argparse
+from datetime import datetime
 
 
 def generate_matrix(versions, input_image, output_image, spark_version,
@@ -14,7 +15,7 @@ def generate_matrix(versions, input_image, output_image, spark_version,
         output_image (str): The output image name.
         spark_version (str): The Spark version to include in the output image tag.
         gpu_options (list): A list of booleans indicating whether to build GPU-enabled images.
-        version_prefix (str): A prefix to denote the language version (e.g., "py" for Python, "r" for R).
+        version_prefix (str): A prefix to denote the language version ("py" or "r").
 
     Returns:
         list: A list of dictionaries, each representing a build configuration.
@@ -24,15 +25,19 @@ def generate_matrix(versions, input_image, output_image, spark_version,
         base = f"{input_image}:latest" if input_image == "base" else f"{input_image}:{version_prefix}{version}"
         output = f"{output_image}:{version_prefix}{version}"
         language_key = "python_version" if version_prefix == "py" else "r_version"
-        version_entry = {"base_image": base, "output_image": output, language_key: version}
+        version_entry = {"base_image_tag": f"{DH_ORGA}/{base}",
+                         "output_image_main_tag": f"{DH_ORGA}/{output}",
+                         language_key: version}
         if spark_version:
-            version_entry["output_image"] += f"-spark{spark_version}"
+            version_entry["output_image_main_tag"] += f"-spark{spark_version}"
             version_entry["spark_version"] = spark_version
         for gpu in gpu_options:
+            final_entry = version_entry.copy()
             suffix = "-gpu" if gpu else ""
-            version_entry["base_image"] += suffix
-            version_entry["output_image"] += suffix
-            matrix.append(version_entry)
+            final_entry["base_image_tag"] += suffix
+            final_entry["output_image_main_tag"] += suffix
+            final_entry["output_image_tags"] = f"{final_entry["output_image_main_tag"]},{final_entry["output_image_main_tag"]}-{TODAY_DATE}"
+            matrix.append(final_entry)
     return matrix
 
 
@@ -48,19 +53,31 @@ if __name__ == "__main__":
     parser.add_argument("--spark_version", type=str, nargs="?", const="")
     parser.add_argument("--build_gpu", type=str, nargs="?")
     parser.add_argument("--base_image_gpu", type=str, nargs="?", const="")
+    parser.add_argument("--dh_orga", type=str)
 
     args = parser.parse_args()
-
     python_versions = [version for version in [args.python_version_1, args.python_version_2]
                        if version]
     r_versions = [version for version in [args.r_version_1, args.r_version_2] if version]
     gpu_options = [False, True] if args.build_gpu == "true" else [False]
 
+    DH_ORGA = args.dh_orga.lower()
+    TODAY_DATE = datetime.today().strftime('%Y.%m.%d')
+
     if args.output_image == "base":
         # Building base onyxia image from external images
+        onyxia_base_tag = "base:latest"
         matrix = [
-            {"base_image": args.input_image, "output_image": "base:latest"},
-            {"base_image": args.base_image_gpu, "output_image": "base:latest-gpu"}
+            {
+                "base_image_tag": args.input_image,
+                "output_image_main_tag": f"{DH_ORGA}/{onyxia_base_tag}",
+                "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag},{DH_ORGA}/{onyxia_base_tag}-{TODAY_DATE}"
+            },
+            {
+                "base_image_tag": args.base_image_gpu,
+                "output_image_main_tag": f"{DH_ORGA}/{onyxia_base_tag}-gpu",
+                "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag}-gpu,{DH_ORGA}/{onyxia_base_tag}-gpu-{TODAY_DATE}"
+            }
             ]
     else:
         # Subsequent images, with versioning
