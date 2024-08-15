@@ -36,7 +36,7 @@ def generate_matrix(versions, input_image, output_image, spark_version,
             suffix = "-gpu" if gpu else ""
             final_entry["base_image_tag"] += suffix
             final_entry["output_image_main_tag"] += suffix
-            final_entry["output_image_tags"] = f"{final_entry["output_image_main_tag"]},{final_entry["output_image_main_tag"]}-{TODAY_DATE}"
+            final_entry["output_image_tags"] = f'{final_entry["output_image_main_tag"]},{final_entry["output_image_main_tag"]}-{TODAY_DATE}'
             matrix.append(final_entry)
     return matrix
 
