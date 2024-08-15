@@ -3,7 +3,6 @@ channels:
 
 dependencies:
   - beautifulsoup4
-  - gensim
   - geopandas
   - matplotlib-base
   - mlflow
@@ -15,6 +14,5 @@ dependencies:
   - seaborn
   - scikit-learn
   - scipy
-  - spacy
   - statsmodels
   - xgboost
