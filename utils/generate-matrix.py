@@ -41,19 +41,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_image", type=str)
     parser.add_argument("--output_image", type=str)
-    parser.add_argument("--python_version1", type=str, nargs="?", const="")
-    parser.add_argument("--python_version2", type=str, nargs="?", const="")
-    parser.add_argument("--r_version1", type=str, nargs="?", const="")
-    parser.add_argument("--r_version2", type=str, nargs="?", const="")
+    parser.add_argument("--python_version_1", type=str, nargs="?", const="")
+    parser.add_argument("--python_version_2", type=str, nargs="?", const="")
+    parser.add_argument("--r_version_1", type=str, nargs="?", const="")
+    parser.add_argument("--r_version_2", type=str, nargs="?", const="")
     parser.add_argument("--spark_version", type=str, nargs="?", const="")
     parser.add_argument("--build_gpu", type=str, nargs="?")
     parser.add_argument("--base_image_gpu", type=str, nargs="?", const="")
 
     args = parser.parse_args()
 
-    python_versions = [version for version in [args.python_version1, args.python_version2]
+    python_versions = [version for version in [args.python_version_1, args.python_version_2]
                        if version]
-    r_versions = [version for version in [args.r_version1, args.r_version2] if version]
+    r_versions = [version for version in [args.r_version_1, args.r_version_2] if version]
     gpu_options = [False, True] if args.build_gpu == "true" else [False]
 
     if args.output_image == "base":
