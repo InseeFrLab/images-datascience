@@ -1,16 +1,5 @@
 name: Template for each build job
 
-# It would make more sense to define this in the `main-workflow.yml`, but it's not possible yet
-# See : https://github.com/orgs/community/discussions/23107
-env:
-  python_version_1: 3.12.5
-  python_version_2: 3.11.9
-  r_version_1: 4.4.1
-  r_version_2: 4.3.3
-  spark_version: 3.5.1
-  DOCKERHUB_ORGANIZATION: ${{ github.repository_owner }}
-  IMAGE_PREFIX: onyxia
-
 on:
   workflow_call:
     inputs:
@@ -30,6 +19,31 @@ on:
         description: Name of the GPU base image
         required: false
         type: string
+      build_gpu:
+        description: If true, build GPU versions of the images
+        required: false
+        type: boolean
+        default: true
+      python_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      python_version_2:
+        description: context of docker image
+        required: false
+        type: string
+      r_version_1:
+        description: context of docker image
+        required: false
+        type: string
+      r_version_2:
+        description: context of docker image
+        required: false
+        type: string
+      spark_version:
+        description: context of docker image
+        required: false
+        type: string
 
 jobs:
   matrix_prep:
@@ -40,18 +54,18 @@ jobs:
     - name: Check out code 
       uses: actions/checkout@v4
 
+    - name: Set up Python
+      uses: actions/setup-python@v5 
+      with:
+        python-version: '3.10'
+
     - id: set-matrix
       run: |
-        base_image_escaped=$(echo ${{inputs.base_image}} | sed 's/\//\\\//g' )
-        base_image_gpu_escaped=$(echo ${{inputs.base_image_gpu}} | sed 's/\//\\\//g' )
-        sed -i "s/:base_image_gpu/$base_image_gpu_escaped/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:base_image/$base_image_escaped/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:python_version_1/${{env.python_version_1}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:python_version_2/${{env.python_version_2}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:r_version_1/${{env.r_version_1}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:r_version_2/${{env.r_version_2}}/g" ./releases/${{ inputs.image }}.json
-        sed -i "s/:spark_version/${{env.spark_version}}/g" ./releases/${{ inputs.image }}.json
-        matrix=$(cat ./releases/${{ inputs.image }}.json | jq .)
+        matrix=$(python utils/generate-matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }} \
+                 --python_version_1 ${{ inputs.python_version_1 }} --python_version_2 ${{ inputs.python_version_2 }} \
+                 --r_version_1 ${{ inputs.r_version_1 }} --r_version_2 ${{ inputs.r_version_2 }} --spark_version ${{ inputs.spark_version }} \
+                 --build_gpu ${{ inputs.build_gpu }} --base_image_gpu ${{ inputs.base_image_gpu }} \
+                 --dh_orga ${{ github.repository_owner }} --images_prefix onyxia )
         echo $matrix
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
@@ -60,7 +74,7 @@ jobs:
     needs: matrix_prep
     strategy:
       fail-fast: false
-      matrix: 
+      matrix:
         ${{fromJson(needs.matrix_prep.outputs.matrix)}}
     steps:
       - name: Check out code 
@@ -80,71 +94,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Generate input and output image names
-        # Generate the full name of the input and output images
-        id: generate-image-names
-        run: |
-          # General parameters to build image names
-          dh_orga=${{ env.DOCKERHUB_ORGANIZATION }}
-          dh_orga=$(echo "$dh_orga" | awk '{print tolower($0)}')
-          date=$(date +%Y.%m.%d)
-          if [ -n "${{ matrix.gpu }}" ]; then
-              TAG_SUFFIX=-gpu
-          fi
-
-          # Function to compute image name from json release files
-          compute_image_name() {
-          local image="$1"
-          if [[ "$image" == *"-delim-"* ]]; then
-            # Images that have tags based on versions
-            image_name=$(echo $image | awk -F '-delim-' '{print $1}' )
-            tag=$(echo $image | awk -F '-delim-' '{print $2}' )
-          else
-            # onyxia-base
-            image_name=$(echo $image | awk -F ':' '{print $1}' )
-            tag=$(echo $image | awk -F ':' '{print $2}' )
-          fi
-          echo "${image_name}:${tag}"
-          }
-
-          # Compute input image name
-          base_image=${{ matrix.base_image }}
-          if [[ "$base_image" == *"ubuntu"* ]]; then
-            # Base image is external (ubuntu or nvidia) -> no change to do
-            base_image_final=$base_image
-          else
-            # Base image is internal -> compute relevant name
-            base_image_computed=$(compute_image_name $base_image)
-            base_image_final="${dh_orga}/${{ env.IMAGE_PREFIX }}-${base_image_computed}${TAG_SUFFIX}"
-          fi
-
-          # Compute output image name
-          output_image=${{ matrix.output_image }}
-          output_image_computed=$(compute_image_name $output_image)
-          output_image_final="$dh_orga/${{ env.IMAGE_PREFIX}}-${output_image_computed}${TAG_SUFFIX}"
-          output_image_final_with_date="$output_image_final-$date"
-          output_tags=$output_image_final,$output_image_final_with_date
-
-          # Make image names available to next steps
-          echo "base_image=${base_image_final}" >> $GITHUB_OUTPUT
-          echo "main_tag=$output_image_final" >> $GITHUB_OUTPUT
-          echo "tags=$output_tags" >> $GITHUB_OUTPUT
-
-          # Logging
-          echo "Base image : ${base_image_final}"
-          echo "Output image tags : ${output_tags}"
-        shell: bash
-
       - name: Build and load to the Docker client
-        if: ${{ matrix.gpu != 'true' }}
+        if: ${{ !contains(matrix.output_image_tags, 'gpu') }}
         uses: docker/build-push-action@v6
         with:
           load: true
           push: false
           context: ${{ inputs.context }}
-          tags: ${{ steps.generate-image-names.outputs.tags }}
+          tags: ${{ matrix.output_image_tags }}
           build-args: |
-            BASE_IMAGE=${{ steps.generate-image-names.outputs.base_image }}
+            BASE_IMAGE=${{ matrix.base_image_tag }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
@@ -152,10 +111,10 @@ jobs:
             "github_token=${{ secrets.GITHUB_TOKEN }}"
 
       - name: Test image using Google's Container Structure Test
-        if: ${{ matrix.gpu != 'true' }}
+        if: ${{ !contains(matrix.output_image_tags, 'gpu') }}
         uses: ./.github/actions/container-structure-test
         with:
-          image: ${{ steps.generate-image-names.outputs.main_tag }}
+          image: ${{ matrix.output_image_main_tag }}
           config: ./${{ inputs.context }}/tests.yaml
 
       - name: Login to Docker Hub
@@ -171,9 +130,9 @@ jobs:
         with:
           push: true
           context: ${{ inputs.context }}
-          tags: ${{ steps.generate-image-names.outputs.tags }}
+          tags: ${{ matrix.output_image_tags }}
           build-args: |
-            BASE_IMAGE=${{ steps.generate-image-names.outputs.base_image }}
+            BASE_IMAGE=${{ matrix.base_image_tag }}
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}

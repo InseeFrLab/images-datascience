@@ -1,7 +1,0 @@
-[
-    {
-        "base_image":"r-minimal-delim-r:r_version_1",
-        "output_image":"r-python-julia-delim-r:r_version_1",
-        "r_version":":r_version_1"
-    }
-]
