@@ -94,7 +94,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and load to the Docker client
-        if: ${{ contains(matrix.output_image_tags, 'gpu') }}
+        if: ${{ !contains(matrix.output_image_tags, 'gpu') }}
         uses: docker/build-push-action@v6
         with:
           load: true
@@ -110,7 +110,7 @@ jobs:
             "github_token=${{ secrets.GITHUB_TOKEN }}"
 
       - name: Test image using Google's Container Structure Test
-        if: ${{ contains(matrix.output_image_tags, 'gpu') }}
+        if: ${{ !contains(matrix.output_image_tags, 'gpu') }}
         uses: ./.github/actions/container-structure-test
         with:
           image: ${{ matrix.output_image_tags }}
