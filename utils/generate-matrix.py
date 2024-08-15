@@ -25,8 +25,8 @@ def generate_matrix(versions, input_image, output_image, spark_version,
         base = f"{input_image}:latest" if input_image == "base" else f"{input_image}:{version_prefix}{version}"
         output = f"{output_image}:{version_prefix}{version}"
         language_key = "python_version" if version_prefix == "py" else "r_version"
-        version_entry = {"base_image_tag": f"{DH_ORGA}/{base}",
-                         "output_image_main_tag": f"{DH_ORGA}/{output}",
+        version_entry = {"base_image_tag": f"{DH_ORGA}/{args.images_prefix}-{base}",
+                         "output_image_main_tag": f"{DH_ORGA}/{args.images_prefix}-{output}",
                          language_key: version}
         if spark_version:
             version_entry["output_image_main_tag"] += f"-spark{spark_version}"
@@ -54,6 +54,7 @@ if __name__ == "__main__":
     parser.add_argument("--build_gpu", type=str, nargs="?")
     parser.add_argument("--base_image_gpu", type=str, nargs="?", const="")
     parser.add_argument("--dh_orga", type=str)
+    parser.add_argument("--images_prefix", type=str)
 
     args = parser.parse_args()
     python_versions = [version for version in [args.python_version_1, args.python_version_2]
@@ -66,7 +67,7 @@ if __name__ == "__main__":
 
     if args.output_image == "base":
         # Building base onyxia image from external images
-        onyxia_base_tag = "base:latest"
+        onyxia_base_tag = f"{args.images_prefix}-base:latest"
         matrix = [
             {
                 "base_image_tag": args.input_image,
