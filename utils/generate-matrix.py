@@ -29,13 +29,16 @@ def generate_matrix(versions, input_image, output_image, spark_version,
                          "output_image_main_tag": f"{DH_ORGA}/{args.images_prefix}-{output}",
                          language_key: version}
         if spark_version:
-            version_entry["output_image_main_tag"] += f"-spark{spark_version}"
+            suffix_spark = f"-spark{spark_version}"
+            if "spark" in base:
+                version_entry["base_image_tag"] += suffix_spark
+            version_entry["output_image_main_tag"] += suffix_spark
             version_entry["spark_version"] = spark_version
         for gpu in gpu_options:
             final_entry = version_entry.copy()
-            suffix = "-gpu" if gpu else ""
-            final_entry["base_image_tag"] += suffix
-            final_entry["output_image_main_tag"] += suffix
+            suffix_gpu = "-gpu" if gpu else ""
+            final_entry["base_image_tag"] += suffix_gpu
+            final_entry["output_image_main_tag"] += suffix_gpu
             final_entry["output_image_tags"] = f'{final_entry["output_image_main_tag"]},{final_entry["output_image_main_tag"]}-{TODAY_DATE}'
             matrix.append(final_entry)
     return matrix
