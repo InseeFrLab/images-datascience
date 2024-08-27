@@ -7,6 +7,7 @@ sudo true -nv 2>&1
 if [ $? -eq 0 ]; then
   echo "sudo_allowed"
   SUDO=0
+  sudo update-ca-certificates
 else
   echo "no_sudo"
   SUDO=1
