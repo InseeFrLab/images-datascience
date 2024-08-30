@@ -4,20 +4,19 @@ This document outlines the maintainers responsible for the datascience images, a
 
 ## Active Maintainers
 
-| Name             | GitHub Username   | Affiliation   | Role           |
-| ---------------- | ----------------- | ------------- | -------------- |
-| Romain Avouac    | @avouacr           | Insee         | Lead Maintainer |
-| Alexis Dondon    | @alexisdondon      | Insee         | Lead Maintainer |
-| Frédéric Comte   | @fcomte          | Insee         | Co-maintainer  |
+| Name             | GitHub Username   | Affiliation   | Role            |
+| ---------------- | ----------------- | ------------- | --------------  |
+| Ines Hiverlet    | @ihiverlet        | Insee         | Lead Maintainer |
+| Romain Avouac    | @avouacr          | Insee         | Co-maintainer   |
+| Frédéric Comte   | @fcomte           | Insee         | Co-maintainer   |
 
 ## Emeritus Maintainers
 
 These are previous maintainers who have stepped down from their role but are recognized for their contributions.
 
-| Name             | GitHub Username   |
-| ---------------- | ----------------- |
-| ... | ...        |
-
+| Name             | GitHub Username   | Affiliation   | Role           |
+| ---------------- | ----------------- | ------------- | -------------- |
+| Alexis Dondon    | @alexisdondon      | Insee         | Lead Maintainer |
 
 ## Becoming a Maintainer
 
