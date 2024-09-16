@@ -3,6 +3,7 @@ channels:
 
 dependencies:
   - beautifulsoup4
+  - dask
   - geopandas
   - matplotlib-base
   - mlflow
