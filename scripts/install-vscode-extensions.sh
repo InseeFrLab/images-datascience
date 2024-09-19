@@ -29,6 +29,7 @@ base_extensions=(
     "ms-kubernetes-tools.vscode-kubernetes-tools"
     "mhutchie.git-graph"
     "hediet.vscode-drawio"
+    "yzhang.markdown-all-in-one"
     "streetsidesoftware.code-spell-checker"
     "streetsidesoftware.code-spell-checker-french"
 )
