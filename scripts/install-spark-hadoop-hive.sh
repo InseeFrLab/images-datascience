@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-HADOOP_VERSION="3.3.6"
+HADOOP_VERSION="3.4.0"
 HIVE_VERSION="2.3.9"
 HIVE_LISTENER_VERSION="0.0.3"
 
@@ -37,8 +37,8 @@ wget -q ${SPARK_BUILD_S3_BUCKET}/hive-listener/${HIVE_LISTENER_JAR}
 mv ${HIVE_LISTENER_JAR} ${HIVE_HOME}/lib/hive-listener.jar
 
 # Add postgreSQL support to Hive
-wget -q https://jdbc.postgresql.org/download/postgresql-42.2.18.jar
-mv postgresql-42.2.18.jar ${HIVE_HOME}/lib/postgresql-jdbc.jar
+wget -q https://jdbc.postgresql.org/download/postgresql-42.7.3.jar
+mv postgresql-42.7.3.jar ${HIVE_HOME}/lib/postgresql-jdbc.jar
 
 # Fix versions inconsistencies of some binaries between Hadoop & Hive distributions
 rm ${HIVE_HOME}/lib/guava-14.0.1.jar
@@ -46,3 +46,6 @@ cp ${HADOOP_HOME}/share/hadoop/common/lib/guava-27.0-jre.jar ${HIVE_HOME}/lib/
 wget -q https://repo1.maven.org/maven2/jline/jline/2.14.6/jline-2.14.6.jar
 mv jline-2.14.6.jar ${HIVE_HOME}/lib/
 rm ${HIVE_HOME}/lib/jline-2.12.jar
+
+# Fix multiple bindings
+rm ${HADOOP_HOME}/share/hadoop/tools/lib/bundle-2.23.19.jar
