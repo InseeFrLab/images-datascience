@@ -3,7 +3,7 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-ARG PYTHON_VERSION="3.12.6"
+ARG PYTHON_VERSION="3.12.7"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 ENV CONDA_DIR="/opt/conda"
