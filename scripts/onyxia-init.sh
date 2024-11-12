@@ -122,7 +122,6 @@ if [  "`which git`" != "" ]; then
                 done
                 cd $HOME  
             fi
-
         fi
     fi
 
@@ -141,6 +140,11 @@ if [  "`which git`" != "" ]; then
     if [ -n "$GIT_CREDENTIALS_CACHE_DURATION" ]; then
         git config --"$git_config" credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
     fi
+
+    # Fix permissions
+    [ -d ~/.cache/git ] && chown -R ${USERNAME}:${GROUPNAME} ~/.cache/git
+    [ -f ~/.gitconfig ] && chown ${USERNAME}:${GROUPNAME} ~/.gitconfig
+
 fi
 
 if command -v R; then
