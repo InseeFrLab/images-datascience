@@ -30,10 +30,12 @@ chains = {
 chain_name = sys.argv[1]
 chain = chains[chain_name]
 
-GPU = False
-if len(sys.argv) == 3:
-    if sys.argv[2] == "gpu":
-        GPU = True
+# GPU build if third argument says so
+GPU = len(sys.argv) >= 3 and sys.argv[2] == "gpu"
+
+# Specific R/Python version specified in fourth argument
+version = sys.argv[3] if len(sys.argv) >= 4 else None
+language_key = "PYTHON_VERSION" if "python-minimal" in chain else "R_VERSION"
 
 for i, image in enumerate(chain):
 
@@ -46,10 +48,7 @@ for i, image in enumerate(chain):
     else:
         previous_image = chain[i-1]
 
-    if GPU:
-        device_suffix = "-gpu"
-    else:
-        device_suffix = ""
+    device_suffix = "-gpu" if GPU else ""
 
     if i < len(chain) - 1:
         tag = image
@@ -59,5 +58,8 @@ for i, image in enumerate(chain):
     cmd = ["docker", "build", "--progress=plain", image, "-t", tag,
            "--build-arg", f"BASE_IMAGE={previous_image}",
            "--build-arg", f"DEVICE_SUFFIX={device_suffix}"]
+    if version:
+        cmd.extend(["--build-arg", f"{language_key}={version}"])
+
     print(" ".join(cmd))
     subprocess.run(cmd)
