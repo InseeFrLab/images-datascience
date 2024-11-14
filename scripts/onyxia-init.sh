@@ -171,6 +171,7 @@ if [[ "$DARK_MODE" == "true" ]]; then
     fi
     if command -v rstudio-server; then
         jq '. + {"editor_theme": "Vibrant Ink"}' ${HOME}/.config/rstudio/rstudio-prefs.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.config/rstudio/rstudio-prefs.json
+        chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.config
     fi
 fi
 
