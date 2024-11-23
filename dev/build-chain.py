@@ -1,7 +1,6 @@
+import argparse
 import subprocess
-import sys
 import shutil
-
 
 chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
@@ -24,42 +23,66 @@ chains = {
     "vscode-python-minimal": ["base", "python-minimal", "vscode"],
     "r-python-julia": ["base", "r-minimal", "r-python-julia"],
     "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"],
-    "vscode-r": ["base", "r-minimal", "r-datascience", "vscode"]
+    "vscode-r": ["base", "r-minimal", "r-datascience", "vscode"],
 }
 
-chain_name = sys.argv[1]
-chain = chains[chain_name]
+def parse_arguments():
+    
+    return parser.parse_args()
 
-# GPU build if third argument says so
-GPU = len(sys.argv) >= 3 and sys.argv[2] == "gpu"
+def main():
+    args = parse_arguments()
+    chain_name = args.chain
+    chain = chains[chain_name]
+    gpu = args.gpu
+    version = args.version
+    language_key = "PYTHON_VERSION" if "python-minimal" in chain else "R_VERSION"
 
-# Specific R/Python version specified in fourth argument
-version = sys.argv[3] if len(sys.argv) >= 4 else None
-language_key = "PYTHON_VERSION" if "python-minimal" in chain else "R_VERSION"
-
-for i, image in enumerate(chain):
-
-    if image == "base":
-        shutil.copytree("scripts", "base/scripts", dirs_exist_ok=True)
-        if GPU:
-            previous_image = "nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04"
+    for i, image in enumerate(chain):
+        if image == "base":
+            shutil.copytree("scripts", "base/scripts", dirs_exist_ok=True)
+            previous_image = (
+                "nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04" if gpu else "ubuntu:22.04"
+            )
         else:
-            previous_image = "ubuntu:22.04"
-    else:
-        previous_image = chain[i-1]
+            previous_image = chain[i - 1]
 
-    device_suffix = "-gpu" if GPU else ""
+        device_suffix = "-gpu" if gpu else ""
 
-    if i < len(chain) - 1:
-        tag = image
-    else:
-        tag = f"inseefrlab/onyxia-{chain_name}:dev"
+        if i < len(chain) - 1:
+            tag = image
+        else:
+            tag = f"inseefrlab/onyxia-{chain_name}:dev"
 
-    cmd = ["docker", "build", "--progress=plain", image, "-t", tag,
-           "--build-arg", f"BASE_IMAGE={previous_image}",
-           "--build-arg", f"DEVICE_SUFFIX={device_suffix}"]
-    if version:
-        cmd.extend(["--build-arg", f"{language_key}={version}"])
+        cmd = [
+            "docker", "build", "--progress=plain", image, "-t", tag,
+            "--build-arg", f"BASE_IMAGE={previous_image}",
+            "--build-arg", f"DEVICE_SUFFIX={device_suffix}"
+        ]
+        if version:
+            cmd.extend(["--build-arg", f"{language_key}={version}"])
 
-    print(" ".join(cmd))
-    subprocess.run(cmd)
+        print(" ".join(cmd))
+        subprocess.run(cmd)
+
+if __name__ == "__main__":
+
+    # CLI configuration
+    parser = argparse.ArgumentParser(description="Build a Docker image chain.")
+    parser.add_argument(
+        "--chain",
+        required=True,
+        choices=chains.keys(),
+        help="The name of the chain to build (e.g., 'rstudio', 'python-datascience').",
+    )
+    parser.add_argument(
+        "--gpu",
+        action="store_true",
+        help="Whether to build with GPU support."
+    )
+    parser.add_argument(
+        "--version",
+        help="Specify a version for R or Python."
+    )
+
+    
