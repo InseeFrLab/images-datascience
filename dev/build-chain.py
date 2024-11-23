@@ -42,7 +42,7 @@ for i, image in enumerate(chain):
     if image == "base":
         shutil.copytree("scripts", "base/scripts", dirs_exist_ok=True)
         if GPU:
-            previous_image = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04"
+            previous_image = "nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04"
         else:
             previous_image = "ubuntu:22.04"
     else:
