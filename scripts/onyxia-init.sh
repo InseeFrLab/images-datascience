@@ -126,20 +126,18 @@ if [  "`which git`" != "" ]; then
     fi
 
     # Git config
-    if [[ $(id -u) = 0 ]]; then
-        git_config="system"
-    else
-        git_config="global"
-    fi
     if [ -n "$GIT_USER_NAME" ]; then
-        git config --"$git_config" user.name "$GIT_USER_NAME"
+        git config --global user.name "$GIT_USER_NAME"
     fi
     if [ -n "$GIT_USER_MAIL" ]; then
-        git config --"$git_config" user.email "$GIT_USER_MAIL"
+        git config --global user.email "$GIT_USER_MAIL"
     fi
     if [ -n "$GIT_CREDENTIALS_CACHE_DURATION" ]; then
-        git config --"$git_config" credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
+        git config --global credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
     fi
+    # Default strategy when performing a git pull
+    # Use Git's former default (fast-forward if possible, else merge) to avoid cryptic error message
+    git config --global pull.rebase false
 
     # Fix permissions
     [ -d ~/.cache/git ] && chown -R ${USERNAME}:${GROUPNAME} ~/.cache/git
