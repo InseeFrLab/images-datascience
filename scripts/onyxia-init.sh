@@ -226,5 +226,10 @@ if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
     curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
 fi
 
+# Activate Conda env by default in shell except if specified otherwise
+if [[ "$CUSTOM_PYTHON_ENV" != "true" ]]; then
+echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc ;
+fi
+
 echo "execution of $@"
 exec "$@"
