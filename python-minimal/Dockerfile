@@ -23,8 +23,6 @@ RUN /opt/install-conda.sh && \
     conda env update -n base -f conda-env.yml && \
     # Install duckdb extensions
     conda run -n base python /opt/install-duckdb-extensions.py && \
-    # Activate custom Conda env by default in shell
-    echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
     # Clean
