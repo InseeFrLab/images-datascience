@@ -28,7 +28,7 @@ RUN --mount=type=secret,id=github_token \
     apt-get update  && \
     # Install JDK
     /opt/install-java.sh && \
-    # Install Spark/Hadoop/Hive 
+    # Install Spark/Hadoop/Hive
     /opt/install-spark-hadoop-hive.sh && \
     # Put Spark config in the right place
     cp /opt/spark-env.sh $SPARK_HOME/conf && \

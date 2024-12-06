@@ -1,48 +1,89 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": ["r-minimal/Dockerfile"],
       "matchStrings": ["ARG R_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^R(?<version>.*)$"
+      "extractVersionTemplate": "^R(?<version>.*?)$"
     },
     {
-      "fileMatch": [".github/workflows/main-workflow-template.yml"],
-      "matchStrings": ["r_version_1: (?<currentValue>.*?)"],
+      "customType": "regex",
+      "fileMatch": [".github/workflows/main-workflow.yml"],
+      "matchStrings": ["(^| )r_version_1: *(?<currentValue>[^\\s]*)"],
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^R(?<version>.*)$"
+      "extractVersionTemplate": "^R(?<version>.*?)$"
     },
     {
+      "customType": "regex",
+      "fileMatch": [".github/workflows/main-workflow.yml"],
+      "matchStrings": ["(^| )r_version_2: *(?<currentValue>[^\\s]*)"],
+      "depNameTemplate": "rocker-org/rocker-versioned2",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^R(?<version>.*?)$"
+    },
+    {
+      "customType": "regex",
       "fileMatch": ["python-minimal/Dockerfile"],
       "matchStrings": ["ARG PYTHON_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "conda-forge/python",
       "datasourceTemplate": "conda"
     },
     {
-      "fileMatch": [".github/workflows/main-workflow-template.yml"],
-      "matchStrings": ["python_version_1: (?<currentValue>.*?)"],
+      "customType": "regex",
+      "fileMatch": [".github/workflows/main-workflow.yml"],
+      "matchStrings": ["(^| )python_version_1: *(?<currentValue>[^\\s]*)"],
       "depNameTemplate": "conda-forge/python",
       "datasourceTemplate": "conda"
     },
     {
-      "fileMatch": ["spark/Dockerfile"],
-      "matchStrings": ["ARG SPARK_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "apache/spark",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
+      "customType": "regex",
+      "fileMatch": [".github/workflows/main-workflow.yml"],
+      "matchStrings": ["(^| )python_version_2: *(?<currentValue>[^\\s]*)"],
+      "depNameTemplate": "conda-forge/python",
+      "datasourceTemplate": "conda"
     },
     {
-      "fileMatch": [".github/workflows/main-workflow-template.yml"],
-      "matchStrings": ["spark_version: (?<currentValue>.*?)"],
+      "customType": "regex",
+      "fileMatch": ["spark/Dockerfile$"],
+      "matchStrings": ["ARG SPARK_VERSION=\"(?<currentValue>.*?)\""],
       "depNameTemplate": "apache/spark",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>[^\\s]*)"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [".github/workflows/main-workflow.yml"],
+      "matchStrings": ["(^| )spark_version: *(?<currentValue>[^\\s]*)"],
+      "depNameTemplate": "apache/spark",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "v(?<version>[^\\s]*)"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["regex"],
+      "matchJsonata": ["$contains(replaceString, '_version_2')"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["regex"],
+      "matchJsonata": ["$contains(replaceString, 'python_version_2')"],
+      "separateMinorPatch": true,
+      "groupName": "Python backup version update"
+    },
+    {
+      "matchManagers": ["regex"],
+      "matchJsonata": ["$contains(replaceString, 'r_version_2')"],
+      "separateMinorPatch": true,
+      "groupName": "R backup version update"
     }
   ]
 }
