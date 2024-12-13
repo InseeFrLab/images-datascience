@@ -1,7 +1,7 @@
 con <- DBI::dbConnect(duckdb::duckdb())
 
-DBI::dbExecute(con, 'INSTALL httpfs from core_nightly')
-DBI::dbExecute(con, 'INSTALL aws from core_nightly')
-DBI::dbExecute(con, 'INSTALL postgres from core_nightly')
-DBI::dbExecute(con, 'INSTALL spatial from core_nightly')
+DBI::dbExecute(con, 'INSTALL httpfs')
+DBI::dbExecute(con, 'INSTALL aws')
+DBI::dbExecute(con, 'INSTALL postgres')
+DBI::dbExecute(con, 'INSTALL spatial')
 DBI::dbDisconnect(con, shutdown=TRUE)
