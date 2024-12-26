@@ -9,8 +9,6 @@ COPY conda-env.yml .
 
 RUN ls -larth /opt/
 RUN conda env update -n base -f conda-env.yml && \
-    # Install Python packages not available on conda-forge
-    pip3 install opencv-python-headless && \
     # Install Quarto latest version
     /opt/install-quarto.sh && \
     # Fix permissions
