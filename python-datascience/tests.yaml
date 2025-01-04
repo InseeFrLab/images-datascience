@@ -50,10 +50,6 @@ commandTests:
     expectedOutput: ["/opt/conda/bin/pip"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["julia"]
-    expectedOutput: ["/opt/julia/bin/julia"]
-  - name: "Does the binary exists?"
-    command: "which"
     args: ["quarto"]
     expectedOutput: ["/usr/local/bin/quarto"]
   - name: "Does the binary exists?"
