@@ -202,14 +202,6 @@ fi
 export DUCKDB_S3_ENDPOINT=$AWS_S3_ENDPOINT
 fi
 
-if [[ -e "$HOME/work" ]]; then
-  if [[ $(id -u) = 0 ]]; then
-    echo "cd $HOME/work" >> /etc/profile
-  else
-    echo "cd $HOME/work" >> $HOME/.bashrc
-  fi
-fi
-
 if [[ -n "$FAUXPILOT_SERVER" ]]; then
     dir="$HOME/.local/share/code-server/User"
     file="settings.json"
