@@ -9,8 +9,6 @@ COPY conda-env.yml .
 
 RUN ls -larth /opt/
 RUN conda env update -n base -f conda-env.yml && \
-    # Install Quarto latest version
-    /opt/install-quarto.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
     # Clean

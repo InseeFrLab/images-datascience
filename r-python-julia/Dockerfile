@@ -20,8 +20,6 @@ RUN /opt/install-julia.sh && \
     # Install and configure reticulate to use Python in R
     install2.r --error reticulate && \
     R -q -e 'reticulate::py_discover_config(required_module = NULL, use_environment = NULL)' && \
-    # Install quarto
-    /opt/install-quarto.sh && \
     # Clean
     rm requirements.txt && \
     rm -rf /var/lib/apt/lists/*

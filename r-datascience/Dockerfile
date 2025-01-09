@@ -12,7 +12,6 @@ USER root
 
 # Install additional libraries and R packages for datascience
 RUN /opt/install-java.sh && \
-    /opt/install-quarto.sh && \
     # Install Shiny Server
     /rocker_scripts/install_shiny_server.sh && \
     # Install packages bundles from rocker
