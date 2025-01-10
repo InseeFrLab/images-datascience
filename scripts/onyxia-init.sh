@@ -192,7 +192,7 @@ fi
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
 cat <<EOF > ${HOME}/.duckdbrc
 -- Duck head prompt
-.prompt '🦆 '
+.prompt 'duckdb > '
 -- Set s3 context
 CALL load_aws_credentials();
 EOF
