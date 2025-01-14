@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-HADOOP_VERSION="3.4.0"
+HADOOP_VERSION="3.4.1"
 HIVE_VERSION="2.3.9"
 HIVE_LISTENER_VERSION="0.0.3"
 
@@ -48,4 +48,4 @@ mv jline-2.14.6.jar ${HIVE_HOME}/lib/
 rm ${HIVE_HOME}/lib/jline-2.12.jar
 
 # Fix multiple bindings
-rm ${HADOOP_HOME}/share/hadoop/tools/lib/bundle-2.23.19.jar
+rm ${HADOOP_HOME}/share/hadoop/tools/lib/bundle-2.24.6.jar
