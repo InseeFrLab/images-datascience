@@ -120,7 +120,6 @@ if [  "`which git`" != "" ]; then
                         chown -R $PROJECT_USER:$PROJECT_GROUP $f
                     fi
                 done
-                cd $HOME  
             fi
         fi
     fi
