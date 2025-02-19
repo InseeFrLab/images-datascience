@@ -96,31 +96,32 @@ if [  "`which git`" != "" ]; then
     if [[ -n "$GIT_REPOSITORY" ]]; then
         if [[ -n "$GIT_PERSONAL_ACCESS_TOKEN" ]]; then
             REPO_DOMAIN=`echo "$GIT_REPOSITORY" | awk -F/ '{print $3}'`
-            if [  $REPO_DOMAIN = "github.com" ]; then
-                COMMAND=`echo git clone $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
+            if [ $REPO_DOMAIN = "github.com" ]; then
+                GIT_REPOSITORY=`echo $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
             else
-                COMMAND=`echo git clone $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/oauth2:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
+                GIT_REPOSITORY=`echo $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/oauth2:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
             fi
+        fi
+
+        if [[ -n "$ROOT_PROJECT_DIRECTORY" ]]; then
+            COMMAND="git -C $ROOT_PROJECT_DIRECTORY clone $GIT_REPOSITORY"
         else
-            COMMAND=`echo git clone $GIT_REPOSITORY`
+            COMMAND="git clone $GIT_REPOSITORY"
         fi
 
         if [[ -n "$GIT_BRANCH" ]]; then
             COMMAND="$COMMAND --branch $GIT_BRANCH"
         fi
 
+        $COMMAND
         if [[ -n "$ROOT_PROJECT_DIRECTORY" ]]; then
-            if [[ `ls $ROOT_PROJECT_DIRECTORY | grep -v "lost+found"` = "" ]]; then
-                cd $ROOT_PROJECT_DIRECTORY 
-                $COMMAND               
-                for f in *; do
-                    echo $f
-                    if [[ -d "$f" && $f != "lost+found" ]]; then
-                        echo directory
-                        chown -R $PROJECT_USER:$PROJECT_GROUP $f
-                    fi
-                done
-            fi
+            echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"
+            for f in "$ROOT_PROJECT_DIRECTORY"/*; do
+                if [[ -d "$f" && "$(basename $f)" != "lost+found" ]]; then
+                    echo "  $f"
+                    chown -R $PROJECT_USER:$PROJECT_GROUP $f
+                fi
+            done
         fi
     fi
 
