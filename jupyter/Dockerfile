@@ -32,4 +32,4 @@ USER 1000
 
 EXPOSE 8888
 
-CMD ["jupyter", "lab", "--no-browser", "--ip", "0.0.0.0"]
+CMD ["jupyter", "lab", "--no-browser", "--ip", "0.0.0.0", "--notebook-dir", "${WORKSPACE_DIR}"]
