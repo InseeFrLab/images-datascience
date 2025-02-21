@@ -199,7 +199,11 @@ EOF
 if [[ $PATH_STYLE_ACCES == 'true' ]] ; then  
 echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
 fi
-$PATH_STYLE=$(( [ "$PATH_STYLE_ACCES" ] && echo "path" || echo "vhost" ))
+if [ "$PATH_STYLE_ACCES" ]; then
+    PATH_STYLE="path"
+else
+    PATH_STYLE="vhost"
+fi
 duckdb -c "CREATE OR REPLACE PERSISTENT SECRET my_persistent_secret( \
     TYPE S3, \
     KEY_ID '"$AWS_ACCESS_KEY_ID"', \
