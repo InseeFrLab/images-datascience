@@ -196,9 +196,22 @@ cat <<EOF > ${HOME}/.duckdbrc
 -- Set s3 context
 CALL load_aws_credentials();
 EOF
-if [[ $S3_URL_STYLE_PATH == 'true' ]] ; then  
+if [[ $PATH_STYLE_ACCES == 'true' ]] ; then  
 echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
 fi
+$PATH_STYLE=$(( [ "$PATH_STYLE_ACCES" ] && echo "path" || echo "vhost" ))
+duckdb -c "CREATE OR REPLACE PERSISTENT SECRET my_persistent_secret( \
+    TYPE S3, \
+    KEY_ID '"$AWS_ACCESS_KEY_ID"', \
+    SECRET '"$AWS_SECRET_ACCESS_KEY"', \
+    REGION '"$AWS_DEFAULT_REGION"', \
+    SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
+    ENDPOINT '"$AWS_S3_ENDPOINT"', \
+    URL_STYLE '"$PATH_STYLE"' \
+  );"
+
+chmod 600  ~/.duckdb/stored_secrets/my_persistent_secret.duckdb_secret
+
 export DUCKDB_S3_ENDPOINT=$AWS_S3_ENDPOINT
 fi
 
