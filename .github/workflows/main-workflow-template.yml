@@ -47,7 +47,7 @@ on:
 
 jobs:
   matrix_prep:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -124,8 +124,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Restore common Docker images from cache
-        uses: ./.github/actions/cache-common-images
+      # - name: Restore common Docker images from cache
+      #   uses: ./.github/actions/cache-common-images
       
       - name: Push to DockerHub
         if: ${{ github.ref == 'refs/heads/main' }}
