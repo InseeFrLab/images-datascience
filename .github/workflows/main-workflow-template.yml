@@ -70,7 +70,7 @@ jobs:
         echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
   docker:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: matrix_prep
     strategy:
       fail-fast: false
