@@ -87,9 +87,6 @@ jobs:
 
       - name: Make free space
         uses: ./.github/actions/make-free-space
-        
-      - name: Cache common Docker images
-        uses: ./.github/actions/cache-common-images
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -126,6 +123,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Restore common Docker images from cache
+        uses: ./.github/actions/cache-common-images
       
       - name: Push to DockerHub
         if: ${{ github.ref == 'refs/heads/main' }}
