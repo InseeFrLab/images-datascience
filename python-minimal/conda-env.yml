@@ -4,6 +4,8 @@ channels:
 dependencies:
   - boto3
   - ipykernel
+  - nbclient
+  - nbformat
   - pip
   - pyarrow
   - python-duckdb
