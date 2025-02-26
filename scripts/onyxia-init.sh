@@ -86,6 +86,9 @@ if [[ $(id -u) = 0 ]]; then
     env | sed 's/^/export /g' | grep "AWS\|VAULT\|KC\|KUB\|MC" >> /root/.bashrc
 fi
 
+if [[ -z $ROOT_PROJECT_DIRECTORY ]]; then
+    ROOT_PROJECT_DIRECTORY="$WORSKSPACE_DIR"
+fi
 
 if [  "`which git`" != "" ]; then
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
@@ -96,32 +99,17 @@ if [  "`which git`" != "" ]; then
     if [[ -n "$GIT_REPOSITORY" ]]; then
         if [[ -n "$GIT_PERSONAL_ACCESS_TOKEN" ]]; then
             REPO_DOMAIN=`echo "$GIT_REPOSITORY" | awk -F/ '{print $3}'`
-            if [  $REPO_DOMAIN = "github.com" ]; then
-                COMMAND=`echo git clone $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
+            if [ $REPO_DOMAIN = "github.com" ]; then
+                GIT_REPOSITORY=`echo $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
             else
-                COMMAND=`echo git clone $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/oauth2:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
+                GIT_REPOSITORY=`echo $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/oauth2:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
             fi
-        else
-            COMMAND=`echo git clone $GIT_REPOSITORY`
         fi
 
         if [[ -n "$GIT_BRANCH" ]]; then
-            COMMAND="$COMMAND --branch $GIT_BRANCH"
-        fi
-
-        if [[ -n "$ROOT_PROJECT_DIRECTORY" ]]; then
-            if [[ `ls $ROOT_PROJECT_DIRECTORY | grep -v "lost+found"` = "" ]]; then
-                cd $ROOT_PROJECT_DIRECTORY 
-                $COMMAND               
-                for f in *; do
-                    echo $f
-                    if [[ -d "$f" && $f != "lost+found" ]]; then
-                        echo directory
-                        chown -R $PROJECT_USER:$PROJECT_GROUP $f
-                    fi
-                done
-                cd $HOME  
-            fi
+            git -C $ROOT_PROJECT_DIRECTORY clone $GIT_REPOSITORY --branch $GIT_BRANCH
+        else
+            git -C $ROOT_PROJECT_DIRECTORY clone $GIT_REPOSITORY
         fi
     fi
 
@@ -187,7 +175,6 @@ if [[ $SUDO -eq 0 ]]; then
     done
 fi
 
-
 # Configure duckdb CLI
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
 cat <<EOF > ${HOME}/.duckdbrc
@@ -196,6 +183,7 @@ cat <<EOF > ${HOME}/.duckdbrc
 -- Set s3 context
 CALL load_aws_credentials();
 EOF
+
 if [[ $S3_URL_STYLE_PATH == 'true' ]] ; then  
 echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
 fi
@@ -222,6 +210,14 @@ fi
 if [[ -n "$CONDA_DIR" && "$CUSTOM_PYTHON_ENV" != "true" ]]; then
     echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc ;
 fi
+
+echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"
+for f in "$ROOT_PROJECT_DIRECTORY"/*; do
+    if [[ -d "$f" && "$(basename $f)" != "lost+found" ]]; then
+        echo "  $f"
+        chown -R $PROJECT_USER:$PROJECT_GROUP $f
+    fi
+done
 
 echo "execution of $@"
 exec "$@"
