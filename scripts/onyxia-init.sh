@@ -196,10 +196,10 @@ cat <<EOF > ${HOME}/.duckdbrc
 -- Set s3 context
 CALL load_aws_credentials();
 EOF
-if [[ $PATH_STYLE_ACCES == 'true' ]] ; then  
+if [[ $AWS_PATH_STYLE_ACCESS == 'true' ]] ; then  
 echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
 fi
-if [ "$PATH_STYLE_ACCES" ]; then
+if [ "$AWS_PATH_STYLE_ACCESS" ]; then
     PATH_STYLE="path"
 else
     PATH_STYLE="vhost"
