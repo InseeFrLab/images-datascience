@@ -190,15 +190,6 @@ fi
 
 # Configure duckdb CLI
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
-cat <<EOF > ${HOME}/.duckdbrc
--- Duck head prompt
-.prompt 'duckdb > '
--- Set s3 context
-CALL load_aws_credentials();
-EOF
-if [[ $AWS_PATH_STYLE_ACCESS == 'true' ]] ; then  
-echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
-fi
 if [ "$AWS_PATH_STYLE_ACCESS" ]; then
     PATH_STYLE="path"
 else
@@ -215,8 +206,6 @@ duckdb -c "CREATE OR REPLACE PERSISTENT SECRET my_persistent_secret( \
   );"
 
 chmod 600  ~/.duckdb/stored_secrets/my_persistent_secret.duckdb_secret
-
-export DUCKDB_S3_ENDPOINT=$AWS_S3_ENDPOINT
 fi
 
 if [[ -n "$FAUXPILOT_SERVER" ]]; then
