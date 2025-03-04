@@ -45,8 +45,8 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
             KEYS=$(jq -r '.data.data.".onyxia".keysOrdering | .[]' <<< "$JSON")
         fi
 
-        for i in $KEYS; 
-        do 
+        for i in $KEYS;
+        do
             echo $i
             value=$(jq -r .data.data.$i <<< $JSON)
             export $i="${value}"
@@ -73,7 +73,7 @@ if [  "`which kubectl`" != "" ]; then
     export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode | jq -r ' .["kubernetes.io"].serviceaccount.name'`
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     # Fix permissions on kubectl config file
-    chown -R onyxia:users ${HOME}/.kube 
+    chown -R onyxia:users ${HOME}/.kube
 fi
 
 
@@ -111,8 +111,8 @@ if [  "`which git`" != "" ]; then
 
         if [[ -n "$ROOT_PROJECT_DIRECTORY" ]]; then
             if [[ `ls $ROOT_PROJECT_DIRECTORY | grep -v "lost+found"` = "" ]]; then
-                cd $ROOT_PROJECT_DIRECTORY 
-                $COMMAND               
+                cd $ROOT_PROJECT_DIRECTORY
+                $COMMAND
                 for f in *; do
                     echo $f
                     if [[ -d "$f" && $f != "lost+found" ]]; then
@@ -120,7 +120,7 @@ if [  "`which git`" != "" ]; then
                         chown -R $PROJECT_USER:$PROJECT_GROUP $f
                     fi
                 done
-                cd $HOME  
+                cd $HOME
             fi
         fi
     fi
@@ -159,11 +159,11 @@ if command -v R; then
     env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
 fi
 
-if [[ "$DARK_MODE" == "true" ]]; then 
+if [[ "$DARK_MODE" == "true" ]]; then
     if command -v jupyter-lab; then
         mkdir ${CONDA_DIR}/share/jupyter/lab/settings
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${CONDA_DIR}/share/jupyter/lab/settings/overrides.json;
-    fi 
+    fi
     if command -v code-server; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
     fi
@@ -190,6 +190,7 @@ fi
 
 # Configure duckdb CLI
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
+    echo ".prompt 'duckdb > '" > ${HOME}/.duckdbrc
     if [ "$AWS_PATH_STYLE_ACCESS" ]; then
         PATH_STYLE="path"
     else
