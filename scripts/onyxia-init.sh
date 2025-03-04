@@ -191,10 +191,10 @@ fi
 # Configure duckdb CLI
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
     echo ".prompt 'duckdb > '" > ${HOME}/.duckdbrc
-    if [ "$AWS_PATH_STYLE_ACCESS" ]; then
-        PATH_STYLE="path"
+    if [[ -n $AWS_PATH_STYLE_ACCESS ]]; then
+        AWS_PATH_STYLE="path"
     else
-        PATH_STYLE="vhost"
+        AWS_PATH_STYLE="vhost"
     fi
     duckdb -c "CREATE OR REPLACE PERSISTENT SECRET onyxia_secret( \
         TYPE S3, \
@@ -203,17 +203,10 @@ if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
         REGION '"$AWS_DEFAULT_REGION"', \
         SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
         ENDPOINT '"$AWS_S3_ENDPOINT"', \
-        URL_STYLE '"$PATH_STYLE"' \
+        URL_STYLE '"$AWS_PATH_STYLE"' \
     );"
-
-
-if [[ $S3_URL_STYLE_PATH == 'true' ]] ; then
-echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
 fi
-export DUCKDB_S3_ENDPOINT=$AWS_S3_ENDPOINT
->>>>>>> main
-fi
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
+chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
 
 if [[ -n "$FAUXPILOT_SERVER" ]]; then
     dir="$HOME/.local/share/code-server/User"
