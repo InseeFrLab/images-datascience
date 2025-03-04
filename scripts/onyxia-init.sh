@@ -86,6 +86,9 @@ if [[ $(id -u) = 0 ]]; then
     env | sed 's/^/export /g' | grep "AWS\|VAULT\|KC\|KUB\|MC" >> /root/.bashrc
 fi
 
+if [[ -z $ROOT_PROJECT_DIRECTORY ]]; then
+    ROOT_PROJECT_DIRECTORY="$WORSKSPACE_DIR"
+fi
 
 if [  "`which git`" != "" ]; then
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
@@ -96,13 +99,11 @@ if [  "`which git`" != "" ]; then
     if [[ -n "$GIT_REPOSITORY" ]]; then
         if [[ -n "$GIT_PERSONAL_ACCESS_TOKEN" ]]; then
             REPO_DOMAIN=`echo "$GIT_REPOSITORY" | awk -F/ '{print $3}'`
-            if [  $REPO_DOMAIN = "github.com" ]; then
-                COMMAND=`echo git clone $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
+            if [ $REPO_DOMAIN = "github.com" ]; then
+                GIT_REPOSITORY=`echo $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
             else
-                COMMAND=`echo git clone $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/oauth2:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
+                GIT_REPOSITORY=`echo $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/oauth2:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
             fi
-        else
-            COMMAND=`echo git clone $GIT_REPOSITORY`
         fi
 
         if [[ -n "$GIT_BRANCH" ]]; then
@@ -187,7 +188,6 @@ if [[ $SUDO -eq 0 ]]; then
     done
 fi
 
-
 # Configure duckdb CLI
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
     echo ".prompt 'duckdb > '" > ${HOME}/.duckdbrc
@@ -205,6 +205,13 @@ if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
         ENDPOINT '"$AWS_S3_ENDPOINT"', \
         URL_STYLE '"$PATH_STYLE"' \
     );"
+
+
+if [[ $S3_URL_STYLE_PATH == 'true' ]] ; then
+echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
+fi
+export DUCKDB_S3_ENDPOINT=$AWS_S3_ENDPOINT
+>>>>>>> main
 fi
     chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
 
@@ -228,6 +235,14 @@ fi
 if [[ -n "$CONDA_DIR" && "$CUSTOM_PYTHON_ENV" != "true" ]]; then
     echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc ;
 fi
+
+echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"
+for f in "$ROOT_PROJECT_DIRECTORY"/*; do
+    if [[ -d "$f" && "$(basename $f)" != "lost+found" ]]; then
+        echo "  $f"
+        chown -R $PROJECT_USER:$PROJECT_GROUP $f
+    fi
+done
 
 echo "execution of $@"
 exec "$@"

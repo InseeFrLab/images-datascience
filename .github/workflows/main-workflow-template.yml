@@ -57,11 +57,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5 
       with:
-        python-version: '3.11'
+        python-version: '3.13.2'
 
     - id: set-matrix
       run: |
-        matrix=$(python utils/generate-matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }} \
+        matrix=$(python3 utils/generate-matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }} \
                  --python_version_1 ${{ inputs.python_version_1 }} --python_version_2 ${{ inputs.python_version_2 }} \
                  --r_version_1 ${{ inputs.r_version_1 }} --r_version_2 ${{ inputs.r_version_2 }} --spark_version ${{ inputs.spark_version }} \
                  --build_gpu ${{ inputs.build_gpu }} --base_image_gpu ${{ inputs.base_image_gpu }} \
@@ -85,7 +85,7 @@ jobs:
         if: ${{ inputs.context == 'base' }}
         run: cp -r scripts/ base/scripts/
 
-      - name: Make free space on GHA VM
+      - name: Make free space
         uses: ./.github/actions/make-free-space
 
       - name: Set up QEMU
@@ -123,6 +123,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Restore common Docker images from cache
+        uses: ./.github/actions/cache-common-images
       
       - name: Push to DockerHub
         if: ${{ github.ref == 'refs/heads/main' }}

@@ -1,4 +1,4 @@
-name: Container Structure Test
+name: Make free space
 description: Remove unwanted software to increase available space on GHA build VM.
 # https://github.com/actions/virtual-environments/issues/2840
 
@@ -14,7 +14,6 @@ runs:
         sudo rm -rf "/usr/local/share/boost"
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
         sudo rm -rf /opt/hostedtoolcache/CodeQL
-        docker image prune --all --force
     - name: Show available space
       shell: bash
       run: |
