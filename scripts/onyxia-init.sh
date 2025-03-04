@@ -190,23 +190,22 @@ fi
 
 # Configure duckdb CLI
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
-if [ "$AWS_PATH_STYLE_ACCESS" ]; then
-    PATH_STYLE="path"
-else
-    PATH_STYLE="vhost"
+    if [ "$AWS_PATH_STYLE_ACCESS" ]; then
+        PATH_STYLE="path"
+    else
+        PATH_STYLE="vhost"
+    fi
+    duckdb -c "CREATE OR REPLACE PERSISTENT SECRET onyxia_secret( \
+        TYPE S3, \
+        KEY_ID '"$AWS_ACCESS_KEY_ID"', \
+        SECRET '"$AWS_SECRET_ACCESS_KEY"', \
+        REGION '"$AWS_DEFAULT_REGION"', \
+        SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
+        ENDPOINT '"$AWS_S3_ENDPOINT"', \
+        URL_STYLE '"$PATH_STYLE"' \
+    );"
 fi
-duckdb -c "CREATE OR REPLACE PERSISTENT SECRET my_persistent_secret( \
-    TYPE S3, \
-    KEY_ID '"$AWS_ACCESS_KEY_ID"', \
-    SECRET '"$AWS_SECRET_ACCESS_KEY"', \
-    REGION '"$AWS_DEFAULT_REGION"', \
-    SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
-    ENDPOINT '"$AWS_S3_ENDPOINT"', \
-    URL_STYLE '"$PATH_STYLE"' \
-  );"
-
-chmod 600  ~/.duckdb/stored_secrets/my_persistent_secret.duckdb_secret
-fi
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
 
 if [[ -n "$FAUXPILOT_SERVER" ]]; then
     dir="$HOME/.local/share/code-server/User"
