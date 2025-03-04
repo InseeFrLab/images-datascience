@@ -45,8 +45,8 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
             KEYS=$(jq -r '.data.data.".onyxia".keysOrdering | .[]' <<< "$JSON")
         fi
 
-        for i in $KEYS; 
-        do 
+        for i in $KEYS;
+        do
             echo $i
             value=$(jq -r .data.data.$i <<< $JSON)
             export $i="${value}"
@@ -73,7 +73,7 @@ if [  "`which kubectl`" != "" ]; then
     export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode | jq -r ' .["kubernetes.io"].serviceaccount.name'`
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     # Fix permissions on kubectl config file
-    chown -R onyxia:users ${HOME}/.kube 
+    chown -R onyxia:users ${HOME}/.kube
 fi
 
 
@@ -147,11 +147,11 @@ if command -v R; then
     env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
 fi
 
-if [[ "$DARK_MODE" == "true" ]]; then 
+if [[ "$DARK_MODE" == "true" ]]; then
     if command -v jupyter-lab; then
         mkdir ${CONDA_DIR}/share/jupyter/lab/settings
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${CONDA_DIR}/share/jupyter/lab/settings/overrides.json;
-    fi 
+    fi
     if command -v code-server; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
     fi
@@ -177,18 +177,23 @@ fi
 
 # Configure duckdb CLI
 if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
-cat <<EOF > ${HOME}/.duckdbrc
--- Duck head prompt
-.prompt 'duckdb > '
--- Set s3 context
-CALL load_aws_credentials();
-EOF
-
-if [[ $S3_URL_STYLE_PATH == 'true' ]] ; then  
-echo set S3_URL_STYLE='path' >> ${HOME}/.duckdbrc
+    echo ".prompt 'duckdb > '" > ${HOME}/.duckdbrc
+    if [[ -n $AWS_PATH_STYLE_ACCESS ]]; then
+        AWS_PATH_STYLE="path"
+    else
+        AWS_PATH_STYLE="vhost"
+    fi
+    duckdb -c "CREATE OR REPLACE PERSISTENT SECRET s3_onyxia_connection( \
+        TYPE S3, \
+        KEY_ID '"$AWS_ACCESS_KEY_ID"', \
+        SECRET '"$AWS_SECRET_ACCESS_KEY"', \
+        REGION '"$AWS_DEFAULT_REGION"', \
+        SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
+        ENDPOINT '"$AWS_S3_ENDPOINT"', \
+        URL_STYLE '"$AWS_PATH_STYLE"' \
+    );"
 fi
-export DUCKDB_S3_ENDPOINT=$AWS_S3_ENDPOINT
-fi
+chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
 
 if [[ -n "$FAUXPILOT_SERVER" ]]; then
     dir="$HOME/.local/share/code-server/User"
