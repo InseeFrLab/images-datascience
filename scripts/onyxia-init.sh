@@ -107,22 +107,9 @@ if [  "`which git`" != "" ]; then
         fi
 
         if [[ -n "$GIT_BRANCH" ]]; then
-            COMMAND="$COMMAND --branch $GIT_BRANCH"
-        fi
-
-        if [[ -n "$ROOT_PROJECT_DIRECTORY" ]]; then
-            if [[ `ls $ROOT_PROJECT_DIRECTORY | grep -v "lost+found"` = "" ]]; then
-                cd $ROOT_PROJECT_DIRECTORY
-                $COMMAND
-                for f in *; do
-                    echo $f
-                    if [[ -d "$f" && $f != "lost+found" ]]; then
-                        echo directory
-                        chown -R $PROJECT_USER:$PROJECT_GROUP $f
-                    fi
-                done
-                cd $HOME
-            fi
+            git -C $ROOT_PROJECT_DIRECTORY clone $GIT_REPOSITORY --branch $GIT_BRANCH
+        else
+            git -C $ROOT_PROJECT_DIRECTORY clone $GIT_REPOSITORY
         fi
     fi
 
@@ -196,7 +183,7 @@ if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
     else
         AWS_PATH_STYLE="vhost"
     fi
-    duckdb -c "CREATE OR REPLACE PERSISTENT SECRET onyxia_secret( \
+    duckdb -c "CREATE OR REPLACE PERSISTENT SECRET s3_onyxia_connection( \
         TYPE S3, \
         KEY_ID '"$AWS_ACCESS_KEY_ID"', \
         SECRET '"$AWS_SECRET_ACCESS_KEY"', \
