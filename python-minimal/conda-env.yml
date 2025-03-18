@@ -11,4 +11,5 @@ dependencies:
   - python-duckdb
   - requests
   - s3fs
+  - uv
   - wheel
