@@ -6,29 +6,11 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ARG PYTHON_VERSION="3.12.9"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
-ENV CONDA_DIR="/opt/conda"
-ENV PATH="${CONDA_DIR}/bin:${PATH}"
-
 USER root
 
-COPY conda-env.yml .
-
-RUN /opt/install-conda.sh && \
-    # Set specified Python version in base Conda env
-    conda install python=="${PYTHON_VERSION}" && \
-    # Pin Python version to prevent Conda from upgrading it
-    touch ${CONDA_DIR}/conda-meta/pinned && \
-    echo "python==${PYTHON_VERSION}" >> ${CONDA_DIR}/conda-meta/pinned && \
-    # Install essential Python packages
-    conda env update -n base -f conda-env.yml && \
-    # Install duckdb extensions
-    conda run -n base python /opt/install-duckdb-extensions.py && \
+RUN /opt/install-python.sh && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
-    # Clean
-    rm conda-env.yml && \ 
-    conda clean --all -f -y && \
-    rm -rf /var/lib/apt/lists/*
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 USER 1000
 

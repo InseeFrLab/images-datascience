@@ -8,10 +8,9 @@ USER root
 RUN /opt/install-jupyterlab.sh && \
     # Install JupyterLab extensions
     pip3 install jupyterlab-git && \
-    # If using Conda and Julia is installed, make its kernel available in Jupyter
-    if command -v julia && [ -n "$CONDA_DIR" ]; then \
-        julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' && \
-        mv "${HOME}/.local/share/jupyter/kernels/julia"* "${CONDA_DIR}/share/jupyter/kernels/"; \
+    # If Julia is installed, make its kernel available in Jupyter
+    if command -v julia; then \
+        julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"'
     fi && \
     # If R is installed, make its kernel available in Jupyter
     if command -v R; then \
@@ -20,13 +19,10 @@ RUN /opt/install-jupyterlab.sh && \
     # Generate jupyter server config
     jupyter server --generate-config && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
     jupyter lab clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    if command -v conda; then \
-        conda clean --all -f -y; \
-    fi
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 

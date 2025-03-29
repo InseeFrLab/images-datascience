@@ -149,8 +149,8 @@ fi
 
 if [[ "$DARK_MODE" == "true" ]]; then
     if command -v jupyter-lab; then
-        mkdir ${CONDA_DIR}/share/jupyter/lab/settings
-        echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > ${CONDA_DIR}/share/jupyter/lab/settings/overrides.json;
+        mkdir $HOME/.jupyter/lab/settings
+        echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > $HOME/.jupyter/lab/settings/overrides.json;
     fi
     if command -v code-server; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
@@ -209,11 +209,6 @@ source /opt/onyxia-set-repositories.sh
 if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
     echo "download $PERSONAL_INIT_SCRIPT"
     curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
-fi
-
-# Activate Conda env by default in shell except if specified otherwise
-if [[ -n "$CONDA_DIR" && "$CUSTOM_PYTHON_ENV" != "true" ]]; then
-    echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate" >> ${HOME}/.bashrc ;
 fi
 
 echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"

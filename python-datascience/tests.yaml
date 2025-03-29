@@ -38,10 +38,6 @@ commandTests:
     expectedOutput: ["/usr/local/bin/argo"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["conda"]
-    expectedOutput: ["/opt/conda/bin/conda"]
-  - name: "Does the binary exists?"
-    command: "which"
     args: ["python"]
     expectedOutput: ["/opt/conda/bin/python"]
   - name: "Does the binary exists?"

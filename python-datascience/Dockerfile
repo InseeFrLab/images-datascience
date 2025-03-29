@@ -5,16 +5,11 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
-COPY conda-env.yml .
+COPY requirements.txt .
 
-RUN ls -larth /opt/
-RUN conda env update -n base -f conda-env.yml && \
+RUN pip install --no-cache-dir -r requirements.txt && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
-    # Clean
-    rm conda-env.yml && \ 
-    conda clean --all -f -y && \
-    rm -rf /var/lib/apt/lists/*
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 USER 1000
 
