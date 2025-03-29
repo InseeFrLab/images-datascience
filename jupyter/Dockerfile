@@ -8,9 +8,13 @@ USER root
 RUN /opt/install-jupyterlab.sh && \
     # Install JupyterLab extensions
     pip3 install jupyterlab-git && \
+    # If Python is installed, make its kernel available in Jupyter
+    if command -v python3; then \
+        pip install --no-cache-dir ipykernel \
+    fi && \
     # If Julia is installed, make its kernel available in Jupyter
     if command -v julia; then \
-        julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"'
+        julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' \
     fi && \
     # If R is installed, make its kernel available in Jupyter
     if command -v R; then \
