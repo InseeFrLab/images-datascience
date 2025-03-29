@@ -9,7 +9,9 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 

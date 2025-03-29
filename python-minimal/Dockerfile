@@ -10,7 +10,9 @@ USER root
 
 RUN /opt/install-python.sh && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 
