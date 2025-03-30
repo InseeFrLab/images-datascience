@@ -45,7 +45,7 @@ parser.add_argument(
     help="Specify a version for R or Python."
 )
 parser.add_argument(
-    "--no-cache",
+    "--nocache",
     action="store_true",
     help="Tell Docker to build without using caching."
 )
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     chain = chains[chain_name]
     gpu = args.gpu
     version = args.version
-    no_cache = args.no-cache
+    no_cache = args.no_cache
     language_key = "PYTHON_VERSION" if "python-minimal" in chain else "R_VERSION"
 
     # Build chain
