@@ -39,7 +39,7 @@ cd Python-${PYTHON_VERSION}
 		--enable-shared \
 		--with-lto \
 		--with-ensurepip
-make -j4  # GHA's public VM have 4 cores
+make -j8  # GHA's public VM have 4 cores
 sudo make install
 rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
 
