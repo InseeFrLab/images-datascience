@@ -10,7 +10,7 @@ pandas
 plotly
 polars
 pyarrow
-python-duckdb
+duckdb
 requests
 s3fs
 seaborn
