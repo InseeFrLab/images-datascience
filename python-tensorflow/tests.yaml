@@ -38,16 +38,12 @@ commandTests:
     expectedOutput: ["/usr/local/bin/argo"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["conda"]
-    expectedOutput: ["/opt/conda/bin/conda"]
-  - name: "Does the binary exists?"
-    command: "which"
     args: ["python"]
-    expectedOutput: ["/opt/conda/bin/python"]
+    expectedOutput: ["/usr/local/bin/python3"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["pip"]
-    expectedOutput: ["/opt/conda/bin/pip"]
+    expectedOutput: ["/usr/local/bin/pip3"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["duckdb"]

@@ -13,20 +13,6 @@ if [  "`which pip`" != "" ]; then
     fi
 fi
 
-if [  "`which conda`" != "" ]; then
-    if [[ -n "$CONDA_REPOSITORY" ]]; then
-        echo "configuration conda (add channels)"
-        conda config --add channels $CONDA_REPOSITORY
-        conda config --remove channels conda-forge
-        conda config --remove channels conda-forge --file /opt/conda/.condarc
-    fi
-
-    if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
-        echo "configuration of conda to a custom crt"
-        conda config --set ssl_verify $PATH_TO_CA_BUNDLE
-    fi
-fi
-
 if command -v R; then
   if [[ -n "$R_REPOSITORY" ]] || [[ -n "$PACKAGE_MANAGER_URL" ]]; then
       echo "configuration r (add local repository)"

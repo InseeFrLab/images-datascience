@@ -202,7 +202,7 @@ if [[ -n "$FAUXPILOT_SERVER" ]]; then
     jq --arg key "fauxpilot.enabled" --argjson value "true" --indent 4 '. += {($key): $value}'  $dir/$file > $dir/$file.tmp && mv $dir/$file.tmp $dir/$file
 fi
 
-# The commands related to setting the various repositories (R/CRAN, pip, conda)
+# The commands related to setting the various repositories (R/CRAN, pip)
 # are located in specific script
 source /opt/onyxia-set-repositories.sh
 

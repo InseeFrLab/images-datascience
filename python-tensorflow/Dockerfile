@@ -9,7 +9,6 @@ RUN pip3 install tensorflow && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    conda clean --all -f -y && \
     rm -rf /var/lib/apt/lists/*
 
 USER 1000

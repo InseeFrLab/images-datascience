@@ -10,11 +10,6 @@ function apt_install() {
     fi
 }
 
-if command -v conda ; then
-    conda install -y jupyterlab
-else
-    if [ "`which pip3`" = "" ]; then
-        apt_install python3-pip
-    fi
+if command -v pip3 ; then
     pip3 install jupyterlab
 fi
