@@ -13,7 +13,6 @@ function apt_install() {
 # Install system libs
 apt_install \
     dpkg-dev \
-    libbluetooth-dev \
     libbz2-dev \
     libc6-dev \
     libdb-dev \
@@ -22,7 +21,6 @@ apt_install \
     liblzma-dev \
     libncursesw5-dev \
     libreadline-dev \
-    libsqlite3-dev \
     libssl-dev \
     tk-dev \
     uuid-dev \
@@ -34,7 +32,6 @@ wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION
 tar xzvf Python-${PYTHON_VERSION}.tgz
 cd Python-${PYTHON_VERSION}
 ./configure \
-		--enable-loadable-sqlite-extensions \
 		--enable-optimizations \
 		--enable-shared \
 		--with-lto \
