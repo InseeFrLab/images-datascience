@@ -41,6 +41,9 @@ cd Python-${PYTHON_VERSION}
 		--with-ensurepip
 make
 sudo make install
+rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
+
+# Add to PATH
 sudo ln -fs /usr/local/bin/python3 /usr/bin/python3
 
 # Ensure pip is installed
