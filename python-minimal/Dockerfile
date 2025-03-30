@@ -3,12 +3,17 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-ARG PYTHON_VERSION="3.12.9"
+ARG PYTHON_VERSION="3.12.10"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 USER root
 
-RUN /opt/install-python.sh && \
+# Build Python from source
+RUN /opt/install-python.sh
+
+# Install Python packages
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean

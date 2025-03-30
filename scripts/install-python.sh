@@ -39,7 +39,7 @@ cd Python-${PYTHON_VERSION}
 		--enable-shared \
 		--with-lto \
 		--with-ensurepip
-make -j8
+make -j4
 sudo make install
 rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
 
