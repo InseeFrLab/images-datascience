@@ -4,16 +4,10 @@ geopandas
 matplotlib
 mlflow
 nltk
-numpy
-pandas
 plotly
 polars
-pyarrow
-duckdb
-requests
-s3fs
-seaborn
 scikit-learn
 scipy
+seaborn
 statsmodels
 xgboost
