@@ -10,7 +10,8 @@ function apt_install() {
     fi
 }
 
-# Install system libs
+# Install system libraries required to build Python from source
+savedAptMark="$(apt-mark showmanual)"
 apt_install \
     dpkg-dev \
     libbz2-dev \
@@ -21,6 +22,7 @@ apt_install \
     liblzma-dev \
     libncursesw5-dev \
     libreadline-dev \
+    libsqlite3-dev \
     libssl-dev \
     tk-dev \
     uuid-dev \
@@ -32,6 +34,7 @@ wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION
 tar xzvf Python-${PYTHON_VERSION}.tgz
 cd Python-${PYTHON_VERSION}
 ./configure \
+        --enable-loadable-sqlite-extensions \
 		--enable-optimizations \
 		--enable-shared \
 		--with-lto \
@@ -42,12 +45,15 @@ ldconfig
 
 # Checks
 python3 --version
-python3 -m ensurepip --upgrade
+python3 -m ensurepip
+pip install --upgrade pip
 
 # Useful symlinks
 ln -s /usr/local/bin/python3 /usr/local/bin/python
 ln -s /usr/local/bin/pip3 /usr/local/bin/pip
 
 # Clean
+apt-mark auto '.*' > /dev/null
+apt-mark manual $savedAptMark
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 rm -rf /var/lib/apt/lists/*
