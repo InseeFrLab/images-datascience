@@ -18,7 +18,6 @@ apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     git \
-    gnupg2 \
     jq \
     less \
     locales \
