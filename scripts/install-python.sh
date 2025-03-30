@@ -50,7 +50,6 @@ pip3 install --upgrade pip
 
 # Useful symlinks
 ln -s /usr/local/bin/python3 /usr/local/bin/python
-ln -s /usr/local/bin/pip3 /usr/local/bin/pip
 
 # Clean
 apt-mark auto '.*' > /dev/null
