@@ -87,4 +87,4 @@ if __name__ == "__main__":
             cmd.extend(["--no-cache"])
 
         print(" ".join(cmd))
-        subprocess.run(cmd)
+        subprocess.run(cmd, check=True)

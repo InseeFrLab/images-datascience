@@ -37,13 +37,17 @@ cd Python-${PYTHON_VERSION}
 		--with-lto \
 		--with-ensurepip
 make -j 8  # GHA's public VM have 4 cores
-sudo make install
-rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
+make install
+ldconfig
+
+# Checks
+python3 --version
+python3 -m ensurepip --upgrade
 
 # Useful symlinks
 ln -s /usr/local/bin/python3 /usr/local/bin/python
 ln -s /usr/local/bin/pip3 /usr/local/bin/pip
 
-# Checks
-python3 --version
-python3 -m ensurepip --upgrade
+# Clean
+apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
+rm -rf /var/lib/apt/lists/*

@@ -11,16 +11,15 @@ ENV PATH="/usr/local/bin:${PATH}"
 
 USER root
 
-# Build Python from source
-RUN /opt/install-python.sh
-
-# Install Python packages
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \
+
+# Build Python from source
+RUN /opt/install-python.sh && \
+    pip install --no-cache-dir -r requirements.txt && \
+    # Re-install system libs that may have been removed by autoremove
+    /opt/install-system-libs.sh && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    # Clean
-    rm -rf /var/lib/apt/lists/*
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
 
 USER 1000
 
