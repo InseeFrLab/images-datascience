@@ -38,7 +38,6 @@ RUN chmod -R +x /opt/ && \
     locale-gen en_US.UTF-8 && \
     # Install common clients useful for Onyxia
     /opt/install-kubectl.sh && \
-    /opt/install-kubectl-krew.sh && \
     /opt/install-helm.sh && \
     /opt/install-mc.sh && \
     /opt/install-vault-cli.sh && \
@@ -51,8 +50,6 @@ RUN chmod -R +x /opt/ && \
     chmod +x /opt/onyxia-init.sh && \
     # Clean
     rm -rf /var/lib/apt/lists/*
-
-ENV PATH="${PATH}:${HOME}/.local/bin:${HOME}/.krew/bin"
 
 # Set locales
 ENV LC_ALL="en_US.UTF-8"

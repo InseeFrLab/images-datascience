@@ -6,6 +6,9 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ARG PYTHON_VERSION="3.12.9"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
+# Ensure local Python is preferred over system version
+ENV PATH="/usr/local/bin:${PATH}"
+
 USER root
 
 # Build Python from source

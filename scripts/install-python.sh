@@ -36,9 +36,13 @@ cd Python-${PYTHON_VERSION}
 		--enable-shared \
 		--with-lto \
 		--with-ensurepip
-make -j8  # GHA's public VM have 4 cores
+make -j 8  # GHA's public VM have 4 cores
 sudo make install
 rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
+
+# Useful symlinks
+ln -s /usr/local/bin/python3 /usr/local/bin/python
+ln -s /usr/local/bin/pip3 /usr/local/bin/pip
 
 # Checks
 python3 --version
