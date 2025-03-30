@@ -12,13 +12,33 @@ function apt_install() {
 
 # Install system libs
 apt_install \
+    dpkg-dev \
+    libbluetooth-dev \
+    libbz2-dev \
+    libc6-dev \
+    libdb-dev \
+    libffi-dev \
+    libgdbm-dev \
+    liblzma-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    tk-dev \
+    uuid-dev \
+    xz-utils \
     zlib1g-dev
 
 # Install Python
 wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
 tar xzvf Python-${PYTHON_VERSION}.tgz
 cd Python-${PYTHON_VERSION}
-./configure --enable-optimizations --with-lto
+./configure \
+		--enable-loadable-sqlite-extensions \
+		--enable-optimizations \
+		--enable-shared \
+		--with-lto \
+		--with-ensurepip
 make
 sudo make install
 sudo ln -fs /usr/local/bin/python3 /usr/bin/python3
