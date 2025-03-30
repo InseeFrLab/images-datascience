@@ -25,7 +25,6 @@ apt-get install -y --no-install-recommends \
     nano \
     openssh-client \
     postgresql-client \
-    python3-pip \
     sudo \
     tini \
     unzip \
