@@ -39,12 +39,15 @@ cd Python-${PYTHON_VERSION}
 		--enable-shared \
 		--with-lto \
 		--with-ensurepip
-make
+make -j8
 sudo make install
 rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
 
 # Add to PATH
-sudo ln -fs /usr/local/bin/python3 /usr/bin/python3
+sudo ln -fs /usr/local/bin/python /usr/bin/python${PYTHON_VERSION}
+sudo ln -fs /usr/local/bin/python3 /usr/bin/python${PYTHON_VERSION}
+sudo ln -fs /usr/local/bin/pip /usr/bin/pip${PYTHON_VERSION}
+sudo ln -fs /usr/local/bin/pip3 /usr/bin/pip${PYTHON_VERSION}
 
 # Ensure pip is installed
 python3 -m ensurepip --upgrade
