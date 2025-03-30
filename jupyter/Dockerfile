@@ -10,11 +10,11 @@ RUN /opt/install-jupyterlab.sh && \
     pip3 install jupyterlab-git && \
     # If Python is installed, make its kernel available in Jupyter
     if command -v python3; then \
-        pip install --no-cache-dir ipykernel nbclient nbformat \
+        pip install --no-cache-dir ipykernel nbclient nbformat; \
     fi && \
     # If Julia is installed, make its kernel available in Jupyter
     if command -v julia; then \
-        julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"' \
+        julia -e 'using Pkg; pkg"add IJulia"; pkg"precompile"'; \
     fi && \
     # If R is installed, make its kernel available in Jupyter
     if command -v R; then \
