@@ -46,6 +46,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--no-cache",
+    action="store_true",
     help="Tell Docker to build without using caching."
 )
 
