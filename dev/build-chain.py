@@ -44,7 +44,10 @@ parser.add_argument(
     "--version",
     help="Specify a version for R or Python."
 )
-
+parser.add_argument(
+    "--no-cache",
+    help="Tell Docker to build without using caching."
+)
 
 if __name__ == "__main__":
 
@@ -54,6 +57,7 @@ if __name__ == "__main__":
     chain = chains[chain_name]
     gpu = args.gpu
     version = args.version
+    no_cache = args.no-cache
     language_key = "PYTHON_VERSION" if "python-minimal" in chain else "R_VERSION"
 
     # Build chain
@@ -78,6 +82,8 @@ if __name__ == "__main__":
         ]
         if version:
             cmd.extend(["--build-arg", f"{language_key}={version}"])
+        if no_cache:
+            cmd.extend(["--no-cache"])
 
         print(" ".join(cmd))
         subprocess.run(cmd)
