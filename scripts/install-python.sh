@@ -49,5 +49,7 @@ sudo ln -fs /usr/local/bin/python3 /usr/bin/python${PYTHON_VERSION}
 sudo ln -fs /usr/local/bin/pip /usr/bin/pip${PYTHON_VERSION}
 sudo ln -fs /usr/local/bin/pip3 /usr/bin/pip${PYTHON_VERSION}
 
-# Ensure pip is installed
+# Checks
+python --version
+python3 --version
 python3 -m ensurepip --upgrade
