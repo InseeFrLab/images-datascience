@@ -37,24 +37,22 @@ cd Python-${PYTHON_VERSION}
         --enable-loadable-sqlite-extensions \
 		--enable-optimizations \
 		--enable-shared \
-		--with-lto \
-		--with-ensurepip
-make -j 8  # GHA's public VM have 4 cores
+		--with-lto
+make -j 4  # GHA's public VM have 4 cores
 make install
 ldconfig
 
 # Checks
 python3 --version
-python3 -m ensurepip
-
-# Install/upgrade package managers
-pip3 install --upgrade pip uv
 
 # Useful symlinks
 ln -s /usr/local/bin/python3 /usr/local/bin/python
 
+# Install/upgrade package managers
+pip3 install --no-cache --upgrade pip uv
+
 # Clean
+rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
 apt-mark auto '.*' > /dev/null
 apt-mark manual $savedAptMark
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
-rm -rf /var/lib/apt/lists/*

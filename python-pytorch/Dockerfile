@@ -7,15 +7,11 @@ USER root
 
 RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         # CUDA support
-        pip3 install torch torchvision torchaudio; \
+        uv pip install --system --no-cache torch torchvision torchaudio; \
     else \
         # CPU only
-        pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
-    fi && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    # Clean
-    rm -rf /var/lib/apt/lists/*
+        uv pip install --system --no-cache torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
+    fi
 
 USER 1000
 

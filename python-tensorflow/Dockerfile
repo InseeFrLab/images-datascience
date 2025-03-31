@@ -5,11 +5,7 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
-RUN pip3 install tensorflow && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    # Clean
-    rm -rf /var/lib/apt/lists/*
+RUN uv pip install --system --no-cache tensorflow
 
 USER 1000
 
