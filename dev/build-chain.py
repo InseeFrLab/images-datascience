@@ -28,6 +28,7 @@ chains = {
     "vscode-pytorch": ["base", "python-minimal", "python-pytorch", "vscode"],
     "vscode-tensorflow": ["base", "python-minimal", "python-tensorflow", "vscode"],
     "r-python-julia": ["base", "r-minimal", "r-python-julia"],
+    "jupyter-r-python-julia": ["base", "r-minimal", "r-python-julia", "jupyter"],
     "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"],
     "vscode-r": ["base", "r-minimal", "r-datascience", "vscode"],
 }

@@ -35,6 +35,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
       RDS--> VSCODER[vscode-r]:::ide;
+      RPYJU--> JRPYJU[jupyter-r-python-julia]:::ide;
       RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
       classDef base fill:#d2f9ff,color:#000  ;
       classDef minimal fill:#C1D5DF,color:#000;
