@@ -90,5 +90,6 @@ if __name__ == "__main__":
         if no_cache:
             cmd.extend(["--no-cache"])
 
-        logging.info(f"Command : {" ".join(cmd)}")
+        cmd_str = " ".join(cmd)
+        logging.info(f"Command : {cmd_str}")
         subprocess.run(cmd, check=True)
