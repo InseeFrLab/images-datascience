@@ -12,10 +12,8 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         # CPU only
         pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
     fi && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    # Clean
-    rm -rf /var/lib/apt/lists/*
+    # Fix permissions and clean
+    /opt/fix-permissions-and-clean.sh
 
 USER 1000
 

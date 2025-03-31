@@ -22,10 +22,8 @@ RUN /rocker_scripts/install_rstudio.sh && \
     # Initialize RStudio's user config file
     mkdir -p "$(dirname $RSTUDIO_USER_CONF_FILE)" && \
     echo '{}' > $RSTUDIO_USER_CONF_FILE && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    # Clean
-    rm -rf /var/lib/apt/lists/*
+    # Fix permissions and clean
+    /opt/fix-permissions-and-clean.sh
 
 EXPOSE 8787
 

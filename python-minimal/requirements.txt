@@ -1,5 +1,5 @@
 duckdb
-numpy
+numpy>=2.0.0
 pandas
 pyarrow
 requests

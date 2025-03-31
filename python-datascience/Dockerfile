@@ -8,11 +8,9 @@ USER root
 # Install Python packages
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    # Clean
-    rm requirements.txt && \
-    rm -rf /var/lib/apt/lists/*
+    # Fix permissions and clean
+    /opt/fix-permissions-and-clean.sh && \
+    rm requirements.txt
 
 USER 1000
 

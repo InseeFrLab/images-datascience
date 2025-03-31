@@ -39,13 +39,10 @@ RUN --mount=type=secret,id=github_token \
         R -e "install.packages(c('sparklyr', 'arrow'))" && \
         R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \
     fi && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
-    # Change log verbosity of Hadoop
-    sed -i -e "s/hadoop.root.logger=INFO,console/hadoop.root.logger=WARN,console/g" /opt/hadoop/etc/hadoop/log4j.properties && \
-    # Clean
-    rm -rf /tmp/* && \
-    rm -rf /var/lib/apt/lists/*
+    # Fix permissions and clean
+    /opt/fix-permissions-and-clean.sh && \
+    chown -R ${USERNAME}:${GROUPNAME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
+    rm -rf /tmp/*
 
 USER 1000
 

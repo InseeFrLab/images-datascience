@@ -18,10 +18,8 @@ COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/
 
 # VSCode extensions and language-specific configuration
 RUN /opt/install-vscode-extensions.sh && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    # Clean
-    rm -rf /var/lib/apt/lists/*
+    # Fix permissions and clean
+    /opt/fix-permissions-and-clean.sh
 
 USER 1000
 

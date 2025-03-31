@@ -18,11 +18,9 @@ RUN /opt/install-python.sh && \
     pip install --no-cache-dir -r requirements.txt && \
     # Re-install system libs that may have been removed by autoremove
     /opt/install-system-libs.sh && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    # Clean
-    rm requirements.txt && \
-    rm -rf /var/lib/apt/lists/*
+    # Fix permissions and clean
+    /opt/fix-permissions-and-clean.sh && \
+    rm requirements.txt
 
 USER 1000
 
