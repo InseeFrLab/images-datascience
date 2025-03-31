@@ -14,7 +14,8 @@ USER root
 
 COPY requirements.txt .
 
-RUN /opt/install-julia.sh && \
+RUN /opt/install-python.sh && \
+    /opt/install-julia.sh && \
     # Install common Python packages
     pip3 install -r requirements.txt && \
     # Install and configure reticulate to use Python in R

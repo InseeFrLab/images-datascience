@@ -19,7 +19,10 @@ RUN /opt/install-python.sh && \
     # Re-install system libs that may have been removed by autoremove
     /opt/install-system-libs.sh && \
     # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    rm requirements.txt && \
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 
