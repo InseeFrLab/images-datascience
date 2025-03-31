@@ -1,6 +1,10 @@
 import argparse
 import subprocess
 import shutil
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s')
+
 
 chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
@@ -86,5 +90,5 @@ if __name__ == "__main__":
         if no_cache:
             cmd.extend(["--no-cache"])
 
-        print(" ".join(cmd))
+        logging.info(f"Command : {" ".join(cmd)}")
         subprocess.run(cmd, check=True)
