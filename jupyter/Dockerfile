@@ -22,9 +22,11 @@ RUN /opt/install-jupyterlab.sh && \
     fi && \
     # Generate jupyter server config
     jupyter server --generate-config && \
-    # Fix permissions and clean
-    /opt/fix-permissions-and-clean.sh && \
-    jupyter lab clean
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    jupyter lab clean && \
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 

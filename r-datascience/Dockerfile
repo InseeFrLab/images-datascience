@@ -19,9 +19,10 @@ RUN /opt/install-java.sh && \
     /rocker_scripts/install_geospatial.sh && \
     # Re-install system libs that may have been removed by autoremove in rocker scripts
     /opt/install-system-libs.sh && \
-    # Fix permissions and clean
-    /opt/fix-permissions-and-clean.sh && \
-    chown -R ${USERNAME}:${GROUPNAME} ${R_HOME}
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 

@@ -6,8 +6,10 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 USER root
 
 RUN pip3 install tensorflow && \
-    # Fix permissions and clean
-    /opt/fix-permissions-and-clean.sh
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 USER 1000
 

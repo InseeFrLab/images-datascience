@@ -45,9 +45,11 @@ RUN chmod -R +x /opt/ && \
     /opt/install-duckdb-cli.sh && \
     /opt/install-duckdb-extensions.sh && \
     /opt/install-quarto.sh && \
-    # Fix permissions and clean
-    /opt/fix-permissions-and-clean.sh && \
-    chmod +x /opt/onyxia-init.sh
+    # Fix permissions
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    chmod +x /opt/onyxia-init.sh && \
+    # Clean
+    rm -rf /var/lib/apt/lists/*
 
 # Set locales
 ENV LC_ALL="en_US.UTF-8"

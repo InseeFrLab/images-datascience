@@ -4,7 +4,6 @@ geopandas
 matplotlib
 mlflow
 nltk
-numpy>=2.0.0
 plotly
 polars
 scikit-learn
