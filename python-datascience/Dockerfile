@@ -7,7 +7,7 @@ USER root
 
 # Install Python packages
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \
+RUN uv pip install --system --no-cache-dir -r requirements.txt && \
     # Fix permissions and clean
     /opt/fix-permissions-and-clean.sh && \
     rm requirements.txt

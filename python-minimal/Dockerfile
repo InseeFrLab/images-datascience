@@ -15,7 +15,7 @@ COPY requirements.txt .
 
 # Build Python from source
 RUN /opt/install-python.sh && \
-    pip install --no-cache-dir -r requirements.txt && \
+    uv pip install --system --no-cache-dir -r requirements.txt && \
     # Re-install system libs that may have been removed by autoremove
     /opt/install-system-libs.sh && \
     # Fix permissions and clean

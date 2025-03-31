@@ -46,7 +46,9 @@ ldconfig
 # Checks
 python3 --version
 python3 -m ensurepip
-pip3 install --upgrade pip
+
+# Install/upgrade package managers
+pip3 install --upgrade pip uv
 
 # Useful symlinks
 ln -s /usr/local/bin/python3 /usr/local/bin/python
