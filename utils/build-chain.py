@@ -44,8 +44,6 @@ def build_chain(chain, language_key, version, gpu, no_cache, push):
         else:
             previous_image = chain[i - 1]
 
-        device_suffix = "-gpu" if gpu else ""
-
         if i < len(chain) - 1:
             tag = image
         else:
@@ -53,8 +51,7 @@ def build_chain(chain, language_key, version, gpu, no_cache, push):
 
         cmd_build = [
             "docker", "build", "--progress=plain", image, "-t", tag,
-            "--build-arg", f"BASE_IMAGE={previous_image}",
-            "--build-arg", f"DEVICE_SUFFIX={device_suffix}"
+            "--build-arg", f"BASE_IMAGE={previous_image}"
         ]
         if version:
             cmd_build.extend(["--build-arg", f"{language_key}={version}"])
