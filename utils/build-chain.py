@@ -3,8 +3,10 @@ import subprocess
 import shutil
 import logging
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s')
-
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
@@ -30,45 +32,11 @@ chains = {
     "r-python-julia": ["base", "r-minimal", "r-python-julia"],
     "jupyter-r-python-julia": ["base", "r-minimal", "r-python-julia", "jupyter"],
     "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"],
-    "vscode-r": ["base", "r-minimal", "r-datascience", "vscode"],
+    "vscode-r": ["base", "r-minimal", "r-datascience", "vscode"]
 }
 
 
-# CLI configuration
-parser = argparse.ArgumentParser(description="Build a Docker image chain.")
-parser.add_argument(
-    "--chain",
-    required=True,
-    choices=chains.keys(),
-    help="The name of the chain to build (e.g., 'rstudio', 'python-datascience').",
-)
-parser.add_argument(
-    "--gpu",
-    action="store_true",
-    help="Whether to build with GPU support."
-)
-parser.add_argument(
-    "--version",
-    help="Specify a version for R or Python."
-)
-parser.add_argument(
-    "--no_cache",
-    action="store_true",
-    help="Tell Docker to build without using caching."
-)
-
-if __name__ == "__main__":
-
-    # Parse build configuration from CLI args
-    args = parser.parse_args()
-    chain_name = args.chain
-    chain = chains[chain_name]
-    gpu = args.gpu
-    version = args.version
-    no_cache = args.no_cache
-    language_key = "PYTHON_VERSION" if "python-minimal" in chain else "R_VERSION"
-
-    # Build chain
+def build_chain(chain, language_key, version, gpu, no_cache, push):
     for i, image in enumerate(chain):
         if image == "base":
             shutil.copytree("scripts", "base/scripts", dirs_exist_ok=True)
@@ -81,18 +49,71 @@ if __name__ == "__main__":
         if i < len(chain) - 1:
             tag = image
         else:
-            tag = f"inseefrlab/onyxia-{chain_name}:dev"
+            tag = f"inseefrlab/onyxia-{chain}:dev"
 
-        cmd = [
+        cmd_build = [
             "docker", "build", "--progress=plain", image, "-t", tag,
             "--build-arg", f"BASE_IMAGE={previous_image}",
             "--build-arg", f"DEVICE_SUFFIX={device_suffix}"
         ]
         if version:
-            cmd.extend(["--build-arg", f"{language_key}={version}"])
+            cmd_build.extend(["--build-arg", f"{language_key}={version}"])
         if no_cache:
-            cmd.extend(["--no-cache"])
+            cmd_build.extend(["--no-cache"])
 
-        cmd_str = " ".join(cmd)
-        logging.info(f"Command : {cmd_str}")
-        subprocess.run(cmd, check=True)
+        cmd_build = " ".join(cmd_build)
+        logging.info(f"Build command : {cmd_build}")
+        subprocess.run(cmd_build, check=True)
+
+    if push:
+        # Push last image of the chain
+        cmd_push = ["docker", "push", tag]
+        logging.info(f"Push command : {cmd_push}")
+        subprocess.run(cmd_push, check=True)
+
+
+def build_cli_parser():
+    parser = argparse.ArgumentParser(description="Build a Docker image chain.")
+    parser.add_argument(
+        "--chain",
+        required=True,
+        choices=chains.keys(),
+        help="The name of the chain to build (e.g., 'rstudio', 'python-datascience').",
+    )
+    parser.add_argument(
+        "--gpu",
+        action="store_true",
+        help="Whether to build with GPU support."
+    )
+    parser.add_argument(
+        "--version",
+        help="Specify a version for R or Python."
+    )
+    parser.add_argument(
+        "--no_cache",
+        action="store_true",
+        help="Tell Docker to build without using caching."
+    )
+    parser.add_argument(
+        "--push",
+        action="store_true",
+        help="Whether to push the last image of the chain to DockerHub."
+    )
+
+
+if __name__ == '__main__':
+
+    # Parse CLI parameters
+    parser = build_cli_parser()
+    args = parser.parse_args()
+    chain = chains[args.chain]
+    language_key = "PYTHON_VERSION" if "python-minimal" in chain else "R_VERSION"
+
+    # Build chain
+    build_chain(chain=chain,
+                language_key=language_key,
+                version=args.version,
+                gpu=args.gpu,
+                no_cache=args.no_cache,
+                push=args.push
+                )
