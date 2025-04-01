@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Number of retries
 retries=3
@@ -75,3 +76,6 @@ fi
 if command -v quarto &> /dev/null; then
     install_extension "quarto.quarto"
 fi
+
+# Fix permissions on VSCode's extensions directory
+chown -R ${USERNAME}:${GROUPNAME} ~/.local/share/code-server/extensions/

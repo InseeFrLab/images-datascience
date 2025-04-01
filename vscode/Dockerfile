@@ -9,7 +9,8 @@ ARG REMOTE_CONFIG_DIR="${HOME}/.local/share/code-server/Machine"
 USER root
 
 # Install VSCode
-RUN curl -fsSL https://code-server.dev/install.sh | bash && \
+RUN /opt/install-vscode.sh && \
+    # Initialize config dirs
     mkdir -p ${USER_CONFIG_DIR} ${REMOTE_CONFIG_DIR}
 
 # Copy custom VSCode settings
@@ -18,8 +19,6 @@ COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/
 
 # VSCode extensions and language-specific configuration
 RUN /opt/install-vscode-extensions.sh && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
     rm -rf /var/lib/apt/lists/*
 
