@@ -58,7 +58,7 @@ def build_chain(chain, language_key, version, gpu, no_cache, push):
         if no_cache:
             cmd_build.extend(["--no-cache"])
 
-        logging.info(f"Build command : {" ".join(cmd_build)}")
+        logging.info(f"Build command : {' '.join(cmd_build)}")
         subprocess.run(cmd_build, check=True)
 
     if push:
