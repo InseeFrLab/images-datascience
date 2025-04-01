@@ -34,7 +34,7 @@ RUN --mount=type=secret,id=github_token \
     cp /opt/spark-env.sh $SPARK_HOME/conf && \
     # Install additional packages if R is installed
     if command -v R; then \
-        /opt/rocker_scripts/install_tidyverse.sh && \
+        /opt/opt/rocker_scripts/install_tidyverse.sh && \
         export GITHUB_PAT=`cat /run/secrets/github_token` && \
         R -e "install.packages(c('sparklyr', 'arrow'))" && \
         R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \

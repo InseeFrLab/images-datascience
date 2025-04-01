@@ -47,7 +47,6 @@ RUN chmod -R +x /opt/ && \
     /opt/install-quarto.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
-    chmod +x /opt/onyxia-init.sh && \
     # Clean
     rm -rf /var/lib/apt/lists/*
 
