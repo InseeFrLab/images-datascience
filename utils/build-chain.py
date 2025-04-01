@@ -96,6 +96,7 @@ def build_cli_parser():
         action="store_true",
         help="Whether to push the last image of the chain to DockerHub."
     )
+    return parser
 
 
 if __name__ == '__main__':
