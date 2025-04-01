@@ -1,12 +1,14 @@
 beautifulsoup4
 dask
 geopandas
-lightgbm
 matplotlib
 mlflow
 nltk
 numpy>=2.0.0
+plotly
+polars
 scikit-learn
 scipy
 seaborn
+statsmodels
 xgboost
