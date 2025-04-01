@@ -7,8 +7,12 @@ mkdir /opt/rocker_scripts
 cp -a rocker-versioned2/scripts/. /opt/rocker_scripts/
 chmod -R 700 /opt/rocker_scripts/
 
-# Install R
+# Build R from source
 /opt/rocker_scripts/install_R_source.sh
+
+# Give user ownership on R's directory for user-installed packages 
+mkdir -p "${R_HOME}/site-library/"
+chown -R ${USERNAME}:${GROUPNAME} "${R_HOME}/site-library/"
 
 # Clean
 rm -rf rocker-versioned2/

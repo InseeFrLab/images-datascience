@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+# Install DuckDB CLI
+
 ARCH=$(uname -m)
 
 case $ARCH in
@@ -18,4 +20,10 @@ esac
 
 wget -q https://github.com/duckdb/duckdb/releases/latest/download/$FILENAME
 unzip $FILENAME -d /usr/local/bin/
+
+# Give user ownership on DuckDB's directory for user-installed extensions 
+mkdir -p "${HOME}/.duckdb/extensions/"
+chown -R ${USERNAME}:${GROUPNAME} "${HOME}/.duckdb/extensions/"
+
+# Clean
 rm $FILENAME

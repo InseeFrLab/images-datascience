@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-duckdb -c "SET extension_directory='/home/${USERNAME}/.duckdb/extensions'; \
+duckdb -c "
 INSTALL httpfs; \
 INSTALL aws; \
 INSTALL postgres; \
