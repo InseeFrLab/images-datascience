@@ -48,8 +48,11 @@ python3 --version
 # Useful symlinks
 ln -s /usr/local/bin/python3 /usr/local/bin/python
 
+# Give user ownership on Python's directory for user-installed packages 
+chown -R ${USERNAME}:${GROUPNAME} /usr/local/lib/python${PYTHON_VERSION%.*}/site-packages/
+
 # Install/upgrade package managers
-pip3 install --no-cache --upgrade pip uv
+pip3 install --no-cache-dir --upgrade pip uv
 
 # Clean
 rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}

@@ -17,7 +17,7 @@ COPY requirements.txt .
 RUN /opt/install-python.sh && \
     /opt/install-julia.sh && \
     # Install common Python packages
-    pip3 install -r requirements.txt && \
+    uv pip install --system --no-cache -r requirements.txt && \
     # Install and configure reticulate to use Python in R
     install2.r --error reticulate && \
     R -q -e 'reticulate::py_discover_config(required_module = NULL, use_environment = NULL)' && \
