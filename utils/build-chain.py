@@ -36,7 +36,10 @@ chains = {
 }
 
 
-def build_chain(chain, language_key, version, gpu, no_cache, push):
+def build_chain(chain_name, language_key, version, gpu, no_cache, push):
+
+    chain = chains[chain_name]
+
     for i, image in enumerate(chain):
         if image == "base":
             shutil.copytree("scripts", "base/scripts", dirs_exist_ok=True)
@@ -47,7 +50,7 @@ def build_chain(chain, language_key, version, gpu, no_cache, push):
         if i < len(chain) - 1:
             tag = image
         else:
-            tag = f"inseefrlab/onyxia-{chain}:dev"
+            tag = f"inseefrlab/onyxia-{chain_name}:dev"
 
         cmd_build = [
             "docker", "build", "--progress=plain", image, "-t", tag,
@@ -103,11 +106,10 @@ if __name__ == '__main__':
     # Parse CLI parameters
     parser = build_cli_parser()
     args = parser.parse_args()
-    chain = chains[args.chain]
-    language_key = "PYTHON_VERSION" if "python-minimal" in chain else "R_VERSION"
+    language_key = "PYTHON_VERSION" if "python-minimal" in chains[args.chain] else "R_VERSION"
 
     # Build chain
-    build_chain(chain=chain,
+    build_chain(chain_name=args.chain,
                 language_key=language_key,
                 version=args.version,
                 gpu=args.gpu,
