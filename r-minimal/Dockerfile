@@ -12,7 +12,7 @@ ENV DEFAULT_USER="${USERNAME}"
 USER root
 
 # Build R from source using rocker's install scripts
-RUN /opt/install-R.sh
+RUN /opt/install-r.sh
 
 # Use RStudio's package manager to download packages as binaries
 ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
