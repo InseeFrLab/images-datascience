@@ -18,13 +18,13 @@ RUN /opt/install-r.sh
 ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
-RUN /opt/rocker_scripts/setup_R.sh && \
+RUN /rocker_scripts/setup_R.sh && \
     # Re-install system libs that may have been removed by autoremove
     /opt/install-system-libs.sh && \
     # Install additional system libs needed by R packages
     /opt/install-system-libs-r.sh && \
     # Configure R for CUDA if parent image has CUDA
-    if ! [[ -z "${CUDA_VERSION}" ]]; then /opt/rocker_scripts/config_R_cuda.sh; fi && \
+    if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
     # Install useful additional packages
     install2.r --error \
         arrow \

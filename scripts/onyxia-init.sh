@@ -149,7 +149,7 @@ fi
 
 if [[ "$DARK_MODE" == "true" ]]; then
     if command -v jupyter-lab; then
-        mkdir $HOME/.jupyter/lab/settings
+        mkdir -p $HOME/.jupyter/lab/settings
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > $HOME/.jupyter/lab/settings/overrides.json;
     fi
     if command -v code-server; then

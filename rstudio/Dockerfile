@@ -14,8 +14,8 @@ ENV PATH="/usr/lib/rstudio-server/bin:${PATH}"
 USER root 
 
 # Install Rstudio using rocker's install scripts
-RUN /opt/rocker_scripts/install_rstudio.sh && \
-    /opt/rocker_scripts/install_pandoc.sh && \
+RUN /rocker_scripts/install_rstudio.sh && \
+    /rocker_scripts/install_pandoc.sh && \
     # Set default working directory for R sessions and R projects
     echo "session-default-working-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_SYSTEM_CONF_FILE} && \
     echo "session-default-new-project-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_SYSTEM_CONF_FILE} && \
@@ -25,6 +25,7 @@ RUN /opt/rocker_scripts/install_rstudio.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
+    rm -rf /rocker_scripts/ && \
     rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8787

@@ -3,12 +3,10 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-ENV JULIA_DIR="/opt/julia"
+ARG PYTHON_VERSION="3.12.9"
+ENV PYTHON_VERSION=${PYTHON_VERSION}
+ENV JULIA_DIR="/usr/local/lib/julia"
 ENV PATH="${HOME}/.local/bin:${JULIA_DIR}/bin:${PATH}"
-
-# Python config for the `reticulate` package
-ENV PYTHON_CONFIGURE_OPTS="--enable-shared"
-ENV RETICULATE_AUTOCONFIGURE="0"
 
 USER root
 
@@ -18,9 +16,6 @@ RUN /opt/install-python.sh && \
     /opt/install-julia.sh && \
     # Install common Python packages
     uv pip install --system --no-cache -r requirements.txt && \
-    # Install and configure reticulate to use Python in R
-    install2.r --error reticulate && \
-    R -q -e 'reticulate::py_discover_config(required_module = NULL, use_environment = NULL)' && \
     # Clean
     rm requirements.txt && \
     rm -rf /var/lib/apt/lists/*

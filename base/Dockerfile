@@ -19,7 +19,7 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     # Setup custom user with sudo rights
     useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     # Create workspace
-    mkdir ${WORKSPACE_DIR} && \
+    mkdir -p ${WORKSPACE_DIR} && \
     # Disable default sudo message when opening shell
     touch ${HOME}/.sudo_as_admin_successful
 WORKDIR ${WORKSPACE_DIR}
