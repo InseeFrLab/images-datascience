@@ -38,6 +38,7 @@ chains = {
 
 def build_chain(chain_name, language_key, version, gpu, no_cache, push):
 
+    logging.info(f"Building chain : {chain_name}")
     chain = chains[chain_name]
 
     for i, image in enumerate(chain):
@@ -49,7 +50,8 @@ def build_chain(chain_name, language_key, version, gpu, no_cache, push):
 
         if i < len(chain) - 1:
             tag = image
-        else:
+        else: 
+            # Last step of the chain
             tag = f"inseefrlab/onyxia-{chain_name}:dev"
 
         cmd_build = [
@@ -57,7 +59,8 @@ def build_chain(chain_name, language_key, version, gpu, no_cache, push):
             "--build-arg", f"BASE_IMAGE={previous_image}"
         ]
         if version:
-            cmd_build.extend(["--build-arg", f"{language_key}={version}"])
+            version_param = "PYTHON_VERSION" if language_key == "py" else "R_VERSION"
+            cmd_build.extend(["--build-arg", f"{version_param}={version}"])
         if no_cache:
             cmd_build.extend(["--no-cache"])
 
@@ -65,8 +68,9 @@ def build_chain(chain_name, language_key, version, gpu, no_cache, push):
         subprocess.run(cmd_build, check=True)
 
     if push:
-        # Push last image of the chain
-        cmd_push = ["docker", "push", tag]
+        push_tag = f"inseefrlab/onyxia-{chain_name}:{language_key}{version}-dev"
+        cmd_tag = ["docker", "tag", tag, push_tag]
+        cmd_push = ["docker", "push", push_tag]
         logging.info(f"Push command : {cmd_push}")
         subprocess.run(cmd_push, check=True)
 
@@ -106,7 +110,7 @@ if __name__ == '__main__':
     # Parse CLI parameters
     parser = build_cli_parser()
     args = parser.parse_args()
-    language_key = "PYTHON_VERSION" if "python-minimal" in chains[args.chain] else "R_VERSION"
+    language_key = "py" if "python-minimal" in chains[args.chain] else "r"
 
     # Build chain
     build_chain(chain_name=args.chain,
