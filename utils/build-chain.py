@@ -70,6 +70,7 @@ def build_chain(chain_name, language_key, version, gpu, no_cache, push):
     if push:
         push_tag = f"inseefrlab/onyxia-{chain_name}:{language_key}{version}-dev"
         cmd_tag = ["docker", "tag", tag, push_tag]
+        subprocess.run(cmd_tag, check=True)
         cmd_push = ["docker", "push", push_tag]
         logging.info(f"Push command : {cmd_push}")
         subprocess.run(cmd_push, check=True)
