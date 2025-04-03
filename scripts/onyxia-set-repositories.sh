@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ $SUDO -eq 0 ]]; then
+    ENV_FILE=/etc/environment
+else
+    ENV_FILE=~/.bashrc
+
 # Python configuration
 
 if command -v pip; then
@@ -18,8 +23,8 @@ fi
 
 if command -v uv; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
-        echo "export UV_DEFAULT_INDEX=$PIP_REPOSITORY" >> ~/.bashrc 
-        echo 'export UV_NATIVE_TLS=true' >> ~/.bashrc 
+        echo "export UV_DEFAULT_INDEX=$PIP_REPOSITORY" >> "$ENV_FILE"
+        echo 'export UV_NATIVE_TLS=true' >> "$ENV_FILE"   
     fi
 
 # R configuration
@@ -45,9 +50,6 @@ if command -v R; then
 
       echo '  options(repos = r)' >> ${R_HOME}/etc/Rprofile.site
       echo '})' >> ${R_HOME}/etc/Rprofile.site
-
-      # Unsure if this last line below should be inside this is ; 
-      # leaving it here for now, but should be reviewed before.
 
       # Configure renv to use the specified package repository
       echo 'options(renv.config.repos.override = getOption("repos"))' >> ${R_HOME}/etc/Rprofile.site
