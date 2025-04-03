@@ -3,12 +3,12 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-# System-wide configuration
+# System configuration
 SHELL ["/bin/bash", "-c"]
 ENV SHELL="/bin/bash"
 ENV DEBIAN_FRONTEND="noninteractive"
 
-# Setup user & workspace
+# User configuration
 ENV USERNAME="onyxia"
 ENV UID="1000"
 ENV GROUPNAME="users"

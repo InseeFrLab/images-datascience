@@ -3,7 +3,7 @@
 if [[ $SUDO -eq 0 ]]; then
     ENV_FILE=/etc/environment
 else
-    ENV_FILE=~/.bashrc
+    ENV_FILE=${HOME}/.bashrc
 
 # Python configuration
 

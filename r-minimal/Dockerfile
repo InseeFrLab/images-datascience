@@ -12,7 +12,9 @@ ENV DEFAULT_USER="${USERNAME}"
 USER root
 
 # Build R from source using rocker's install scripts
-RUN /opt/install-r.sh
+RUN /opt/install-r.sh && \
+    # Give user ownership
+    /opt/make_user_owner.sh ${R_HOME}
 
 # Use RStudio's package manager to download packages as binaries
 ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
@@ -43,7 +45,7 @@ RUN /rocker_scripts/setup_R.sh && \
     # Install duckdb extensions
     Rscript /opt/install-duckdb-extensions.R && \
     # Give user ownership
-    /opt/make_user_owner.sh && \
+    /opt/make_user_owner.sh ${R_HOME} && \
     # Clean
     /opt/clean.sh
 

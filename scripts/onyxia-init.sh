@@ -56,7 +56,7 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
                     sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
                 fi
             else
-                sh -c "printf 'export %s=\"%s\"\n' $i \"$value\" >> ~/.bashrc"
+                sh -c "printf 'export %s=\"%s\"\n' $i \"$value\" >> ${HOME}/.bashrc"
                 if command -v R; then
                     sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
                 fi
@@ -128,8 +128,8 @@ if [  "`which git`" != "" ]; then
     git config --global pull.rebase false
 
     # Give user ownership
-    [ -d ~/.cache/git ] && chown -R ${USERNAME}:${GROUPNAME} ~/.cache/git
-    [ -f ~/.gitconfig ] && chown ${USERNAME}:${GROUPNAME} ~/.gitconfig
+    [ -d ${HOME}/.cache/git ] && chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.cache/git
+    [ -f ${HOME}/.gitconfig ] && chown ${USERNAME}:${GROUPNAME} ${HOME}/.gitconfig
 
 fi
 
