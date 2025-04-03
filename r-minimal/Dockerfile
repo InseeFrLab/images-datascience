@@ -23,25 +23,10 @@ ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 RUN /rocker_scripts/setup_R.sh && \
     # Re-install system libs that may have been removed by autoremove
     /opt/install-system-libs.sh && \
-    # Install additional system libs needed by R packages
-    /opt/install-system-libs-r.sh && \
     # Configure R for CUDA if parent image has CUDA
     if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
     # Install useful additional packages
-    install2.r --ncpus -1 --error \
-        arrow \
-        aws.s3 \
-        devtools \
-        DBI \
-        duckdb \
-        lintr \
-        paws \
-        quarto \
-        renv \
-        RPostgreSQL \
-        styler \
-        targets \
-        vaultr && \
+    /opt/install-r-minimal-packages.sh && \
     # Install duckdb extensions
     Rscript /opt/install-duckdb-extensions.R && \
     # Give user ownership
