@@ -19,6 +19,8 @@ COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/
 
 # VSCode extensions and language-specific configuration
 RUN /opt/install-vscode-extensions.sh && \
+    # Give user ownership
+    /opt/make_user_owner.sh && \
     # Clean
     /opt/clean.sh
 

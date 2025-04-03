@@ -12,6 +12,8 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         # CPU only
         uv pip install --system --no-cache torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
     fi && \
+    # Give user ownership
+    /opt/make_user_owner.sh && \
     # Clean
     /opt/clean.sh
 
