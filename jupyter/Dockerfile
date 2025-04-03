@@ -25,8 +25,8 @@ RUN /opt/install-jupyterlab.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    jupyter lab clean && \
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh && \
+    jupyter lab clean
 
 USER 1000
 

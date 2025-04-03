@@ -5,7 +5,9 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
-RUN uv pip install --system --no-cache tensorflow
+RUN uv pip install --system --no-cache tensorflow && \
+    # Clean
+    /opt/clean.sh
 
 USER 1000
 

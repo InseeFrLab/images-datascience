@@ -25,8 +25,7 @@ RUN /rocker_scripts/install_rstudio.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    rm -rf /rocker_scripts/ && \
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh /rocker_scripts/
 
 EXPOSE 8787
 

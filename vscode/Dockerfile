@@ -20,7 +20,7 @@ COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/
 # VSCode extensions and language-specific configuration
 RUN /opt/install-vscode-extensions.sh && \
     # Clean
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh
 
 USER 1000
 

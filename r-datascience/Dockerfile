@@ -22,7 +22,7 @@ RUN /opt/install-java.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
     # Clean
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh
 
 USER 1000
 

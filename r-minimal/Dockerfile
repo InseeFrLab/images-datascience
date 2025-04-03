@@ -45,7 +45,7 @@ RUN /rocker_scripts/setup_R.sh && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh
 
 USER 1000
 

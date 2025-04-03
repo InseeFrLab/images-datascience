@@ -44,8 +44,7 @@ RUN --mount=type=secret,id=github_token \
     # Change log verbosity of Hadoop
     sed -i -e "s/hadoop.root.logger=INFO,console/hadoop.root.logger=WARN,console/g" /opt/hadoop/etc/hadoop/log4j.properties && \
     # Clean
-    rm -rf /tmp/* && \
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh
 
 USER 1000
 

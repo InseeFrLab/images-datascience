@@ -46,7 +46,7 @@ RUN chmod -R +x /opt/ && \
     # Fix permissions
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh
 
 # Set locales
 ENV LC_ALL="en_US.UTF-8"
