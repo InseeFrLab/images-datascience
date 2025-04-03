@@ -38,7 +38,7 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     /opt/install-duckdb-extensions.sh && \
     /opt/install-quarto.sh && \
     # Give user ownership
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    /opt/make_user_owner.sh && \
     # Clean
     /opt/clean.sh
 

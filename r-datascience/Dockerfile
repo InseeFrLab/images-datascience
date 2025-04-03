@@ -20,7 +20,7 @@ RUN /opt/install-java.sh && \
     # Re-install system libs that may have been removed by autoremove in rocker scripts
     /opt/install-system-libs.sh && \
     # Give user ownership
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${R_HOME} && \
+    /opt/make_user_owner.sh ${R_HOME} && \
     # Clean
     /opt/clean.sh
 

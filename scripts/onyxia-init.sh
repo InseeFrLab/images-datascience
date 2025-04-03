@@ -157,7 +157,7 @@ if [[ "$DARK_MODE" == "true" ]]; then
     fi
     if command -v rstudio-server; then
         jq '. + {"editor_theme": "Vibrant Ink"}' ${HOME}/.config/rstudio/rstudio-prefs.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.config/rstudio/rstudio-prefs.json
-        chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.config
+        /opt/make_user_owner.sh/.config
     fi
 fi
 
@@ -193,7 +193,7 @@ if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
         URL_STYLE '"$AWS_PATH_STYLE"' \
     );"
 fi
-chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
+/opt/make_user_owner.sh/.duckdb
 
 if [[ -n "$FAUXPILOT_SERVER" ]]; then
     dir="$HOME/.local/share/code-server/User"

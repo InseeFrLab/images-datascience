@@ -40,7 +40,7 @@ RUN --mount=type=secret,id=github_token \
         R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \
     fi && \
     # Give user ownership
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
+    /opt/make_user_owner.sh ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
     # Change log verbosity of Hadoop
     sed -i -e "s/hadoop.root.logger=INFO,console/hadoop.root.logger=WARN,console/g" /opt/hadoop/etc/hadoop/log4j.properties && \
     # Clean
