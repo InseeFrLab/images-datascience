@@ -40,8 +40,6 @@ RUN chmod -R +x /opt/ && \
     /opt/install-kubectl.sh && \
     /opt/install-helm.sh && \
     /opt/install-mc.sh && \
-    /opt/install-vault-cli.sh && \
-    /opt/install-argo-workflows-cli.sh && \
     /opt/install-duckdb-cli.sh && \
     /opt/install-duckdb-extensions.sh && \
     /opt/install-quarto.sh && \
