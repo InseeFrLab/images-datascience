@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-if [  "`which pip`" != "" ]; then
+
+# Python configuration
+
+if command -v pip; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
         echo "configuration pip (index-url)"
         pip config set global.index-url $PIP_REPOSITORY
@@ -12,6 +15,14 @@ if [  "`which pip`" != "" ]; then
         export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
     fi
 fi
+
+if command -v uv; then
+    if [[ -n "$PIP_REPOSITORY" ]]; then
+        echo "export UV_DEFAULT_INDEX=$PIP_REPOSITORY" >> ~/.bashrc 
+        echo 'export UV_NATIVE_TLS=true' >> ~/.bashrc 
+    fi
+
+# R configuration
 
 if command -v R; then
   if [[ -n "$R_REPOSITORY" ]] || [[ -n "$PACKAGE_MANAGER_URL" ]]; then
