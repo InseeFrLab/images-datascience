@@ -22,7 +22,7 @@ RUN /rocker_scripts/install_rstudio.sh && \
     # Initialize RStudio's user config file
     mkdir -p "$(dirname $RSTUDIO_USER_CONF_FILE)" && \
     echo '{}' > $RSTUDIO_USER_CONF_FILE && \
-    # Fix permissions
+    # Give user ownership
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
     /opt/clean.sh /rocker_scripts/

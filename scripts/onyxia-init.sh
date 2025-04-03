@@ -72,7 +72,7 @@ if [  "`which kubectl`" != "" ]; then
     kubectl config use-context in-cluster
     export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode | jq -r ' .["kubernetes.io"].serviceaccount.name'`
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
-    # Fix permissions on kubectl config file
+    # Give user ownership on kubectl config file
     chown -R onyxia:users ${HOME}/.kube
 fi
 
@@ -127,7 +127,7 @@ if [  "`which git`" != "" ]; then
     # Use Git's former default (fast-forward if possible, else merge) to avoid cryptic error message
     git config --global pull.rebase false
 
-    # Fix permissions
+    # Give user ownership
     [ -d ~/.cache/git ] && chown -R ${USERNAME}:${GROUPNAME} ~/.cache/git
     [ -f ~/.gitconfig ] && chown ${USERNAME}:${GROUPNAME} ~/.gitconfig
 

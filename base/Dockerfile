@@ -17,17 +17,17 @@ ENV HOME="/home/${USERNAME}"
 ENV WORKSPACE_DIR="${HOME}/work"
 WORKDIR ${WORKSPACE_DIR}
 
-COPY --chmod=x scripts/ /opt/
+COPY --chmod='+x' scripts/ /opt/
 
 RUN groupmod -g ${GID} ${GROUPNAME} && \
     # Setup custom user with sudo rights
     useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
+    # Install core system libraries
+    /opt/install-system-libs.sh && \
     # Make sudo passwordless
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     # Disable default sudo message when opening shell
     touch ${HOME}/.sudo_as_admin_successful && \
-    # Install core system libraries
-    /opt/install-system-libs.sh && \
     # Generate locales
     locale-gen en_US.UTF-8 && \
     # Install common clients useful for Onyxia
@@ -37,7 +37,7 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     /opt/install-duckdb-cli.sh && \
     /opt/install-duckdb-extensions.sh && \
     /opt/install-quarto.sh && \
-    # Fix permissions
+    # Give user ownership
     chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
     # Clean
     /opt/clean.sh
