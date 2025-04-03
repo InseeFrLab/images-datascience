@@ -15,25 +15,19 @@ ENV GROUPNAME="users"
 ENV GID="100"
 ENV HOME="/home/${USERNAME}"
 ENV WORKSPACE_DIR="${HOME}/work"
+WORKDIR ${WORKSPACE_DIR}
+
+COPY --chmod=x scripts/ /opt/
+
 RUN groupmod -g ${GID} ${GROUPNAME} && \
     # Setup custom user with sudo rights
     useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
-    # Create workspace
-    mkdir -p ${WORKSPACE_DIR} && \
-    # Disable default sudo message when opening shell
-    touch ${HOME}/.sudo_as_admin_successful
-WORKDIR ${WORKSPACE_DIR}
-
-USER root
-
-COPY scripts/ /opt/
-
-RUN chmod -R +x /opt/ && \
-    # Install essential system libraries
-    /opt/install-system-libs.sh && \
-    apt-get upgrade -y && \
     # Make sudo passwordless
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
+    # Disable default sudo message when opening shell
+    touch ${HOME}/.sudo_as_admin_successful && \
+    # Install core system libraries
+    /opt/install-system-libs.sh && \
     # Generate locales
     locale-gen en_US.UTF-8 && \
     # Install common clients useful for Onyxia
@@ -53,5 +47,3 @@ ENV LC_ALL="en_US.UTF-8"
 ENV LANG="en_US.UTF-8"
 
 USER 1000
-
-CMD ["/bin/bash"]

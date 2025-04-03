@@ -29,3 +29,4 @@ apt-get install -y --no-install-recommends \
     tini \
     unzip \
     vim
+apt-get upgrade
