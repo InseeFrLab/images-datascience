@@ -3,6 +3,6 @@ set -e
 
 rm -rf \
     /var/lib/apt/lists/* \
-    ${HOME}/.cache/ \
+    ${HOME}/.cache/* \
     /tmp/* \
     "$@"

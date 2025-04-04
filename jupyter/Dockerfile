@@ -22,8 +22,6 @@ RUN /opt/install-jupyterlab.sh && \
     fi && \
     # Generate jupyter server config
     jupyter server --generate-config && \
-    # Give user ownership
-    /opt/make_user_owner.sh && \
     # Clean
     /opt/clean.sh && \
     jupyter lab clean

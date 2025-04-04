@@ -45,17 +45,15 @@ ldconfig
 # Checks
 python3 --version
 
-# Useful symlinks
-ln -s /usr/local/bin/python3 /usr/local/bin/python
-
-# Give user ownership on Python's directory for user-installed packages 
-chown -R ${USERNAME}:${GROUPNAME} /usr/local/lib/python${PYTHON_VERSION%.*}/site-packages/
-
-# Install/upgrade package managers
-pip3 install --no-cache-dir --upgrade pip uv
-
-# Clean
+# Clean install files
+cd ..
 rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
 apt-mark auto '.*' > /dev/null
 apt-mark manual $savedAptMark
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
+
+# Useful symlink
+ln -s /usr/local/bin/python3 /usr/local/bin/python
+
+# Install/upgrade package managers
+pip3 install --no-cache-dir --upgrade pip uv

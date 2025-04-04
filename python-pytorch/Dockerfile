@@ -13,8 +13,8 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         REQUIREMENTS_FILE='requirements-cpu.txt'
     fi && \
     uv pip install --system --no-cache -r ${REQUIREMENTS_FILE} && \
-    # Give user ownership
-    /opt/make_user_owner.sh && \
+    # Fix user permissions
+    /opt/fix-permissions-python.sh && \
     # Clean
     /opt/clean.sh
 

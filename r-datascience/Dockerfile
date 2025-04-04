@@ -19,8 +19,8 @@ RUN /opt/install-java.sh && \
     /rocker_scripts/install_geospatial.sh && \
     # Re-install system libs that may have been removed by autoremove in rocker scripts
     /opt/install-system-libs.sh && \
-    # Give user ownership
-    /opt/make_user_owner.sh ${R_HOME} && \
+    # Fix user permissions
+    /opt/fix-permissions-r.sh && \
     # Clean
     /opt/clean.sh
 

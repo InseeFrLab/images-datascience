@@ -12,9 +12,7 @@ ENV DEFAULT_USER="${USERNAME}"
 USER root
 
 # Build R from source using rocker's install scripts
-RUN /opt/install-r.sh && \
-    # Give user ownership
-    /opt/make_user_owner.sh ${R_HOME}
+RUN /opt/install-r.sh
 
 # Use RStudio's package manager to download packages as binaries
 ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
@@ -25,12 +23,25 @@ RUN /rocker_scripts/setup_R.sh && \
     /opt/install-system-libs.sh && \
     # Configure R for CUDA if parent image has CUDA
     if ! [[ -z "${CUDA_VERSION}" ]]; then /rocker_scripts/config_R_cuda.sh; fi && \
-    # Install useful additional packages
-    /opt/install-r-minimal-packages.sh && \
+    # Install additional system libs required by some R packages
+    /opt/install-system-libs-r.sh && \
+    # Install some standard R packages
+    install2.r --ncpus -1 --error \
+        arrow \
+        aws.s3 \
+        devtools \
+        DBI \
+        duckdb \
+        lintr \
+        paws \
+        quarto \
+        renv \
+        RPostgreSQL \
+        styler
     # Install duckdb extensions
     Rscript /opt/install-duckdb-extensions.R && \
-    # Give user ownership
-    /opt/make_user_owner.sh ${R_HOME} && \
+    # Fix user permissions
+    /opt/fix-permissions-r.sh && \
     # Clean
     /opt/clean.sh
 

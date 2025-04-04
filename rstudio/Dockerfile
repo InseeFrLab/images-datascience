@@ -15,8 +15,6 @@ USER root
 RUN /rocker_scripts/install_rstudio.sh && \
     /rocker_scripts/install_pandoc.sh && \
     /opt/configure-rstudio.sh && \
-    # Give user ownership
-    /opt/make_user_owner.sh && \
     # Clean
     /opt/clean.sh /rocker_scripts/
 

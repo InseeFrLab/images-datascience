@@ -21,9 +21,9 @@ esac
 wget -q https://github.com/duckdb/duckdb/releases/latest/download/$FILENAME
 unzip $FILENAME -d /usr/local/bin/
 
-# Give user ownership on DuckDB's directory for user-installed extensions 
-mkdir -p "${HOME}/.duckdb/extensions/"
-chown -R ${USERNAME}:${GROUPNAME} "${HOME}/.duckdb/extensions/"
+# Give user ownership on DuckDB's directory for user's config and extensions 
+mkdir -p ${HOME}/.duckdb/
+chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb/
 
 # Clean
 rm $FILENAME

@@ -16,8 +16,8 @@ RUN /opt/install-python.sh && \
     /opt/install-julia.sh && \
     # Install common Python packages
     uv pip install --system --no-cache -r requirements.txt && \
-    # Give user ownership
-    /opt/make_user_owner.sh && \
+    # Fix user permissions
+    /opt/fix-permissions-python.sh && \
     # Clean
     /opt/clean.sh requirements.txt
 
