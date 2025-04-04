@@ -26,7 +26,9 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
 
     if [[ "$VAULT_INJECTION_SA_ENABLED" = "true" && "$VAULT_INJECTION_SA_MODE" = "jwt" ]]; then
         echo "using service account injection jwt to get vault token"
-        VAULT_TOKEN=$(vault write -field="token" auth/$VAULT_INJECTION_SA_AUTH_PATH/login role=$VAULT_INJECTION_SA_AUTH_ROLE jwt=@/var/run/secrets/kubernetes.io/serviceaccount/token)
+        VAULT_TOKEN=$(curl -s --request POST \
+        --data "{\"role\": \"$VAULT_INJECTION_SA_AUTH_ROLE\", \"jwt\": \"$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)\"}" \
+        $VAULT_ADDR/v1/auth/$VAULT_INJECTION_SA_AUTH_PATH/login | jq -r .auth.client_token)
     fi
 
     # If a token is available (either personal Token injected by Onyxia UI, or SA token
