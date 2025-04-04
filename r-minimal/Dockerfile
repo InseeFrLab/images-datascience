@@ -37,7 +37,7 @@ RUN /rocker_scripts/setup_R.sh && \
         quarto \
         renv \
         RPostgreSQL \
-        styler
+        styler && \
     # Install duckdb extensions
     Rscript /opt/install-duckdb-extensions.R && \
     # Fix user permissions

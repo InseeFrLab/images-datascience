@@ -52,7 +52,10 @@ def build_chain(chain_name, language_key, version, gpu, no_cache, push):
             tag = image
         else: 
             # Last step of the chain
-            tag = f"inseefrlab/onyxia-{chain_name}:dev"
+            tag = f"inseefrlab/onyxia-{chain_name}:{language_key}{version}"
+            if gpu:
+                tag += "-gpu"
+            tag += "-dev"
 
         cmd_build = [
             "docker", "build", "--progress=plain", image, "-t", tag,
@@ -68,10 +71,7 @@ def build_chain(chain_name, language_key, version, gpu, no_cache, push):
         subprocess.run(cmd_build, check=True)
 
     if push:
-        push_tag = f"inseefrlab/onyxia-{chain_name}:{language_key}{version}-dev"
-        cmd_tag = ["docker", "tag", tag, push_tag]
-        subprocess.run(cmd_tag, check=True)
-        cmd_push = ["docker", "push", push_tag]
+        cmd_push = ["docker", "push", tag]
         logging.info(f"Push command : {cmd_push}")
         subprocess.run(cmd_push, check=True)
 
