@@ -38,7 +38,7 @@ cd Python-${PYTHON_VERSION}
 		--enable-optimizations \
 		--enable-shared \
 		--with-lto
-make -j9
+make -j4
 make install
 ldconfig
 

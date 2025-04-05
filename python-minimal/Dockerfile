@@ -16,7 +16,7 @@ COPY requirements.txt .
 # Build Python from source
 RUN /opt/install-python.sh && \
     # Install Python packages
-    uv pip install --system -r requirements.txt && \
+    uv pip install --system --no-cache -r requirements.txt && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

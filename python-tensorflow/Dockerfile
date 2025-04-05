@@ -5,7 +5,7 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
-RUN uv pip install --system tensorflow && \
+RUN uv pip install --system --no-cache tensorflow && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

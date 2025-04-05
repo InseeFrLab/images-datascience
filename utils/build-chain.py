@@ -48,11 +48,13 @@ def build_chain(chain_name, r_version, py_version, spark_version,
         build_args = []
 
         # Specify base image for each build step
-        if image == "base":
+        if i == 0:
+            # First step : define external base images
             shutil.copytree("scripts", "base/scripts", dirs_exist_ok=True)
             previous_image = "nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04" if gpu else "ubuntu:22.04"
         else:
-            previous_image = chain[i - 1]
+            # Intermediary and final steps : use previous built tag as base image 
+            previous_image = tag
         build_args.extend(["--build-arg", f"BASE_IMAGE={previous_image}"])
 
         # Specify language versions
@@ -67,16 +69,19 @@ def build_chain(chain_name, r_version, py_version, spark_version,
             build_args.extend(["--build-arg", f"SPARK_VERSION={spark_version}"])
             versions_tag.append(f"spark{spark_version}")
 
-        if i < len(chain) - 1:
-            # Intermediary steps : only image name as tag
-            tag = image
-        else: 
-            # Last step of the chain : proper tagging
+        # Output tag
+        if i == 0:
+            # First step : base is always tagged as latest
+            tag = "inseefrlab/onyxia-base:latest"
+        else:
+            # Intermediary and final steps : tag with language versions
+            # If final step, image is named after chain_name
+            image_name = image if i < len(chain) - 1 else chain_name
             versions_tag_str = "-".join(versions_tag)
-            tag = f"inseefrlab/onyxia-{chain_name}:{versions_tag_str}"
-            if gpu:
-                tag += "-gpu"
-            tag += "-dev"
+            tag = f"inseefrlab/onyxia-{image_name}:{versions_tag_str}"
+        if gpu:
+            tag += "-gpu"
+        tag += "-dev"
 
         cmd_build = [
             "docker", "build", "--progress=plain", image, "-t", tag,
