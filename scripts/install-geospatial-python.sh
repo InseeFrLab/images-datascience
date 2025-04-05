@@ -18,4 +18,4 @@ apt_install \
 
 # Install GDAL Python package with numpy-based raster support
 # See : https://pypi.org/project/GDAL/
-uv pip install --system --no-cache gdal[numpy]=="$(gdal-config --version).*"
+uv pip install --system gdal[numpy]=="$(gdal-config --version).*"

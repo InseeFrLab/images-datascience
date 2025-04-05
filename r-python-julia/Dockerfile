@@ -15,7 +15,7 @@ COPY requirements.txt .
 RUN /opt/install-python.sh && \
     /opt/install-julia.sh && \
     # Install common Python packages
-    uv pip install --system --no-cache -r requirements.txt && \
+    uv pip install --system -r requirements.txt && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

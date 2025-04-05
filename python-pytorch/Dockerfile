@@ -7,10 +7,10 @@ USER root
 
 RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         # CUDA support
-        uv pip install --system --no-cache torch torchvision torchaudio; \
+        uv pip install --system torch torchvision torchaudio; \
     else \
         # CPU only
-        uv pip install --system --no-cache torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
+        uv pip install --system torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
     fi && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \

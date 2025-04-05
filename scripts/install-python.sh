@@ -38,7 +38,7 @@ cd Python-${PYTHON_VERSION}
 		--enable-optimizations \
 		--enable-shared \
 		--with-lto
-make -j 4  # GHA's public VM have 4 cores
+make -j9
 make install
 ldconfig
 
@@ -55,5 +55,6 @@ apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 # Useful symlink
 ln -s /usr/local/bin/python3 /usr/local/bin/python
 
-# Install/upgrade package managers
-pip3 install --no-cache-dir --upgrade pip uv
+# Upgrade pip & install uv for further Python packages installation
+pip3 install --no-cache-dir --upgrade pip
+pip3 install --no-cache-dir uv
