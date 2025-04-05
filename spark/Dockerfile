@@ -12,10 +12,10 @@ ENV JAVA_VERSION="17"
 ENV JAVA_HOME="/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64"
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-ENV HADOOP_HOME="/opt/hadoop"
-ENV SPARK_HOME="/opt/spark"
-ENV HIVE_HOME="/opt/hive"
-ENV PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.7-src.zip"
+ENV HADOOP_HOME="/usr/local/bin/hadoop"
+ENV SPARK_HOME="/usr/local/bin/spark"
+ENV HIVE_HOME="/usr/local/bin/hive"
+ENV PYTHONPATH="${SPARK_HOME}/python:${SPARK_HOME}/python/lib/py4j-0.10.9.7-src.zip"
 ENV SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M"
 
 ENV HADOOP_OPTIONAL_TOOLS="hadoop-aws"
@@ -39,10 +39,8 @@ RUN --mount=type=secret,id=github_token \
         R -e "install.packages(c('sparklyr', 'arrow'))" && \
         R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \
     fi && \
-    # Give user ownership
-    /opt/make_user_owner.sh ${HADOOP_HOME} ${SPARK_HOME} ${HIVE_HOME} && \
-    # Change log verbosity of Hadoop
-    sed -i -e "s/hadoop.root.logger=INFO,console/hadoop.root.logger=WARN,console/g" /opt/hadoop/etc/hadoop/log4j.properties && \
+    # Fix user permissions
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh
 

@@ -223,6 +223,7 @@ jobs:
       context: r-python-julia
       base_image: r-minimal
       r_version_1: 4.4.2
+      python_version_1: 3.12.9
       build_gpu: false
     secrets: inherit
   vscode-r-python-julia:

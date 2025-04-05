@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN /opt/install-geospatial-python.sh && \
     uv pip install --system --no-cache -r requirements.txt && \
     # Fix user permissions
-    /opt/fix-permissions-python.sh && \
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh requirements.txt
 

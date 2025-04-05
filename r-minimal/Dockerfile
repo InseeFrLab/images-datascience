@@ -41,7 +41,7 @@ RUN /rocker_scripts/setup_R.sh && \
     # Install duckdb extensions
     Rscript /opt/install-duckdb-extensions.R && \
     # Fix user permissions
-    /opt/fix-permissions-r.sh && \
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh
 

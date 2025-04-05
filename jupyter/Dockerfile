@@ -22,6 +22,8 @@ RUN /opt/install-jupyterlab.sh && \
     fi && \
     # Generate jupyter server config
     jupyter server --generate-config && \
+    # Fix user permissions
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh && \
     jupyter lab clean

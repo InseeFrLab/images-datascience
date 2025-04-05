@@ -2,8 +2,14 @@
 set -e
 
 # Install latest version of quarto
-QUARTO_DL_URL=$(wget -qO- https://quarto.org/docs/download/_download.json | grep -oP '(?<=\"download_url\":\s\")https.*linux-amd64.deb')
-wget -q ${QUARTO_DL_URL} -O quarto.deb
-dpkg -i quarto.deb
-quarto check install
-rm quarto.deb
+LATEST_VERSION=$(curl -s https://quarto.org/docs/download/_download.json | jq -r '.version')
+DL_URL="https://github.com/quarto-dev/quarto-cli/releases/download/v${LATEST_VERSION}/quarto-${LATEST_VERSION}-linux-amd64.tar.gz"
+wget -q ${DL_URL} -O quarto.tar.gz
+tar -C /opt/ -xvzf quarto.tar.gz
+ln -s "/opt/quarto-${LATEST_VERSION}/bin/quarto" /usr/local/bin/quarto
+
+# Check install succeeded
+quarto check
+
+# Clean install files
+rm -f quarto.tar.gz

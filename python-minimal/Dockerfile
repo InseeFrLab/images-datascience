@@ -18,7 +18,7 @@ RUN /opt/install-python.sh && \
     # Install Python packages
     uv pip install --system --no-cache -r requirements.txt && \
     # Fix user permissions
-    /opt/fix-permissions-python.sh && \
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh requirements.txt
 

@@ -37,8 +37,8 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     /opt/install-duckdb-cli.sh && \
     /opt/install-duckdb-extensions.sh && \
     /opt/install-quarto.sh && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} && \
+    # Fix user permissions
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh
 

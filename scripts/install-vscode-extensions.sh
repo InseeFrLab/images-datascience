@@ -1,10 +1,6 @@
 #!/bin/bash
 set -e
 
-# Initialize VSCode's extensions directory and give user permissions
-mkdir -p ${HOME}/.local/share/code-server/extensions/
-chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.local/share/code-server/extensions/
-
 # Number of retries
 retries=3
 # Wait time between retries

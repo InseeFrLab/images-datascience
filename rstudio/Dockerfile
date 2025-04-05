@@ -15,6 +15,8 @@ USER root
 RUN /rocker_scripts/install_rstudio.sh && \
     /rocker_scripts/install_pandoc.sh && \
     /opt/configure-rstudio.sh && \
+    # Fix user permissions
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh /rocker_scripts/
 

@@ -17,9 +17,7 @@ RUN /opt/install-python.sh && \
     # Install common Python packages
     uv pip install --system --no-cache -r requirements.txt && \
     # Fix user permissions
-    /opt/fix-permissions-r.sh && \
-    /opt/fix-permissions-python.sh && \
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.julia/
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh requirements.txt
 

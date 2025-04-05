@@ -15,6 +15,8 @@ COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/
 # Install VSCode
 RUN /opt/install-vscode.sh && \
     /opt/install-vscode-extensions.sh && \
+    # Fix user permissions
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh
 

@@ -13,7 +13,7 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         uv pip install --system --no-cache torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
     fi && \
     # Fix user permissions
-    /opt/fix-permissions-python.sh && \
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh
 

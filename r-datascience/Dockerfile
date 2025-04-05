@@ -20,7 +20,7 @@ RUN /opt/install-java.sh && \
     # Re-install system libs that may have been removed by autoremove in rocker scripts
     /opt/install-system-libs.sh && \
     # Fix user permissions
-    /opt/fix-permissions-r.sh && \
+    /opt/fix-user-permissions.sh && \
     # Clean
     /opt/clean.sh
 
