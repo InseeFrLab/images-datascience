@@ -36,23 +36,44 @@ chains = {
 }
 
 
-def build_chain(chain_name, language_key, version, gpu, no_cache, push):
+def build_chain(chain_name, r_version, py_version, spark_version,
+                gpu, no_cache, push):
 
     logging.info(f"Building chain : {chain_name}")
     chain = chains[chain_name]
 
     for i, image in enumerate(chain):
+
+        # Placeholder for build args
+        build_args = []
+
+        # Specify base image for each build step
         if image == "base":
             shutil.copytree("scripts", "base/scripts", dirs_exist_ok=True)
             previous_image = "nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04" if gpu else "ubuntu:22.04"
         else:
             previous_image = chain[i - 1]
+        build_args.extend(["--build-arg", f"BASE_IMAGE={previous_image}"])
+
+        # Specify language versions
+        versions_tag = []
+        if r_version is not None:
+            build_args.extend(["--build-arg", f"R_VERSION={r_version}"])
+            versions_tag.append(f"r{r_version}")
+        if py_version is not None:
+            build_args.extend(["--build-arg", f"PYTHON_VERSION={py_version}"])
+            versions_tag.append(f"py{py_version}")
+        if spark_version is not None:
+            build_args.extend(["--build-arg", f"SPARK_VERSION={spark_version}"])
+            versions_tag.append(f"spark{spark_version}")
 
         if i < len(chain) - 1:
+            # Intermediary steps : only image name as tag
             tag = image
         else: 
-            # Last step of the chain
-            tag = f"inseefrlab/onyxia-{chain_name}:{language_key}{version}"
+            # Last step of the chain : proper tagging
+            versions_tag_str = "-".join(versions_tag)
+            tag = f"inseefrlab/onyxia-{chain_name}:{versions_tag_str}"
             if gpu:
                 tag += "-gpu"
             tag += "-dev"
@@ -61,9 +82,6 @@ def build_chain(chain_name, language_key, version, gpu, no_cache, push):
             "docker", "build", "--progress=plain", image, "-t", tag,
             "--build-arg", f"BASE_IMAGE={previous_image}"
         ]
-        if version:
-            version_param = "PYTHON_VERSION" if language_key == "py" else "R_VERSION"
-            cmd_build.extend(["--build-arg", f"{version_param}={version}"])
         if no_cache:
             cmd_build.extend(["--no-cache"])
 
@@ -90,8 +108,16 @@ def build_cli_parser():
         help="Whether to build with GPU support."
     )
     parser.add_argument(
-        "--version",
-        help="Specify a version for R or Python."
+        "--r_version",
+        help="Specify a version for R."
+    )
+    parser.add_argument(
+        "--py_version",
+        help="Specify a version for Python."
+    )
+    parser.add_argument(
+        "--spark_version",
+        help="Specify a version for Spark."
     )
     parser.add_argument(
         "--no_cache",
@@ -111,12 +137,12 @@ if __name__ == '__main__':
     # Parse CLI parameters
     parser = build_cli_parser()
     args = parser.parse_args()
-    language_key = "py" if "python-minimal" in chains[args.chain] else "r"
 
     # Build chain
     build_chain(chain_name=args.chain,
-                language_key=language_key,
-                version=args.version,
+                r_version=args.r_version,
+                py_version=args.py_version,
+                spark_version=args.spark_version,
                 gpu=args.gpu,
                 no_cache=args.no_cache,
                 push=args.push
