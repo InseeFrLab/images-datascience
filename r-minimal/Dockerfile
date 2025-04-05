@@ -11,14 +11,12 @@ ENV DEFAULT_USER="${USERNAME}"
 
 USER root
 
-# Build R from source using rocker's install scripts
-RUN /opt/install-r.sh
-
 # Use RStudio's package manager to download packages as binaries
 ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
-RUN /rocker_scripts/setup_R.sh && \
+RUN /opt/install-r.sh && \
+    /rocker_scripts/setup_R.sh && \
     # Re-install system libs that may have been removed by autoremove
     /opt/install-system-libs.sh && \
     # Configure R for CUDA if parent image has CUDA
@@ -27,19 +25,9 @@ RUN /rocker_scripts/setup_R.sh && \
     /opt/install-system-libs-r.sh && \
     # Install some standard R packages
     install2.r --ncpus -1 --error \
-        arrow \
-        aws.s3 \
         devtools \
-        DBI \
-        duckdb \
         lintr \
-        paws \
-        quarto \
-        renv \
-        RPostgreSQL \
-        styler && \
-    # Install duckdb extensions
-    Rscript /opt/install-duckdb-extensions.R && \
+        renv && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean
