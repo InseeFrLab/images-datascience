@@ -56,5 +56,6 @@ apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 ln -s /usr/local/bin/python3 /usr/local/bin/python
 ln -s /usr/local/bin/pip3 /usr/local/bin/pip
 
-# Upgrade pip
+# Upgrade pip & install uv for further Python packages installation
 pip install --no-cache-dir --upgrade pip
+pip install --no-cache-dir uv
