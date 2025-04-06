@@ -8,7 +8,7 @@ This document outlines the maintainers responsible for the datascience images, a
 | ---------------- | ----------------- | ------------- | --------------  |
 | Romain Avouac    | @avouacr          | Insee         | Lead Maintainer |
 | Ines Hiverlet    | @ihiverlet        | Insee         | Co-maintainer   |
-| Gaspard Ferrey   | @Gaspi            | Insee         | Co-maintainer   |
+| Gaspard Férey    | @Gaspi            | Insee         | Co-maintainer   |
 | Frédéric Comte   | @fcomte           | Insee         | Co-maintainer   |
 
 ## Emeritus Maintainers
