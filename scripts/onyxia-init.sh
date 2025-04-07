@@ -6,11 +6,11 @@ whoami
 sudo true -nv 2>&1
 if [ $? -eq 0 ]; then
   echo "sudo_allowed"
-  EXPORT SUDO=0
+  export SUDO=0
   sudo update-ca-certificates
 else
   echo "no_sudo"
-  EXPORT SUDO=1
+  export SUDO=1
 fi
 
 if [[ -n "$REGION_INIT_SCRIPT" ]]; then
