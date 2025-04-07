@@ -15,15 +15,18 @@ ENV GROUPNAME="users"
 ENV GID="100"
 ENV HOME="/home/${USERNAME}"
 ENV WORKSPACE_DIR="${HOME}/work"
+RUN groupmod -g ${GID} ${GROUPNAME} && \
+    # Setup custom user with sudo rights
+    useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
+    # Create workspace
+    mkdir -p ${WORKSPACE_DIR} && \
+    # Disable default sudo message when opening shell
+    touch ${HOME}/.sudo_as_admin_successful
 WORKDIR ${WORKSPACE_DIR}
 
 COPY --chmod='+x' scripts/ /opt/
 
-RUN groupmod -g ${GID} ${GROUPNAME} && \
-    # Setup custom user with sudo rights
-    useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
-    # Install core system libraries
-    /opt/install-system-libs.sh && \
+RUN /opt/install-system-libs.sh && \
     # Make sudo passwordless
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     # Disable default sudo message when opening shell
