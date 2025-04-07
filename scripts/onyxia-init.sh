@@ -67,7 +67,7 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
     fi
 fi
 
-if [  "`which kubectl`" != "" ]; then
+if command -v kubectl; then
     kubectl config set-cluster in-cluster --server=https://kubernetes.default --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     kubectl config set-credentials user --token `cat /var/run/secrets/kubernetes.io/serviceaccount/token`
     kubectl config set-context in-cluster --user=user --cluster=in-cluster --namespace=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
@@ -75,12 +75,12 @@ if [  "`which kubectl`" != "" ]; then
     export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode | jq -r ' .["kubernetes.io"].serviceaccount.name'`
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     # Give user ownership on kubectl config file
-    chown -R onyxia:users ${HOME}/.kube
+    chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.kube
 fi
 
 
 
-if [  "`which mc`" != "" ]; then
+if command -v mc; then
     export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY:$AWS_SESSION_TOKEN@$AWS_S3_ENDPOINT
 fi
 
@@ -92,7 +92,7 @@ if [[ -z $ROOT_PROJECT_DIRECTORY ]]; then
     ROOT_PROJECT_DIRECTORY="$WORSKSPACE_DIR"
 fi
 
-if [  "`which git`" != "" ]; then
+if command -v git; then
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
         echo "configuration of git to a custom crt"
         git config --global http.sslVerify true
@@ -131,7 +131,7 @@ if [  "`which git`" != "" ]; then
 
     # Give user ownership
     [ -d ${HOME}/.cache/git ] && chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.cache/git
-    [ -f ${HOME}/.gitconfig ] && chown ${USERNAME}:${GROUPNAME} ${HOME}/.gitconfig
+    [ -f ${HOME}/.gitconfig ] && chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.gitconfig
 
 fi
 
@@ -195,13 +195,6 @@ if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
     );"
 fi
 
-if [[ -n "$FAUXPILOT_SERVER" ]]; then
-    dir="$HOME/.local/share/code-server/User"
-    file="settings.json"
-    jq --arg key "fauxpilot.server" --arg value "$FAUXPILOT_SERVER" --indent 4 '. += {($key): $value}'  $dir/$file > $dir/$file.tmp && mv $dir/$file.tmp $dir/$file
-    jq --arg key "fauxpilot.enabled" --argjson value "true" --indent 4 '. += {($key): $value}'  $dir/$file > $dir/$file.tmp && mv $dir/$file.tmp $dir/$file
-fi
-
 # The commands related to setting the various repositories (R/CRAN, pip)
 # are located in specific script
 source /opt/onyxia-set-repositories.sh
@@ -214,7 +207,6 @@ fi
 echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"
 for f in "$ROOT_PROJECT_DIRECTORY"/*; do
     if [[ -d "$f" && "$(basename $f)" != "lost+found" ]]; then
-        echo "  $f"
         chown -R $PROJECT_USER:$PROJECT_GROUP $f
     fi
 done

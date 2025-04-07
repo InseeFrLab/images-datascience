@@ -27,6 +27,7 @@ if command -v uv; then
         echo "export UV_DEFAULT_INDEX=$PIP_REPOSITORY" >> "$ENV_FILE"
         echo 'export UV_NATIVE_TLS=true' >> "$ENV_FILE"   
     fi
+fi
 
 # R configuration
 
