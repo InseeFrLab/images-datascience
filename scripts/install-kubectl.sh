@@ -19,4 +19,4 @@ esac
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/$ARCHITECTURE/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
-echo 'source <(kubectl completion bash)' >> /home/${USERNAME}/.bashrc
+echo 'source <(kubectl completion bash)' >> ${HOME}/.bashrc

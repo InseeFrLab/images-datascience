@@ -6,4 +6,4 @@ chmod +x get_helm.sh
 ./get_helm.sh
 rm get_helm.sh
 
-echo 'source <(helm completion bash)' >> /home/${USERNAME}/.bashrc
+echo 'source <(helm completion bash)' >> ${HOME}/.bashrc
