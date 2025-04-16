@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-TEST=true
 PUSH=false
 SHUTDOWN=false
 
