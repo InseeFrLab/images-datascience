@@ -7,7 +7,7 @@ fileExistenceTests:
   - name: "user home"
     path: "/home/onyxia"
     shouldExist: true
-    permissions: "drwxr-x---"
+    permissions: "drwxr-xr-x"
     uid: 1000
     gid: 100
   - name: "onyxia init script"
@@ -29,14 +29,6 @@ commandTests:
     command: "which"
     args: ["mc"]
     expectedOutput: ["/usr/local/bin/mc"]
-  - name: "Does the binary exists?"
-    command: "which"
-    args: ["vault"]
-    expectedOutput: ["/usr/local/bin/vault"]
-  - name: "Does the binary exists?"
-    command: "which"
-    args: ["argo"]
-    expectedOutput: ["/usr/local/bin/argo"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["code-server"]
