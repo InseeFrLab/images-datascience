@@ -37,7 +37,7 @@ chains = {
 
 
 def build_chain(chain_name, r_version, py_version, spark_version,
-                gpu, no_cache, test, push):
+                gpu, no_cache, push):
 
     logging.info(f"Building chain : {chain_name}")
     chain = chains[chain_name]
@@ -93,11 +93,11 @@ def build_chain(chain_name, r_version, py_version, spark_version,
         logging.info(f"Build command : {' '.join(cmd_build)}")
         subprocess.run(cmd_build, check=True)
 
-        if test:
-            cmd_test = ["container-structure-test", "test", "--image", image,
-                        "--config", f"{image}/tests.yaml"]
-            logging.info(f"Test command : {cmd_test}")
-            subprocess.run(cmd_test, check=True)
+        # Container tests
+        cmd_test = ["container-structure-test", "test", "--image", tag,
+                    "--config", f"{image}/tests.yaml"]
+        logging.info(f"Test command : {cmd_test}")
+        subprocess.run(cmd_test, check=True)
 
     if push:
         cmd_push = ["docker", "push", tag]
@@ -136,11 +136,6 @@ def build_cli_parser():
         help="Tell Docker to build without using caching."
     )
     parser.add_argument(
-        "--test",
-        action="store_true",
-        help="Whether to test built images using container-structure-test."
-    )
-    parser.add_argument(
         "--push",
         action="store_true",
         help="Whether to push the last image of the chain to DockerHub."
@@ -161,6 +156,5 @@ if __name__ == '__main__':
                 spark_version=args.spark_version,
                 gpu=args.gpu,
                 no_cache=args.no_cache,
-                test=args.test,
                 push=args.push
                 )
