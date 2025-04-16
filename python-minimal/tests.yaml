@@ -31,11 +31,11 @@ commandTests:
   - name: "Does the binary exists?"
     command: "which"
     args: ["python"]
-    expectedOutput: ["/usr/local/bin/python3"]
+    expectedOutput: ["/usr/local/bin/python"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["pip"]
-    expectedOutput: ["/usr/local/bin/pip3"]
+    expectedOutput: ["/usr/local/bin/pip"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["duckdb"]
