@@ -5,8 +5,6 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 ARG PYTHON_VERSION="3.12.9"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
-ENV JULIA_DIR="/usr/local/lib/julia"
-ENV PATH="${HOME}/.local/bin:${JULIA_DIR}/bin:${PATH}"
 
 USER root
 

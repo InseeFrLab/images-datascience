@@ -13,4 +13,4 @@ RUN uv pip install --system --no-cache tensorflow && \
 
 USER 1000
 
-CMD ["python3"]
+CMD ["python"]

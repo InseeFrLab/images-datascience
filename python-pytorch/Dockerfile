@@ -19,4 +19,4 @@ RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
 
 USER 1000
 
-CMD ["python3"]
+CMD ["python"]

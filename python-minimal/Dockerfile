@@ -24,4 +24,4 @@ RUN /opt/install-python.sh && \
 
 USER 1000
 
-CMD ["python3"]
+CMD ["python"]

@@ -77,10 +77,10 @@ if [ "$PYSPARK_MAJOR_PYTHON_VERSION" == "2" ]; then
     export PYSPARK_PYTHON="python"
     export PYSPARK_DRIVER_PYTHON="python"
 elif [ "$PYSPARK_MAJOR_PYTHON_VERSION" == "3" ]; then
-    pyv3="$(python3 -V 2>&1)"
+    pyv3="$(python -V 2>&1)"
     export PYTHON_VERSION="${pyv3:7}"
-    export PYSPARK_PYTHON="python3"
-    export PYSPARK_DRIVER_PYTHON="python3"
+    export PYSPARK_PYTHON="python"
+    export PYSPARK_DRIVER_PYTHON="python"
 fi
 
 case "$SPARK_K8S_CMD" in

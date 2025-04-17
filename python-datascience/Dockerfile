@@ -17,4 +17,4 @@ RUN /opt/install-geospatial-python.sh && \
 
 USER 1000
 
-CMD ["python3"]
+CMD ["python"]

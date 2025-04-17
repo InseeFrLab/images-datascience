@@ -42,8 +42,12 @@ make -j4
 make install
 ldconfig
 
+# Useful symlinks
+ln -s /usr/local/bin/python3 /usr/local/bin/python
+ln -s /usr/local/bin/pip3 /usr/local/bin/pip
+
 # Checks
-python3 --version
+python --version
 
 # Clean install files
 cd ..
@@ -51,10 +55,6 @@ rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
 apt-mark auto '.*' > /dev/null
 apt-mark manual $savedAptMark
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
-
-# Useful symlinks
-ln -s /usr/local/bin/python3 /usr/local/bin/python
-ln -s /usr/local/bin/pip3 /usr/local/bin/pip
 
 # Upgrade pip & install uv for further Python packages installation
 pip install --no-cache-dir --upgrade pip

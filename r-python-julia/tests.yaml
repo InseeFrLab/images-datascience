@@ -34,12 +34,12 @@ commandTests:
     expectedOutput: ["/usr/local/bin/R"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["python3"]
-    expectedOutput: ["/usr/bin/python3"]
+    args: ["python"]
+    expectedOutput: ["/usr/bin/python"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["julia"]
-    expectedOutput: ["/opt/julia/bin/julia"]
+    expectedOutput: ["/usr/local/bin/julia"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["duckdb"]
