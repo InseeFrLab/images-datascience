@@ -8,11 +8,9 @@ ARG R_VERSION="4.4.2"
 ENV R_VERSION=${R_VERSION}
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER="${USERNAME}"
+ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 USER root
-
-# Use RStudio's package manager to download packages as binaries
-ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
 RUN /opt/install-r.sh && \
