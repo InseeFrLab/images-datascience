@@ -61,7 +61,7 @@ jobs:
       image: r-minimal
       context: r-minimal
       base_image: base
-      r_version_1: 4.4.2
+      r_version_1: 4.5.0
       r_version_2: 4.5.0
     secrets: inherit
   r-datascience:
@@ -71,7 +71,7 @@ jobs:
       image: r-datascience
       context: r-datascience
       base_image: r-minimal
-      r_version_1: 4.4.2
+      r_version_1: 4.5.0
       r_version_2: 4.5.0
     secrets: inherit
   jupyter-python:
