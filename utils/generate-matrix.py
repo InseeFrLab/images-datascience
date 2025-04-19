@@ -83,8 +83,34 @@ if __name__ == "__main__":
                 "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag}-gpu,{DH_ORGA}/{onyxia_base_tag}-gpu-{TODAY_DATE}"
             }
             ]
+
+    elif "r-python-julia" in args.output_image:
+        # Building multi-languages image
+        if args.input_image == "r-minimal":
+            # r-python-julia inherits from r-minimal
+            input_tag = f"{DH_ORGA}/{args.input_image}:r{args.r_version_1}"
+            output_main_tag = f"{DH_ORGA}/{args.output_image}:r{args.r_version_1}-py{args.python_version_1}"
+            matrix = [
+                {
+                    "base_image_tag": input_tag,
+                    "output_image_main_tag": output_main_tag,
+                    "output_image_tags": f"{output_main_tag},{output_main_tag}-{TODAY_DATE}"
+                }
+            ]
+        else:
+            # {jupyter/vscode}-r-python-julia inherit from r-python-julia
+            input_tag = f"{DH_ORGA}/{args.input_image}:r{args.r_version_1}-py{args.python_version_1}"
+            output_main_tag = f"{DH_ORGA}/{args.output_image}:r{args.r_version_1}-py{args.python_version_1}"
+            matrix = [
+                {
+                    "base_image_tag": input_tag,
+                    "output_image_main_tag": output_main_tag,
+                    "output_image_tags": f"{output_main_tag},{output_main_tag}-{TODAY_DATE}"
+                }
+            ]
+
     else:
-        # Subsequent images, with versioning
+        # Other images
         if python_versions:
             matrix = generate_matrix(python_versions, args.input_image, args.output_image,
                                      args.spark_version, gpu_options, "py")

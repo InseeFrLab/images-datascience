@@ -32,22 +32,22 @@
       "customType": "regex",
       "fileMatch": ["python-minimal/Dockerfile"],
       "matchStrings": ["ARG PYTHON_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "conda-forge/python",
-      "datasourceTemplate": "conda"
+      "depNameTemplate": "python",
+      "datasourceTemplate": "python-version"
     },
     {
       "customType": "regex",
       "fileMatch": [".github/workflows/main-workflow.yml"],
       "matchStrings": ["(^| )python_version_1: *(?<currentValue>[^\\s]*)"],
-      "depNameTemplate": "conda-forge/python",
-      "datasourceTemplate": "conda"
+      "depNameTemplate": "python",
+      "datasourceTemplate": "python-version"
     },
     {
       "customType": "regex",
       "fileMatch": [".github/workflows/main-workflow.yml"],
       "matchStrings": ["(^| )python_version_2: *(?<currentValue>[^\\s]*)"],
-      "depNameTemplate": "conda-forge/python",
-      "datasourceTemplate": "conda"
+      "depNameTemplate": "python",
+      "datasourceTemplate": "python-version"
     },
     {
       "customType": "regex",

@@ -30,24 +30,12 @@ commandTests:
     expectedOutput: ["/usr/local/bin/mc"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["vault"]
-    expectedOutput: ["/usr/local/bin/vault"]
-  - name: "Does the binary exists?"
-    command: "which"
-    args: ["argo"]
-    expectedOutput: ["/usr/local/bin/argo"]
-  - name: "Does the binary exists?"
-    command: "which"
-    args: ["conda"]
-    expectedOutput: ["/opt/conda/bin/conda"]
-  - name: "Does the binary exists?"
-    command: "which"
     args: ["python"]
-    expectedOutput: ["/opt/conda/bin/python"]
+    expectedOutput: ["/usr/local/bin/python"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["pip"]
-    expectedOutput: ["/opt/conda/bin/pip"]
+    expectedOutput: ["/usr/local/bin/pip"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["quarto"]

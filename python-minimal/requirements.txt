@@ -1,0 +1,10 @@
+duckdb
+ipykernel
+nbclient
+nbformat
+numpy>=2.0.0
+pandas
+pyarrow
+requests
+s3fs
+uv

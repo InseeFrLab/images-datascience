@@ -35,6 +35,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
       RDS--> VSCODER[vscode-r]:::ide;
+      RPYJU--> JRPYJU[jupyter-r-python-julia]:::ide;
       RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
       classDef base fill:#d2f9ff,color:#000  ;
       classDef minimal fill:#C1D5DF,color:#000;
@@ -55,7 +56,6 @@ If Onyxia support is checked, it means that the Onyxia product could inject auto
 |   environment variable   |   Example | Description |  helm chart support |   Onyxia support   |
 |---    |:-:    |:-:    |:-:    |:-:     |
 | PIP_REPOSITORY   | https://some.entreprise.mirror/repository/pypi-proxy/simple   | Configure an externally managed pip repository manager   | ✔️   | ✔️  |
-| CONDA_REPOSITORY | https://some.entreprise.mirror/repository/conda-proxy/main   |  Configure an externally managed conda repository manager   |✔️   |✔️    |
 | R_REPOSITORY | https://some.entreprise.mirror/repository/cran   |  Configure an externally managed cran repository manager   |not yet (*)   | not yet  (*)   |
 | PATH_TO_CA_BUNDLE  | /etc/ssl/certs/ca-certificates.crt  | Configure a path to a ca bundle with autorities to support an auto-signed some.entreprise.mirror   | not yet (*)   | not yet (*)    |
 
@@ -66,7 +66,7 @@ There is multiple recipes:
 **Your user has non root capabilities:**
 - use an init script : https://github.com/InseeFrLab/images-datascience/blob/main/scripts/onyxia-init.sh#L7
 - you can use an init region script location injected by Onyxia with a curl to an endpoint with your certiticates and put it in a path let's say /tmp/ca-certificates:
-- put this path in env variable PATH_TO_CABUNDLE then onyxia-init.sh script will configure git, pip and conda to user this certificates.
+- put this path in env variable PATH_TO_CABUNDLE then onyxia-init.sh script will configure git and pip to user this certificates.
 
 ```
 runAsNonRoot: true

@@ -30,12 +30,8 @@ commandTests:
     expectedOutput: ["/usr/local/bin/mc"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["vault"]
-    expectedOutput: ["/usr/local/bin/vault"]
-  - name: "Does the binary exists?"
-    command: "which"
-    args: ["argo"]
-    expectedOutput: ["/usr/local/bin/argo"]
+    args: ["quarto"]
+    expectedOutput: ["/usr/local/bin/quarto"]
   - name: "Does the binary exists?"
     command: "which"
     args: ["duckdb"]
