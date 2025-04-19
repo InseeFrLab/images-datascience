@@ -1,12 +1,18 @@
 #!/bin/bash
 set -e
 
+# Build configuration
+
 PUSH=false
-NO_CACHE=true
+USE_CACHE=true
 
 DOCKER_BUILD_ARGS=""
 [ "$PUSH" = "true" ] && DOCKER_BUILD_ARGS+=" --push"
-[ "$NO_CACHE" = "true" ] && DOCKER_BUILD_ARGS+=" --no_cache"
+
+echo "Cleaning Docker cache"
+[ "$USE_CACHE" = "false" ] && docker rm -vf $(docker ps -aq) && docker rmi -f $(docker images -aq)
+
+# Build process
 
 PYTHON_VERSIONS=("3.12.9" "3.11.12")
 R_VERSIONS=("4.5.0" "4.4.3")

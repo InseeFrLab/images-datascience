@@ -1,6 +1,5 @@
 import argparse
 import subprocess
-import shutil
 import logging
 
 logging.basicConfig(
@@ -37,7 +36,7 @@ chains = {
 
 
 def build_chain(chain_name, r_version, py_version, spark_version,
-                gpu, no_cache, no_test, push):
+                gpu, no_test, push):
 
     logging.info(f"Building chain : {chain_name}")
     chain = chains[chain_name]
@@ -86,8 +85,6 @@ def build_chain(chain_name, r_version, py_version, spark_version,
             "docker", "build", "--progress=plain", image, "-t", tag,
             "--build-arg", f"BASE_IMAGE={previous_image}"
         ]
-        if no_cache:
-            cmd_build.extend(["--no-cache"])
 
         logging.info(f"Build command : {' '.join(cmd_build)}")
         subprocess.run(cmd_build, check=True)
@@ -131,11 +128,6 @@ def build_cli_parser():
         help="Specify a version for Spark."
     )
     parser.add_argument(
-        "--no_cache",
-        action="store_true",
-        help="Tell Docker to build without using caching."
-    )
-    parser.add_argument(
         "--no_test",
         action="store_true",
         help="Don't test the container."
@@ -160,7 +152,6 @@ if __name__ == '__main__':
                 py_version=args.py_version,
                 spark_version=args.spark_version,
                 gpu=args.gpu,
-                no_cache=args.no_cache,
                 no_test=args.no_test,
                 push=args.push
                 )
