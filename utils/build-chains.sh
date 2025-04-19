@@ -4,13 +4,9 @@ set -e
 # Build configuration
 
 PUSH=false
-USE_CACHE=true
 
 DOCKER_BUILD_ARGS=""
 [ "$PUSH" = "true" ] && DOCKER_BUILD_ARGS+=" --push"
-
-echo "Cleaning Docker cache"
-[ "$USE_CACHE" = "false" ] && docker rm -vf $(docker ps -aq) && docker rmi -f $(docker images -aq)
 
 # Build process
 

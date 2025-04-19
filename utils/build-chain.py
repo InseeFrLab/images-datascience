@@ -81,10 +81,8 @@ def build_chain(chain_name, r_version, py_version, spark_version,
             tag += "-gpu"
         tag += "-dev"
 
-        cmd_build = [
-            "docker", "build", "--progress=plain", image, "-t", tag,
-            "--build-arg", f"BASE_IMAGE={previous_image}"
-        ]
+        cmd_build = ["docker", "build", "--progress=plain", image,
+                     "-t", tag] + build_args
 
         logging.info(f"Build command : {' '.join(cmd_build)}")
         subprocess.run(cmd_build, check=True)
