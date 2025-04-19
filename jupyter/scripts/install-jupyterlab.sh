@@ -10,12 +10,6 @@ function apt_install() {
     fi
 }
 
-apt_install \
-    ca-certificates-java \
-    libbz2-dev \
-    openjdk-${JAVA_VERSION}-jdk-headless \
-    openjdk-${JAVA_VERSION}-jre-headless
-
-if command -v R; then
-    R CMD javareconf
+if command -v pip3; then
+    uv pip install --system --no-cache jupyterlab
 fi

@@ -5,13 +5,12 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
-RUN pip3 install tensorflow && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
+RUN uv pip install --system --no-cache tensorflow && \
+    # Fix user permissions
+    /opt/fix-user-permissions.sh && \
     # Clean
-    conda clean --all -f -y && \
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh
 
 USER 1000
 
-CMD ["python3"]
+CMD ["python"]

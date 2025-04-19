@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Number of retries
 retries=3

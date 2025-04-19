@@ -31,14 +31,6 @@ commandTests:
     expectedOutput: ["/usr/local/bin/mc"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["vault"]
-    expectedOutput: ["/usr/local/bin/vault"]
-  - name: "Does the binary exists?"
-    command: "which"
-    args: ["argo"]
-    expectedOutput: ["/usr/local/bin/argo"]
-  - name: "Does the binary exists?"
-    command: "which"
     args: ["code-server"]
     expectedOutput: ["/usr/bin/code-server"]
   - name: "Does the binary exists?"

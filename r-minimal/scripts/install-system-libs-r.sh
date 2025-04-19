@@ -10,6 +10,7 @@ function apt_install() {
     fi
 }
 
+# Install system libraries required by some R packages
 apt_install \
     libglpk40 \
     libpq-dev \

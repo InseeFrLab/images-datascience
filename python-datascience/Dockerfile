@@ -5,17 +5,17 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
-COPY conda-env.yml .
+COPY --chmod='+x' scripts/ /opt/
+COPY requirements.txt .
 
-RUN ls -larth /opt/
-RUN conda env update -n base -f conda-env.yml && \
-    # Fix permissions
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME} ${CONDA_DIR} && \
+# Install Python packages and their required system libraries
+RUN /opt/install-geospatial-python.sh && \
+    uv pip install --system --no-cache -r requirements.txt && \
+    # Fix user permissions
+    /opt/fix-user-permissions.sh && \
     # Clean
-    rm conda-env.yml && \ 
-    conda clean --all -f -y && \
-    rm -rf /var/lib/apt/lists/*
+    /opt/clean.sh requirements.txt
 
 USER 1000
 
-CMD ["python3"]
+CMD ["python"]
