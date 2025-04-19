@@ -21,7 +21,7 @@ jobs:
       context: python-minimal
       base_image: base
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   python-datascience:
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -30,7 +30,7 @@ jobs:
       context: python-datascience
       base_image: python-minimal
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   python-pytorch:
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -39,7 +39,7 @@ jobs:
       context: python-pytorch
       base_image: python-minimal
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   python-tensorflow:
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -48,7 +48,7 @@ jobs:
       context: python-tensorflow
       base_image: python-minimal
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   r-minimal:
     needs: [base]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -75,7 +75,7 @@ jobs:
       context: jupyter
       base_image: python-datascience
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   vscode-python:
     needs: [python-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -84,7 +84,7 @@ jobs:
       context: vscode
       base_image: python-datascience
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   pyspark:
     needs: [python-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -93,7 +93,7 @@ jobs:
       context: spark
       base_image: python-minimal
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
       spark_version: 3.5.5
       build_gpu: false
     secrets: inherit
@@ -105,7 +105,7 @@ jobs:
       context: jupyter
       base_image: pyspark
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
       spark_version: 3.5.5
       build_gpu: false
   vscode-pyspark:
@@ -116,7 +116,7 @@ jobs:
       context: vscode
       base_image: pyspark
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
       spark_version: 3.5.5
       build_gpu: false
   jupyter-pytorch:
@@ -127,7 +127,7 @@ jobs:
       context: jupyter
       base_image: python-pytorch
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   vscode-pytorch:
     needs: [python-pytorch]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -136,7 +136,7 @@ jobs:
       context: vscode
       base_image: python-pytorch
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   jupyter-tensorflow:
     needs: [python-tensorflow]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -145,7 +145,7 @@ jobs:
       context: jupyter
       base_image: python-tensorflow
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   vscode-tensorflow:
     needs: [python-tensorflow]
     uses: ./.github/workflows/main-workflow-template.yml
@@ -154,7 +154,7 @@ jobs:
       context: vscode
       base_image: python-tensorflow
       python_version_1: 3.12.9
-      python_version_2: 3.11.11
+      python_version_2: 3.11.12
   rstudio:
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
