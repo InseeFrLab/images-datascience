@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-PUSH=true
-NO_CACHE=false
+PUSH=false
+NO_CACHE=true
 
 DOCKER_BUILD_ARGS=""
 [ "$PUSH" = "true" ] && DOCKER_BUILD_ARGS+=" --push"
