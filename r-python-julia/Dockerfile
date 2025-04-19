@@ -8,6 +8,7 @@ ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 USER root
 
+COPY --chmod='+x' scripts/ /opt/
 COPY requirements.txt .
 
 RUN /opt/install-python.sh && \

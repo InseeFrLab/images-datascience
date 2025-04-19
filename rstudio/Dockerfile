@@ -9,7 +9,9 @@ ENV USERID=${UID}
 ENV GROUPID=${GID}
 ENV PATH="/usr/lib/rstudio-server/bin:${PATH}"
 
-USER root 
+USER root
+
+COPY --chmod='+x' scripts/ /opt/
 
 # Install Rstudio using rocker's install scripts
 RUN /rocker_scripts/install_rstudio.sh && \

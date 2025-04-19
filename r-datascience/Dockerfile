@@ -10,6 +10,8 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 USER root
 
+COPY --chmod='+x' scripts/ /opt/
+
 RUN /rocker_scripts/install_geospatial.sh && \
     # Install a Java JDK/JRE for R packages that use it as backend
     /opt/install-java.sh && \

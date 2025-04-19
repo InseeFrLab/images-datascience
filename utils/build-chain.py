@@ -37,7 +37,7 @@ chains = {
 
 
 def build_chain(chain_name, r_version, py_version, spark_version,
-                gpu, no_cache, push):
+                gpu, no_cache, no_test, push):
 
     logging.info(f"Building chain : {chain_name}")
     chain = chains[chain_name]
@@ -50,7 +50,6 @@ def build_chain(chain_name, r_version, py_version, spark_version,
         # Specify base image for each build step
         if i == 0:
             # First step : define external base images
-            shutil.copytree("scripts", "base/scripts", dirs_exist_ok=True)
             previous_image = "nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04" if gpu else "ubuntu:22.04"
         else:
             # Intermediary and final steps : use previous built tag as base image 
@@ -93,11 +92,12 @@ def build_chain(chain_name, r_version, py_version, spark_version,
         logging.info(f"Build command : {' '.join(cmd_build)}")
         subprocess.run(cmd_build, check=True)
 
-        # Container tests
-        cmd_test = ["container-structure-test", "test", "--image", tag,
-                    "--config", f"{image}/tests.yaml"]
-        logging.info(f"Test command : {cmd_test}")
-        subprocess.run(cmd_test, check=True)
+        if not no_test:
+            # Container tests
+            cmd_test = ["container-structure-test", "test", "--image", tag,
+                        "--config", f"{image}/tests.yaml"]
+            logging.info(f"Test command : {cmd_test}")
+            subprocess.run(cmd_test, check=True)
 
     if push:
         cmd_push = ["docker", "push", tag]
@@ -136,6 +136,11 @@ def build_cli_parser():
         help="Tell Docker to build without using caching."
     )
     parser.add_argument(
+        "--no_test",
+        action="store_true",
+        help="Don't test the container."
+    )
+    parser.add_argument(
         "--push",
         action="store_true",
         help="Whether to push the last image of the chain to DockerHub."
@@ -156,5 +161,6 @@ if __name__ == '__main__':
                 spark_version=args.spark_version,
                 gpu=args.gpu,
                 no_cache=args.no_cache,
+                no_test=args.no_test,
                 push=args.push
                 )

@@ -11,12 +11,15 @@ ENV PATH="/usr/local/bin:${PATH}"
 
 USER root
 
+COPY --chmod='+x' scripts/ /opt/
 COPY requirements.txt .
 
 # Build Python from source
 RUN /opt/install-python.sh && \
     # Install Python packages
     uv pip install --system --no-cache -r requirements.txt && \
+    # Install duckdb extensions
+    python /opt/install-duckdb-extensions.py && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

@@ -5,6 +5,7 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
+COPY --chmod='+x' scripts/ /opt/
 COPY requirements.txt .
 
 # Install Python packages and their required system libraries
