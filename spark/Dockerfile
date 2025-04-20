@@ -10,6 +10,7 @@ ENV JAVA_HOME="/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64"
 
 ARG SPARK_VERSION="3.5.5"
 ENV SPARK_VERSION=${SPARK_VERSION}
+
 ENV HADOOP_HOME="/usr/local/lib/hadoop"
 ENV SPARK_HOME="/usr/local/lib/spark"
 ENV HIVE_HOME="/usr/local/lib/hive"
