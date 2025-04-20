@@ -12,6 +12,3 @@ echo "session-default-new-project-dir=${WORKSPACE_DIR}" >> ${RSTUDIO_SYSTEM_CONF
 RSTUDIO_USER_CONF_DIR="$(dirname $RSTUDIO_USER_CONF_FILE)"
 mkdir -p $RSTUDIO_USER_CONF_DIR
 echo '{}' > $RSTUDIO_USER_CONF_FILE
-
-# Give user ownership on user config directory
-chown -R ${USERNAME}:${GROUPNAME} $RSTUDIO_USER_CONF_DIR
