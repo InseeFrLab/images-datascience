@@ -204,17 +204,6 @@ jobs:
       spark_version: 3.5.5
       build_gpu: false
     secrets: inherit
-  jupyter-r:
-    needs: [r-datascience]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-r
-      context: jupyter
-      base_image: r-datascience
-      r_version_1: 4.5.0
-      r_version_2: 4.4.3
-      build_gpu: false
-    secrets: inherit
   r-python-julia:
     needs: [r-minimal]
     uses: ./.github/workflows/main-workflow-template.yml
