@@ -44,6 +44,26 @@ def generate_matrix(versions, input_image, output_image, spark_version,
     return matrix
 
 
+def generate_r_python_julia_matrix(r_version, py_version,
+                                   input_image, output_image):
+    matrix = []
+    if "r-minimal" in input_image:
+        # r-python-julia inherits from r-minimal
+        base = f"{input_image}:r{r_version}"
+    else:
+        # {jupyter/vscode}-r-python-julia inherit from r-python-julia
+        base = f"{input_image}:r{r_version}-py{py_version}"
+    output = f"{output_image}:r{r_version}-py{py_version}"
+    final_entry = {"base_image_tag": f"{DH_ORGA}/{args.images_prefix}-{base}",
+                   "output_image_main_tag": f"{DH_ORGA}/{args.images_prefix}-{output}",
+                   "r_version": r_version,
+                   "python_version": py_version
+                   }
+    final_entry["output_image_tags"] = f'{final_entry["output_image_main_tag"]},{final_entry["output_image_main_tag"]}-{TODAY_DATE}'
+    matrix.append(final_entry)
+    return matrix
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -86,31 +106,13 @@ if __name__ == "__main__":
 
     elif "r-python-julia" in args.output_image:
         # Building multi-languages image
-        if args.input_image == "r-minimal":
-            # r-python-julia inherits from r-minimal
-            input_tag = f"{DH_ORGA}/{args.images_prefix}-{args.input_image}:r{args.r_version_1}"
-            output_main_tag = f"{DH_ORGA}/{args.images_prefix}-{args.output_image}:r{args.r_version_1}-py{args.python_version_1}"
-            matrix = [
-                {
-                    "base_image_tag": input_tag,
-                    "output_image_main_tag": output_main_tag,
-                    "output_image_tags": f"{output_main_tag},{output_main_tag}-{TODAY_DATE}"
-                }
-            ]
-        else:
-            # {jupyter/vscode}-r-python-julia inherit from r-python-julia
-            input_tag = f"{DH_ORGA}/{args.images_prefix}-{args.input_image}:r{args.r_version_1}-py{args.python_version_1}"
-            output_main_tag = f"{DH_ORGA}/{args.images_prefix}-{args.output_image}:r{args.r_version_1}-py{args.python_version_1}"
-            matrix = [
-                {
-                    "base_image_tag": input_tag,
-                    "output_image_main_tag": output_main_tag,
-                    "output_image_tags": f"{output_main_tag},{output_main_tag}-{TODAY_DATE}"
-                }
-            ]
+        matrix = generate_r_python_julia_matrix(r_version=r_versions[0],
+                                                py_version=python_versions[0],
+                                                input_image=args.input_image,
+                                                output_image=args.output_image)
 
     else:
-        # Other images
+        # Other images have either R or Python versions
         if python_versions:
             matrix = generate_matrix(python_versions, args.input_image, args.output_image,
                                      args.spark_version, gpu_options, "py")
