@@ -248,14 +248,3 @@ jobs:
       python_version_1: 3.12.9
       build_gpu: false
     secrets: inherit
-  vscode-r:
-    needs: [r-datascience]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-r
-      context: vscode
-      base_image: r-datascience
-      r_version_1: 4.5.0
-      r_version_2: 4.4.3
-      build_gpu: false
-    secrets: inherit
