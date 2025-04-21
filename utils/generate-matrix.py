@@ -88,8 +88,8 @@ if __name__ == "__main__":
         # Building multi-languages image
         if args.input_image == "r-minimal":
             # r-python-julia inherits from r-minimal
-            input_tag = f"{DH_ORGA}/{args.input_image}:r{args.r_version_1}"
-            output_main_tag = f"{DH_ORGA}/{args.output_image}:r{args.r_version_1}-py{args.python_version_1}"
+            input_tag = f"{DH_ORGA}/{args.images_prefix}-{args.input_image}:r{args.r_version_1}"
+            output_main_tag = f"{DH_ORGA}/{args.images_prefix}-{args.output_image}:r{args.r_version_1}-py{args.python_version_1}"
             matrix = [
                 {
                     "base_image_tag": input_tag,
@@ -99,8 +99,8 @@ if __name__ == "__main__":
             ]
         else:
             # {jupyter/vscode}-r-python-julia inherit from r-python-julia
-            input_tag = f"{DH_ORGA}/{args.input_image}:r{args.r_version_1}-py{args.python_version_1}"
-            output_main_tag = f"{DH_ORGA}/{args.output_image}:r{args.r_version_1}-py{args.python_version_1}"
+            input_tag = f"{DH_ORGA}/{args.images_prefix}-{args.input_image}:r{args.r_version_1}-py{args.python_version_1}"
+            output_main_tag = f"{DH_ORGA}/{args.images_prefix}-{args.output_image}:r{args.r_version_1}-py{args.python_version_1}"
             matrix = [
                 {
                     "base_image_tag": input_tag,
