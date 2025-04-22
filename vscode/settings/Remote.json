@@ -1,3 +1,7 @@
 {
-    
+    "python.defaultInterpreterPath": "/usr/local/bin/python",
+    "jupyter.kernels.excludePythonEnvironments": [
+        "/usr/bin/python3",
+        "/bin/python3"
+    ]
 }
