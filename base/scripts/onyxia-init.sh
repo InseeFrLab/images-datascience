@@ -89,7 +89,7 @@ if [[ $(id -u) = 0 ]]; then
 fi
 
 if [[ -z $ROOT_PROJECT_DIRECTORY ]]; then
-    ROOT_PROJECT_DIRECTORY="$WORSKSPACE_DIR"
+    ROOT_PROJECT_DIRECTORY="$WORKSPACE_DIR"
 fi
 
 if command -v git; then
