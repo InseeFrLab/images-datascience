@@ -195,8 +195,7 @@ if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
     );"
 fi
 
-# The commands related to setting the various repositories (R/CRAN, pip)
-# are located in specific script
+# Configure custom repositories (R/CRAN, pip)
 source /opt/onyxia-set-repositories.sh
 
 if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
@@ -204,12 +203,8 @@ if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
     curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
 fi
 
-echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"
-for f in "$ROOT_PROJECT_DIRECTORY"/*; do
-    if [[ -d "$f" && "$(basename $f)" != "lost+found" ]]; then
-        chown -R $PROJECT_USER:$PROJECT_GROUP $f
-    fi
-done
+# Fix user permissions
+source /opt/fix-user-permissions.sh
 
 echo "execution of $@"
 exec "$@"
