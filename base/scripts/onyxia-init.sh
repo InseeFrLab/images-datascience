@@ -74,8 +74,6 @@ if command -v kubectl; then
     kubectl config use-context in-cluster
     export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode | jq -r ' .["kubernetes.io"].serviceaccount.name'`
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
-    # Give user ownership on kubectl config file
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.kube
 fi
 
 
@@ -128,10 +126,6 @@ if command -v git; then
     # Default strategy when performing a git pull
     # Use Git's former default (fast-forward if possible, else merge) to avoid cryptic error message
     git config --global pull.rebase false
-
-    # Give user ownership
-    [ -d ${HOME}/.cache/git ] && chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.cache/git
-    [ -f ${HOME}/.gitconfig ] && chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.gitconfig
 
 fi
 
@@ -195,8 +189,7 @@ if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
     );"
 fi
 
-# The commands related to setting the various repositories (R/CRAN, pip)
-# are located in specific script
+# Configure custom repositories (R/CRAN, pip)
 source /opt/onyxia-set-repositories.sh
 
 if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
@@ -204,12 +197,8 @@ if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
     curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
 fi
 
-echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"
-for f in "$ROOT_PROJECT_DIRECTORY"/*; do
-    if [[ -d "$f" && "$(basename $f)" != "lost+found" ]]; then
-        chown -R $PROJECT_USER:$PROJECT_GROUP $f
-    fi
-done
+# Fix user permissions
+source /opt/fix-user-permissions.sh
 
 echo "execution of $@"
 exec "$@"
