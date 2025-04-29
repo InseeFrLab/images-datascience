@@ -11,5 +11,8 @@ ln -s "/usr/local/lib/quarto-${LATEST_VERSION}/bin/quarto" /usr/local/bin/quarto
 # Check install succeeded
 quarto check
 
+# Install TinyTeX to enable rendering PDF documents via quarto
+quarto install tinytex --update-path --quiet
+
 # Clean install files
 rm -f quarto.tar.gz
