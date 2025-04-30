@@ -5,7 +5,7 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 USER root
 
-COPY --chmod='+x' scripts/ /opt/
+COPY --chmod=0755 scripts/ /opt/
 
 RUN /opt/install-jupyterlab.sh && \
     # Install JupyterLab extensions

@@ -8,7 +8,7 @@ ARG REMOTE_CONFIG_DIR="${HOME}/.local/share/code-server/Machine"
 
 USER root
 
-COPY --chmod='+x' scripts/ /opt/
+COPY --chmod=0755 scripts/ /opt/
 COPY --chown=${USERNAME}:${GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/settings.json
 COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/settings.json
 

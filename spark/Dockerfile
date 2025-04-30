@@ -22,7 +22,7 @@ ENV PATH="${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${JAVA_HOME}/bin:${PATH}"
 
 USER root
 
-COPY --chmod='+x' scripts/ /opt/
+COPY --chmod=0755 scripts/ /opt/
 
 RUN --mount=type=secret,id=github_token \
     # Install JDK

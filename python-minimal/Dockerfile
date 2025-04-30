@@ -11,7 +11,7 @@ ENV PATH="/usr/local/bin:${PATH}"
 
 USER root
 
-COPY --chmod='+x' scripts/ /opt/
+COPY --chmod=0755 scripts/ /opt/
 COPY requirements.txt .
 
 # Build Python from source

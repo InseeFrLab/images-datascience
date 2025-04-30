@@ -12,7 +12,7 @@ ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
 
 USER root
 
-COPY --chmod='+x' scripts/ /opt/
+COPY --chmod=0755 scripts/ /opt/
 
 # Set up R (RSPM, OpenBLAS, littler, addtional packages)
 RUN /opt/install-r.sh && \
