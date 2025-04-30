@@ -177,22 +177,26 @@ if [[ $SUDO -eq 0 ]]; then
 fi
 
 # Configure duckdb CLI
-if [[ -n $AWS_S3_ENDPOINT ]] && command -v duckdb ; then
+if command -v duckdb ; then
     echo ".prompt 'duckdb > '" > ${HOME}/.duckdbrc
-    if [[ -n $AWS_PATH_STYLE_ACCESS ]]; then
-        AWS_PATH_STYLE="path"
-    else
-        AWS_PATH_STYLE="vhost"
+    chown ${USERNAME}:${GROUPNAME} ${HOME}/.duckdbrc
+    if [[ -n $AWS_S3_ENDPOINT ]] ; then
+        if [[ -n $AWS_PATH_STYLE_ACCESS ]]; then
+            AWS_PATH_STYLE="path"
+        else
+            AWS_PATH_STYLE="vhost"
+        fi
+        duckdb -c "CREATE OR REPLACE PERSISTENT SECRET s3_onyxia_connection( \
+            TYPE S3, \
+            KEY_ID '"$AWS_ACCESS_KEY_ID"', \
+            SECRET '"$AWS_SECRET_ACCESS_KEY"', \
+            REGION '"$AWS_DEFAULT_REGION"', \
+            SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
+            ENDPOINT '"$AWS_S3_ENDPOINT"', \
+            URL_STYLE '"$AWS_PATH_STYLE"' \
+        );"
+        chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
     fi
-    duckdb -c "CREATE OR REPLACE PERSISTENT SECRET s3_onyxia_connection( \
-        TYPE S3, \
-        KEY_ID '"$AWS_ACCESS_KEY_ID"', \
-        SECRET '"$AWS_SECRET_ACCESS_KEY"', \
-        REGION '"$AWS_DEFAULT_REGION"', \
-        SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
-        ENDPOINT '"$AWS_S3_ENDPOINT"', \
-        URL_STYLE '"$AWS_PATH_STYLE"' \
-    );"
 fi
 
 # The commands related to setting the various repositories (R/CRAN, pip)
