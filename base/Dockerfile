@@ -24,7 +24,7 @@ RUN groupmod -g ${GID} ${GROUPNAME} && \
     touch ${HOME}/.sudo_as_admin_successful
 WORKDIR ${WORKSPACE_DIR}
 
-COPY --chmod='+x' scripts/ /opt/
+COPY --chmod=0755 scripts/ /opt/
 
 RUN /opt/install-system-libs.sh && \
     # Make sudo passwordless

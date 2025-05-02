@@ -3,7 +3,7 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-# Config for RStudio 
+# Config for RStudio
 ENV DEFAULT_USER=${USERNAME}
 ENV USERID=${UID}
 ENV GROUPID=${GID}
@@ -11,7 +11,7 @@ ENV PATH="/usr/lib/rstudio-server/bin:${PATH}"
 
 USER root
 
-COPY --chmod='+x' scripts/ /opt/
+COPY --chmod=0755 scripts/ /opt/
 
 # Install Rstudio using rocker's install scripts
 RUN /rocker_scripts/install_rstudio.sh && \
