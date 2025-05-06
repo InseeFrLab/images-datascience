@@ -10,7 +10,7 @@ function apt_install() {
     fi
 }
 
-if command -v pip3; then
+if command -v uv; then
     uv pip install --system --no-cache jupyterlab
 else
     pip install --no-cache-dir jupyterlab
