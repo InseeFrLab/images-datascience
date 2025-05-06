@@ -1,20 +1,27 @@
 #!/usr/bin/env bash
 
-echo "start of onyxia-init.sh script as user :"
-whoami
+if [ "$DEBUG_LOG" = "1" ]; then
+    OUT="/dev/stdout"
+    ERR="/dev/stderr"
+else
+    OUT="/dev/null"
+    ERR="/dev/null"
+fi
+echo "start of onyxia-init.sh script as user :" > $OUT
+whoami > $OUT
 
 sudo true -nv 2>&1
 if [ $? -eq 0 ]; then
-  echo "sudo_allowed"
+  echo "sudo_allowed" > $OUT
   export SUDO=0
-  sudo update-ca-certificates
+  sudo update-ca-certificates > $OUT
 else
-  echo "no_sudo"
+  echo "no_sudo" > $OUT
   export SUDO=1
 fi
 
 if [[ -n "$REGION_INIT_SCRIPT" ]]; then
-    echo "download $REGION_INIT_SCRIPT"
+    echo "download $REGION_INIT_SCRIPT" > $OUT
     # The insecure flag is used as a temporary fix to accomodate Onyxia instances
     # not open to the internet. This should be removed as soon as region-specific
     # configurations are properly handled.
@@ -25,7 +32,7 @@ fi
 if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
 
     if [[ "$VAULT_INJECTION_SA_ENABLED" = "true" && "$VAULT_INJECTION_SA_MODE" = "jwt" ]]; then
-        echo "using service account injection jwt to get vault token"
+        echo "using service account injection jwt to get vault token" > $OUT
         VAULT_TOKEN=$(curl -s --request POST \
         --data "{\"role\": \"$VAULT_INJECTION_SA_AUTH_ROLE\", \"jwt\": \"$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)\"}" \
         $VAULT_ADDR/v1/auth/$VAULT_INJECTION_SA_AUTH_PATH/login | jq -r .auth.client_token)
@@ -49,17 +56,17 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
 
         for i in $KEYS;
         do
-            echo $i
+            echo $i > $OUT
             value=$(jq -r .data.data.$i <<< $JSON)
             export $i="${value}"
             if [[ $SUDO -eq 0 ]]; then
                 sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> /etc/environment"
-                if command -v R; then
+                if command -v R > "$OUT"; then
                     sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
                 fi
             else
                 sh -c "printf 'export %s=\"%s\"\n' $i \"$value\" >> ${HOME}/.bashrc"
-                if command -v R; then
+                if command -v R > "$OUT"; then
                     sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
                 fi
             fi
@@ -67,12 +74,12 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
     fi
 fi
 
-if command -v kubectl; then
-    kubectl config set-cluster in-cluster --server=https://kubernetes.default --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-    kubectl config set-credentials user --token `cat /var/run/secrets/kubernetes.io/serviceaccount/token`
-    kubectl config set-context in-cluster --user=user --cluster=in-cluster --namespace=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
-    kubectl config use-context in-cluster
-    export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode | jq -r ' .["kubernetes.io"].serviceaccount.name'`
+if command -v kubectl > "$OUT"; then
+    kubectl config set-cluster in-cluster --server=https://kubernetes.default --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt > "$OUT" 
+    kubectl config set-credentials user --token `cat /var/run/secrets/kubernetes.io/serviceaccount/token` > "$OUT" 
+    kubectl config set-context in-cluster --user=user --cluster=in-cluster --namespace=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace` > "$OUT" 
+    kubectl config use-context in-cluster > "$OUT" 
+    export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode 2> "$ERR" | jq -r ' .["kubernetes.io"].serviceaccount.name'`
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     # Give user ownership on kubectl config file
     chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.kube
@@ -80,7 +87,7 @@ fi
 
 
 
-if command -v mc; then
+if command -v mc > "$OUT"; then
     export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY:$AWS_SESSION_TOKEN@$AWS_S3_ENDPOINT
 fi
 
@@ -92,9 +99,9 @@ if [[ -z $ROOT_PROJECT_DIRECTORY ]]; then
     ROOT_PROJECT_DIRECTORY="$WORKSPACE_DIR"
 fi
 
-if command -v git; then
+if command -v git > "$OUT"; then
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
-        echo "configuration of git to a custom crt"
+        echo "configuration of git to a custom crt" > $OUT
         git config --global http.sslVerify true
         git config --global http.sslCAInfo $PATH_TO_CA_BUNDLE
     fi
@@ -135,8 +142,8 @@ if command -v git; then
 
 fi
 
-if command -v R; then
-    echo "Renviron.site detected"
+if command -v R > "$OUT"; then
+    echo "Renviron.site detected" > $OUT
     echo -e "MC_HOST_s3=$MC_HOST_s3\nAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID\nAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY\nAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN\nAWS_DEFAULT_REGION=$AWS_DEFAULT_REGION\nAWS_S3_ENDPOINT=$AWS_S3_ENDPOINT\nAWS_EXPIRATION=$AWS_EXPIRATION" >> ${R_HOME}/etc/Renviron.site
     echo -e "VAULT_ADDR=$VAULT_ADDR\nVAULT_TOKEN=$VAULT_TOKEN" >> ${R_HOME}/etc/Renviron.site
     echo -e "SPARK_HOME=$SPARK_HOME" >> ${R_HOME}/etc/Renviron.site
@@ -150,14 +157,14 @@ if command -v R; then
 fi
 
 if [[ "$DARK_MODE" == "true" ]]; then
-    if command -v jupyter-lab; then
+    if command -v jupyter-lab > "$OUT"; then
         mkdir -p $HOME/.jupyter/lab/settings
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > $HOME/.jupyter/lab/settings/overrides.json;
     fi
-    if command -v code-server; then
+    if command -v code-server > "$OUT"; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
     fi
-    if command -v rstudio-server; then
+    if command -v rstudio-server > "$OUT"; then
         jq '. + {"editor_theme": "Vibrant Ink"}' ${HOME}/.config/rstudio/rstudio-prefs.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.config/rstudio/rstudio-prefs.json
     fi
 fi
@@ -169,7 +176,7 @@ if [[ $SUDO -eq 0 ]]; then
     for var in "${env_vars[@]}"; do
         if [[ -n "${!var}" ]]; then
         sudo sh -c "printf '%s=\"%s\"\n' $var \"${!var}\" >> /etc/environment"
-            if command -v R; then
+            if command -v R > "$OUT"; then
                 sudo sh -c "printf '%s=\"%s\"\n' $var \"${!var}\" >> ${R_HOME}/etc/Renviron.site"
             fi
         fi
@@ -177,7 +184,7 @@ if [[ $SUDO -eq 0 ]]; then
 fi
 
 # Configure duckdb CLI
-if command -v duckdb ; then
+if command -v duckdb > "$OUT"; then
     echo ".prompt 'duckdb > '" > ${HOME}/.duckdbrc
     chown ${USERNAME}:${GROUPNAME} ${HOME}/.duckdbrc
     if [[ -n $AWS_S3_ENDPOINT ]] ; then
@@ -194,7 +201,7 @@ if command -v duckdb ; then
             SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
             ENDPOINT '"$AWS_S3_ENDPOINT"', \
             URL_STYLE '"$AWS_PATH_STYLE"' \
-        );"
+        );" > $OUT
         chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
     fi
 fi
@@ -204,16 +211,16 @@ fi
 source /opt/onyxia-set-repositories.sh
 
 if [[ -n "$PERSONAL_INIT_SCRIPT" ]]; then
-    echo "download $PERSONAL_INIT_SCRIPT"
+    echo "download $PERSONAL_INIT_SCRIPT" > $OUT
     curl $PERSONAL_INIT_SCRIPT | bash -s -- $PERSONAL_INIT_ARGS
 fi
 
-echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"
+echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY" > $OUT
 for f in "$ROOT_PROJECT_DIRECTORY"/*; do
     if [[ -d "$f" && "$(basename $f)" != "lost+found" ]]; then
         chown -R $PROJECT_USER:$PROJECT_GROUP $f
     fi
 done
 
-echo "execution of $@"
+echo "execution of $@" > $OUT
 exec "$@"

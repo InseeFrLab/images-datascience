@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+if [ "$DEBUG_LOG" = "1" ]; then
+    OUT="/dev/stdout"
+    ERR="/dev/stderr"
+else
+    OUT="/dev/null"
+    ERR="/dev/null"
+fi
+
 if [[ $SUDO -eq 0 ]]; then
     ENV_FILE=/etc/environment
 else
@@ -8,21 +16,21 @@ fi
 
 # Python configuration
 
-if command -v pip; then
+if command -v pip > "$OUT" ; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
-        echo "configuration pip (index-url)"
+        echo "configuration pip (index-url)" > "$OUT" 
         pip config set global.index-url $PIP_REPOSITORY
     fi
 
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
-        echo "configuration of python and pip to use a custom crt"
+        echo "configuration of python and pip to use a custom crt" > "$OUT" 
         pip config set global.cert $PATH_TO_CA_BUNDLE
         python /opt/certifi_ca.py
         export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
     fi
 fi
 
-if command -v uv; then
+if command -v uv > "$OUT"; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
         echo "export UV_DEFAULT_INDEX=$PIP_REPOSITORY" >> "$ENV_FILE"
         echo 'export UV_NATIVE_TLS=true' >> "$ENV_FILE"   
@@ -31,9 +39,9 @@ fi
 
 # R configuration
 
-if command -v R; then
+if command -v R > "$OUT"; then
   if [[ -n "$R_REPOSITORY" ]] || [[ -n "$PACKAGE_MANAGER_URL" ]]; then
-      echo "configuration r (add local repository)"
+      echo "configuration r (add local repository)" > "$OUT" 
 
       echo '# https://docs.rstudio.com/rspm/admin/serving-binaries/#binaries-r-configuration-linux' >> ${R_HOME}/etc/Rprofile.site
       echo 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))' >> ${R_HOME}/etc/Rprofile.site
