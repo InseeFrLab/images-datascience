@@ -54,12 +54,12 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
             export $i="${value}"
             if [[ $SUDO -eq 0 ]]; then
                 sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> /etc/environment"
-                if command -v R; then
+                if command -v R &>/dev/null; then
                     sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
                 fi
             else
                 sh -c "printf 'export %s=\"%s\"\n' $i \"$value\" >> ${HOME}/.bashrc"
-                if command -v R; then
+                if command -v R &>/dev/null; then
                     sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
                 fi
             fi
@@ -67,7 +67,7 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
     fi
 fi
 
-if command -v kubectl; then
+if command -v kubectl &>/dev/null; then
     kubectl config set-cluster in-cluster --server=https://kubernetes.default --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     kubectl config set-credentials user --token `cat /var/run/secrets/kubernetes.io/serviceaccount/token`
     kubectl config set-context in-cluster --user=user --cluster=in-cluster --namespace=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
@@ -80,7 +80,7 @@ fi
 
 
 
-if command -v mc; then
+if command -v mc &>/dev/null; then
     export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY:$AWS_SESSION_TOKEN@$AWS_S3_ENDPOINT
 fi
 
@@ -92,7 +92,7 @@ if [[ -z $ROOT_PROJECT_DIRECTORY ]]; then
     ROOT_PROJECT_DIRECTORY="$WORKSPACE_DIR"
 fi
 
-if command -v git; then
+if command -v git &>/dev/null; then
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
         echo "configuration of git to a custom crt"
         git config --global http.sslVerify true
@@ -135,7 +135,7 @@ if command -v git; then
 
 fi
 
-if command -v R; then
+if command -v R &>/dev/null; then
     echo "Renviron.site detected"
     echo -e "MC_HOST_s3=$MC_HOST_s3\nAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID\nAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY\nAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN\nAWS_DEFAULT_REGION=$AWS_DEFAULT_REGION\nAWS_S3_ENDPOINT=$AWS_S3_ENDPOINT\nAWS_EXPIRATION=$AWS_EXPIRATION" >> ${R_HOME}/etc/Renviron.site
     echo -e "VAULT_ADDR=$VAULT_ADDR\nVAULT_TOKEN=$VAULT_TOKEN" >> ${R_HOME}/etc/Renviron.site
@@ -150,14 +150,14 @@ if command -v R; then
 fi
 
 if [[ "$DARK_MODE" == "true" ]]; then
-    if command -v jupyter-lab; then
+    if command -v jupyter-lab &>/dev/null; then
         mkdir -p $HOME/.jupyter/lab/settings
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > $HOME/.jupyter/lab/settings/overrides.json;
     fi
-    if command -v code-server; then
+    if command -v code-server &>/dev/null; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
     fi
-    if command -v rstudio-server; then
+    if command -v rstudio-server &>/dev/null; then
         jq '. + {"editor_theme": "Vibrant Ink"}' ${HOME}/.config/rstudio/rstudio-prefs.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.config/rstudio/rstudio-prefs.json
     fi
 fi
@@ -169,7 +169,7 @@ if [[ $SUDO -eq 0 ]]; then
     for var in "${env_vars[@]}"; do
         if [[ -n "${!var}" ]]; then
         sudo sh -c "printf '%s=\"%s\"\n' $var \"${!var}\" >> /etc/environment"
-            if command -v R; then
+            if command -v R &>/dev/null; then
                 sudo sh -c "printf '%s=\"%s\"\n' $var \"${!var}\" >> ${R_HOME}/etc/Renviron.site"
             fi
         fi
@@ -177,7 +177,7 @@ if [[ $SUDO -eq 0 ]]; then
 fi
 
 # Configure duckdb CLI
-if command -v duckdb ; then
+if command -v duckdb &>/dev/null; then
     echo ".prompt 'duckdb > '" > ${HOME}/.duckdbrc
     chown ${USERNAME}:${GROUPNAME} ${HOME}/.duckdbrc
     if [[ -n $AWS_S3_ENDPOINT ]] ; then
@@ -194,7 +194,7 @@ if command -v duckdb ; then
             SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
             ENDPOINT '"$AWS_S3_ENDPOINT"', \
             URL_STYLE '"$AWS_PATH_STYLE"' \
-        );"
+        );" >/dev/null
         chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
     fi
 fi
