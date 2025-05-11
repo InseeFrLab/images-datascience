@@ -211,7 +211,7 @@ fi
 echo "Fixing ownership in project directory: $ROOT_PROJECT_DIRECTORY"
 for f in "$ROOT_PROJECT_DIRECTORY"/*; do
     if [[ -d "$f" && "$(basename $f)" != "lost+found" ]]; then
-        chown -R $PROJECT_USER:$PROJECT_GROUP $f
+        chown -R ${USERNAME}:${GROUPNAME} $f
     fi
 done
 
