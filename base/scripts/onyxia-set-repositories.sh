@@ -8,7 +8,7 @@ fi
 
 # Python configuration
 
-if command -v pip; then
+if command -v pip &>/dev/null; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
         echo "configuration pip (index-url)"
         pip config set global.index-url $PIP_REPOSITORY
@@ -22,16 +22,16 @@ if command -v pip; then
     fi
 fi
 
-if command -v uv; then
+if command -v uv &>/dev/null; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
         echo "export UV_DEFAULT_INDEX=$PIP_REPOSITORY" >> "$ENV_FILE"
-        echo 'export UV_NATIVE_TLS=true' >> "$ENV_FILE"   
+        echo 'export UV_NATIVE_TLS=true' >> "$ENV_FILE"
     fi
 fi
 
 # R configuration
 
-if command -v R; then
+if command -v R &>/dev/null; then
   if [[ -n "$R_REPOSITORY" ]] || [[ -n "$PACKAGE_MANAGER_URL" ]]; then
       echo "configuration r (add local repository)"
 
@@ -44,11 +44,11 @@ if command -v R; then
       if [[ -n "$PACKAGE_MANAGER_URL" ]]; then
           UBUNTU_CODENAME=$(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d= -f2)
           echo "  r[\"PackageManager\"] <- \"${PACKAGE_MANAGER_URL}/${UBUNTU_CODENAME}/latest\"" >> ${R_HOME}/etc/Rprofile.site
-      fi 
+      fi
 
       if [[ -n "$R_REPOSITORY" ]]; then
           echo "  r[\"LocalRepository\"] <- \"${R_REPOSITORY}\"" >> ${R_HOME}/etc/Rprofile.site
-      fi 
+      fi
 
       echo '  options(repos = r)' >> ${R_HOME}/etc/Rprofile.site
       echo '})' >> ${R_HOME}/etc/Rprofile.site

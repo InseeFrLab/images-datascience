@@ -16,6 +16,6 @@ apt_install \
     openjdk-${JAVA_VERSION}-jdk-headless \
     openjdk-${JAVA_VERSION}-jre-headless
 
-if command -v R; then
+if command -v R &>/dev/null; then
     R CMD javareconf
 fi
