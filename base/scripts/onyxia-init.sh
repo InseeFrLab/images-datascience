@@ -72,7 +72,7 @@ if command -v kubectl &>/dev/null; then
     kubectl config set-credentials user --token `cat /var/run/secrets/kubernetes.io/serviceaccount/token`
     kubectl config set-context in-cluster --user=user --cluster=in-cluster --namespace=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     kubectl config use-context in-cluster
-    export KUBERNETES_SERVICE_ACCOUNT=`cat /var/run/secrets/kubernetes.io/serviceaccount/token | tr "." "\n" | head -2 | tail -1 | base64 --decode | jq -r ' .["kubernetes.io"].serviceaccount.name'`
+    export KUBERNETES_SERVICE_ACCOUNT=$(jq -Rr 'split(".")[1] | @base64d | fromjson | .["kubernetes.io"].serviceaccount.name' /var/run/secrets/kubernetes.io/serviceaccount/token)
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     # Give user ownership on kubectl config file
     chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.kube
