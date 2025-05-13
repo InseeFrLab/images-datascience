@@ -31,10 +31,8 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PYDS--> VSCODEPYDS[vscode-python]:::ide;
       PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow]:::ide;
       PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
-      RDS--> JRDS[jupyter-r]:::ide;
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
-      RDS--> VSCODER[vscode-r]:::ide;
       RPYJU--> JRPYJU[jupyter-r-python-julia]:::ide;
       RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
       classDef base fill:#d2f9ff,color:#000  ;
