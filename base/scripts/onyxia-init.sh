@@ -135,6 +135,10 @@ if command -v git &>/dev/null; then
 
 fi
 
+# Define in ~/.bashrc an alias for the vault command that executes the install script, and then remove itself from ~/.bashrc in case of success
+# The last characters ("; :") are here to ignore arguments passed to the vault alias (e.g. "vault kv list store/")
+echo "alias vault='/opt/install-vault-cli.sh && sed -i \"/alias vault=/d\" ~/.bashrc && unalias vault; :'" >> ${HOME}/.bashrc
+
 if command -v R &>/dev/null; then
     echo "Renviron.site detected"
     echo -e "MC_HOST_s3=$MC_HOST_s3\nAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID\nAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY\nAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN\nAWS_DEFAULT_REGION=$AWS_DEFAULT_REGION\nAWS_S3_ENDPOINT=$AWS_S3_ENDPOINT\nAWS_EXPIRATION=$AWS_EXPIRATION" >> ${R_HOME}/etc/Renviron.site
