@@ -21,7 +21,7 @@ fi
 
 echo "Installing Vault..."
 
-# Retrieve latest version of vault
+# Install latest version of vault
 ARCH=$(uname -m)
 case $ARCH in
     "x86_64")

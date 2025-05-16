@@ -137,7 +137,7 @@ fi
 
 # Define in ~/.bashrc an alias for the vault command that executes the install script, and then remove itself from ~/.bashrc in case of success
 # The last characters ("; :") are here to ignore arguments passed to the vault alias (e.g. "vault kv list store/")
-echo "alias vault='/opt/install-vault-cli.sh && sed -i \"/alias vault=/d\" ~/.bashrc && unalias vault; :'" >> ${HOME}/.bashrc
+echo "alias vault='/opt/install-vault-cli.sh && sed -i \"/alias vault=/d\" \"${HOME}/.bashrc\" && unalias vault; :'" >> ${HOME}/.bashrc
 
 if command -v R &>/dev/null; then
     echo "Renviron.site detected"
