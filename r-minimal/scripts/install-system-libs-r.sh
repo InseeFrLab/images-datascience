@@ -12,6 +12,7 @@ function apt_install() {
 
 # Install system libraries required by some R packages
 apt_install \
+    cmake \
     libglpk40 \
     libpq-dev \
     libzmq3-dev
