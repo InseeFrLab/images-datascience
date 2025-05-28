@@ -57,6 +57,16 @@ r_extensions=(
     "RDebugger.r-debugger"
 )
 if command -v R &> /dev/null; then
+    # Install R kernel for jupyter notebooks
+    if command -v pip &>/dev/null; then
+        # First install the minimal jupyter-client python package to make R kernel available to jupyter notebooks
+        if command -v uv &>/dev/null; then
+            uv pip install --system --no-cache jupyter-client
+        else
+            pip install --no-cache-dir jupyter-client
+        fi
+        R -e "install.packages('IRkernel'); IRkernel::installspec()"
+    fi
     for extension in "${r_extensions[@]}"; do
         install_extension $extension
     done
