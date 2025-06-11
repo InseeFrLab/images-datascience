@@ -82,6 +82,7 @@ fi
 
 if command -v mc &>/dev/null; then
     export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY:$AWS_SESSION_TOKEN@$AWS_S3_ENDPOINT
+    export MC_HOST_anon=https://$AWS_S3_ENDPOINT
 fi
 
 if [[ $(id -u) = 0 ]]; then
