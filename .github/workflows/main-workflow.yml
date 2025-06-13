@@ -61,7 +61,7 @@ jobs:
       image: r-minimal
       context: r-minimal
       base_image: base
-      r_version_1: 4.5.0
+      r_version_1: 4.5.1
       r_version_2: 4.4.3
     secrets: inherit
   r-datascience:
@@ -71,7 +71,7 @@ jobs:
       image: r-datascience
       context: r-datascience
       base_image: r-minimal
-      r_version_1: 4.5.0
+      r_version_1: 4.5.1
       r_version_2: 4.4.3
     secrets: inherit
   jupyter-python:
@@ -177,7 +177,7 @@ jobs:
       image: rstudio
       context: rstudio
       base_image: r-datascience
-      r_version_1: 4.5.0
+      r_version_1: 4.5.1
       r_version_2: 4.4.3
     secrets: inherit
   sparkr:
@@ -187,7 +187,7 @@ jobs:
       image: sparkr
       context: spark
       base_image: r-minimal
-      r_version_1: 4.5.0
+      r_version_1: 4.5.1
       r_version_2: 4.4.3
       spark_version: 3.5.5
       build_gpu: false
@@ -199,7 +199,7 @@ jobs:
       image: rstudio-sparkr
       context: rstudio
       base_image: sparkr
-      r_version_1: 4.5.0
+      r_version_1: 4.5.1
       r_version_2: 4.4.3
       spark_version: 3.5.5
       build_gpu: false
@@ -211,7 +211,7 @@ jobs:
       image: r-python-julia
       context: r-python-julia
       base_image: r-minimal
-      r_version_1: 4.5.0
+      r_version_1: 4.5.1
       python_version_1: 3.12.11
       build_gpu: false
     secrets: inherit
@@ -222,7 +222,7 @@ jobs:
       image: vscode-r-python-julia
       context: vscode
       base_image: r-python-julia
-      r_version_1: 4.5.0
+      r_version_1: 4.5.1
       python_version_1: 3.12.11
       build_gpu: false
     secrets: inherit
@@ -233,7 +233,7 @@ jobs:
       image: jupyter-r-python-julia
       context: jupyter
       base_image: r-python-julia
-      r_version_1: 4.5.0
+      r_version_1: 4.5.1
       python_version_1: 3.12.11
       build_gpu: false
     secrets: inherit
