@@ -205,12 +205,12 @@ jobs:
       build_gpu: false
     secrets: inherit
   r-python-julia:
-    needs: [r-minimal]
+    needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: r-python-julia
       context: r-python-julia
-      base_image: r-minimal
+      base_image: r-datascience
       r_version_1: 4.5.1
       python_version_1: 3.12.11
       build_gpu: false

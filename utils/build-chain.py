@@ -28,10 +28,10 @@ chains = {
     "vscode-python-minimal": ["base", "python-minimal", "vscode"],
     "vscode-pytorch": ["base", "python-minimal", "python-pytorch", "vscode"],
     "vscode-tensorflow": ["base", "python-minimal", "python-tensorflow", "vscode"],
-    "r-python-julia": ["base", "r-minimal", "r-python-julia"],
-    "jupyter-r-python-julia": ["base", "r-minimal", "r-python-julia", "jupyter"],
-    "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"],
-    "rstudio-r-python-julia": ["base", "r-minimal", "r-python-julia", "rstudio"]
+    "r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia"],
+    "jupyter-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "jupyter"],
+    "vscode-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "vscode"],
+    "rstudio-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "rstudio"]
 }
 
 
