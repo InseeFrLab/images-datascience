@@ -28,10 +28,10 @@ chains = {
     "vscode-python-minimal": ["base", "python-minimal", "vscode"],
     "vscode-pytorch": ["base", "python-minimal", "python-pytorch", "vscode"],
     "vscode-tensorflow": ["base", "python-minimal", "python-tensorflow", "vscode"],
-    "r-python-julia": ["base", "r-minimal", "r-python-julia"],
-    "jupyter-r-python-julia": ["base", "r-minimal", "r-python-julia", "jupyter"],
-    "vscode-r-python-julia": ["base", "r-minimal", "r-python-julia", "vscode"],
-    "vscode-r": ["base", "r-minimal", "r-datascience", "vscode"]
+    "r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia"],
+    "jupyter-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "jupyter"],
+    "vscode-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "vscode"],
+    "rstudio-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "rstudio"]
 }
 
 
@@ -40,7 +40,7 @@ def build_chain(chain_name, r_version, py_version, spark_version,
 
     logging.info(f"Building chain : {chain_name}")
     chain = chains[chain_name]
-
+    tag = "inseefrlab/onyxia-base:latest"  # Initialize tag
     for i, image in enumerate(chain):
 
         # Placeholder for build args
@@ -67,11 +67,7 @@ def build_chain(chain_name, r_version, py_version, spark_version,
             build_args.extend(["--build-arg", f"SPARK_VERSION={spark_version}"])
             versions_tag.append(f"spark{spark_version}")
 
-        # Output tag
-        if i == 0:
-            # First step : base is always tagged as latest
-            tag = "inseefrlab/onyxia-base:latest"
-        else:
+        if i > 0:
             # Intermediary and final steps : tag with language versions
             # If final step, image is named after chain_name
             image_name = image if i < len(chain) - 1 else chain_name
