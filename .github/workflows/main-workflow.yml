@@ -237,3 +237,14 @@ jobs:
       python_version_1: 3.12.11
       build_gpu: false
     secrets: inherit
+  rstudio-r-python-julia:
+    needs: [r-python-julia]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: rstudio-r-python-julia
+      context: rstudio
+      base_image: r-python-julia
+      r_version_1: 4.5.0
+      python_version_1: 3.12.11
+      build_gpu: false
+    secrets: inherit
