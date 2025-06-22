@@ -10,8 +10,8 @@ DOCKER_BUILD_ARGS=""
 
 # Build process
 
-PYTHON_VERSIONS=("3.12.9" "3.11.12")
-R_VERSIONS=("4.5.0" "4.4.3")
+PYTHON_VERSIONS=("3.12.11" "3.11.12")
+R_VERSIONS=("4.5.1" "4.4.3")
 SPARK_VERSION=3.5.5
 
 for py_ver in "${PYTHON_VERSIONS[@]}"; do
