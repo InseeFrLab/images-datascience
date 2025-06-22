@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=ubuntu:22.04
+ARG BASE_IMAGE=ubuntu:24.04
 FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
@@ -16,6 +16,8 @@ ENV GID="100"
 ENV HOME="/home/${USERNAME}"
 ENV WORKSPACE_DIR="${HOME}/work"
 RUN groupmod -g ${GID} ${GROUPNAME} && \
+    # Remove defaut Ubuntu user (since 24.04)
+    userdel -r ubuntu && \
     # Setup custom user with sudo rights
     useradd ${USERNAME} --uid=${UID} -g ${GROUPNAME} --groups sudo -r --no-log-init --create-home && \
     # Create workspace
