@@ -47,8 +47,8 @@ def generate_matrix(versions, input_image, output_image, spark_version,
 def generate_r_python_julia_matrix(r_version, py_version,
                                    input_image, output_image):
     matrix = []
-    if "r-minimal" in input_image:
-        # r-python-julia inherits from r-minimal
+    if "r-minimal" in input_image or "r-datascience" in input_image:
+        # r-python-julia inherits from r-datascience
         base = f"{input_image}:r{r_version}"
     else:
         # {jupyter/vscode}-r-python-julia inherit from r-python-julia
