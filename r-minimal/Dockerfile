@@ -8,7 +8,7 @@ ARG R_VERSION="4.5.1"
 ENV R_VERSION=${R_VERSION}
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER="${USERNAME}"
-ENV CRAN="https://packagemanager.posit.co/cran/__linux__/jammy/latest"
+ENV CRAN="https://packagemanager.posit.co/cran/__linux__/noble/latest"
 
 USER root
 
