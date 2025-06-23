@@ -3,7 +3,7 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-ARG PYTHON_VERSION="3.12.11"
+ARG PYTHON_VERSION="3.13.5"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 USER root
