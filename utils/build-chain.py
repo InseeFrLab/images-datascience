@@ -49,7 +49,7 @@ def build_chain(chain_name, r_version, py_version, spark_version,
         # Specify base image for each build step
         if i == 0:
             # First step : define external base images
-            previous_image = "nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04" if gpu else "ubuntu:22.04"
+            previous_image = "nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04" if gpu else "ubuntu:24.04"
         else:
             # Intermediary and final steps : use previous built tag as base image 
             previous_image = tag

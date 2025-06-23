@@ -11,8 +11,8 @@ jobs:
     with:
       image: base
       context: base
-      base_image: ubuntu:22.04
-      base_image_gpu: nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+      base_image: ubuntu:24.04
+      base_image_gpu: nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04
     secrets: inherit
   python-minimal:
     needs: [base]
