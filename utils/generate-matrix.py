@@ -1,4 +1,5 @@
 """Generate the matrix for each job of the build pipeline."""
+import os
 import json
 import argparse
 from datetime import datetime
@@ -120,5 +121,7 @@ if __name__ == "__main__":
             matrix = generate_matrix(r_versions, args.input_image, args.output_image,
                                      args.spark_version, gpu_options, "r")
 
-    matrix_json = json.dumps(matrix)
-    print(matrix_json)
+    # Dump matrix in GHA env file
+    payload = {"include": matrix}
+    with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+        fh.write(f"matrix={json.dumps(payload)}\n")
