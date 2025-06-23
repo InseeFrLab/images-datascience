@@ -3,7 +3,7 @@ set -e
 
 # Build configuration
 
-PUSH=true
+PUSH=false
 
 DOCKER_BUILD_ARGS=""
 [ "$PUSH" = "true" ] && DOCKER_BUILD_ARGS+=" --push"
