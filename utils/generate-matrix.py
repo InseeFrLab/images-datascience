@@ -120,6 +120,8 @@ if __name__ == "__main__":
         elif r_versions:
             matrix = generate_matrix(r_versions, args.input_image, args.output_image,
                                      args.spark_version, gpu_options, "r")
+     
+    print(matrix)
 
     # Dump matrix in GHA env file
     payload = {"include": matrix}
