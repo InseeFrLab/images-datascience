@@ -7,7 +7,8 @@ ARG PYTHON_VERSION="3.13.5"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 # Ensure local Python is preferred over system version
-ENV PATH="/usr/local/bin:${PATH}"
+ENV PATH="/opt/python-${PYTHON_VERSION}/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/opt/python-${PYTHON_VERSION}/lib:${LD_LIBRARY_PATH}"
 
 USER root
 

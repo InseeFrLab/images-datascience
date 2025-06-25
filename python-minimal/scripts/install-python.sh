@@ -29,6 +29,10 @@ apt_install \
     xz-utils \
     zlib1g-dev
 
+# Set prefix
+PREFIX="/opt/python-${PYTHON_VERSION}"
+mkdir -p "${PREFIX}"
+
 # Install Python
 wget -q https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
 tar xzvf Python-${PYTHON_VERSION}.tgz
@@ -39,12 +43,16 @@ cd Python-${PYTHON_VERSION}
 		--enable-shared \
 		--with-lto
 make -j4
-make install
+make altinstall
+
+# Register libpython in ldconfig
+echo "${PREFIX}/lib" > /etc/ld.so.conf.d/python-${PYTHON_VERSION}.conf
 ldconfig
 
 # Useful symlinks
-ln -s /usr/local/bin/python3 /usr/local/bin/python
-ln -s /usr/local/bin/pip3 /usr/local/bin/pip
+MAJOR_MINOR="${PYTHON_VERSION%.*}"
+ln -sf "${PREFIX}/bin/python${MAJOR_MINOR}" "${PREFIX}/bin/python"
+ln -sf "${PREFIX}/bin/pip${MAJOR_MINOR}" "${PREFIX}/bin/pip"
 
 # Checks
 python --version
@@ -57,5 +65,5 @@ apt-mark manual $savedAptMark
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
 # Upgrade pip & install uv for further Python packages installation
-pip install --no-cache-dir --upgrade pip
-pip install --no-cache-dir uv
+"${PREFIX}/bin/pip3" install --no-cache-dir --upgrade pip
+"${PREFIX}/bin/pip3" install --no-cache-dir u
