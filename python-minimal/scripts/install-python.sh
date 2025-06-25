@@ -38,15 +38,16 @@ wget -q https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERS
 tar xzvf Python-${PYTHON_VERSION}.tgz
 cd Python-${PYTHON_VERSION}
 ./configure \
-        --enable-loadable-sqlite-extensions \
-		--enable-optimizations \
-		--enable-shared \
-		--with-lto
-make -j4
+    --prefix="${PREFIX}" \
+    --enable-loadable-sqlite-extensions \
+    --enable-optimizations \
+    --enable-shared \
+    --with-lto
+make -j"$(nproc)"
 make altinstall
 
 # Register libpython in ldconfig
-echo "${PREFIX}/lib" > /etc/ld.so.conf.d/python-${PYTHON_VERSION}.conf
+echo "${PREFIX}/lib" > "/etc/ld.so.conf.d/python-${PYTHON_VERSION}.conf"
 ldconfig
 
 # Useful symlinks
@@ -55,7 +56,7 @@ ln -sf "${PREFIX}/bin/python${MAJOR_MINOR}" "${PREFIX}/bin/python"
 ln -sf "${PREFIX}/bin/pip${MAJOR_MINOR}" "${PREFIX}/bin/pip"
 
 # Checks
-python --version
+"${PREFIX}/bin/python" --version
 
 # Clean install files
 cd ..
@@ -64,6 +65,6 @@ apt-mark auto '.*' > /dev/null
 apt-mark manual $savedAptMark
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-# Upgrade pip & install uv for further Python packages installation
+# Upgrade pip & install uv
 "${PREFIX}/bin/pip3" install --no-cache-dir --upgrade pip
-"${PREFIX}/bin/pip3" install --no-cache-dir u
+"${PREFIX}/bin/pip3" install --no-cache-dir uv
