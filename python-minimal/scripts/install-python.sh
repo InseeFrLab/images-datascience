@@ -55,6 +55,10 @@ MAJOR_MINOR="${PYTHON_VERSION%.*}"
 ln -sf "${PREFIX}/bin/python${MAJOR_MINOR}" "${PREFIX}/bin/python"
 ln -sf "${PREFIX}/bin/pip${MAJOR_MINOR}" "${PREFIX}/bin/pip"
 ln -sf "${PREFIX}/bin/pip${MAJOR_MINOR}" "${PREFIX}/bin/pip3"
+# Create symlinks in /usr/local/bin for retro-compatibility
+ln -sf /opt/python-${PYTHON_VERSION}/bin/python /usr/local/bin/python && \
+ln -sf /opt/python-${PYTHON_VERSION}/bin/pip /usr/local/bin/pip
+
 
 # Checks
 "${PREFIX}/bin/python" --version
