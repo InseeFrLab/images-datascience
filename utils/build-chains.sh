@@ -8,6 +8,9 @@ PUSH=false
 DOCKER_BUILD_ARGS=""
 [ "$PUSH" = "true" ] && DOCKER_BUILD_ARGS+=" --push"
 
+REGISTRY=${REGISTRY:-inseefrlab}
+
+
 # Build process
 
 PYTHON_VERSIONS=("3.13.5" "3.12.11")

@@ -36,11 +36,11 @@ chains = {
 
 
 def build_chain(chain_name, r_version, py_version, spark_version,
-                gpu, no_test, push):
+                gpu, no_test, push, registry):
 
     logging.info(f"Building chain : {chain_name}")
     chain = chains[chain_name]
-    tag = "inseefrlab/onyxia-base:latest"  # Initialize tag
+    tag = f"{registry}/onyxia-base:latest"  # Initialize tag
     for i, image in enumerate(chain):
 
         # Placeholder for build args
@@ -49,7 +49,7 @@ def build_chain(chain_name, r_version, py_version, spark_version,
         # Specify base image for each build step
         if i == 0:
             # First step : define external base images
-            previous_image = "nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04" if gpu else "ubuntu:24.04"
+            previous_image = "nvidia/cuda/12.8.1-cudnn-devel-ubuntu24.04" if gpu else "ubuntu:24.04"
         else:
             # Intermediary and final steps : use previous built tag as base image 
             previous_image = tag
@@ -72,7 +72,7 @@ def build_chain(chain_name, r_version, py_version, spark_version,
             # If final step, image is named after chain_name
             image_name = image if i < len(chain) - 1 else chain_name
             versions_tag_str = "-".join(versions_tag)
-            tag = f"inseefrlab/onyxia-{image_name}:{versions_tag_str}"
+            tag = f"{registry}/onyxia-{image_name}:{versions_tag_str}"
         if gpu:
             tag += "-gpu"
         tag += "-dev"
@@ -131,6 +131,11 @@ def build_cli_parser():
         action="store_true",
         help="Whether to push the last image of the chain to DockerHub."
     )
+    parser.add_argument(
+        "--registry",
+        default="inseefrlab",
+        help="Registry to use for tagging Docker images (default: 'inseefrlab')"
+    )
     return parser
 
 
@@ -147,5 +152,6 @@ if __name__ == '__main__':
                 spark_version=args.spark_version,
                 gpu=args.gpu,
                 no_test=args.no_test,
-                push=args.push
+                push=args.push,
+                registry=args.registry
                 )
