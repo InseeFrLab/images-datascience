@@ -8,7 +8,7 @@ ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 # Ensure local Python is preferred over system version
 ENV PATH="/opt/python-${PYTHON_VERSION}/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/opt/python-${PYTHON_VERSION}/lib:${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/opt/python-${PYTHON_VERSION}/lib:${LD_LIBRARY_PATH:-}"
 
 USER root
 

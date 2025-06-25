@@ -54,6 +54,7 @@ ldconfig
 MAJOR_MINOR="${PYTHON_VERSION%.*}"
 ln -sf "${PREFIX}/bin/python${MAJOR_MINOR}" "${PREFIX}/bin/python"
 ln -sf "${PREFIX}/bin/pip${MAJOR_MINOR}" "${PREFIX}/bin/pip"
+ln -sf "${PREFIX}/bin/pip${MAJOR_MINOR}" "${PREFIX}/bin/pip3"
 
 # Checks
 "${PREFIX}/bin/python" --version
