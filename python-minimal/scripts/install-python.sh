@@ -52,6 +52,9 @@ apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 # Useful symlinks
 ln -sf "${PYTHON_DIR}/bin/python3" "${PYTHON_DIR}/bin/python"
 ln -sf "${PYTHON_DIR}/bin/pip3" "${PYTHON_DIR}/bin/pip"
+# For retro-compatibility
+ln -sf "${PYTHON_DIR}/bin/python3" /usr/local/bin/python && \
+ln -sf "${PYTHON_DIR}/bin/pip3" /usr/local/bin/pip
 
 # Checks
 python --version
