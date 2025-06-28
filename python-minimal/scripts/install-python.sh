@@ -29,39 +29,18 @@ apt_install \
     xz-utils \
     zlib1g-dev
 
-# Set prefix
-PREFIX="/opt/python-${PYTHON_VERSION}"
-mkdir -p "${PREFIX}"
-
-# Install Python
+# Build Python from sources
 wget -q https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
 tar xzvf Python-${PYTHON_VERSION}.tgz
 cd Python-${PYTHON_VERSION}
 ./configure \
-    --prefix="${PREFIX}" \
+    --prefix="${PYTHON_DIR}" \
     --enable-loadable-sqlite-extensions \
     --enable-optimizations \
     --enable-shared \
     --with-lto
 make -j"$(nproc)"
-make altinstall
-
-# Register libpython in ldconfig
-echo "${PREFIX}/lib" > "/etc/ld.so.conf.d/python-${PYTHON_VERSION}.conf"
-ldconfig
-
-# Useful symlinks
-MAJOR_MINOR="${PYTHON_VERSION%.*}"
-ln -sf "${PREFIX}/bin/python${MAJOR_MINOR}" "${PREFIX}/bin/python"
-ln -sf "${PREFIX}/bin/pip${MAJOR_MINOR}" "${PREFIX}/bin/pip"
-ln -sf "${PREFIX}/bin/pip${MAJOR_MINOR}" "${PREFIX}/bin/pip3"
-# Create symlinks in /usr/local/bin for retro-compatibility
-ln -sf /opt/python-${PYTHON_VERSION}/bin/python /usr/local/bin/python && \
-ln -sf /opt/python-${PYTHON_VERSION}/bin/pip /usr/local/bin/pip
-
-
-# Checks
-"${PREFIX}/bin/python" --version
+make install
 
 # Clean install files
 cd ..
@@ -70,6 +49,14 @@ apt-mark auto '.*' > /dev/null
 apt-mark manual $savedAptMark
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
+# Useful symlinks
+ln -sf "${PYTHON_DIR}/bin/python3" "${PYTHON_DIR}/bin/python"
+ln -sf "${PYTHON_DIR}/bin/pip3" "${PYTHON_DIR}/bin/pip"
+
+# Checks
+python --version
+which python
+
 # Upgrade pip & install uv
-"${PREFIX}/bin/pip3" install --no-cache-dir --upgrade pip
-"${PREFIX}/bin/pip3" install --no-cache-dir uv
+pip install --no-cache-dir --upgrade pip
+pip install --no-cache-dir uv

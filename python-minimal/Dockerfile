@@ -6,9 +6,9 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ARG PYTHON_VERSION="3.13.5"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
-# Ensure local Python is preferred over system version
-ENV PATH="/opt/python-${PYTHON_VERSION}/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/opt/python-${PYTHON_VERSION}/lib:${LD_LIBRARY_PATH:-}"
+# Install Python separately from system installation to avoid conflicts
+ENV PYTHON_DIR="/opt/python${PYTHON_VERSION}"
+ENV PATH="${PYTHON_DIR}/bin:${PATH}"
 
 USER root
 
