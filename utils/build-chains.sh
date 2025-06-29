@@ -30,4 +30,5 @@ done
 python3 utils/build-chain.py --chain vscode-tensorflow --py_version ${PYTHON_VERSIONS[1]} --gpu $DOCKER_BUILD_ARGS
 
 # r-python-julia images are built with only latest versions of R & Python
+python3 utils/build-chain.py --chain rstudio-r-python-julia --r_version ${R_VERSIONS[0]} --py_version ${PYTHON_VERSIONS[0]} $DOCKER_BUILD_ARGS
 python3 utils/build-chain.py --chain jupyter-r-python-julia --r_version ${R_VERSIONS[0]} --py_version ${PYTHON_VERSIONS[0]} $DOCKER_BUILD_ARGS

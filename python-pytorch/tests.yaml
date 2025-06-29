@@ -13,8 +13,8 @@ fileExistenceTests:
     path: "/opt/onyxia-init.sh"
     shouldExist: true
     permissions: "-rwxr-xr-x"
-    uid: 0
-    gid: 0
+    uid: 1000
+    gid: 100
 commandTests:
   - name: "Does the binary exists?"
     command: "which"
@@ -31,11 +31,11 @@ commandTests:
   - name: "Does the binary exists?"
     command: "which"
     args: ["python"]
-    expectedOutput: ["/usr/local/bin/python"]
+    expectedOutput: ['/opt/python/bin/python']
   - name: "Does the binary exists?"
     command: "which"
     args: ["pip"]
-    expectedOutput: ["/usr/local/bin/pip"]
+    expectedOutput: ['/opt/python/bin/pip']
   - name: "Does the binary exists?"
     command: "which"
     args: ["duckdb"]
