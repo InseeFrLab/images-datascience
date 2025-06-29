@@ -83,7 +83,7 @@ jobs:
       base_image: python-minimal
       python_version_1: 3.13.5
       python_version_2: 3.12.11
-      spark_version: 3.5.5
+      spark_version: 3.5.6
       build_gpu: false
     secrets: inherit
   jupyter-pyspark:
@@ -95,7 +95,7 @@ jobs:
       base_image: pyspark
       python_version_1: 3.13.5
       python_version_2: 3.12.11
-      spark_version: 3.5.5
+      spark_version: 3.5.6
       build_gpu: false
     secrets: inherit
   vscode-pyspark:
@@ -107,7 +107,7 @@ jobs:
       base_image: pyspark
       python_version_1: 3.13.5
       python_version_2: 3.12.11
-      spark_version: 3.5.5
+      spark_version: 3.5.6
       build_gpu: false
     secrets: inherit
   python-pytorch:
@@ -186,7 +186,7 @@ jobs:
       base_image: r-minimal
       r_version_1: 4.5.1
       r_version_2: 4.4.3
-      spark_version: 3.5.5
+      spark_version: 3.5.6
       build_gpu: false
     secrets: inherit
   rstudio-sparkr:
@@ -198,7 +198,7 @@ jobs:
       base_image: sparkr
       r_version_1: 4.5.1
       r_version_2: 4.4.3
-      spark_version: 3.5.5
+      spark_version: 3.5.6
       build_gpu: false
     secrets: inherit
   r-python-julia:
