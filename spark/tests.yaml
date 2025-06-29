@@ -13,8 +13,8 @@ fileExistenceTests:
     path: "/opt/onyxia-init.sh"
     shouldExist: true
     permissions: "-rwxr-xr-x"
-    uid: 0
-    gid: 0
+    uid: 1000
+    gid: 100
   - name: 'Hadoop Home'
     path: '/usr/local/lib/hadoop'
     shouldExist: true

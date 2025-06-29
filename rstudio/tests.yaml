@@ -14,8 +14,8 @@ fileExistenceTests:
     path: "/opt/onyxia-init.sh"
     shouldExist: true
     permissions: "-rwxr-xr-x"
-    uid: 0
-    gid: 0
+    uid: 1000
+    gid: 100
 commandTests:
   - name: "Does the binary exists?"
     command: "which"
