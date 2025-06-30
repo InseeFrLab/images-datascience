@@ -29,25 +29,19 @@ apt_install \
     xz-utils \
     zlib1g-dev
 
-# Install Python
+# Build Python from sources
 wget -q https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
 tar xzvf Python-${PYTHON_VERSION}.tgz
 cd Python-${PYTHON_VERSION}
 ./configure \
-        --enable-loadable-sqlite-extensions \
-		--enable-optimizations \
-		--enable-shared \
-		--with-lto
-make -j4
+    --prefix="${PYTHON_DIR}" \
+    --enable-loadable-sqlite-extensions \
+    --enable-optimizations \
+    --enable-shared \
+    --with-lto \
+    LDFLAGS="-Wl,-rpath ${PYTHON_DIR}/lib"
+make -j"$(nproc)"
 make install
-ldconfig
-
-# Useful symlinks
-ln -s /usr/local/bin/python3 /usr/local/bin/python
-ln -s /usr/local/bin/pip3 /usr/local/bin/pip
-
-# Checks
-python --version
 
 # Clean install files
 cd ..
@@ -56,6 +50,14 @@ apt-mark auto '.*' > /dev/null
 apt-mark manual $savedAptMark
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-# Upgrade pip & install uv for further Python packages installation
+# Useful symlinks
+ln -sf "${PYTHON_DIR}/bin/python3" "${PYTHON_DIR}/bin/python"
+ln -sf "${PYTHON_DIR}/bin/pip3" "${PYTHON_DIR}/bin/pip"
+
+# Checks
+python --version
+which python
+
+# Upgrade pip & install uv
 pip install --no-cache-dir --upgrade pip
 pip install --no-cache-dir uv
