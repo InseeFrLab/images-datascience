@@ -6,6 +6,10 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ARG PYTHON_VERSION="3.13.5"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
+# Install Python separately from system installation to avoid conflicts
+ARG PYTHON_DIR="/opt/python"
+ENV PATH="${PYTHON_DIR}/bin:${PATH}"
+
 USER root
 
 COPY --chmod=0755 scripts/ /opt/
