@@ -10,8 +10,14 @@ function apt_install() {
     fi
 }
 
+PACKAGES=("jupyterlab")
+
+if [[ "$ENABLE_JUPYTER_AI_EXTENSION" == "true" ]]; then
+    PACKAGES+=("jupyter-ai" "langchain-ollama" "langchain-openai")
+fi
+
 if command -v uv &>/dev/null; then
-    uv pip install --system --no-cache jupyterlab
+    echo uv pip install --system --no-cache "${PACKAGES[@]}"
 else
-    pip install --no-cache-dir jupyterlab
+    echo pip install --no-cache-dir "${PACKAGES[@]}"
 fi
