@@ -17,7 +17,7 @@ if [[ "$ENABLE_JUPYTER_AI_EXTENSION" == "true" ]]; then
 fi
 
 if command -v uv &>/dev/null; then
-    echo uv pip install --system --no-cache "${PACKAGES[@]}"
+    uv pip install --system --no-cache "${PACKAGES[@]}"
 else
-    echo pip install --no-cache-dir "${PACKAGES[@]}"
+    pip install --no-cache-dir "${PACKAGES[@]}"
 fi
