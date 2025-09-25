@@ -163,6 +163,15 @@ if [[ "$DARK_MODE" == "true" ]]; then
     fi
 fi
 
+# install packages for jupyter-ai
+if [[ "$ENABLE_JUPYTER_AI_EXTENSION" == "true" ]]; then
+    if command -v uv &>/dev/null; then
+        uv pip install --system --no-cache jupyter-ai langchain-ollama langchain-openai
+    else
+        pip install --no-cache-dir jupyter-ai langchain-ollama langchain-openai
+    fi
+fi
+
 # inject proxy variables
 env_vars=("NO_PROXY" "no_proxy" "HTTP_PROXY" "http_proxy" "HTTPS_PROXY" "https_proxy")
 
