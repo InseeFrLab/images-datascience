@@ -154,12 +154,16 @@ if [[ "$DARK_MODE" == "true" ]]; then
         JUPYTER_APP_DIR=$(jupyter lab path | awk -F': *' '/Application directory/{print $2}')
         mkdir -p $JUPYTER_APP_DIR/settings
         echo "{\"@jupyterlab/apputils-extension:themes\": {\"theme\": \"JupyterLab Dark\"}}" > $JUPYTER_APP_DIR/settings/overrides.json
+	chown ${USERNAME}:${GROUPNAME} $JUPYTER_APP_DIR/settings/overrides.json
     fi
     if command -v code-server &>/dev/null; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
+	chown ${USERNAME}:${GROUPNAME} ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
+
     fi
     if command -v rstudio-server &>/dev/null; then
         jq '. + {"editor_theme": "Vibrant Ink"}' ${HOME}/.config/rstudio/rstudio-prefs.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.config/rstudio/rstudio-prefs.json
+	chown ${USERNAME}:${GROUPNAME} ${HOME}/.config/rstudio/rstudio-prefs.json
     fi
 fi
 
