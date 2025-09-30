@@ -158,7 +158,7 @@ if [[ "$DARK_MODE" == "true" ]]; then
     fi
     if command -v code-server &>/dev/null; then
         jq '. + {"workbench.colorTheme": "Default Dark Modern"}' ${HOME}/.local/share/code-server/User/settings.json > ${HOME}/tmp.settings.json  && mv ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
-	chown ${USERNAME}:${GROUPNAME} ${HOME}/tmp.settings.json ${HOME}/.local/share/code-server/User/settings.json
+	chown ${USERNAME}:${GROUPNAME} ${HOME}/.local/share/code-server/User/settings.json
 
     fi
     if command -v rstudio-server &>/dev/null; then
