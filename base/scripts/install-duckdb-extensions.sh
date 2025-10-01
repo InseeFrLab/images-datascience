@@ -6,4 +6,5 @@ INSTALL httpfs; \
 INSTALL aws; \
 INSTALL postgres; \
 INSTALL spatial; \
+INSTALL icu; \
 "
