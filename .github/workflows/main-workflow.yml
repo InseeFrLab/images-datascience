@@ -21,8 +21,8 @@ jobs:
       image: python-minimal
       context: python-minimal
       base_image: base
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   python-datascience:
     needs: [python-minimal]
@@ -31,8 +31,8 @@ jobs:
       image: python-datascience
       context: python-datascience
       base_image: python-minimal
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   r-minimal:
     needs: [base]
@@ -61,8 +61,8 @@ jobs:
       image: jupyter-python
       context: jupyter
       base_image: python-datascience
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   vscode-python:
     needs: [python-datascience]
@@ -71,8 +71,8 @@ jobs:
       image: vscode-python
       context: vscode
       base_image: python-datascience
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   pyspark:
     needs: [python-minimal]
@@ -81,8 +81,8 @@ jobs:
       image: pyspark
       context: spark
       base_image: python-minimal
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
       spark_version: 3.5.7
       build_gpu: false
     secrets: inherit
@@ -93,8 +93,8 @@ jobs:
       image: jupyter-pyspark
       context: jupyter
       base_image: pyspark
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
       spark_version: 3.5.7
       build_gpu: false
     secrets: inherit
@@ -105,8 +105,8 @@ jobs:
       image: vscode-pyspark
       context: vscode
       base_image: pyspark
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
       spark_version: 3.5.7
       build_gpu: false
     secrets: inherit
@@ -117,8 +117,8 @@ jobs:
       image: python-pytorch
       context: python-pytorch
       base_image: python-minimal
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   jupyter-pytorch:
     needs: [python-pytorch]
@@ -127,8 +127,8 @@ jobs:
       image: jupyter-pytorch
       context: jupyter
       base_image: python-pytorch
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   vscode-pytorch:
     needs: [python-pytorch]
@@ -137,8 +137,8 @@ jobs:
       image: vscode-pytorch
       context: vscode
       base_image: python-pytorch
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   python-tensorflow:
     needs: [python-minimal]
@@ -147,8 +147,8 @@ jobs:
       image: python-tensorflow
       context: python-tensorflow
       base_image: python-minimal
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   jupyter-tensorflow:
     needs: [python-tensorflow]
@@ -157,8 +157,8 @@ jobs:
       image: jupyter-tensorflow
       context: jupyter
       base_image: python-tensorflow
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   vscode-tensorflow:
     needs: [python-tensorflow]
@@ -167,8 +167,8 @@ jobs:
       image: vscode-tensorflow
       context: vscode
       base_image: python-tensorflow
-      python_version_1: 3.13.7
-      python_version_2: 3.12.11
+      python_version_1: 3.13.8
+      python_version_2: 3.12.12
     secrets: inherit
   rstudio:
     needs: [r-datascience]
@@ -212,7 +212,7 @@ jobs:
       context: r-python-julia
       base_image: r-datascience
       r_version_1: 4.5.1
-      python_version_1: 3.13.7
+      python_version_1: 3.13.8
       build_gpu: false
     secrets: inherit
   vscode-r-python-julia:
@@ -223,7 +223,7 @@ jobs:
       context: vscode
       base_image: r-python-julia
       r_version_1: 4.5.1
-      python_version_1: 3.13.7
+      python_version_1: 3.13.8
       build_gpu: false
     secrets: inherit
   jupyter-r-python-julia:
@@ -234,7 +234,7 @@ jobs:
       context: jupyter
       base_image: r-python-julia
       r_version_1: 4.5.1
-      python_version_1: 3.13.7
+      python_version_1: 3.13.8
       build_gpu: false
     secrets: inherit
   rstudio-r-python-julia:
@@ -245,6 +245,6 @@ jobs:
       context: rstudio
       base_image: r-python-julia
       r_version_1: 4.5.1
-      python_version_1: 3.13.7
+      python_version_1: 3.13.8
       build_gpu: false
     secrets: inherit
