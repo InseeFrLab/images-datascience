@@ -11,7 +11,7 @@ function apt_install() {
 }
 
 # Install system libraries for geospatial computation
-add-apt-repository -y ppa:ubuntugis/ppa
+add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
 apt_install \
     libgdal-dev \
     gdal-bin
