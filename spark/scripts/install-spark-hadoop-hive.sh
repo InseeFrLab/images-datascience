@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-HADOOP_VERSION="3.4.1"
-HIVE_VERSION="2.3.9"
+HADOOP_VERSION="3.4.2"
+HIVE_VERSION="2.3.10"
 HIVE_LISTENER_VERSION="0.0.3"
 
 SPARK_BUILD_S3_BUCKET="https://minio.lab.sspcloud.fr/projet-onyxia/build"
