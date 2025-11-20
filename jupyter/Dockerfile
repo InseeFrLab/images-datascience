@@ -20,11 +20,11 @@ RUN /opt/install-jupyterlab.sh && \
     fi && \
     # Generate jupyter server config
     jupyter server --generate-config && \
+    jupyter lab clean && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean
-    /opt/clean.sh && \
-    jupyter lab clean
+    /opt/clean.sh
 
 USER 1000
 
