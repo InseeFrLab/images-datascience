@@ -24,7 +24,7 @@ RUN /opt/install-jupyterlab.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean
-    /opt/clean.sh && \
+    /opt/clean.sh
 
 USER 1000
 
