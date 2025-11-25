@@ -14,7 +14,7 @@ ENV SPARK_VERSION=${SPARK_VERSION}
 ENV HADOOP_HOME="/usr/local/lib/hadoop"
 ENV SPARK_HOME="/usr/local/lib/spark"
 ENV HIVE_HOME="/usr/local/lib/hive"
-ENV PYTHONPATH="${SPARK_HOME}/python:${SPARK_HOME}/python/lib/py4j-0.10.9.7-src.zip"
+ENV PYTHONPATH="${SPARK_HOME}/python:${SPARK_HOME}/python/lib/py4j-0.10.9.9-src.zip"
 ENV SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M"
 ENV HADOOP_OPTIONAL_TOOLS="hadoop-aws"
 
