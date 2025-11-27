@@ -51,7 +51,7 @@ mv jline-2.14.6.jar ${HIVE_HOME}/lib/
 rm ${HIVE_HOME}/lib/jline-2.12.jar
 
 # Fix multiple bindings
-rm ${HADOOP_HOME}/share/hadoop/tools/lib/bundle-2.24.6.jar
+rm ${HADOOP_HOME}/share/hadoop/tools/lib/bundle-2.29.52.jar
 
 # Change log verbosity of Hadoop
 sed -i -e "s/hadoop.root.logger=INFO,console/hadoop.root.logger=WARN,console/g" ${HADOOP_HOME}/etc/hadoop/log4j.properties
