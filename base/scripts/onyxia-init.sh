@@ -151,7 +151,7 @@ if command -v R &>/dev/null; then
     # Configure rproj in rstudio
     if command -v rstudio-server &>/dev/null; then 
         if [[ -n "$GIT_REPOSITORY" ]]; then
-            REPO_DIR=$(basename "$url" .git)
+            REPO_DIR=$(basename "$GIT_REPOSITORY" .git)
             echo "setHook('rstudio.sessionInit', function(newSession) { if (newSession && identical(getwd(), '${WORKSPACE_DIR}')) { message('Activate RStudio project'); rstudioapi::openProject('${REPO_DIR}'); } }, action = 'append')" >> ${HOME}/.Rprofile
         fi
     fi
