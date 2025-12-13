@@ -21,5 +21,6 @@
     ],
     "[latex]":  {
 		"editor.wordWrap": "on"
-	}
+	},
+	"chat.disableAIFeatures": true
 }
