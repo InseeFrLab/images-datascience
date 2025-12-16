@@ -26,20 +26,29 @@ if command -v uv &>/dev/null; then
 fi
 
 # R configuration
-
 if command -v R &>/dev/null; then
   if [[ -n "$R_REPOSITORY" ]] || [[ -n "$PACKAGE_MANAGER_URL" ]]; then
       echo "configuration r (add local repository)"
 
-      echo '# https://docs.rstudio.com/rspm/admin/serving-binaries/#binaries-r-configuration-linux' >> ${R_HOME}/etc/Rprofile.site
-      echo 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))' >> ${R_HOME}/etc/Rprofile.site
+      # When the PACKAGE_MANAGER_URL variable is set, overwrite the Rprofile.site originating from the rocker image
+      # (but still keep the UserAgent setting in case some internal repositories need it)
+      if [[ -n "$PACKAGE_MANAGER_URL" ]]; then
+        echo '# Rocker default configuration removed by /opt/onyxia-set-repositories.sh' > ${R_HOME}/etc/Rprofile.site
+
+        echo '# https://docs.rstudio.com/rspm/admin/serving-binaries/#binaries-r-configuration-linux' >> ${R_HOME}/etc/Rprofile.site
+        echo 'options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(), paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))' >> ${R_HOME}/etc/Rprofile.site
+      fi
+      
       echo '# Proxy repository for R' >> ${R_HOME}/etc/Rprofile.site
       echo 'local({' >> ${R_HOME}/etc/Rprofile.site
       echo '  r <- getOption("repos")' >> ${R_HOME}/etc/Rprofile.site
 
       if [[ -n "$PACKAGE_MANAGER_URL" ]]; then
-          UBUNTU_CODENAME=$(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d= -f2)
-          echo "  r[\"PackageManager\"] <- \"${PACKAGE_MANAGER_URL}/${UBUNTU_CODENAME}/latest\"" >> ${R_HOME}/etc/Rprofile.site
+
+        UBUNTU_CODENAME=$(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d= -f2)
+        # Using "/bin/linux" style URLS for PACKAGE_MANAGER_URL allows easier management for local package managers (eg: Nexus)
+        # See also : https://docs.posit.co/rspm/admin/serving-binaries.html#using-linux-binary-packages
+        echo "  r[\"PackageManager\"] <- sprintf(\"${PACKAGE_MANAGER_URL}/latest/bin/linux/${UBUNTU_CODENAME}-%s/%s\", R.version[\"arch\"], substr(getRversion(), 1, 3))" >> ${R_HOME}/etc/Rprofile.site
       fi
 
       if [[ -n "$R_REPOSITORY" ]]; then
