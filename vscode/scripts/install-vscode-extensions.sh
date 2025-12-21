@@ -42,6 +42,7 @@ done
 python_extensions=(
     "ms-python.python"
     "ms-python.flake8"
+    "charliermarsh.ruff"
 )
 if command -v python &> /dev/null; then
     for extension in "${python_extensions[@]}"; do
@@ -55,6 +56,7 @@ fi
 r_extensions=(
     "reditorsupport.r"
     "RDebugger.r-debugger"
+    "Posit.air-vscode"
 )
 if command -v R &> /dev/null; then
     # Install R kernel for jupyter notebooks
