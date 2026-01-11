@@ -26,6 +26,7 @@ apt_install \
     ca-certificates \
     curl \
     git \
+    graphviz \
     jq \
     less \
     locales \
