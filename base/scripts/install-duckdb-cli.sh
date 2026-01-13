@@ -10,7 +10,7 @@ case $ARCH in
         FILENAME="duckdb_cli-linux-amd64.zip"
         ;;
     "aarch64")
-        FILENAME="duckdb_cli-linux-aarch64.zip"
+        FILENAME="duckdb_cli-linux-arm64.zip"
         ;;
     *)
         echo "Unsupported architecture: $ARCH"
