@@ -29,10 +29,10 @@ base_extensions=(
     "ms-toolsai.jupyter"
     "ms-kubernetes-tools.vscode-kubernetes-tools"
     "mhutchie.git-graph"
-    "hediet.vscode-drawio"
+    "hediet.vscode-drawio@1.9.0"
     "streetsidesoftware.code-spell-checker"
     "streetsidesoftware.code-spell-checker-french"
-    "continue.continue"
+    "continue.continue@1.2.14"
 )
 for extension in "${base_extensions[@]}"; do
     install_extension $extension
@@ -42,7 +42,7 @@ done
 python_extensions=(
     "ms-python.python"
     "ms-python.flake8"
-    "charliermarsh.ruff"
+    "charliermarsh.ruff@2026.34.0"
 )
 if command -v python &> /dev/null; then
     for extension in "${python_extensions[@]}"; do
