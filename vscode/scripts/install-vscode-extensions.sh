@@ -32,7 +32,7 @@ base_extensions=(
     "hediet.vscode-drawio@1.9.0"
     "streetsidesoftware.code-spell-checker"
     "streetsidesoftware.code-spell-checker-french"
-    "continue.continue@1.2.14"
+    "continue.continue@1.3.29"
 )
 for extension in "${base_extensions[@]}"; do
     install_extension $extension
