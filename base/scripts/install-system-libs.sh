@@ -27,6 +27,7 @@ apt_install \
     curl \
     git \
     graphviz \
+    groff \
     jq \
     less \
     locales \
