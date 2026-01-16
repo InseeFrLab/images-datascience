@@ -38,6 +38,7 @@ RUN /opt/install-system-libs.sh && \
     # Install common clients useful for Onyxia
     /opt/install-kubectl.sh && \
     /opt/install-helm.sh && \
+    /opt/install-awscli.sh && \
     /opt/install-mc.sh && \
     /opt/install-duckdb-cli.sh && \
     /opt/install-duckdb-extensions.sh && \
