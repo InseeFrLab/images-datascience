@@ -29,7 +29,7 @@ base_extensions=(
     "ms-toolsai.jupyter"
     "ms-kubernetes-tools.vscode-kubernetes-tools"
     "mhutchie.git-graph"
-    "hediet.vscode-drawio@1.9.0"
+    "hediet.vscode-drawio"
     "streetsidesoftware.code-spell-checker"
     "streetsidesoftware.code-spell-checker-french"
     "continue.continue@1.3.29"
