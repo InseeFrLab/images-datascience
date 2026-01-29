@@ -95,6 +95,8 @@ if command -v git &>/dev/null; then
         REPO_DOMAIN=$(echo "$GIT_REPOSITORY" | awk -F/ '{print $3}')
         if [ "$REPO_DOMAIN" = "github.com" ]; then
             GIT_REPOSITORY=$(echo "$GIT_REPOSITORY" | sed "s|$REPO_DOMAIN|$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN|")
+        elif echo "$GIT_REPOSITORY" | grep -qi "bitbucket"; then
+            GIT_REPOSITORY=$(echo "$GIT_REPOSITORY" | sed "s|$REPO_DOMAIN|$GIT_USER_NAME:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN|")
         else
             GIT_REPOSITORY=$(echo "$GIT_REPOSITORY" | sed "s|$REPO_DOMAIN|oauth2:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN|")
         fi
