@@ -30,8 +30,6 @@ base_extensions=(
     "ms-kubernetes-tools.vscode-kubernetes-tools"
     "mhutchie.git-graph"
     "hediet.vscode-drawio"
-    "streetsidesoftware.code-spell-checker"
-    "streetsidesoftware.code-spell-checker-french"
     "continue.continue@1.3.29"
 )
 for extension in "${base_extensions[@]}"; do
