@@ -11,14 +11,6 @@
     "julia.symbolCacheDownload": true,
     "julia.enableTelemetry": false,
     "r.bracketedPaste": true,
-    "cSpell.language": "en,fr",
-    "cSpell.enableFiletypes": [
-        "!jupyter",
-        "!python",
-        "!r",
-        "!json",
-        "!yaml"
-    ],
     "[latex]":  {
 		"editor.wordWrap": "on"
 	},
