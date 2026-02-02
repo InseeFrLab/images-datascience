@@ -16,4 +16,4 @@ else
     pip install --no-cache-dir jupyterlab jupyter-ai langchain-openai
 fi
 
-mkdir -p  ${HOME}/.local/share/jupyter
+mkdir -p  ${HOME}/.local/share/jupyter/jupyter_ai
