@@ -15,3 +15,5 @@ if command -v uv &>/dev/null; then
 else
     pip install --no-cache-dir jupyterlab jupyter-ai langchain-openai
 fi
+
+mkdir -p  ${HOME}/.local/share/jupyter/jupyter_ai
