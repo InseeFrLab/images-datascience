@@ -3,7 +3,7 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-ARG PYTHON_VERSION="3.13.11"
+ARG PYTHON_VERSION="3.13.12"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 # Install Python separately from system installation to avoid conflicts
