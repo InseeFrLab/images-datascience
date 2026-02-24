@@ -70,8 +70,6 @@ fi
 if command -v kubectl &>/dev/null; then
     export KUBERNETES_SERVICE_ACCOUNT=$(jq -Rr 'split(".")[1] | @base64d | fromjson | .["kubernetes.io"].serviceaccount.name' /var/run/secrets/kubernetes.io/serviceaccount/token)
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
-    # Give user ownership on kubectl config file
-    chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.kube
 fi
 
 if command -v mc &>/dev/null; then
