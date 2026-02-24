@@ -68,17 +68,11 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
 fi
 
 if command -v kubectl &>/dev/null; then
-    kubectl config set-cluster in-cluster --server=https://kubernetes.default --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-    kubectl config set-credentials user --token `cat /var/run/secrets/kubernetes.io/serviceaccount/token`
-    kubectl config set-context in-cluster --user=user --cluster=in-cluster --namespace=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
-    kubectl config use-context in-cluster
     export KUBERNETES_SERVICE_ACCOUNT=$(jq -Rr 'split(".")[1] | @base64d | fromjson | .["kubernetes.io"].serviceaccount.name' /var/run/secrets/kubernetes.io/serviceaccount/token)
     export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
     # Give user ownership on kubectl config file
     chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.kube
 fi
-
-
 
 if command -v mc &>/dev/null; then
     export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY:$AWS_SESSION_TOKEN@$AWS_S3_ENDPOINT
