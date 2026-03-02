@@ -14,5 +14,6 @@
     "[latex]":  {
 		"editor.wordWrap": "on"
 	},
-	"chat.disableAIFeatures": true
+	"chat.disableAIFeatures": true,
+    "workbench.secondarySideBar.defaultVisibility": "hidden"
 }
