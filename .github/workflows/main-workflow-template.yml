@@ -88,7 +88,7 @@ jobs:
 
       - name: Build and load to the Docker client
         if: ${{ !contains(matrix.output_image_tags, 'gpu') }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           load: true
           push: false
@@ -121,7 +121,7 @@ jobs:
       
       - name: Push to DockerHub
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: true
           context: ${{ inputs.context }}
