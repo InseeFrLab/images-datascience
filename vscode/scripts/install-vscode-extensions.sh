@@ -30,7 +30,7 @@ base_extensions=(
     "ms-kubernetes-tools.vscode-kubernetes-tools"
     "mhutchie.git-graph"
     "hediet.vscode-drawio"
-    "continue.continue@1.3.29"
+    "continue.continue@1.3.33"
 )
 for extension in "${base_extensions[@]}"; do
     install_extension $extension
@@ -40,7 +40,7 @@ done
 python_extensions=(
     "ms-python.python"
     "ms-python.flake8"
-    "charliermarsh.ruff@2026.34.0"
+    "charliermarsh.ruff@2026.38.0"
 )
 if command -v python &> /dev/null; then
     for extension in "${python_extensions[@]}"; do
