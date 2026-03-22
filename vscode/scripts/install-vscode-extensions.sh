@@ -70,7 +70,7 @@ if command -v R &> /dev/null; then
     for extension in "${r_extensions[@]}"; do
         install_extension $extension
     done
-    R -e "install.packages(c('languageserver', 'rmarkdown', 'httpgd'))"
+    R -e "install.packages(c('remotes', 'languageserver', 'rmarkdown', 'httpgd'))"
     R -e "remotes::install_github('ManuelHentschel/vscDebugger')"
     pip install radian
     r_path=$(which radian)
