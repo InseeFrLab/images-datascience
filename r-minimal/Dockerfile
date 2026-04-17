@@ -27,7 +27,7 @@ RUN /opt/install-r.sh && \
     install2.r --ncpus -1 --error \
         devtools \
         lintr \
-        remote \
+        remotes \
         renv && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
