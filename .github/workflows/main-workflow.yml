@@ -41,8 +41,8 @@ jobs:
       image: r-minimal
       context: r-minimal
       base_image: base
-      r_version_1: 4.5.3
-      r_version_2: 4.4.3
+      r_version_1: 4.6.0
+      r_version_2: 4.5.3
     secrets: inherit
   r-datascience:
     needs: [r-minimal]
@@ -51,8 +51,8 @@ jobs:
       image: r-datascience
       context: r-datascience
       base_image: r-minimal
-      r_version_1: 4.5.3
-      r_version_2: 4.4.3
+      r_version_1: 4.6.0
+      r_version_2: 4.5.3
     secrets: inherit
   jupyter-python:
     needs: [python-datascience]
@@ -177,8 +177,8 @@ jobs:
       image: rstudio
       context: rstudio
       base_image: r-datascience
-      r_version_1: 4.5.3
-      r_version_2: 4.4.3
+      r_version_1: 4.6.0
+      r_version_2: 4.5.3
     secrets: inherit
   sparkr:
     needs: [r-minimal]
@@ -187,8 +187,8 @@ jobs:
       image: sparkr
       context: spark
       base_image: r-minimal
-      r_version_1: 4.5.3
-      r_version_2: 4.4.3
+      r_version_1: 4.6.0
+      r_version_2: 4.5.3
       spark_version: 4.1.1
       build_gpu: false
     secrets: inherit
@@ -199,8 +199,8 @@ jobs:
       image: rstudio-sparkr
       context: rstudio
       base_image: sparkr
-      r_version_1: 4.5.3
-      r_version_2: 4.4.3
+      r_version_1: 4.6.0
+      r_version_2: 4.5.3
       spark_version: 4.1.1
       build_gpu: false
     secrets: inherit
@@ -211,7 +211,7 @@ jobs:
       image: r-python-julia
       context: r-python-julia
       base_image: r-datascience
-      r_version_1: 4.5.3
+      r_version_1: 4.6.0
       python_version_1: 3.13.12
       build_gpu: false
     secrets: inherit
@@ -222,7 +222,7 @@ jobs:
       image: vscode-r-python-julia
       context: vscode
       base_image: r-python-julia
-      r_version_1: 4.5.3
+      r_version_1: 4.6.0
       python_version_1: 3.13.12
       build_gpu: false
     secrets: inherit
@@ -233,7 +233,7 @@ jobs:
       image: jupyter-r-python-julia
       context: jupyter
       base_image: r-python-julia
-      r_version_1: 4.5.3
+      r_version_1: 4.6.0
       python_version_1: 3.13.12
       build_gpu: false
     secrets: inherit
@@ -244,7 +244,7 @@ jobs:
       image: rstudio-r-python-julia
       context: rstudio
       base_image: r-python-julia
-      r_version_1: 4.5.3
+      r_version_1: 4.6.0
       python_version_1: 3.13.12
       build_gpu: false
     secrets: inherit
