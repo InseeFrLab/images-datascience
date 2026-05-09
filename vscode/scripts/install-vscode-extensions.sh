@@ -40,7 +40,7 @@ done
 python_extensions=(
     "ms-python.python"
     "ms-python.flake8"
-    "charliermarsh.ruff@2026.40.0"
+    "charliermarsh.ruff"
 )
 if command -v python &> /dev/null; then
     for extension in "${python_extensions[@]}"; do
