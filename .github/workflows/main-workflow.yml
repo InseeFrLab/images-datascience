@@ -245,6 +245,6 @@ jobs:
       context: rstudio
       base_image: r-python-julia
       r_version_1: 4.6.0
-      python_version_1: 3.13.12
+      python_version_1: 3.13.13
       build_gpu: false
     secrets: inherit

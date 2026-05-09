@@ -11,9 +11,9 @@ DOCKER_BUILD_ARGS=""
 
 # Build process
 
-PYTHON_VERSIONS=("3.13.8" "3.12.12")
-R_VERSIONS=("4.5.1" "4.4.3")
-SPARK_VERSION=4.0.1
+PYTHON_VERSIONS=("3.13.13" "3.12.13")
+R_VERSIONS=("4.6.0" "4.5.3")
+SPARK_VERSION=4.1.1
 
 for py_ver in "${PYTHON_VERSIONS[@]}"; do
   python3 utils/build-chain.py --chain vscode-python --py_version $py_ver $DOCKER_BUILD_ARGS
