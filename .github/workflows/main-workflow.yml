@@ -248,3 +248,45 @@ jobs:
       python_version_1: 3.13.13
       build_gpu: false
     secrets: inherit
+  marimo-python:
+    needs: [python-datascience]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: marimo-python
+      context: marimo
+      base_image: python-datascience
+      python_version_1: 3.13.13
+      python_version_2: 3.12.13
+    secrets: inherit
+  marimo-pyspark:
+    needs: [pyspark]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: marimo-pyspark
+      context: marimo
+      base_image: pyspark
+      python_version_1: 3.13.13
+      python_version_2: 3.12.13
+      spark_version: 4.0.1
+      build_gpu: false
+    secrets: inherit
+  marimo-pytorch:
+    needs: [python-pytorch]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: marimo-pytorch
+      context: marimo
+      base_image: python-pytorch
+      python_version_1: 3.13.13
+      python_version_2: 3.12.13
+    secrets: inherit
+  marimo-tensorflow:
+    needs: [python-tensorflow]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: marimo-tensorflow
+      context: marimo
+      base_image: python-tensorflow
+      python_version_1: 3.13.13
+      python_version_2: 3.12.13
+    secrets: inherit
