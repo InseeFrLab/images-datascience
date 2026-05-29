@@ -248,3 +248,13 @@ jobs:
       python_version_1: 3.13.13
       build_gpu: false
     secrets: inherit
+  marimo-python:
+    needs: [python-datascience]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: marimo-python
+      context: marimo
+      base_image: python-datascience
+      python_version_1: 3.13.13
+      python_version_2: 3.12.13
+    secrets: inherit

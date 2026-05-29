@@ -31,6 +31,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PYDS--> VSCODEPYDS[vscode-python]:::ide;
       PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow]:::ide;
       PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
+      PYDS--> MARIMOPYDS[marimo-python]:::ide;
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio-r]:::ide;
       RPYJU--> JRPYJU[jupyter-r-python-julia]:::ide;

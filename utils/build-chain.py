@@ -31,7 +31,8 @@ chains = {
     "r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia"],
     "jupyter-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "jupyter"],
     "vscode-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "vscode"],
-    "rstudio-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "rstudio"]
+    "rstudio-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "rstudio"],
+    "marimo-python": ["base", "python-minimal", "python-datascience", "marimo"]
 }
 
 
