@@ -21,6 +21,8 @@ RUN /opt/install-jupyterlab.sh && \
     # Generate jupyter server config
     jupyter server --generate-config && \
     jupyter lab clean && \
+    # Install opencode
+    /opt/install-opencode.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

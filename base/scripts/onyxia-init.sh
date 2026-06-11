@@ -232,6 +232,15 @@ if command -v R >/dev/null 2>&1; then
     fi
 fi
 
+
+# Configure OpenAI credentials
+if [[ -n "$OPENAI_API_KEY" ]]; then
+    echo "export OPENAI_API_KEY=\"$OPENAI_API_KEY\"" >> ${HOME}/.bashrc
+fi
+if [[ -n "$OPENAI_BASE_URL" ]]; then
+    echo "export OPENAI_BASE_URL=\"$OPENAI_BASE_URL\"" >> ${HOME}/.bashrc
+fi
+
 # The commands related to setting the various repositories (R/CRAN, pip)
 # are located in specific script
 source /opt/onyxia-set-repositories.sh
