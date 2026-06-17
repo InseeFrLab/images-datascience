@@ -232,6 +232,7 @@ if command -v R >/dev/null 2>&1; then
     fi
 fi
 
+
 # The commands related to setting the various repositories (R/CRAN, pip)
 # are located in specific script
 source /opt/onyxia-set-repositories.sh
