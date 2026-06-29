@@ -14,7 +14,6 @@ if command -v pip &>/dev/null; then
         echo "configuration of python and pip to use a custom crt"
         pip config set global.cert $PATH_TO_CA_BUNDLE
         python /opt/certifi_ca.py
-        export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
     fi
 fi
 
