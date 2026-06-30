@@ -19,3 +19,4 @@ curl "https://awscli.amazonaws.com/awscli-exe-$DIRECTORY.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install 
 chmod +x /usr/local/bin/aws
+echo "source <(complete -C '/usr/local/bin/aws_completer' aws )" >> ${HOME}/.bashrc
