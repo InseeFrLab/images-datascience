@@ -249,5 +249,11 @@ for f in "$ROOT_PROJECT_DIRECTORY"/*; do
     fi
 done
 
+# The AWS CLI apparently makes use of the $REQUESTS_CA_BUNDLE variable to configure the trust store.
+# In case one is configured for a service based on these images, the variable should be set accordingly.
+if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
+    export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
+fi
+
 echo "execution of $@"
 exec "$@"
