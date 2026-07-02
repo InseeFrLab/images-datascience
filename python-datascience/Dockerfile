@@ -8,6 +8,8 @@ USER root
 COPY --chmod=0755 scripts/ /opt/
 COPY requirements.txt .
 
+RUN add-apt-repository -h
+
 # Install Python packages and their required system libraries
 RUN /opt/install-geospatial-python.sh && \
     uv pip install --system --no-cache -r requirements.txt && \
