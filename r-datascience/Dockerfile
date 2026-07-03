@@ -23,6 +23,7 @@ RUN /rocker_scripts/install_geospatial.sh && \
         duckdb \
         paws \
         quarto \
+        RPostgres \
         RPostgreSQL \
         tidyverse && \
     # Install duckdb extensions
