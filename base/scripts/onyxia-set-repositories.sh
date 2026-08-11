@@ -20,7 +20,7 @@ fi
 if command -v uv &>/dev/null; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
         echo "export UV_DEFAULT_INDEX=$PIP_REPOSITORY" >> "$ENV_FILE"
-        echo 'export UV_NATIVE_TLS=true' >> "$ENV_FILE"
+        echo 'export UV_SYSTEM_CERTS=true' >> "$ENV_FILE"
     fi
 fi
 
