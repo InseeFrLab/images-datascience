@@ -34,7 +34,7 @@ RUN chown -R ${USER} /var/lib/rstudio-server && \
 
 USER 1000
 
-# CMD for regular, root launch
+# Command args for regular, root launch
 # CMD ["/init"]
-# CMD for rootless launch
+# Command args for rootless launch
 CMD ["/usr/lib/rstudio-server/bin/rserver", "--server-daemonize=0", "--auth-none=0", "--auth-timeout-minutes=720", "--server-user=${USER}", "--auth-pam-helper-path=pam-helper"]
