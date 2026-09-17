@@ -37,4 +37,4 @@ USER 1000
 # CMD for regular, root launch
 # CMD ["/init"]
 # CMD for rootless launch
-CMD ["/usr/lib/rstudio-server/bin/rserver", "--server-daemonize=0", "--auth-none=0", "--auth-stay-signed-in-days=30", "--auth-timeout-minutes=720", "--server-user=onyxia", "--auth-pam-helper-path=pam-helper"]
+CMD ["/usr/lib/rstudio-server/bin/rserver", "--server-daemonize=0", "--auth-none=0", "--auth-timeout-minutes=720", "--server-user=${USER}", "--auth-pam-helper-path=pam-helper"]
