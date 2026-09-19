@@ -68,8 +68,9 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
 fi
 
 if command -v kubectl &>/dev/null; then
-    export KUBERNETES_SERVICE_ACCOUNT=$(jq -Rr 'split(".")[1] | @base64d | fromjson | .["kubernetes.io"].serviceaccount.name' /var/run/secrets/kubernetes.io/serviceaccount/token)
-    export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
+    KUBERNETES_SERVICE_ACCOUNT=$(jq -Rr 'split(".")[1] | @base64d | fromjson | .["kubernetes.io"].serviceaccount.name' /var/run/secrets/kubernetes.io/serviceaccount/token)
+    KUBERNETES_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+    export KUBERNETES_SERVICE_ACCOUNT KUBERNETES_NAMESPACE
 fi
 
 if [[ $(id -u) = 0 ]]; then
@@ -188,12 +189,12 @@ if command -v duckdb &>/dev/null; then
         fi
         duckdb -c "CREATE OR REPLACE PERSISTENT SECRET s3_onyxia_connection( \
             TYPE S3, \
-            KEY_ID '"$AWS_ACCESS_KEY_ID"', \
-            SECRET '"$AWS_SECRET_ACCESS_KEY"', \
-            REGION '"$AWS_DEFAULT_REGION"', \
-            SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
-            ENDPOINT '"$AWS_S3_ENDPOINT"', \
-            URL_STYLE '"$AWS_PATH_STYLE"' \
+            KEY_ID '$AWS_ACCESS_KEY_ID', \
+            SECRET '$AWS_SECRET_ACCESS_KEY', \
+            REGION '$AWS_DEFAULT_REGION', \
+            SESSION_TOKEN '$AWS_SESSION_TOKEN', \
+            ENDPOINT '$AWS_S3_ENDPOINT', \
+            URL_STYLE '$AWS_PATH_STYLE' \
         );" >/dev/null
         chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
     fi
@@ -231,5 +232,5 @@ if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
     export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
 fi
 
-echo "execution of $@"
+echo "execution of $*"
 exec "$@"

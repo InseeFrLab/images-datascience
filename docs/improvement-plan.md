@@ -44,10 +44,18 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 - [ ] **5. Hardcoded py4j filename** — S
   - Evidence: `spark/Dockerfile:17` sets `PYTHONPATH` to `py4j-0.10.9.9-src.zip`. Renovate now bumps `SPARK_VERSION` automatically; when Spark ships a new py4j, `import pyspark` breaks and no test catches it.
   - Fix: in `install-spark-hadoop-hive.sh`, symlink `${SPARK_HOME}/python/lib/py4j-*-src.zip` to a fixed name (e.g. `py4j-src.zip`) and reference that name. Add an `import pyspark` test (see #7).
+  - **Deferred, and widened to a full audit of the Spark/Hadoop/Hive install** (to do after the easier items). The goal is to simplify it a lot. Questions to answer, none verified yet:
+    - Spark comes from a custom build (`spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}-java-${JAVA_VERSION}.tgz`, built by InseeFrLab/Spark-hive and hosted on `minio.lab.sspcloud.fr`). Is that still needed, or would the official Apache distribution or `pip install pyspark` do?
+    - A separate full Hadoop distribution is installed, and `SPARK_DIST_CLASSPATH=$(hadoop classpath)` is set in `spark-env.sh` and the entrypoint. Are Hadoop jars shipped twice, once in the Spark build and once in `HADOOP_HOME`?
+    - A full Hive 2.3.10 distribution is installed. Spark built with `-Phive` already bundles the Hive 2.3 client for the metastore. What is the full distribution used for, beyond the `hive-authentication` and `hive-listener` jars and the postgres JDBC driver?
+    - Several hand fixes are tied to exact jar names: remove guava 14, copy guava 27, swap jline, and remove `bundle-2.29.52.jar` "to fix multiple bindings". The last one is the AWS SDK bundle that `hadoop-aws` needs. Where does S3A get the SDK from, and will these fixes survive version bumps?
+    - `HADOOP_VERSION`, `HIVE_VERSION`, the jline/guava and postgres JDBC versions are hardcoded in the script and not managed by Renovate.
+    - SparkR is installed with `remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')`, and the R layer also runs `install_tidyverse.sh`.
+    - `spark-entrypoint.sh` is a copy of the upstream Spark-on-Kubernetes entrypoint, including dead `PYSPARK_MAJOR_PYTHON_VERSION == 2` handling. Compare it with the current upstream version.
 
 ## P1 — Reliability and security
 
-- [ ] **6. No CI on pull requests** — M
+- [x] **6. No CI on pull requests** — M (done for linting only: `.github/workflows/lint.yml` runs ruff, shellcheck (warning level), hadolint (`.hadolint.yaml`) and `renovate-config-validator --strict` on PRs. **Building images on PRs was rejected**: it was tried before and costs too much compute)
   - Evidence: `.github/workflows/main-workflow.yml` triggers only on `schedule` and `workflow_dispatch`. Renovate PRs (including the Python/R/Spark regex managers) and contributor PRs merge without being built.
   - Fix: a new PR workflow with two parts:
     - lint job: `uv run ruff check`, `ruff format --check`, shellcheck, hadolint, `renovate-config-validator`
@@ -129,13 +137,14 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
   - Fix: a single `images.yaml` (layers, parents, versions, GPU flag) that drives both the CI matrix and local builds. Alternatively, generate `main-workflow.yml` from it and check in CI that it's up to date.
 - [ ] **18. Shell hygiene** — S (CI) + M (fixes)
   - Evidence: 197 shellcheck findings; no `pipefail` anywhere, so e.g. an empty Julia version slips through.
+  - Progress: shellcheck now runs in CI at `--severity=warning`. The 1 error and 22 warnings were fixed (`onyxia-init.sh`: `$*` in the final echo, split `export`s, DuckDB SQL quoting; `spark-entrypoint.sh`: split `export`, documented `SC2206` ignore for intentional word splitting). About 180 info/style findings remain, mostly SC2086; raise the threshold once they are fixed.
   - Fix: add shellcheck to the lint job (#6), use `set -euo pipefail` in build scripts, and fix the findings incrementally. Be careful with `onyxia-init.sh`: it deliberately doesn't use `set -e`, so it tolerates failures at startup.
 - [ ] **19. Half-built arm64 support** — S (decision)
   - Evidence: some scripts branch on `uname -m` (awscli, kubectl, duckdb), but `JAVA_HOME` (`*-amd64`), `install-quarto.sh`, `install-julia.sh` and `tests.yaml` are amd64-only, and CI builds amd64 only.
   - Fix: pick one. Either drop the arm64 branches, or commit to multi-arch builds.
 - [ ] **20. Python tooling** — S
   - Evidence:
-    - `pyproject.toml` declares `ruff` as a runtime dependency instead of a dev group
+    - ~~`pyproject.toml` declares `ruff` as a runtime dependency instead of a dev group~~ Done: ruff, shellcheck-py and hadolint-py are in the `dev` dependency group
     - the `images-datascience` entry point (`__init__.py`) only prints a greeting
     - `generate_matrix.py` relies on globals (`DH_ORGA`, `args`, `TODAY_DATE`) defined under `__main__`
     - the tag scheme users depend on has no unit tests
@@ -150,7 +159,8 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 
 ## Suggested order
 
-1. **Bundle A: one quick-win PR.** #1, #2, #3, #4, #5, #11, #14, #15.
+1. **Bundle A: one quick-win PR.** #1, #2, #3, #4, #11, #14, #15.
+   #5 was moved out of this bundle and widened into a Spark stack audit, to do after the easier items.
 2. **Bundle B: PR CI and functional tests.** #6, #7, and the lint part of #18. This is what makes the Renovate automation safe.
 3. **Bundle C: failure notification and isolation.** #8.
 4. **Bundle D: pinning with checksums, tool by tool.** #9.

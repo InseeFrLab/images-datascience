@@ -9,10 +9,14 @@ Docker images for ready-to-run datascience services (Jupyter, RStudio, VSCode, m
 Python tooling (Python 3.13, managed with uv):
 
 ```bash
-uv sync                      # install dev deps (ruff)
-uv run ruff check .          # lint (line-length 120, set in pyproject.toml)
-uv run ruff format .         # format
+uv sync                                                    # install dev deps (ruff, shellcheck, hadolint)
+uv run ruff check .                                        # lint Python (line-length 120, set in pyproject.toml)
+uv run ruff format .                                       # format Python
+uv run shellcheck --severity=warning $(git ls-files '*.sh')  # lint shell scripts
+uv run hadolint $(git ls-files '*Dockerfile')              # lint Dockerfiles (config in .hadolint.yaml)
 ```
+
+These same checks, plus `renovate-config-validator --strict`, run on every PR in `.github/workflows/lint.yml`, and they must pass. Images are deliberately **not** built on PRs: it was tried and costs too much compute. Image builds only happen in the weekly/manual `main-workflow.yml`.
 
 Build a full image chain locally (each layer is built with `docker build`, then tested with `container-structure-test`, which must be installed):
 

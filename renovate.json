@@ -7,11 +7,11 @@
     {
       "description": "Python version 1, the newer of the two maintained versions (python_version_1 in main-workflow.yml is the source of truth)",
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github/workflows/main-workflow\\.yml$",
-        "^src/images_datascience/build_chains\\.sh$",
-        "^python-minimal/Dockerfile$",
-        "^r-python-julia/Dockerfile$"
+      "managerFilePatterns": [
+        "/^\\.github/workflows/main-workflow\\.yml$/",
+        "/^src/images_datascience/build_chains\\.sh$/",
+        "/^python-minimal/Dockerfile$/",
+        "/^r-python-julia/Dockerfile$/"
       ],
       "matchStrings": [
         "python_version_1: *(?<currentValue>[^\\s]+)",
@@ -25,9 +25,9 @@
     {
       "description": "Python version 2, the older of the two maintained versions (python_version_2 in main-workflow.yml is the source of truth)",
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github/workflows/main-workflow\\.yml$",
-        "^src/images_datascience/build_chains\\.sh$"
+      "managerFilePatterns": [
+        "/^\\.github/workflows/main-workflow\\.yml$/",
+        "/^src/images_datascience/build_chains\\.sh$/"
       ],
       "matchStrings": [
         "python_version_2: *(?<currentValue>[^\\s]+)",
@@ -40,10 +40,10 @@
     {
       "description": "R version 1, the newer of the two maintained versions (r_version_1 in main-workflow.yml is the source of truth)",
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github/workflows/main-workflow\\.yml$",
-        "^src/images_datascience/build_chains\\.sh$",
-        "^r-minimal/Dockerfile$"
+      "managerFilePatterns": [
+        "/^\\.github/workflows/main-workflow\\.yml$/",
+        "/^src/images_datascience/build_chains\\.sh$/",
+        "/^r-minimal/Dockerfile$/"
       ],
       "matchStrings": [
         "r_version_1: *(?<currentValue>[^\\s]+)",
@@ -58,9 +58,9 @@
     {
       "description": "R version 2, the older of the two maintained versions (r_version_2 in main-workflow.yml is the source of truth)",
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github/workflows/main-workflow\\.yml$",
-        "^src/images_datascience/build_chains\\.sh$"
+      "managerFilePatterns": [
+        "/^\\.github/workflows/main-workflow\\.yml$/",
+        "/^src/images_datascience/build_chains\\.sh$/"
       ],
       "matchStrings": [
         "r_version_2: *(?<currentValue>[^\\s]+)",
@@ -74,10 +74,10 @@
     {
       "description": "Spark version (spark_version in main-workflow.yml is the source of truth)",
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github/workflows/main-workflow\\.yml$",
-        "^src/images_datascience/build_chains\\.sh$",
-        "^spark/Dockerfile$"
+      "managerFilePatterns": [
+        "/^\\.github/workflows/main-workflow\\.yml$/",
+        "/^src/images_datascience/build_chains\\.sh$/",
+        "/^spark/Dockerfile$/"
       ],
       "matchStrings": [
         "spark_version: *(?<currentValue>[^\\s]+)",

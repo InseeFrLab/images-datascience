@@ -48,7 +48,8 @@ case "$SPARK_K8S_CMD" in
       exec /usr/bin/tini -g -- "$@"
       ;;
 esac
-export SPARK_DIST_CLASSPATH=$(hadoop classpath)
+SPARK_DIST_CLASSPATH=$(hadoop classpath)
+export SPARK_DIST_CLASSPATH
 SPARK_CLASSPATH="$SPARK_CLASSPATH:${SPARK_HOME}/jars/*"
 env | grep SPARK_JAVA_OPT_ | sort -t_ -k4 -n | sed 's/[^=]*=\(.*\)/\1/g' > /tmp/java_opts.txt
 readarray -t SPARK_EXECUTOR_JAVA_OPTS < /tmp/java_opts.txt
@@ -83,6 +84,8 @@ elif [ "$PYSPARK_MAJOR_PYTHON_VERSION" == "3" ]; then
     export PYSPARK_DRIVER_PYTHON="python"
 fi
 
+# Unquoted variables below are deliberately word-split: they hold several arguments (e.g. $PYSPARK_ARGS)
+# shellcheck disable=SC2206
 case "$SPARK_K8S_CMD" in
   driver)
     CMD=(

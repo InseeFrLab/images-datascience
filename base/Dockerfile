@@ -9,6 +9,7 @@ ENV SHELL="/bin/bash"
 ENV DEBIAN_FRONTEND="noninteractive"
 
 # User configuration
+# hadolint ignore=DL3064
 ENV USERNAME="onyxia"
 ENV UID="1000"
 ENV GROUPNAME="users"

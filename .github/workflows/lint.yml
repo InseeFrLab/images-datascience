@@ -1,0 +1,29 @@
+name: Lint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10
+
+      - name: Ruff (lint)
+        run: uv run --locked ruff check --output-format=github .
+
+      - name: Ruff (format)
+        run: uv run --locked ruff format --check --diff .
+
+      - name: ShellCheck
+        run: git ls-files -z '*.sh' | xargs -0 uv run --locked shellcheck --severity=warning
+
+      - name: Hadolint
+        run: git ls-files -z '*Dockerfile' | xargs -0 uv run --locked hadolint
