@@ -11,9 +11,15 @@ DOCKER_BUILD_ARGS=""
 
 # Build process
 
-PYTHON_VERSIONS=("3.13.15" "3.12.13")
-R_VERSIONS=("4.6.0" "4.5.3")
-SPARK_VERSION=4.1.1
+# Versions are kept in sync with .github/workflows/main-workflow.yml by Renovate
+PYTHON_VERSION_1="3.13.15"
+PYTHON_VERSION_2="3.12.14"
+R_VERSION_1="4.6.1"
+R_VERSION_2="4.5.3"
+SPARK_VERSION="4.1.1"
+
+PYTHON_VERSIONS=("$PYTHON_VERSION_1" "$PYTHON_VERSION_2")
+R_VERSIONS=("$R_VERSION_1" "$R_VERSION_2")
 
 for py_ver in "${PYTHON_VERSIONS[@]}"; do
   python3 src/images_datascience/build_chain.py --chain vscode-python --py_version $py_ver $DOCKER_BUILD_ARGS

@@ -1,10 +1,8 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## What this repo is
 
-Docker images for ready-to-run datascience services (Jupyter, RStudio, VSCode, marimo…), designed for the [Onyxia](https://github.com/InseeFrLab/onyxia-web) platform and published to Docker Hub as `inseefrlab/onyxia-<image>:<tag>`. Most of the "code" is Dockerfiles and bash install scripts; the Python in `src/` only orchestrates builds.
+Docker images for ready-to-run datascience services (Jupyter, RStudio, VSCode, marimo…), designed in particular for [Onyxia](https://github.com/InseeFrLab/onyxia-web) based data-science platforms and published to Docker Hub as `inseefrlab/onyxia-<image>:<tag>`. Most of the "code" is Dockerfiles and bash install scripts; the Python in `src/` only orchestrates builds.
 
 ## Commands
 
@@ -15,8 +13,6 @@ uv sync                      # install dev deps (ruff)
 uv run ruff check .          # lint (line-length 120, set in pyproject.toml)
 uv run ruff format .         # format
 ```
-
-`ruff check` currently reports N999 on `build_chain.py` / `generate_matrix.py` because of their hyphenated filenames; they are invoked as scripts, not imported.
 
 Build a full image chain locally (each layer is built with `docker build`, then tested with `container-structure-test`, which must be installed):
 
@@ -65,8 +61,8 @@ The valid layer stacks are declared in the `chains` dict in `src/images_datascie
 - `main-workflow.yml` runs weekly (Monday 01:00 UTC) and on manual dispatch. It defines one job per output image with `needs:` dependencies mirroring the layer graph, each calling the reusable `main-workflow-template.yml` with `image` (output name), `context` (layer directory), `base_image`, and language versions.
 - The template runs `src/images_datascience/generate_matrix.py` to expand versions × GPU/CPU into a build matrix (written to `$GITHUB_OUTPUT`), then builds, runs `<context>/tests.yaml`, and pushes only from `main`. GPU variants are built but **not tested** in CI.
 - Tag scheme: `onyxia-<image>:py<ver>` / `r<ver>` / `r<ver>-py<ver>`, plus `-spark<ver>`, `-gpu`, and a dated duplicate `-YYYY.MM.DD`. Base is `onyxia-base:latest[-gpu]`.
-- Two versions of Python and R are supported (`*_version_1` = latest, `*_version_2` = previous). `r-python-julia` images only use version 1; spark images are CPU-only (`build_gpu: false`).
+- Two versions of Python and R are actively maintained for users (`*_version_1` = newer, `*_version_2` = older); neither is a fallback. `r-python-julia` images only use version 1; spark images are CPU-only (`build_gpu: false`).
 
 ### Version pinning
 
-Python/R/Spark versions are duplicated in several places: `ARG` defaults in `python-minimal`, `r-minimal`, `r-python-julia`, `spark` Dockerfiles, the version inputs in `main-workflow.yml`, and hardcoded lists in `build_chains.sh`. Renovate (`renovate.json`) updates the Dockerfile ARGs and workflow inputs via regex managers (major/minor bumps disabled for `_version_2`), but not `build_chains.sh` or the CUDA base image tags — those drift and must be updated manually.
+The version inputs in `main-workflow.yml` are the source of truth for Python/R/Spark versions. They are duplicated in the `ARG` defaults of the `python-minimal`, `r-python-julia`, `r-minimal` and `spark` Dockerfiles and in the `*_VERSION_*` variables of `build_chains.sh`. `renovate.json` has one regex manager per version slot (Python 1/2, R 1/2, Spark) covering all of these files, and groups each slot into a single PR; version 2 only gets patch bumps, so moving it to a new minor release (e.g. when version 1 moves on) is a manual change. When changing a version by hand, update every occurrence; when adding a new place that pins one of these versions, add its pattern to the matching manager. CUDA base image tags (`build_chain.py`, `main-workflow.yml`) are not managed and must be updated manually.
