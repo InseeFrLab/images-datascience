@@ -55,7 +55,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 
 ## P1 — Reliability and security
 
-- [x] **6. No CI on pull requests** — M (done for linting only: `.github/workflows/lint.yml` runs ruff, shellcheck (warning level), hadolint (`.hadolint.yaml`) and `renovate-config-validator --strict` on PRs. **Building images on PRs was rejected**: it was tried before and costs too much compute)
+- [x] **6. No CI on pull requests** — M (done for linting only: `.github/workflows/lint.yml` runs ruff, shellcheck (warning level) and hadolint (`.hadolint.yaml`) on PRs. **Building images on PRs was rejected**: it was tried before and costs too much compute)
   - Evidence: `.github/workflows/main-workflow.yml` triggers only on `schedule` and `workflow_dispatch`. Renovate PRs (including the Python/R/Spark regex managers) and contributor PRs merge without being built.
   - Fix: a new PR workflow with two parts:
     - lint job: `uv run ruff check`, `ruff format --check`, shellcheck, hadolint, `renovate-config-validator`
@@ -71,16 +71,16 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
     - vscode: `code-server --list-extensions`
     - rstudio: `rstudio-server verify-installation`
     - base: `quarto check`, and `duckdb -c "LOAD httpfs"` run as the user
-- [ ] **8. One failing variant blocks whole image families, silently** — M
+- [ ] **8. One failing variant blocks whole image families** — M (deferred until after #12)
   - Evidence: with `fail-fast: false`, a single failing matrix entry still fails the job, and every `needs:` child job is skipped for all versions.
   - Evidence: GPU variants skip the "Build and load" step (`if: !contains(..., 'gpu')` in `main-workflow-template.yml`), so they are first built in "Push to DockerHub". Their build errors show up as push failures, and GPU images are never tested.
-  - Fix:
-    - notify on failure (open or update a GitHub issue, or post to Slack)
-    - build GPU variants in the build step too, and skip only the tests
-    - consider separating GPU jobs from CPU jobs so a GPU failure doesn't block CPU images
+  - Decisions:
+    - **No failure notification**: the maintainers check the pipeline result every Monday morning.
+    - **GPU images are not tested on purpose, for lack of disk**: they are too big for GitHub-hosted runners to load them into Docker and run the tests. Revisit once #12 has reduced image sizes; if GPU images become small enough, build and test them like the CPU ones.
+  - Remaining fix to consider: separate GPU jobs from CPU jobs, so that a GPU failure doesn't block the CPU images built on top of it.
 - [ ] **9. Unpinned, unverified downloads at build time** — M–L (do it tool by tool)
   - Evidence (all in the scripts named below):
-    - `install-helm.sh` pipes the `master` branch installer
+    - ~~`install-helm.sh` pipes the `master` branch installer~~ Done: Helm 4 pinned as `HELM_VERSION` in `install-helm.sh`, installed from the official `get.helm.sh` archive with its SHA-256 checked, and bumped by a Renovate regex manager (`helm/helm` GitHub releases). Use it as the model for the other tools.
     - these fetch "latest": `install-kubectl.sh`, `install-duckdb-cli.sh`, `install-quarto.sh`, `install-julia.sh` (unauthenticated GitHub API; an empty version on rate limit isn't caught), `install-vscode.sh` (code-server `install.sh`), `install-opencode.sh` (`curl | bash`), `install-awscli.sh`
     - `spark/scripts/install-spark-hadoop-hive.sh` downloads Spark, Hadoop, Hive and jars (some from `minio.lab.sspcloud.fr`) without any checksum
     - Hadoop comes from `downloads.apache.org`, which only hosts current releases, so 3.4.2 will return 404 once it's superseded
@@ -163,7 +163,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 1. **Bundle A: one quick-win PR.** #1, #2, #3, #4, #11, #14, #15.
    #5 was moved out of this bundle and widened into a Spark stack audit, to do after the easier items.
 2. **Bundle B: PR CI and functional tests.** #6, #7, and the lint part of #18. This is what makes the Renovate automation safe.
-3. **Bundle C: failure notification and isolation.** #8.
+3. **Bundle C: failure isolation.** #8, after #12 (image size) since it may change the GPU testing choice.
 4. **Bundle D: pinning with checksums, tool by tool.** #9.
 5. **Bundle E: init-script hardening.** #10, coordinated with the helm charts.
 6. **Then:** performance (#13, #12) and refactoring (#16, #17, #19, #20, #21).

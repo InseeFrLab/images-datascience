@@ -16,7 +16,7 @@ uv run shellcheck --severity=warning $(git ls-files '*.sh')  # lint shell script
 uv run hadolint $(git ls-files '*Dockerfile')              # lint Dockerfiles (config in .hadolint.yaml)
 ```
 
-These same checks, plus `renovate-config-validator --strict`, run on every PR in `.github/workflows/lint.yml`, and they must pass. Images are deliberately **not** built on PRs: it was tried and costs too much compute. Image builds only happen in the weekly/manual `main-workflow.yml`.
+These same checks run on every PR in `.github/workflows/lint.yml`, and they must pass. Images are deliberately **not** built on PRs: it was tried and costs too much compute. Image builds only happen in the weekly/manual `main-workflow.yml`.
 
 Build a full image chain locally (each layer is built with `docker build`, then tested with `container-structure-test`, which must be installed):
 
@@ -64,10 +64,12 @@ The valid layer stacks are declared in the `chains` dict in `src/images_datascie
 ### CI (`.github/workflows/`)
 
 - `main-workflow.yml` runs weekly (Monday 01:00 UTC) and on manual dispatch. It defines one job per output image with `needs:` dependencies mirroring the layer graph, each calling the reusable `main-workflow-template.yml` with `image` (output name), `context` (layer directory), `base_image`, and language versions.
-- The template runs `src/images_datascience/generate_matrix.py` to expand versions × GPU/CPU into a build matrix (written to `$GITHUB_OUTPUT`), then builds, runs `<context>/tests.yaml`, and pushes only from `main`. GPU variants are built but **not tested** in CI.
+- The template runs `src/images_datascience/generate_matrix.py` to expand versions × GPU/CPU into a build matrix (written to `$GITHUB_OUTPUT`), then builds, runs `<context>/tests.yaml`, and pushes only from `main`. GPU variants are built but **not tested** in CI: they are too big for GitHub-hosted runners to load and test (disk space).
 - Tag scheme: `onyxia-<image>:py<ver>` / `r<ver>` / `r<ver>-py<ver>`, plus `-spark<ver>`, `-gpu`, and a dated duplicate `-YYYY.MM.DD`. Base is `onyxia-base:latest[-gpu]`.
 - Two versions of Python and R are actively maintained for users (`*_version_1` = newer, `*_version_2` = older); neither is a fallback. `r-python-julia` images only use version 1; spark images are CPU-only (`build_gpu: false`).
 
 ### Version pinning
 
 The version inputs in `main-workflow.yml` are the source of truth for Python/R/Spark versions. They are duplicated in the `ARG` defaults of the `python-minimal`, `r-python-julia`, `r-minimal` and `spark` Dockerfiles and in the `*_VERSION_*` variables of `build_chains.sh`. `renovate.json` has one regex manager per version slot (Python 1/2, R 1/2, Spark) covering all of these files, and groups each slot into a single PR; version 2 only gets patch bumps, so moving it to a new minor release (e.g. when version 1 moves on) is a manual change. When changing a version by hand, update every occurrence; when adding a new place that pins one of these versions, add its pattern to the matching manager. CUDA base image tags (`build_chain.py`, `main-workflow.yml`) are not managed and must be updated manually.
+
+Tools downloaded at build time are being pinned the same way, one at a time (see `docs/improvement-plan.md` #9): a `<TOOL>_VERSION="x.y.z"` variable at the top of the install script, a download of the official release with its checksum verified, and a Renovate regex manager on that line. `base/scripts/install-helm.sh` is the reference example. Most other tools still install their latest release at build time.

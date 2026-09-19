@@ -87,6 +87,19 @@
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+)$",
       "depTypeTemplate": "spark"
+    },
+    {
+      "description": "Helm CLI version installed in base",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^base/scripts/install-helm\\.sh$/"
+      ],
+      "matchStrings": [
+        "HELM_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "helm/helm",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
     }
   ],
   "packageRules": [
