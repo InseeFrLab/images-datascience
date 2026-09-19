@@ -1,5 +1,6 @@
-import certifi
 import os
+
+import certifi
 
 ##
 # This script override certifi certificates that allow most python package
@@ -7,8 +8,8 @@ import os
 ##
 print("certifi add certificates")
 cafile = certifi.where()
-with open(os.environ['PATH_TO_CA_BUNDLE'], 'rb') as infile:
+with open(os.environ["PATH_TO_CA_BUNDLE"], "rb") as infile:
     customca = infile.read()
-with open(cafile, 'ab') as outfile:
-    print("writing to "+str(cafile))
+with open(cafile, "ab") as outfile:
+    print("writing to " + str(cafile))
     outfile.write(customca)
