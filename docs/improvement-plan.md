@@ -64,10 +64,6 @@ At every start, the end of `base/scripts/onyxia-init.sh` runs `chown -R` over ev
   ```
 - Complementary, in the helm charts: `fsGroup` with `fsGroupChangePolicy: OnRootMismatch`.
 
-### 15. Unused CI step — S
-
-`.github/actions/cache-common-images` pulls `golang` and `dockereng/export-build` in every build job and warns "Failed to restore". It also has no `description`, which actionlint reports as an error. Remove the action and its step in `main-workflow-template.yml`.
-
 ### 17. Two definitions of the image graph — M
 
 The image stacks are still declared twice: `chains` in `utils/build_chain.py` (local builds) and the jobs in `.github/workflows/main-workflow.yml` (CI). They currently match, and versions and the CUDA image already come from a single `versions.env`, but adding an image means editing both.
