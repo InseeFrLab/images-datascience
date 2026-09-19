@@ -27,11 +27,11 @@ commandTests:
   - name: "Does the binary exists?"
     command: "which"
     args: ["python"]
-    expectedOutput: ['/opt/python/bin/python']
+    expectedOutput: ['^/opt/python/cpython-[0-9.]+-linux-x86_64-gnu/bin/python$']
   - name: "Does the binary exists?"
     command: "which"
     args: ["pip"]
-    expectedOutput: ['/opt/python/bin/pip']
+    expectedOutput: ['^/opt/python/cpython-[0-9.]+-linux-x86_64-gnu/bin/pip$']
   - name: "Does the binary exists?"
     command: "which"
     args: ["quarto"]
