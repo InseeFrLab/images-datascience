@@ -89,13 +89,14 @@
       "depTypeTemplate": "spark"
     },
     {
-      "description": "Tools downloaded by install scripts, pinned with a '# renovate: datasource=... depName=...' comment above a <TOOL>_VERSION=\"x.y.z\" line",
+      "description": "Tools downloaded by install scripts and CI actions, pinned with a '# renovate: datasource=... depName=...' comment above a <TOOL>_VERSION=\"x.y.z\" line",
       "customType": "regex",
       "managerFilePatterns": [
-        "/(^|/)scripts/[^/]+\\.sh$/"
+        "/(^|/)scripts/[^/]+\\.sh$/",
+        "/^\\.github/actions/[^/]+/action\\.yml$/"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)\\n[A-Z_]+_VERSION=\"(?<currentValue>[^\"]+)\""
+        "# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)\\n\\s*[A-Z_]+_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
       "extractVersionTemplate": "^v?(?<version>.+)$",
       "depTypeTemplate": "build-tool"
@@ -124,7 +125,7 @@
       "groupName": "Spark version update"
     },
     {
-      "description": "Tools downloaded by install scripts: one weekly PR for all of them",
+      "description": "Tools downloaded by install scripts and CI actions: one weekly PR for all of them",
       "matchDepTypes": ["build-tool"],
       "groupName": "Build tools",
       "schedule": ["* * * * 0"]

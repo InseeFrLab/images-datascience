@@ -15,9 +15,20 @@ runs:
     - name: Download Container Structure Test
       shell: bash
       run: |
-        curl -fsSLO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
-        chmod +x container-structure-test-linux-amd64
-        sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+        # renovate: datasource=github-releases depName=GoogleContainerTools/container-structure-test
+        CST_VERSION="1.22.1"
+
+        # Download the official binary and verify its checksum
+        CST_URL="https://github.com/GoogleContainerTools/container-structure-test/releases/download/v${CST_VERSION}"
+        CST_BINARY="container-structure-test-linux-amd64"
+        TMP_DIR=$(mktemp -d)
+        curl -fsSL "${CST_URL}/${CST_BINARY}" -o "${TMP_DIR}/${CST_BINARY}"
+        curl -fsSL "${CST_URL}/checksums.txt" -o "${TMP_DIR}/checksums.txt"
+        (cd "${TMP_DIR}" && grep -F "  ${CST_BINARY}" checksums.txt | sha256sum --check --strict)
+
+        # Install Container Structure Test
+        sudo install -m 0755 "${TMP_DIR}/${CST_BINARY}" /usr/local/bin/container-structure-test
+        rm -rf "${TMP_DIR}"
     - name: Test container
       shell: bash
       run: |
