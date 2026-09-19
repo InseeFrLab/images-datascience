@@ -1,25 +1,17 @@
 #!/bin/bash
 set -e
 
-ARCH=$(uname -m)
+# renovate: datasource=github-tags depName=aws/aws-cli
+AWS_CLI_VERSION="2.36.49"
 
-case $ARCH in
-    "x86_64")
-        DIRECTORY="linux-x86_64"
-        ;;
-    "aarch64")
-        DIRECTORY="linux-aarch64"
-        ;;
-    *)
-        echo "Unsupported architecture: $ARCH"
-        exit 1
-        ;;
-esac
-
-# Work in a temporary directory to avoid leaving install files in the image
+# Download the official archive and its PGP signature
+AWS_CLI_ZIP="awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip"
 TMP_DIR=$(mktemp -d)
-curl -fsSL "https://awscli.amazonaws.com/awscli-exe-$DIRECTORY.zip" -o "${TMP_DIR}/awscliv2.zip"
-unzip -q "${TMP_DIR}/awscliv2.zip" -d "${TMP_DIR}"
+curl -fsSL "https://awscli.amazonaws.com/${AWS_CLI_ZIP}" -o "${TMP_DIR}/${AWS_CLI_ZIP}"
+curl -fsSL "https://awscli.amazonaws.com/${AWS_CLI_ZIP}.sig" -o "${TMP_DIR}/${AWS_CLI_ZIP}.sig"
+
+# Install AWS CLI
+unzip -q "${TMP_DIR}/${AWS_CLI_ZIP}" -d "${TMP_DIR}"
 "${TMP_DIR}/aws/install"
 chmod +x /usr/local/bin/aws
 rm -rf "${TMP_DIR}"

@@ -89,17 +89,16 @@
       "depTypeTemplate": "spark"
     },
     {
-      "description": "Helm CLI version installed in base",
+      "description": "Tools downloaded by install scripts, pinned with a '# renovate: datasource=... depName=...' comment above a <TOOL>_VERSION=\"x.y.z\" line",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^base/scripts/install-helm\\.sh$/"
+        "/(^|/)scripts/[^/]+\\.sh$/"
       ],
       "matchStrings": [
-        "HELM_VERSION=\"(?<currentValue>[^\"]+)\""
+        "# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)\\n[A-Z_]+_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
-      "depNameTemplate": "helm/helm",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+)$"
+      "extractVersionTemplate": "^v?(?<version>.+)$",
+      "depTypeTemplate": "build-tool"
     }
   ],
   "packageRules": [
@@ -123,6 +122,12 @@
     {
       "matchDepTypes": ["spark"],
       "groupName": "Spark version update"
+    },
+    {
+      "description": "Tools downloaded by install scripts: one weekly PR for all of them",
+      "matchDepTypes": ["build-tool"],
+      "groupName": "Build tools",
+      "schedule": ["* * * * 0"]
     },
     {
       "description": "Version 2 stays on its minor release and only receives patch updates",
