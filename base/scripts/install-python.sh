@@ -1,42 +1,54 @@
 #!/bin/bash
 set -e
 
-### Install uv
+# Install system libraries required to build Python from source
+savedAptMark="$(apt-mark showmanual)"
+/opt/apt-install.sh \
+    dpkg-dev \
+    libbz2-dev \
+    libc6-dev \
+    libdb-dev \
+    libffi-dev \
+    libgdbm-dev \
+    liblzma-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    tk-dev \
+    uuid-dev \
+    xz-utils \
+    zlib1g-dev
 
-# renovate: datasource=github-releases depName=astral-sh/uv
-UV_VERSION="0.12.17"
+# Build Python from sources
+wget -nv https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
+tar xzvf Python-${PYTHON_VERSION}.tgz
+cd Python-${PYTHON_VERSION}
+./configure \
+    --prefix="${PYTHON_DIR}" \
+    --enable-loadable-sqlite-extensions \
+    --enable-optimizations \
+    --enable-shared \
+    --with-lto \
+    LDFLAGS="-Wl,-rpath ${PYTHON_DIR}/lib"
+make -j"$(nproc)"
+make install
 
-# Download the official archive and verify its checksum
-UV_ARCHIVE="uv-x86_64-unknown-linux-gnu.tar.gz"
-UV_URL="https://github.com/astral-sh/uv/releases/download/${UV_VERSION}"
-TMP_DIR=$(mktemp -d)
-curl -fsSL "${UV_URL}/${UV_ARCHIVE}" -o "${TMP_DIR}/${UV_ARCHIVE}"
-curl -fsSL "${UV_URL}/${UV_ARCHIVE}.sha256" -o "${TMP_DIR}/${UV_ARCHIVE}.sha256"
-(cd "${TMP_DIR}" && sha256sum --check --strict "${UV_ARCHIVE}.sha256")
+# Clean install files
+cd ..
+rm -rf Python-${PYTHON_VERSION}.tgz Python-${PYTHON_VERSION}
+apt-mark auto '.*' > /dev/null
+apt-mark manual $savedAptMark
+apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-# Install uv
-tar -xzf "${TMP_DIR}/${UV_ARCHIVE}" -C "${TMP_DIR}"
-install -m 0755 "${TMP_DIR}/uv-x86_64-unknown-linux-gnu/uv" "${TMP_DIR}/uv-x86_64-unknown-linux-gnu/uvx" /usr/local/bin/
-rm -rf "${TMP_DIR}"
-
-
-### Install Python with uv prebuilt python binaries
-
-# Install Python in the parent folder of ${PYTHON_DIR} (set in the Dockerfile, and whose bin/ is on the PATH).
-# It must not be uv's default location (~/.local/share/uv/python), which `uv pip install --system` ignores,
-# nor be reached through a symlink, which breaks the paths uv computes when installing package commands.
-# UV_PYTHON_INSTALL_DIR is only set here, so that users' own `uv python` commands never manage this Python.
-UV_PYTHON_INSTALL_DIR=$(dirname "${PYTHON_DIR}")
-export UV_PYTHON_INSTALL_DIR
-export UV_NO_CACHE=1
-uv python install "${PYTHON_VERSION}" --no-bin
-
-# uv marks its Pythons as externally managed, which would block `pip install` and `uv pip install --system`
-rm "${PYTHON_DIR}/lib/python${PYTHON_VERSION%.*}/EXTERNALLY-MANAGED"
+# Useful symlinks
+ln -sf "${PYTHON_DIR}/bin/python3" "${PYTHON_DIR}/bin/python"
+ln -sf "${PYTHON_DIR}/bin/pip3" "${PYTHON_DIR}/bin/pip"
 
 # Checks
 python --version
 which python
 
-# Upgrade pip
+# Upgrade pip & install uv
 pip install --no-cache-dir --upgrade pip
+pip install --no-cache-dir uv

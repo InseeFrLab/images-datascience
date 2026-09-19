@@ -44,14 +44,6 @@ Published sizes on 2026-09-19 (compressed, amd64):
 - **GPU testing:** GPU images are not tested in CI because they are too big for GitHub-hosted runners to load and test. Once sizes are reduced, check whether they fit, and test them like the CPU ones if so.
 
 <<<<<<< Updated upstream
-### 13. Python compiled from source — M
-
-`base/scripts/install-python.sh` compiles CPython with `--enable-optimizations --with-lto`. That sits on the critical path of every Python chain (python-minimal and r-python-julia), × 2 versions × CPU/GPU.
-
-- Fix: install prebuilt python-build-standalone binaries (also PGO+LTO-optimized) with `uv python install` into `/opt/python`.
-- The tests expect `/opt/python/bin/python` and `/opt/python/bin/pip`, so `python` and `pip` symlinks may be needed.
-- Check that C-extension builds still work, e.g. GDAL's Python bindings in python-datascience.
-
 ### 14. Container startup work — S
 
 At every start, the end of `base/scripts/onyxia-init.sh` runs `chown -R` over every folder in `$ROOT_PROJECT_DIRECTORY`. That's slow on volumes with virtualenvs or data, and useless when the script runs as `onyxia` (Jupyter, VS Code), since a normal user can't change file owners.
@@ -101,4 +93,4 @@ Fix: a single `images.yaml` (layers, parents, languages, GPU flag) that drives b
 - **`import tkinter` is broken in the images:** irrelevant for headless images.
 - **The `chown -R` over `~/work` at startup stays:** the folder only holds what was just cloned or added by an init script, and the user must own all of it.
 - **The image graph stays declared twice** (`chains` in `utils/build_chain.py`, jobs in `main-workflow.yml`): no generated CI. Adding an image means updating both.
-- **Python is installed with uv only,** no build from source: the `EXTERNALLY-MANAGED` marker uv adds is removed, and Python is installed outside uv's default location so that `uv pip install --system` uses it.
+- **Python stays built from source** (PGO + LTO): a uv-installed Python (python-build-standalone) was tried twice. Its `EXTERNALLY-MANAGED` marker blocks `pip install` / `uv pip install --system`, `uv pip install --system` ignores Pythons in uv's default location, and a symlinked install breaks uv's paths for package commands (e.g. `charset_normalizer` on 3.13). The source build works as is.

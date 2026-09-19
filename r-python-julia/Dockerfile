@@ -6,8 +6,8 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ARG PYTHON_VERSION="3.13.15"
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
-# Python is installed by uv (see /opt/install-python.sh) in /opt/python, in the folder uv names after the version
-ARG PYTHON_DIR="/opt/python/cpython-${PYTHON_VERSION}-linux-x86_64-gnu"
+# Install Python separately from system installation to avoid conflicts
+ARG PYTHON_DIR="/opt/python"
 ENV PATH="${PYTHON_DIR}/bin:${PATH}"
 
 USER root
