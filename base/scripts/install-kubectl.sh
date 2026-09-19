@@ -16,7 +16,8 @@ case $ARCH in
         ;;
 esac
 
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/$ARCHITECTURE/kubectl"
+KUBECTL_VERSION=$(curl -fsSL https://dl.k8s.io/release/stable.txt)
+curl -fsSLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${ARCHITECTURE}/kubectl"
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 echo 'source <(kubectl completion bash)' >> ${HOME}/.bashrc

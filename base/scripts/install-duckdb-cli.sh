@@ -18,7 +18,7 @@ case $ARCH in
         ;;
 esac
 
-wget -q https://github.com/duckdb/duckdb/releases/latest/download/$FILENAME
+wget -nv https://github.com/duckdb/duckdb/releases/latest/download/$FILENAME
 unzip $FILENAME -d /usr/local/bin/
 
 # Clean

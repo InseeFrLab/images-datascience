@@ -56,6 +56,7 @@ The valid layer stacks are declared in the `chains` dict in `src/images_datascie
 
 - Every layer does `COPY --chmod=0755 scripts/ /opt/`, so `/opt` accumulates scripts from all parent layers. Child layers call helpers defined in `base/scripts/` (notably `/opt/fix-user-permissions.sh` and `/opt/clean.sh`) without shipping them.
 - Pattern for each layer: `USER root` → one `RUN` chaining install scripts → `/opt/fix-user-permissions.sh` → `/opt/clean.sh [extra files]` → `USER 1000`. The permission fix only chowns files not already owned by the user, to avoid duplicating files in layers.
+- Downloads in build scripts must fail loudly: use `wget -nv` (never `-q`, which also hides error messages) and `curl -fsSL` (`-f` fails on HTTP errors, `-S` prints them despite `-s`). Put version lookups (`VERSION=$(curl ...)`) on their own line, and use `set -o pipefail` when they are piped, so that a failed lookup stops the build instead of producing a broken URL.
 - Runtime user is `onyxia` (UID 1000, group `users` GID 100) with passwordless sudo; workdir is `/home/onyxia/work`.
 - Python is built from source into `/opt/python` (not the system Python); packages are installed with `uv pip install --system`. R comes from rocker scripts (`/rocker_scripts/...`), with `R_HOME=/usr/local/lib/R`.
 - `base/scripts/onyxia-init.sh` is the container init script used by Onyxia at startup (region init script, Vault secrets injection, CA bundles via `PATH_TO_CA_BUNDLE`, `PIP_REPOSITORY`/`R_REPOSITORY` mirrors — see README).

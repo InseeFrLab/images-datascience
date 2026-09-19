@@ -19,7 +19,7 @@ add-apt-repository -y ppa:git-core/ppa
 mkdir -p /usr/share/keyrings
 
 echo "deb [signed-by=/usr/share/keyrings/postgresql.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | tee /usr/share/keyrings/postgresql.asc > /dev/null
+wget -nv -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | tee /usr/share/keyrings/postgresql.asc > /dev/null
 
 apt update
 
