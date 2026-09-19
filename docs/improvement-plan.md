@@ -37,7 +37,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 - [x] **3. Spark entrypoint dumps the environment to pod logs** — S (fixed: `env` call removed)
   - Evidence: `spark/scripts/spark-entrypoint.sh:132` calls `env` before exec for driver/executor commands. This prints any credentials passed to executor pods (e.g. `AWS_*` via `spark.kubernetes.executorEnv`) into the pod logs.
   - Fix: remove the line.
-- [ ] **4. `${WORKSPACE_DIR}` not expanded in exec-form CMD** — S
+- [x] **4. `${WORKSPACE_DIR}` not expanded in exec-form CMD** — S (fixed: jupyter drops `--notebook-dir` and starts in `WORKDIR`; vscode uses `CMD ["/bin/bash", "-c", "exec code-server ... \"${WORKSPACE_DIR}\""]`)
   - Evidence: `jupyter/Dockerfile:35` and `vscode/Dockerfile:29`. Exec form does no variable substitution, so a plain `docker run` passes the literal string `${WORKSPACE_DIR}`. jupyter_server resolves it to `/home/onyxia/work/${WORKSPACE_DIR}` and refuses to start ("No such directory").
   - Scope: **Onyxia is not affected.** The helm charts in InseeFrLab/helm-charts-interactive-services override `command`/`args` (`/bin/sh -c "<init script> jupyter lab ..."` without `--notebook-dir`, and `code-server ... /home/<user>/work`), so the image CMD is never used there. Jupyter opens in the image `WORKDIR` (`/home/onyxia/work`). Only standalone use of the images (plain `docker run`, other platforms) hits the bug.
   - Fix: use the literal path `/home/onyxia/work`, or shell form wrapped with `exec`.
