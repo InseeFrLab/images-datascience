@@ -16,7 +16,7 @@ uv run shellcheck --severity=warning $(git ls-files '*.sh')  # lint shell script
 uv run hadolint $(git ls-files '*Dockerfile')              # lint Dockerfiles (config in .hadolint.yaml)
 ```
 
-These same checks, plus `renovate-config-validator --strict`, run on every PR in `.github/workflows/lint.yml`, and they must pass. Images are deliberately **not** built on PRs: it was tried and costs too much compute. Image builds only happen in the weekly/manual `main-workflow.yml`.
+These same checks, plus `renovate-config-validator --strict`, run on every PR in `.github/workflows/lint.yml`, and they must pass. Images are deliberately **not** built on PRs: it costs too much compute. Image builds only happen in the weekly/manual `main-workflow.yml`.
 
 Build a full image chain locally (each layer is built with `docker build`, then tested with `container-structure-test`, which must be installed):
 
