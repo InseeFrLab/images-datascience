@@ -204,16 +204,6 @@ if command -v duckdb &>/dev/null; then
     fi
 fi
 
-# Set R extensions and secrets storage to the same place as the cli and python client
-# Print installed packages
-
-if command -v R >/dev/null 2>&1; then
-
-        Rscript -e 'ip <- installed.packages()
-	print(ip[,c("Package", "Version")])'
-fi
-
-
 # The commands related to setting the various repositories (R/CRAN, pip)
 # are located in specific script
 source /opt/onyxia-set-repositories.sh
