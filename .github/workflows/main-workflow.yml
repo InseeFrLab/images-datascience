@@ -140,36 +140,6 @@ jobs:
       python_version_1: 3.13.15
       python_version_2: 3.12.14
     secrets: inherit
-  python-tensorflow:
-    needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: python-tensorflow
-      context: python-tensorflow
-      base_image: python-minimal
-      python_version_1: 3.13.15
-      python_version_2: 3.12.14
-    secrets: inherit
-  jupyter-tensorflow:
-    needs: [python-tensorflow]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-tensorflow
-      context: jupyter
-      base_image: python-tensorflow
-      python_version_1: 3.13.15
-      python_version_2: 3.12.14
-    secrets: inherit
-  vscode-tensorflow:
-    needs: [python-tensorflow]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-tensorflow
-      context: vscode
-      base_image: python-tensorflow
-      python_version_1: 3.13.15
-      python_version_2: 3.12.14
-    secrets: inherit
   rstudio:
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
