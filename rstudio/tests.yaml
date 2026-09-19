@@ -44,3 +44,7 @@ commandTests:
   - name: "RStudio Server and pandoc run"
     command: "bash"
     args: ["-c", "rstudio-server version && pandoc --version"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

@@ -36,3 +36,7 @@ commandTests:
   - name: "marimo runs"
     command: "marimo"
     args: ["--version"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

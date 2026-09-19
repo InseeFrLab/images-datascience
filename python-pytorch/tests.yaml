@@ -39,3 +39,7 @@ commandTests:
   - name: "PyTorch runs"
     command: "python"
     args: ["-c", "import torch"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

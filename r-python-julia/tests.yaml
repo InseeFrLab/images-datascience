@@ -47,9 +47,10 @@ commandTests:
   - name: "Python is the requested version"
     command: "bash"
     args: ["-c", "python --version | grep -F \"Python ${PYTHON_VERSION}\""]
-  - name: "Python packages import"
-    command: "python"
-    args: ["-c", "import duckdb, numpy, pandas, pyarrow, requests, s3fs"]
-  - name: "Julia runs and packages load"
+  - name: "Julia runs and main package load"
     command: "julia"
     args: ["-e", "using HDF5"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

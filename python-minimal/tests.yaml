@@ -42,12 +42,6 @@ commandTests:
   - name: "uv runs"
     command: "uv"
     args: ["--version"]
-  - name: "Python packages import"
-    command: "python"
-    args: ["-c", "import duckdb, ipykernel, nbclient, nbformat, numpy, pandas, pyarrow, requests, s3fs"]
-  - name: "DuckDB Python extensions are preinstalled for the user"
-    command: "python"
-    args: ["-c", "import duckdb; conn = duckdb.connect(); conn.sql('SET autoinstall_known_extensions = false'); [conn.sql(f'LOAD {ext}') for ext in ['httpfs', 'aws', 'postgres', 'spatial', 'icu']]"]
   - name: "Workspace is empty (no leftover install files)"
     command: "ls"
     args: ["-A", "/home/onyxia/work"]

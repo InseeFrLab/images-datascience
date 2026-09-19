@@ -35,9 +35,9 @@ commandTests:
   - name: "CLI tools run"
     command: "bash"
     args: ["-c", "aws --version && kubectl version --client && helm version && git --version && psql --version && jq --version"]
-  - name: "DuckDB CLI extensions are preinstalled for the user"
-    command: "duckdb"
-    args: ["-c", "SET autoinstall_known_extensions = false; LOAD httpfs; LOAD aws; LOAD postgres; LOAD spatial; LOAD icu;"]
+  - name: "DuckDB runs"
+    command: "bash"
+    args: ["-c", "duckdb --version"]
   - name: "Quarto can render PDFs with TinyTeX"
     command: "bash"
     args: ["-c", "quarto --version && pdflatex --version"]

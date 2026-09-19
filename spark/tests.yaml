@@ -50,3 +50,7 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

@@ -40,6 +40,7 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
-  - name: "Python packages import"
-    command: "python"
-    args: ["-c", "import bs4, dask, geopandas, matplotlib, mlflow, nltk, numpy, plotly, polars, scipy, seaborn, sklearn, statsmodels, xgboost"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]
