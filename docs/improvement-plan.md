@@ -30,7 +30,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 - [x] **1. AWS CLI installer left in every image** — S (fixed: install from a `mktemp -d` directory, removed afterwards)
   - Evidence: `base/scripts/install-awscli.sh:18-20` downloads `awscliv2.zip` and unzips `./aws` into the current directory, which is `WORKDIR ${WORKSPACE_DIR}` = `/home/onyxia/work` (see `base/Dockerfile`). Neither is deleted, so both ship in base's 924 MB layer and in every image built on it.
   - Fix: work in a `mktemp -d` directory and remove it; drop the pointless `sudo` (the script already runs as root).
-- [ ] **2. Redirect bug and leftover pip caches** — S
+- [x] **2. Redirect bug and leftover pip caches** — S (fixed: GDAL installed with `uv pip install --system --no-cache "gdal[numpy]==..."` plus an `osgeo.gdal_array` import check; the build dependency pre-install was dropped because GDAL's pyproject.toml declares them for the isolated build. radian installed with `--no-cache`)
   - Evidence: `python-datascience/scripts/install-geospatial-python.sh:21` runs `uv pip install --system numpy>1.0.0 wheel setuptools>=67` unquoted. Bash reads `>1.0.0` and `>=67` as redirects, so the constraints are ignored and files `1.0.0` and `=67` are created in `/home/onyxia/work` (shellcheck SC2261).
   - Evidence: the next line, `pip install gdal[numpy]==...`, has no `--no-cache-dir`. Nor does `pip install radian` in `vscode/scripts/install-vscode-extensions.sh:75`. Both leave a pip cache in `~/.cache/pip`, because `HOME=/home/onyxia` during builds.
   - Fix: quote the requirement specifiers, add `--no-cache-dir` (or use `uv pip install --system --no-cache`), and quote `"gdal[numpy]==..."`.
@@ -143,6 +143,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
   - The `ppa:ubuntugis/ubuntugis-unstable` PPA is used in published images (`install-geospatial-python.sh:14`).
   - Both `RPostgres` and the legacy `RPostgreSQL` are installed (`r-datascience/Dockerfile`).
   - Hive 2.3.10 is on an end-of-life line; the postgres JDBC is 42.7.3.
+  - radian (R console used by the vscode R setup) is no longer maintained; its README recommends arf as an alternative. Decide whether to switch, or point `r.rterm.linux` to plain R.
   - The vscode layer's `remotes::install_github('ManuelHentschel/vscDebugger')` has no GitHub token, so it can hit rate limits. The spark layer already passes the `github_token` build secret; do the same here.
   - README is outdated: it links `scripts/onyxia-init.sh` (now `base/scripts/`) and says 02:00 while the cron is `0 1 * * 1` (01:00 UTC).
 

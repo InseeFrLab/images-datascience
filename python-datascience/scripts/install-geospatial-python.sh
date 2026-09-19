@@ -16,7 +16,7 @@ apt_install \
     libgdal-dev \
     gdal-bin
 
-# Install GDAL Python package with numpy-based raster support
+# Install GDAL Python package with numpy-based raster support, matching the system libgdal version
 # See : https://pypi.org/project/GDAL/
-uv pip install --system numpy>1.0.0 wheel setuptools>=67
-pip install gdal[numpy]=="$(gdal-config --version).*"
+uv pip install --system --no-cache "gdal[numpy]==$(gdal-config --version).*"
+python -c "from osgeo import gdal_array"
