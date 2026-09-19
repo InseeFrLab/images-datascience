@@ -4,26 +4,7 @@ set -e
 # Add custom PPAs to get most up-to-date software
 apt-get update
 /opt/apt-install.sh gnupg2 software-properties-common wget
-# PPA for git
-add-apt-repository -y ppa:git-core/ppa
-# PPA for postgresql-client
-mkdir -p /usr/share/keyrings
-
-echo "deb [signed-by=/usr/share/keyrings/postgresql.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-wget -nv -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | tee /usr/share/keyrings/postgresql.asc > /dev/null
-
-apt update
-
-# Pinning postgresql
-cat > /etc/apt/preferences.d/pgdg <<EOF
-Package: *
-Pin: release o=apt.postgresql.org
-Pin-Priority: 100
-
-Package: postgresql-* postgresql-client-* libpq5 libpq-dev
-Pin: release o=apt.postgresql.org
-Pin-Priority: 700
-EOF
+add-apt-repository -y ppa:git-core/ppa  # For Git
 
 # Install system libraries
 /opt/apt-install.sh \
@@ -39,8 +20,16 @@ EOF
     locales \
     nano \
     openssh-client \
-    postgresql-client \
     sudo \
     tini \
     unzip \
     vim
+
+# Install the latest postgresql-client from the PostgreSQL PPA, and remove the PPA afterwards
+mkdir -p /usr/share/keyrings
+wget -nv -O /usr/share/keyrings/postgresql.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+echo "deb [signed-by=/usr/share/keyrings/postgresql.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+apt-get update
+/opt/apt-install.sh postgresql-client libpq-dev
+rm /etc/apt/sources.list.d/pgdg.list /usr/share/keyrings/postgresql.asc
+apt-get update

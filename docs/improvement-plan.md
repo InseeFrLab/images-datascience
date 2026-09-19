@@ -117,7 +117,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
   - Evidence: `python-minimal/scripts/install-python.sh` and its duplicate `r-python-julia/scripts/install-python.sh` compile CPython with `--enable-optimizations --with-lto`. This sits on the critical path of every Python chain, × 2 versions × CPU/GPU.
   - Fix: install prebuilt python-build-standalone binaries (also PGO+LTO-optimized) with `uv python install` into `/opt/python`. The tests expect `/opt/python/bin/python` and `/opt/python/bin/pip`; `python` and `pip` symlinks may be needed. Check that C-extension builds (e.g. GDAL's Python bindings in #2) still work.
 - [ ] **14. Container startup work** — S
-  - Evidence: `onyxia-init.sh:221-226` runs `chown -R` over every directory in the workspace at each start, which is slow on volumes with virtualenvs or data. Lines 205-209 print every installed R package at each start.
+  - Evidence: `onyxia-init.sh:221-226` runs `chown -R` over every directory in the workspace at each start, which is slow on volumes with virtualenvs or data. ~~Lines 205-209 print every installed R package at each start.~~ Removed.
   - Fix: `find "$f" ! -user "$USERNAME" -exec chown ...`, or limit to the cloned repo; drop the package listing or make it opt-in.
 - [ ] **15. Useless CI steps** — S
   - ~~Evidence: `docker/setup-qemu-action` runs, but no multi-arch build happens.~~ QEMU step removed with #19. `.github/actions/cache-common-images` pulls `golang` and `dockereng/export-build` in every job and warns "Failed to restore".
@@ -152,13 +152,13 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
     - the tag scheme users depend on has no unit tests
   - Fix: move ruff to `[dependency-groups] dev`; pass config explicitly to functions; add pytest tests for the matrix/tag generation, run in the lint job.
 - [ ] **21. Small items** — S each
-  - The `ppa:ubuntugis/ubuntugis-unstable` PPA is used in published images (`install-geospatial-python.sh:14`).
-  - Both `RPostgres` and the legacy `RPostgreSQL` are installed (`r-datascience/Dockerfile`).
-  - Hive 2.3.10 is on an end-of-life line; the postgres JDBC is 42.7.3.
+  - ~~The `ppa:ubuntugis/ubuntugis-unstable` PPA is used in published images.~~ Done: the PPA is only enabled to install `libgdal-dev` and `gdal-bin`, then removed. Same for the PostgreSQL apt repository in base (`postgresql-client` and `libpq-dev`), which replaces the apt pinning.
+  - ~~Both `RPostgres` and the legacy `RPostgreSQL` are installed.~~ Done: `RPostgreSQL` removed.
+  - Hive 2.3.10 is on an end-of-life line; the postgres JDBC is 42.7.3. Deferred to the Spark audit (#5).
   - ~~radian (R console used by the vscode R setup) is no longer maintained.~~ Done: radian removed; `r.rterm.linux` left unset so vscode-R uses R from `PATH`, and the radian-only `r.bracketedPaste` setting removed.
-  - The vscode layer's `remotes::install_github('ManuelHentschel/vscDebugger')` has no GitHub token, so it can hit rate limits. The spark layer already passes the `github_token` build secret; do the same here.
-  - `import tkinter` fails in python-minimal (`libtk8.6.so` missing): `install-python.sh` purges its build dependencies with `apt-get purge --auto-remove`, which also removes the Tk runtime library. Harmless on a headless server; either keep `libtk8.6` installed or accept it.
-  - README is outdated: it links `scripts/onyxia-init.sh` (now `base/scripts/`) and says 02:00 while the cron is `0 1 * * 1` (01:00 UTC).
+  - ~~The vscode layer's `remotes::install_github('ManuelHentschel/vscDebugger')` has no GitHub token.~~ Done: `vscDebugger` removed. The `RDebugger.r-debugger` VS Code extension, which needs it, is still installed (to decide).
+  - Won't fix: `import tkinter` fails in python-minimal (`libtk8.6.so` missing): `install-python.sh` purges its build dependencies with `apt-get purge --auto-remove`, which also removes the Tk runtime library. Harmless on a headless server; either keep `libtk8.6` installed or accept it.
+  - ~~README is outdated~~ Done: link to `base/scripts/onyxia-init.sh`, build time 01:00 UTC, `PATH_TO_CABUNDLE` typo fixed to `PATH_TO_CA_BUNDLE`, image graph aligned with `main-workflow.yml` (`pyspark`, `rstudio`, `r-python-julia` on `r-datascience`, `rstudio-r-python-julia` added).
 
 ## Suggested order
 
