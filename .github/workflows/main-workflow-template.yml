@@ -39,12 +39,10 @@ jobs:
     steps:
     - name: Check out code 
       uses: actions/checkout@v7
-
     - name: Set up Python
       uses: actions/setup-python@v7 
       with:
         python-version: '3.14'
-
     - id: set-matrix
       run: |
         python3 utils/generate_matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }} \

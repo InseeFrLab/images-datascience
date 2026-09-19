@@ -3,14 +3,11 @@ import logging
 import subprocess
 from pathlib import Path
 
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
-
-VERSIONS_FILE = Path("versions.env")
 
 chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
@@ -36,6 +33,17 @@ chains = {
 }
 
 
+def read_versions():
+    versions_file_path = "versions.env"
+    versions = {}
+    for line in Path(versions_file_path).read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            key, value = line.split("=", 1)
+            versions[key] = value.strip('"')
+    return versions
+
+
 def build_chain(chain_name, r_version, py_version, spark_version, gpu, no_test, push):
 
     logger.info(f"Building chain : {chain_name}")
@@ -48,7 +56,7 @@ def build_chain(chain_name, r_version, py_version, spark_version, gpu, no_test, 
         # Specify base image for each build step
         if i == 0:
             # First step : define external base images
-            previous_image = read_versions()["CUDA_BASE_IMAGE"] if gpu else "ubuntu:24.04"
+            previous_image = read_versions()["BASE_IMAGE_GPU"] if gpu else read_versions()["BASE_IMAGE"]
         else:
             # Intermediary and final steps : use previous built tag as base image
             previous_image = tag
@@ -108,17 +116,6 @@ def build_cli_parser():
     parser.add_argument("--no_test", action="store_true", help="Don't test the container.")
     parser.add_argument("--push", action="store_true", help="Whether to push the last image of the chain to DockerHub.")
     return parser
-
-
-def read_versions(path=VERSIONS_FILE):
-    """Parse the KEY="value" lines of versions.env into a dict, ignoring comments and blank lines."""
-    versions = {}
-    for line in VERSIONS_FILE.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#"):
-            key, value = line.split("=", 1)
-            versions[key] = value.strip('"')
-    return versions
 
 
 if __name__ == "__main__":
