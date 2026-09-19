@@ -9,7 +9,7 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^src/images_datascience/build_chains\\.sh$/",
+        "/^utils/build_chains\\.sh$/",
         "/^python-minimal/Dockerfile$/",
         "/^r-python-julia/Dockerfile$/"
       ],
@@ -27,7 +27,7 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^src/images_datascience/build_chains\\.sh$/"
+        "/^utils/build_chains\\.sh$/"
       ],
       "matchStrings": [
         "python_version_2: *(?<currentValue>[^\\s]+)",
@@ -42,7 +42,7 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^src/images_datascience/build_chains\\.sh$/",
+        "/^utils/build_chains\\.sh$/",
         "/^r-minimal/Dockerfile$/"
       ],
       "matchStrings": [
@@ -60,7 +60,7 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^src/images_datascience/build_chains\\.sh$/"
+        "/^utils/build_chains\\.sh$/"
       ],
       "matchStrings": [
         "r_version_2: *(?<currentValue>[^\\s]+)",
@@ -76,7 +76,7 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^src/images_datascience/build_chains\\.sh$/",
+        "/^utils/build_chains\\.sh$/",
         "/^spark/Dockerfile$/"
       ],
       "matchStrings": [

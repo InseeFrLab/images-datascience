@@ -132,7 +132,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
     - `install-java.sh` exists in both r-datascience and spark (identical)
   - Fix: because every layer copies `scripts/` to `/opt`, shared helpers can live in `base/scripts/` (e.g. `/opt/apt-install.sh`) and be called from child layers.
 - [ ] **17. Two diverged definitions of the image graph** — M–L
-  - Evidence: `chains` in `src/images_datascience/build_chain.py` versus the jobs in `main-workflow.yml`:
+  - Evidence: `chains` in `utils/build_chain.py` versus the jobs in `main-workflow.yml`:
     - local chain `python-pyspark` is `pyspark` in CI
     - `jupyter-python-minimal` exists only locally, `vscode-pyspark` only in CI
     - the CUDA base image is `12.8.1` locally and `12.6.3` in CI
@@ -144,7 +144,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 - [x] **19. Half-built arm64 support** — S (done: images are amd64 only. The `uname -m` branches were removed with the #9 rewrites, and the unused QEMU setup step was removed from `main-workflow-template.yml`)
   - Evidence: some scripts branch on `uname -m` (awscli, kubectl, duckdb), but `JAVA_HOME` (`*-amd64`), `install-quarto.sh`, `install-julia.sh` and `tests.yaml` are amd64-only, and CI builds amd64 only.
   - Fix: pick one. Either drop the arm64 branches, or commit to multi-arch builds.
-- [ ] **20. Python tooling** — S
+- [x] **20. Python tooling** — S (done: scripts moved to `utils/`, repo turned into a non-packaged uv project, `generate_matrix.py` uses module constants instead of `args` globals. Unit tests for the tag scheme not added)
   - Evidence:
     - ~~`pyproject.toml` declares `ruff` as a runtime dependency instead of a dev group~~ Done: ruff, shellcheck-py and hadolint-py are in the `dev` dependency group
     - the `images-datascience` entry point (`__init__.py`) only prints a greeting

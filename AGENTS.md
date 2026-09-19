@@ -2,11 +2,11 @@
 
 ## What this repo is
 
-Docker images for ready-to-run datascience services (Jupyter, RStudio, VSCode, marimo…), designed in particular for [Onyxia](https://github.com/InseeFrLab/onyxia-web) based data-science platforms and published to Docker Hub as `inseefrlab/onyxia-<image>:<tag>`. Most of the "code" is Dockerfiles and bash install scripts; the Python in `src/` only orchestrates builds.
+Docker images for ready-to-run datascience services (Jupyter, RStudio, VSCode, marimo…), designed in particular for [Onyxia](https://github.com/InseeFrLab/onyxia-web) based data-science platforms and published to Docker Hub as `inseefrlab/onyxia-<image>:<tag>`. Most of the "code" is Dockerfiles and bash install scripts; the Python scripts in `utils/` only orchestrate builds.
 
 ## Commands
 
-Python tooling (Python version in `.python-version`, managed with uv):
+Python tooling (Python version in `.python-version`, managed with uv). The repo is a non-packaged uv project (no `[build-system]`): uv only manages the dev tools, and the `utils/` scripts run directly with `python3`.
 
 ```bash
 uv sync                                                    # install dev deps (ruff, shellcheck, hadolint)
@@ -21,13 +21,13 @@ These same checks run on every PR in `.github/workflows/check-code-quality.yml`,
 Build a full image chain locally (each layer is built with `docker build`, then tested with `container-structure-test`, which must be installed):
 
 ```bash
-python3 src/images_datascience/build_chain.py --chain jupyter-python --py_version 3.13.15
-python3 src/images_datascience/build_chain.py --chain rstudio --r_version 4.6.1
-python3 src/images_datascience/build_chain.py --chain jupyter-pyspark --py_version 3.13.15 --spark_version 4.1.1
+python3 utils/build_chain.py --chain jupyter-python --py_version 3.13.15
+python3 utils/build_chain.py --chain rstudio --r_version 4.6.1
+python3 utils/build_chain.py --chain jupyter-pyspark --py_version 3.13.15 --spark_version 4.1.1
 # flags: --gpu (start from nvidia/cuda base), --no_test, --push
 ```
 
-Local tags get a `-dev` suffix (e.g. `inseefrlab/onyxia-python-minimal:py3.13.15-dev`). `src/images_datascience/build_chains.sh` builds a representative set of chains.
+Local tags get a `-dev` suffix (e.g. `inseefrlab/onyxia-python-minimal:py3.13.15-dev`). `utils/build_chains.sh` builds a representative set of chains.
 
 Test a single already-built image against one layer's tests:
 
@@ -50,7 +50,7 @@ Each top-level directory (`base`, `python-minimal`, `r-minimal`, `python-datasci
 
 Because layers are reused across parents, their Dockerfiles branch on what the parent provides at build time — e.g. `if command -v R` (spark installs SparkR/sparklyr, jupyter installs IRkernel), `if command -v julia`, or `if [[ -n "${CUDA_VERSION}" ]]` (pytorch CUDA vs CPU wheels, R CUDA config). Keep that in mind when editing a shared layer: it must still work on every parent it is stacked on.
 
-The valid layer stacks are declared in the `chains` dict in `src/images_datascience/build_chain.py` (local builds) and, independently, as the job graph in `.github/workflows/main-workflow.yml` (CI). Adding a new image means updating both.
+The valid layer stacks are declared in the `chains` dict in `utils/build_chain.py` (local builds) and, independently, as the job graph in `.github/workflows/main-workflow.yml` (CI). Adding a new image means updating both.
 
 ### Script conventions inside Dockerfiles
 
@@ -64,14 +64,14 @@ The valid layer stacks are declared in the `chains` dict in `src/images_datascie
 ### CI (`.github/workflows/`)
 
 - `main-workflow.yml` runs weekly (Monday 01:00 UTC) and on manual dispatch. It defines one job per output image with `needs:` dependencies mirroring the layer graph, each calling the reusable `main-workflow-template.yml` with `image` (output name), `context` (layer directory), `base_image`, and language versions.
-- The template runs `src/images_datascience/generate_matrix.py` to expand versions × GPU/CPU into a build matrix (written to `$GITHUB_OUTPUT`), then builds, runs `<context>/tests.yaml`, and pushes only from `main`. GPU variants are built but **not tested** in CI: they are too big for GitHub-hosted runners to load and test (disk space).
+- The template runs `utils/generate_matrix.py` to expand versions × GPU/CPU into a build matrix (written to `$GITHUB_OUTPUT`), then builds, runs `<context>/tests.yaml`, and pushes only from `main`. GPU variants are built but **not tested** in CI: they are too big for GitHub-hosted runners to load and test (disk space).
 - Images are built for **amd64 only**: no multi-arch build, and install scripts only download amd64 binaries. Don't add arm64 branches.
-- Tag scheme: `onyxia-<image>:py<ver>` / `r<ver>` / `r<ver>-py<ver>`, plus `-spark<ver>`, `-gpu`, and a dated duplicate `-YYYY.MM.DD`. Base is `onyxia-base:latest[-gpu]`.
+- Tag scheme: `onyxia-<image>:py<ver>` / `r<ver>` / `r<ver>-py<ver>`, plus `-spark<ver>`, `-gpu`, and a dated duplicate `-YYYY.MM.DD`. Base is `onyxia-base:latest[-gpu]`. The Docker Hub organization and image prefix are the `DH_ORGA` and `IMAGES_PREFIX` constants in `utils/generate_matrix.py`; `DH_ORGA` must stay lowercase, since Docker rejects uppercase repository names.
 - Two versions of Python and R are actively maintained for users (`*_version_1` = newer, `*_version_2` = older); neither is a fallback. `r-python-julia` images only use version 1; spark images are CPU-only (`build_gpu: false`).
 
 ### Version pinning
 
-The version inputs in `main-workflow.yml` are the source of truth for Python/R/Spark versions. They are duplicated in the `ARG` defaults of the `python-minimal`, `r-python-julia`, `r-minimal` and `spark` Dockerfiles and in the `*_VERSION_*` variables of `build_chains.sh`. `renovate.json` has one regex manager per version slot (Python 1/2, R 1/2, Spark) covering all of these files, and groups each slot into a single PR; version 2 only gets patch bumps, so moving it to a new minor release (e.g. when version 1 moves on) is a manual change. When changing a version by hand, update every occurrence; when adding a new place that pins one of these versions, add its pattern to the matching manager. CUDA base image tags (`build_chain.py`, `main-workflow.yml`) are not managed and must be updated manually.
+The version inputs in `main-workflow.yml` are the source of truth for Python/R/Spark versions. They are duplicated in the `ARG` defaults of the `python-minimal`, `r-python-julia`, `r-minimal` and `spark` Dockerfiles and in the `*_VERSION_*` variables of `utils/build_chains.sh`. `renovate.json` has one regex manager per version slot (Python 1/2, R 1/2, Spark) covering all of these files, and groups each slot into a single PR; version 2 only gets patch bumps, so moving it to a new minor release (e.g. when version 1 moves on) is a manual change. When changing a version by hand, update every occurrence; when adding a new place that pins one of these versions, add its pattern to the matching manager. CUDA base image tags (`utils/build_chain.py`, `main-workflow.yml`) are not managed and must be updated manually.
 
 Tools downloaded at build time (kubectl, helm, AWS CLI, DuckDB CLI, quarto, opencode, Julia, code-server) are pinned in their install script, **not** in Dockerfiles (Dockerfiles only pin the versions the project manages: Python, R, Spark). Each script follows the same model, see `base/scripts/install-kubectl.sh`:
 - a `# renovate: datasource=<datasource> depName=<name>` comment right above a `<TOOL>_VERSION="x.y.z"` line. One generic regex manager in `renovate.json` picks it up (in `scripts/*.sh` and in `.github/actions/*/action.yml`, where container-structure-test is pinned the same way), and all tool bumps land in a single weekly "Build tools" PR.

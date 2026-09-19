@@ -5,6 +5,10 @@ import json
 import os
 from datetime import UTC, datetime
 
+DH_ORGA = "inseefrlab"
+IMAGES_PREFIX = "onyxia"
+TODAY_DATE = datetime.now(UTC).strftime("%Y.%m.%d")
+
 
 def generate_matrix(versions, input_image, output_image, spark_version, gpu_options, version_prefix):
     """
@@ -27,8 +31,8 @@ def generate_matrix(versions, input_image, output_image, spark_version, gpu_opti
         output = f"{output_image}:{version_prefix}{version}"
         language_key = "python_version" if version_prefix == "py" else "r_version"
         version_entry = {
-            "base_image_tag": f"{DH_ORGA}/{args.images_prefix}-{base}",
-            "output_image_main_tag": f"{DH_ORGA}/{args.images_prefix}-{output}",
+            "base_image_tag": f"{DH_ORGA}/{IMAGES_PREFIX}-{base}",
+            "output_image_main_tag": f"{DH_ORGA}/{IMAGES_PREFIX}-{output}",
             language_key: version,
         }
         if spark_version:
@@ -59,8 +63,8 @@ def generate_r_python_julia_matrix(r_version, py_version, input_image, output_im
         base = f"{input_image}:r{r_version}-py{py_version}"
     output = f"{output_image}:r{r_version}-py{py_version}"
     final_entry = {
-        "base_image_tag": f"{DH_ORGA}/{args.images_prefix}-{base}",
-        "output_image_main_tag": f"{DH_ORGA}/{args.images_prefix}-{output}",
+        "base_image_tag": f"{DH_ORGA}/{IMAGES_PREFIX}-{base}",
+        "output_image_main_tag": f"{DH_ORGA}/{IMAGES_PREFIX}-{output}",
         "r_version": r_version,
         "python_version": py_version,
     }
@@ -82,20 +86,15 @@ if __name__ == "__main__":
     parser.add_argument("--spark_version", type=str, nargs="?", const="")
     parser.add_argument("--build_gpu", type=str, nargs="?")
     parser.add_argument("--base_image_gpu", type=str, nargs="?", const="")
-    parser.add_argument("--dh_orga", type=str)
-    parser.add_argument("--images_prefix", type=str)
 
     args = parser.parse_args()
     python_versions = [version for version in [args.python_version_1, args.python_version_2] if version]
     r_versions = [version for version in [args.r_version_1, args.r_version_2] if version]
     gpu_options = [False, True] if args.build_gpu == "true" else [False]
 
-    DH_ORGA = args.dh_orga.lower()
-    TODAY_DATE = datetime.now(UTC).strftime("%Y.%m.%d")
-
     if args.output_image == "base":
         # Building base onyxia image from external images
-        onyxia_base_tag = f"{args.images_prefix}-base:latest"
+        onyxia_base_tag = f"{IMAGES_PREFIX}-base:latest"
         matrix = [
             {
                 "base_image_tag": args.input_image,
