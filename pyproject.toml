@@ -1,7 +1,7 @@
 [project]
 name = "images-datascience"
 version = "0.1.0"
-description = "A project to build modular datascience environment for Onyxia's instances."
+description = "A project to build ready-to-run datascience environment for Onyxia's instances."
 readme = "README.md"
 authors = [
     { name = "avouacr", email = "avouacr@pm.me" }
