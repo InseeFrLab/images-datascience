@@ -33,3 +33,6 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "marimo runs"
+    command: "marimo"
+    args: ["--version"]

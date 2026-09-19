@@ -40,3 +40,16 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "R packages load"
+    command: "Rscript"
+    args: ["-e", "for (p in c('arrow', 'aws.s3', 'DBI', 'duckdb', 'paws', 'quarto', 'RPostgres', 'RPostgreSQL', 'sf', 'tidyverse')) library(p, character.only = TRUE)"]
+  - name: "DuckDB R extensions are preinstalled for the user"
+    command: "Rscript"
+    args: ["-e", "con <- DBI::dbConnect(duckdb::duckdb()); DBI::dbExecute(con, 'SET autoinstall_known_extensions = false'); for (ext in c('httpfs', 'aws', 'postgres', 'spatial', 'icu')) DBI::dbExecute(con, paste('LOAD', ext))"]
+  - name: "Java runs"
+    command: "java"
+    args: ["-version"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

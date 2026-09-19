@@ -60,7 +60,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
   - Fix: a new PR workflow with two parts:
     - lint job: `uv run ruff check`, `ruff format --check`, shellcheck, hadolint, `renovate-config-validator`
     - build job: builds and tests only the layers whose directories changed (path filters), CPU only, one version, no push. Parent images come from Docker Hub.
-- [ ] **7. Container tests only check binary paths** — M
+- [x] **7. Container tests only check binary paths** — M (done except spark: each `tests.yaml` has a `# Functional tests` section derived from its Dockerfile, with `if command -v …` guards where the layer is stacked on several parents, plus a "Workspace is empty" check. The base, python-minimal, r-minimal and r-datascience tests were run once against the published images and pass, except the workspace check, which fails there because of #1/#2 until the next build. The other layers' tests have not been run. **Spark tests are still to write**, together with #5)
   - Evidence: every `*/tests.yaml` is a near-copy of `which helm/kubectl/duckdb/...` checks. Nothing verifies that packages import or services start.
   - Fix: add at least one functional `commandTests` entry per layer, for example:
     - python-datascience: `python -c "import geopandas, osgeo.gdal, polars, sklearn"`
@@ -155,6 +155,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
   - Hive 2.3.10 is on an end-of-life line; the postgres JDBC is 42.7.3.
   - ~~radian (R console used by the vscode R setup) is no longer maintained.~~ Done: radian removed; `r.rterm.linux` left unset so vscode-R uses R from `PATH`, and the radian-only `r.bracketedPaste` setting removed.
   - The vscode layer's `remotes::install_github('ManuelHentschel/vscDebugger')` has no GitHub token, so it can hit rate limits. The spark layer already passes the `github_token` build secret; do the same here.
+  - `import tkinter` fails in python-minimal (`libtk8.6.so` missing): `install-python.sh` purges its build dependencies with `apt-get purge --auto-remove`, which also removes the Tk runtime library. Harmless on a headless server; either keep `libtk8.6` installed or accept it.
   - README is outdated: it links `scripts/onyxia-init.sh` (now `base/scripts/`) and says 02:00 while the cron is `0 1 * * 1` (01:00 UTC).
 
 ## Suggested order
