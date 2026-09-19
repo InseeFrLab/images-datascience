@@ -125,7 +125,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 
 ## P3 — Code quality and maintainability
 
-- [ ] **16. Duplicated scripts** — S–M
+- [x] **16. Duplicated scripts** — S–M (done: `apt_install` replaced by `base/scripts/apt-install.sh`, `install-python.sh` and `install-java.sh` moved to `base/scripts/`, per-layer copies deleted)
   - Evidence:
     - the `apt_install` function is copy-pasted in 6 scripts
     - `install-python.sh` exists in both python-minimal and r-python-julia (identical except for the final newline)

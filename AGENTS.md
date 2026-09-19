@@ -54,7 +54,7 @@ The valid layer stacks are declared in the `chains` dict in `src/images_datascie
 
 ### Script conventions inside Dockerfiles
 
-- Every layer does `COPY --chmod=0755 scripts/ /opt/`, so `/opt` accumulates scripts from all parent layers. Child layers call helpers defined in `base/scripts/` (notably `/opt/fix-user-permissions.sh` and `/opt/clean.sh`) without shipping them.
+- Every layer does `COPY --chmod=0755 scripts/ /opt/`, so `/opt` accumulates scripts from all parent layers. Child layers call helpers defined in `base/scripts/` without shipping them: `/opt/fix-user-permissions.sh`, `/opt/clean.sh`, `/opt/apt-install.sh <packages>` (installs missing apt packages, refreshing package lists if needed), and the install scripts shared by several layers (`/opt/install-python.sh` for python-minimal and r-python-julia, `/opt/install-java.sh` for r-datascience and spark). A script needed by more than one layer belongs in `base/scripts/`, not copied into each layer.
 - Pattern for each layer: `USER root` → one `RUN` chaining install scripts → `/opt/fix-user-permissions.sh` → `/opt/clean.sh [extra files]` → `USER 1000`. The permission fix only chowns files not already owned by the user, to avoid duplicating files in layers.
 - Downloads in build scripts must fail loudly: use `wget -nv` (never `-q`, which also hides error messages) and `curl -fsSL` (`-f` fails on HTTP errors, `-S` prints them despite `-s`). Put version lookups (`VERSION=$(curl ...)`) on their own line, and use `set -o pipefail` when they are piped, so that a failed lookup stops the build instead of producing a broken URL.
 - Runtime user is `onyxia` (UID 1000, group `users` GID 100) with passwordless sudo; workdir is `/home/onyxia/work`.
