@@ -1,14 +1,16 @@
 import argparse
 import logging
 import subprocess
+from pathlib import Path
 
-from versions import read_versions
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
+
+VERSIONS_FILE = Path("versions.env")
 
 chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
@@ -106,6 +108,17 @@ def build_cli_parser():
     parser.add_argument("--no_test", action="store_true", help="Don't test the container.")
     parser.add_argument("--push", action="store_true", help="Whether to push the last image of the chain to DockerHub.")
     return parser
+
+
+def read_versions(path=VERSIONS_FILE):
+    """Parse the KEY="value" lines of versions.env into a dict, ignoring comments and blank lines."""
+    versions = {}
+    for line in VERSIONS_FILE.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            key, value = line.split("=", 1)
+            versions[key] = value.strip('"')
+    return versions
 
 
 if __name__ == "__main__":
