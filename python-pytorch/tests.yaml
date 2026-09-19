@@ -36,3 +36,6 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "PyTorch runs"
+    command: "python"
+    args: ["-c", "import torch"]

@@ -45,3 +45,6 @@ commandTests:
     command: "which"
     args: ["opencode"]
     expectedOutput: ["/usr/local/bin/opencode"]
+  - name: "JupyterLab runs"
+    command: "bash"
+    args: ["-c", "jupyter lab --version"]

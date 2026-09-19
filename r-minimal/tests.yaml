@@ -32,3 +32,13 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "R is the requested version"
+    command: "bash"
+    args: ["-c", "R --version | grep -F \"R version ${R_VERSION}\""]
+  - name: "R packages load"
+    command: "Rscript"
+    args: ["-e", "for (p in c('devtools', 'lintr', 'remotes', 'renv')) library(p, character.only = TRUE)"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

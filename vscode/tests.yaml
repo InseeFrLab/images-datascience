@@ -37,3 +37,6 @@ commandTests:
     command: "which"
     args: ["opencode"]
     expectedOutput: ["/usr/local/bin/opencode"]
+  - name: "code-server runs"
+    command: "code-server"
+    args: ["--version"]

@@ -15,16 +15,7 @@ RUN /rocker_scripts/install_geospatial.sh && \
     # Install a Java JDK/JRE for R packages that use it as backend
     /opt/install-java.sh && \
     # Install useful R packages for data science
-    install2.r --ncpus -1 --error \
-        arrow \
-        aws.s3 \
-        DBI \
-        duckdb \
-        paws \
-        quarto \
-        RPostgres \
-        RPostgreSQL \
-        tidyverse && \
+    /opt/install-r-packages.sh && \
     # Install duckdb extensions
     Rscript /opt/install-duckdb-extensions.R && \
     # Fix user permissions

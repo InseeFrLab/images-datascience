@@ -41,3 +41,6 @@ commandTests:
     command: "which"
     args: ["opencode"]
     expectedOutput: ["/usr/local/bin/opencode"]
+  - name: "RStudio Server and pandoc run"
+    command: "bash"
+    args: ["-c", "rstudio-server version && pandoc --version"]

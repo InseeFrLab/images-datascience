@@ -24,11 +24,7 @@ RUN /opt/install-r.sh && \
     # Install additional system libs required by some R packages
     /opt/install-system-libs-r.sh && \
     # Install some standard R packages
-    install2.r --ncpus -1 --error \
-        devtools \
-        lintr \
-        remotes \
-        renv && \
+    /opt/install-r-packages.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean
