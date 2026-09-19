@@ -56,7 +56,7 @@ def build_chain(chain_name, r_version, py_version, spark_version, gpu, no_test, 
         # Specify base image for each build step
         if i == 0:
             # First step : define external base images
-            previous_image = read_versions()["BASE_IMAGE_GPU"] if gpu else read_versions()["BASE_IMAGE"]
+            previous_image = read_versions()["BASE_IMAGE_GPU"] if gpu else read_versions()["BASE_IMAGE_CPU"]
         else:
             # Intermediary and final steps : use previous built tag as base image
             previous_image = tag
