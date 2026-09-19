@@ -27,7 +27,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 
 ## P0 — Bugs and quick wins
 
-- [ ] **1. AWS CLI installer left in every image** — S
+- [x] **1. AWS CLI installer left in every image** — S (fixed: install from a `mktemp -d` directory, removed afterwards)
   - Evidence: `base/scripts/install-awscli.sh:18-20` downloads `awscliv2.zip` and unzips `./aws` into the current directory, which is `WORKDIR ${WORKSPACE_DIR}` = `/home/onyxia/work` (see `base/Dockerfile`). Neither is deleted, so both ship in base's 924 MB layer and in every image built on it.
   - Fix: work in a `mktemp -d` directory and remove it; drop the pointless `sudo` (the script already runs as root).
 - [ ] **2. Redirect bug and leftover pip caches** — S
