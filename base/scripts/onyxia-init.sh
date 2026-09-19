@@ -47,23 +47,27 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
             KEYS=$(jq -r '.data.data.".onyxia".keysOrdering | .[]' <<< "$JSON")
         fi
 
-        for i in $KEYS;
-        do
-            echo $i
-            value=$(jq -r .data.data.$i <<< $JSON)
-            export $i="${value}"
+        while IFS= read -r key; do
+            [[ -z "$key" ]] && continue
+            if [[ ! "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+                echo "skipping Vault secret $key: not a valid environment variable name"
+                continue
+            fi
+            echo "$key"
+            value=$(jq -r --arg key "$key" '.data.data[$key]' <<< "$JSON")
+            export "$key=$value"
             if [[ $SUDO -eq 0 ]]; then
-                sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> /etc/environment"
+                printf '%s="%s"\n' "$key" "$value" | sudo tee -a /etc/environment >/dev/null
                 if command -v R &>/dev/null; then
-                    sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
+                    printf '%s="%s"\n' "$key" "$value" | sudo tee -a "${R_HOME}/etc/Renviron.site" >/dev/null
                 fi
             else
-                sh -c "printf 'export %s=\"%s\"\n' $i \"$value\" >> ${HOME}/.bashrc"
+                printf 'export %s=%q\n' "$key" "$value" >> "${HOME}/.bashrc"
                 if command -v R &>/dev/null; then
-                    sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
+                    printf '%s="%s"\n' "$key" "$value" >> "${R_HOME}/etc/Renviron.site"
                 fi
             fi
-        done
+        done <<< "$KEYS"
     fi
 fi
 
