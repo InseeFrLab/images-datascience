@@ -34,11 +34,12 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
   - Evidence: `python-datascience/scripts/install-geospatial-python.sh:21` runs `uv pip install --system numpy>1.0.0 wheel setuptools>=67` unquoted. Bash reads `>1.0.0` and `>=67` as redirects, so the constraints are ignored and files `1.0.0` and `=67` are created in `/home/onyxia/work` (shellcheck SC2261).
   - Evidence: the next line, `pip install gdal[numpy]==...`, has no `--no-cache-dir`. Nor does `pip install radian` in `vscode/scripts/install-vscode-extensions.sh:75`. Both leave a pip cache in `~/.cache/pip`, because `HOME=/home/onyxia` during builds.
   - Fix: quote the requirement specifiers, add `--no-cache-dir` (or use `uv pip install --system --no-cache`), and quote `"gdal[numpy]==..."`.
-- [ ] **3. Spark entrypoint dumps the environment to pod logs** — S
+- [x] **3. Spark entrypoint dumps the environment to pod logs** — S (fixed: `env` call removed)
   - Evidence: `spark/scripts/spark-entrypoint.sh:132` calls `env` before exec for driver/executor commands. This prints any credentials passed to executor pods (e.g. `AWS_*` via `spark.kubernetes.executorEnv`) into the pod logs.
   - Fix: remove the line.
 - [ ] **4. `${WORKSPACE_DIR}` not expanded in exec-form CMD** — S
-  - Evidence: `jupyter/Dockerfile:35` and `vscode/Dockerfile:29`. Exec form does no variable substitution, so a plain `docker run` passes the literal string `${WORKSPACE_DIR}`.
+  - Evidence: `jupyter/Dockerfile:35` and `vscode/Dockerfile:29`. Exec form does no variable substitution, so a plain `docker run` passes the literal string `${WORKSPACE_DIR}`. jupyter_server resolves it to `/home/onyxia/work/${WORKSPACE_DIR}` and refuses to start ("No such directory").
+  - Scope: **Onyxia is not affected.** The helm charts in InseeFrLab/helm-charts-interactive-services override `command`/`args` (`/bin/sh -c "<init script> jupyter lab ..."` without `--notebook-dir`, and `code-server ... /home/<user>/work`), so the image CMD is never used there. Jupyter opens in the image `WORKDIR` (`/home/onyxia/work`). Only standalone use of the images (plain `docker run`, other platforms) hits the bug.
   - Fix: use the literal path `/home/onyxia/work`, or shell form wrapped with `exec`.
 - [ ] **5. Hardcoded py4j filename** — S
   - Evidence: `spark/Dockerfile:17` sets `PYTHONPATH` to `py4j-0.10.9.9-src.zip`. Renovate now bumps `SPARK_VERSION` automatically; when Spark ships a new py4j, `import pyspark` breaks and no test catches it.

@@ -129,6 +129,5 @@ case "$SPARK_K8S_CMD" in
     exit 1
 esac
 
-env
 # Execute the container CMD under tini for better hygiene
 exec /usr/bin/tini -g -- "${CMD[@]}"
