@@ -9,7 +9,7 @@ They can be used alone but are designed to work with the [Onyxia](https://github
 4 layers:
 - base layer ubuntu and nvidia's ubuntu-cuda adding some base binaries 
 - a layer to add on this base some python and R versions (currently, 2 different versions supported for each programming language)
-- a layer to add on this python and R images some coherent bundle experience classic datascience packages, spark,  tensorflow and pytorch 
+- a layer to add on this python and R images some coherent bundle experience classic datascience packages, spark and pytorch 
 - a layer to put on the top of that some ide like jupyter, rstudio or vscode
 
 ```mermaid
@@ -18,18 +18,15 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       B-->RM[r-minimal]:::minimal;
       PM-->PYDS[python-datascience]:::package;
       PM-->PYSPARK[python-pyspark]:::package;
-      PM-->PYTENSORFLOW[python-tensorflow]:::package;
       PM-->PYTORCH[python-pytorch]:::package;
       RM-->RDS[r-datascience]:::package;
       RM-->RSPARK[sparkr]:::package;
       RM-->RPYJU[r-python-julia]:::package;
       PYSPARK--> JPYSPARK[jupyter-pyspark]:::ide;
       PYDS--> JPYDS[jupyter-python]:::ide;
-      PYTENSORFLOW--> JPYTENSORFLOW[jupyter-tensorflow]:::ide;
       PYTORCH--> JPYTORCH[jupyter-pytorch]:::ide;
       PYSPARK--> VSCODEPYSPARK[vscode-pyspark]:::ide;
       PYDS--> VSCODEPYDS[vscode-python]:::ide;
-      PYTENSORFLOW--> VSCODEPYTENSORFLOW[vscode-tensorflow]:::ide;
       PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
       PYDS--> MARIMOPYDS[marimo-python]:::ide;
       RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
