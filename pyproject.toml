@@ -1,0 +1,22 @@
+[project]
+name = "images-datascience"
+version = "0.1.0"
+description = "A project to build modular datascience environment for Onyxia's instances."
+readme = "README.md"
+authors = [
+    { name = "avouacr", email = "avouacr@pm.me" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "ruff>=0.16.8",
+]
+
+[project.scripts]
+images-datascience = "images_datascience:main"
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 120

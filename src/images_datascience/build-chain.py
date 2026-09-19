@@ -1,11 +1,12 @@
 import argparse
-import subprocess
 import logging
+import subprocess
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
+logger = logging.getLogger(__name__)
 
 chains = {
     "rstudio": ["base", "r-minimal", "r-datascience", "rstudio"],
@@ -29,18 +30,16 @@ chains = {
     "jupyter-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "jupyter"],
     "vscode-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "vscode"],
     "rstudio-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "rstudio"],
-    "marimo-python": ["base", "python-minimal", "python-datascience", "marimo"]
+    "marimo-python": ["base", "python-minimal", "python-datascience", "marimo"],
 }
 
 
-def build_chain(chain_name, r_version, py_version, spark_version,
-                gpu, no_test, push):
+def build_chain(chain_name, r_version, py_version, spark_version, gpu, no_test, push):
 
-    logging.info(f"Building chain : {chain_name}")
+    logger.info(f"Building chain : {chain_name}")
     chain = chains[chain_name]
     tag = "inseefrlab/onyxia-base:latest"  # Initialize tag
     for i, image in enumerate(chain):
-
         # Placeholder for build args
         build_args = []
 
@@ -49,7 +48,7 @@ def build_chain(chain_name, r_version, py_version, spark_version,
             # First step : define external base images
             previous_image = "nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04" if gpu else "ubuntu:24.04"
         else:
-            # Intermediary and final steps : use previous built tag as base image 
+            # Intermediary and final steps : use previous built tag as base image
             previous_image = tag
         build_args.extend(["--build-arg", f"BASE_IMAGE={previous_image}"])
 
@@ -75,22 +74,20 @@ def build_chain(chain_name, r_version, py_version, spark_version,
             tag += "-gpu"
         tag += "-dev"
 
-        cmd_build = ["docker", "build", "--progress=plain", image,
-                     "-t", tag] + build_args
+        cmd_build = ["docker", "build", "--progress=plain", image, "-t", tag] + build_args
 
-        logging.info(f"Build command : {' '.join(cmd_build)}")
+        logger.info(f"Build command : {' '.join(cmd_build)}")
         subprocess.run(cmd_build, check=True)
 
         if not no_test:
             # Container tests
-            cmd_test = ["container-structure-test", "test", "--image", tag,
-                        "--config", f"{image}/tests.yaml"]
-            logging.info(f"Test command : {cmd_test}")
+            cmd_test = ["container-structure-test", "test", "--image", tag, "--config", f"{image}/tests.yaml"]
+            logger.info(f"Test command : {cmd_test}")
             subprocess.run(cmd_test, check=True)
 
     if push:
         cmd_push = ["docker", "push", tag]
-        logging.info(f"Push command : {cmd_push}")
+        logger.info(f"Push command : {cmd_push}")
         subprocess.run(cmd_push, check=True)
 
 
@@ -102,48 +99,27 @@ def build_cli_parser():
         choices=chains.keys(),
         help="The name of the chain to build (e.g., 'rstudio', 'python-datascience').",
     )
-    parser.add_argument(
-        "--gpu",
-        action="store_true",
-        help="Whether to build with GPU support."
-    )
-    parser.add_argument(
-        "--r_version",
-        help="Specify a version for R."
-    )
-    parser.add_argument(
-        "--py_version",
-        help="Specify a version for Python."
-    )
-    parser.add_argument(
-        "--spark_version",
-        help="Specify a version for Spark."
-    )
-    parser.add_argument(
-        "--no_test",
-        action="store_true",
-        help="Don't test the container."
-    )
-    parser.add_argument(
-        "--push",
-        action="store_true",
-        help="Whether to push the last image of the chain to DockerHub."
-    )
+    parser.add_argument("--gpu", action="store_true", help="Whether to build with GPU support.")
+    parser.add_argument("--r_version", help="Specify a version for R.")
+    parser.add_argument("--py_version", help="Specify a version for Python.")
+    parser.add_argument("--spark_version", help="Specify a version for Spark.")
+    parser.add_argument("--no_test", action="store_true", help="Don't test the container.")
+    parser.add_argument("--push", action="store_true", help="Whether to push the last image of the chain to DockerHub.")
     return parser
 
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     # Parse CLI parameters
     parser = build_cli_parser()
     args = parser.parse_args()
 
     # Build chain
-    build_chain(chain_name=args.chain,
-                r_version=args.r_version,
-                py_version=args.py_version,
-                spark_version=args.spark_version,
-                gpu=args.gpu,
-                no_test=args.no_test,
-                push=args.push
-                )
+    build_chain(
+        chain_name=args.chain,
+        r_version=args.r_version,
+        py_version=args.py_version,
+        spark_version=args.spark_version,
+        gpu=args.gpu,
+        no_test=args.no_test,
+        push=args.push,
+    )
