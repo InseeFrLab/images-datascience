@@ -11,12 +11,9 @@ DOCKER_BUILD_ARGS=""
 
 # Build process
 
-# Versions are kept in sync with .github/workflows/main-workflow.yml by Renovate
-PYTHON_VERSION_1="3.13.15"
-PYTHON_VERSION_2="3.12.14"
-R_VERSION_1="4.6.1"
-R_VERSION_2="4.5.3"
-SPARK_VERSION="4.1.1"
+# Maintained versions (PYTHON_VERSION_1/2, R_VERSION_1/2, SPARK_VERSION)
+# shellcheck source=versions.env
+source "$(dirname "$0")/../versions.env"
 
 PYTHON_VERSIONS=("$PYTHON_VERSION_1" "$PYTHON_VERSION_2")
 R_VERSIONS=("$R_VERSION_1" "$R_VERSION_2")

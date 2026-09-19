@@ -15,35 +15,21 @@ on:
         description: Name of the base image
         required: true
         type: string
-      base_image_gpu:
-        description: Name of the GPU base image
+      languages:
+        description: Languages of the image, which select the versions read from versions.env (python, r or r-python; empty for base)
         required: false
         type: string
+        default: ""
+      spark:
+        description: If true, the image includes Spark (version read from versions.env)
+        required: false
+        type: boolean
+        default: false
       build_gpu:
         description: If true, build GPU versions of the images
         required: false
         type: boolean
         default: true
-      python_version_1:
-        description: context of docker image
-        required: false
-        type: string
-      python_version_2:
-        description: context of docker image
-        required: false
-        type: string
-      r_version_1:
-        description: context of docker image
-        required: false
-        type: string
-      r_version_2:
-        description: context of docker image
-        required: false
-        type: string
-      spark_version:
-        description: context of docker image
-        required: false
-        type: string
 
 jobs:
   matrix_prep:
@@ -62,9 +48,7 @@ jobs:
     - id: set-matrix
       run: |
         python3 utils/generate_matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }} \
-            --python_version_1 ${{ inputs.python_version_1 }} --python_version_2 ${{ inputs.python_version_2 }} \
-            --r_version_1 ${{ inputs.r_version_1 }} --r_version_2 ${{ inputs.r_version_2 }} --spark_version ${{ inputs.spark_version }} \
-            --build_gpu ${{ inputs.build_gpu }} --base_image_gpu ${{ inputs.base_image_gpu }}
+            --languages "${{ inputs.languages }}" --spark ${{ inputs.spark }} --build_gpu ${{ inputs.build_gpu }}
   docker:
     runs-on: ubuntu-latest
     needs: matrix_prep

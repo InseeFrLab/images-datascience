@@ -2,6 +2,8 @@ import argparse
 import logging
 import subprocess
 
+from versions import read_versions
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -17,14 +19,12 @@ chains = {
     "python-minimal": ["base", "python-minimal"],
     "python-datascience": ["base", "python-minimal", "python-datascience"],
     "python-pytorch": ["base", "python-minimal", "python-pytorch"],
-    "python-pyspark": ["base", "python-minimal", "spark"],
-    "jupyter-r": ["base", "r-minimal", "r-datascience", "jupyter"],
-    "jupyter-python-minimal": ["base", "python-minimal", "jupyter"],
+    "pyspark": ["base", "python-minimal", "spark"],
     "jupyter-python": ["base", "python-minimal", "python-datascience", "jupyter"],
     "jupyter-pytorch": ["base", "python-minimal", "python-pytorch", "jupyter"],
     "jupyter-pyspark": ["base", "python-minimal", "spark", "jupyter"],
     "vscode-python": ["base", "python-minimal", "python-datascience", "vscode"],
-    "vscode-python-minimal": ["base", "python-minimal", "vscode"],
+    "vscode-pyspark": ["base", "python-minimal", "spark", "vscode"],
     "vscode-pytorch": ["base", "python-minimal", "python-pytorch", "vscode"],
     "r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia"],
     "jupyter-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "jupyter"],
@@ -46,7 +46,7 @@ def build_chain(chain_name, r_version, py_version, spark_version, gpu, no_test, 
         # Specify base image for each build step
         if i == 0:
             # First step : define external base images
-            previous_image = "nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04" if gpu else "ubuntu:24.04"
+            previous_image = read_versions()["CUDA_BASE_IMAGE"] if gpu else "ubuntu:24.04"
         else:
             # Intermediary and final steps : use previous built tag as base image
             previous_image = tag

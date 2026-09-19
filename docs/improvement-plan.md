@@ -1,171 +1,98 @@
 # Improvement plan
 
-Audit of the repository done on 2026-09-19. Each item has an ID, the evidence found, the intended fix and an effort estimate (**S** < 1h, **M** ≈ half a day, **L** multi-day). Tick the box and add the PR number when an item is done.
+Remaining work from the repository audit of 2026-09-19; fixed items have been removed. Item numbers are kept from the original audit. Effort: **S** < 1h, **M** ≈ half a day, **L** multi-day.
 
-## Context at audit time
+## Open items
 
-- No Docker was available during the audit: findings come from reading the code, shellcheck, the Docker Hub API (published layer sizes) and the GitHub API (CI history). Image contents were not inspected directly.
-- **CI health:** 5 of the last 8 weekly runs of `main-workflow.yml` failed.
-  - `r-datascience` failed every week from 2026-08-03 to 2026-08-31, which skipped rstudio, jupyter-r, r-python-julia and their IDE images for 4 weeks. This was fixed by the PostgreSQL APT repository commits.
-  - 2026-09-14: `base` failed on `/opt/install-mc.sh`, already removed by commit 15dbaa6.
-  - No PR runs CI, and no one is notified of failures.
-- **Published sizes (compressed, amd64):**
+### 5. Spark/Hadoop/Hive install — L
 
-  | Image | Size |
-  |---|---|
-  | base | 0.95 GB (one 924 MB `RUN` layer) |
-  | python-minimal | 1.24 GB |
-  | python-datascience | 1.94 GB (702 MB geospatial + requirements layer) |
-  | jupyter-python | 2.06 GB |
-  | vscode-python | 2.44 GB |
-  | rstudio | 2.5 GB |
-  | jupyter-pyspark | 3.46 GB |
-  | jupyter-python GPU | 7.18 GB |
-  | jupyter-pytorch GPU | 9.5 GB |
+Audit and simplify the whole Spark layer (`spark/`). None of the questions below have been checked yet.
 
-- **shellcheck** (`uvx --from shellcheck-py shellcheck $(git ls-files '*.sh')`): 197 findings, 162 of them SC2086 (unquoted variables).
+- **py4j filename:** `spark/Dockerfile` sets `PYTHONPATH` to `py4j-0.10.9.9-src.zip`. Renovate bumps `SPARK_VERSION` automatically, so when Spark ships a new py4j, `import pyspark` breaks. Quick fix: symlink `${SPARK_HOME}/python/lib/py4j-*-src.zip` to a fixed name in `install-spark-hadoop-hive.sh` and reference that name.
+- **Spark tests:** `spark/tests.yaml` still only checks binary paths. Add functional tests like the other layers: `import pyspark` and a local `SparkSession` when Python is present, `library(sparklyr)` and `library(SparkR)` when R is present.
+- **Custom Spark build:** Spark comes from `spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}-java-${JAVA_VERSION}.tgz`, built by InseeFrLab/Spark-hive and hosted on `minio.lab.sspcloud.fr`. Is it still needed, or would the official Apache distribution or `pip install pyspark` do?
+- **Hadoop shipped twice?** A full Hadoop distribution is installed, and `SPARK_DIST_CLASSPATH=$(hadoop classpath)` is set in `spark-env.sh` and the entrypoint.
+- **Full Hive 2.3.10 distribution:** Spark built with `-Phive` already bundles the Hive 2.3 client. What is the full distribution used for, beyond the `hive-authentication` and `hive-listener` jars and the postgres JDBC driver? Hive 2.3 is also an end-of-life line, and the postgres JDBC driver is 42.7.3.
+- **Hand fixes tied to exact jar names:** remove guava 14, copy guava 27, swap jline, and remove `bundle-2.29.52.jar` "to fix multiple bindings". That last jar is the AWS SDK bundle `hadoop-aws` needs: where does S3A get the SDK from, and will these fixes survive version bumps?
+- **Downloads:**
+  - `HADOOP_VERSION`, `HIVE_VERSION` and the jline/guava/JDBC versions are hardcoded and not tracked by Renovate.
+  - Nothing is checksum-verified, unlike the other install scripts.
+  - Hadoop comes from `downloads.apache.org`, which only hosts current releases, so 3.4.2 will return 404 once superseded. Use `archive.apache.org`.
+- **SparkR:** installed with `remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')`, and the R variant also runs rocker's `install_tidyverse.sh`.
+- **`spark-entrypoint.sh`:** a copy of the upstream Spark-on-Kubernetes entrypoint, including dead `PYSPARK_MAJOR_PYTHON_VERSION == 2` handling. Compare it with the current upstream version.
 
-## P0 — Bugs and quick wins
+### 12. Image size — M
 
-- [x] **1. AWS CLI installer left in every image** — S (fixed: install from a `mktemp -d` directory, removed afterwards)
-  - Evidence: `base/scripts/install-awscli.sh:18-20` downloads `awscliv2.zip` and unzips `./aws` into the current directory, which is `WORKDIR ${WORKSPACE_DIR}` = `/home/onyxia/work` (see `base/Dockerfile`). Neither is deleted, so both ship in base's 924 MB layer and in every image built on it.
-  - Fix: work in a `mktemp -d` directory and remove it; drop the pointless `sudo` (the script already runs as root).
-- [x] **2. Redirect bug and leftover pip caches** — S (fixed: GDAL installed with `uv pip install --system --no-cache "gdal[numpy]==..."` plus an `osgeo.gdal_array` import check; the build dependency pre-install was dropped because GDAL's pyproject.toml declares them for the isolated build. radian later removed altogether, see #21)
-  - Evidence: `python-datascience/scripts/install-geospatial-python.sh:21` runs `uv pip install --system numpy>1.0.0 wheel setuptools>=67` unquoted. Bash reads `>1.0.0` and `>=67` as redirects, so the constraints are ignored and files `1.0.0` and `=67` are created in `/home/onyxia/work` (shellcheck SC2261).
-  - Evidence: the next line, `pip install gdal[numpy]==...`, has no `--no-cache-dir`. Nor does `pip install radian` in `vscode/scripts/install-vscode-extensions.sh:75`. Both leave a pip cache in `~/.cache/pip`, because `HOME=/home/onyxia` during builds.
-  - Fix: quote the requirement specifiers, add `--no-cache-dir` (or use `uv pip install --system --no-cache`), and quote `"gdal[numpy]==..."`.
-- [x] **3. Spark entrypoint dumps the environment to pod logs** — S (fixed: `env` call removed)
-  - Evidence: `spark/scripts/spark-entrypoint.sh:132` calls `env` before exec for driver/executor commands. This prints any credentials passed to executor pods (e.g. `AWS_*` via `spark.kubernetes.executorEnv`) into the pod logs.
-  - Fix: remove the line.
-- [x] **4. `${WORKSPACE_DIR}` not expanded in exec-form CMD** — S (fixed: jupyter drops `--notebook-dir` and starts in `WORKDIR`; vscode uses `CMD ["/bin/bash", "-c", "exec code-server ... \"${WORKSPACE_DIR}\""]`)
-  - Evidence: `jupyter/Dockerfile:35` and `vscode/Dockerfile:29`. Exec form does no variable substitution, so a plain `docker run` passes the literal string `${WORKSPACE_DIR}`. jupyter_server resolves it to `/home/onyxia/work/${WORKSPACE_DIR}` and refuses to start ("No such directory").
-  - Scope: **Onyxia is not affected.** The helm charts in InseeFrLab/helm-charts-interactive-services override `command`/`args` (`/bin/sh -c "<init script> jupyter lab ..."` without `--notebook-dir`, and `code-server ... /home/<user>/work`), so the image CMD is never used there. Jupyter opens in the image `WORKDIR` (`/home/onyxia/work`). Only standalone use of the images (plain `docker run`, other platforms) hits the bug.
-  - Fix: use the literal path `/home/onyxia/work`, or shell form wrapped with `exec`.
-- [ ] **5. Hardcoded py4j filename** — S
-  - Evidence: `spark/Dockerfile:17` sets `PYTHONPATH` to `py4j-0.10.9.9-src.zip`. Renovate now bumps `SPARK_VERSION` automatically; when Spark ships a new py4j, `import pyspark` breaks and no test catches it.
-  - Fix: in `install-spark-hadoop-hive.sh`, symlink `${SPARK_HOME}/python/lib/py4j-*-src.zip` to a fixed name (e.g. `py4j-src.zip`) and reference that name. Add an `import pyspark` test (see #7).
-  - **Deferred, and widened to a full audit of the Spark/Hadoop/Hive install** (to do after the easier items). The goal is to simplify it a lot. Questions to answer, none verified yet:
-    - Spark comes from a custom build (`spark-${SPARK_VERSION}-bin-hadoop-${HADOOP_VERSION}-hive-${HIVE_VERSION}-java-${JAVA_VERSION}.tgz`, built by InseeFrLab/Spark-hive and hosted on `minio.lab.sspcloud.fr`). Is that still needed, or would the official Apache distribution or `pip install pyspark` do?
-    - A separate full Hadoop distribution is installed, and `SPARK_DIST_CLASSPATH=$(hadoop classpath)` is set in `spark-env.sh` and the entrypoint. Are Hadoop jars shipped twice, once in the Spark build and once in `HADOOP_HOME`?
-    - A full Hive 2.3.10 distribution is installed. Spark built with `-Phive` already bundles the Hive 2.3 client for the metastore. What is the full distribution used for, beyond the `hive-authentication` and `hive-listener` jars and the postgres JDBC driver?
-    - Several hand fixes are tied to exact jar names: remove guava 14, copy guava 27, swap jline, and remove `bundle-2.29.52.jar` "to fix multiple bindings". The last one is the AWS SDK bundle that `hadoop-aws` needs. Where does S3A get the SDK from, and will these fixes survive version bumps?
-    - `HADOOP_VERSION`, `HIVE_VERSION`, the jline/guava and postgres JDBC versions are hardcoded in the script and not managed by Renovate.
-    - SparkR is installed with `remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')`, and the R layer also runs `install_tidyverse.sh`.
-    - `spark-entrypoint.sh` is a copy of the upstream Spark-on-Kubernetes entrypoint, including dead `PYSPARK_MAJOR_PYTHON_VERSION == 2` handling. Compare it with the current upstream version.
+Published sizes on 2026-09-19 (compressed, amd64):
 
-## P1 — Reliability and security
+| Image | Size |
+|---|---|
+| base | 0.95 GB (one 924 MB `RUN` layer) |
+| python-minimal | 1.24 GB |
+| python-datascience | 1.94 GB (702 MB geospatial + requirements layer) |
+| jupyter-python | 2.06 GB |
+| vscode-python | 2.44 GB |
+| rstudio | 2.5 GB |
+| jupyter-pyspark | 3.46 GB |
+| jupyter-python GPU | 7.18 GB |
+| jupyter-pytorch GPU | 9.5 GB |
 
-- [x] **6. No CI on pull requests** — M (done for linting only: `.github/workflows/check-code-quality.yml` runs ruff, shellcheck (warning level) and hadolint (`.hadolint.yaml`) on PRs. **Building images on PRs was rejected**: it was tried before and costs too much compute)
-  - Evidence: `.github/workflows/main-workflow.yml` triggers only on `schedule` and `workflow_dispatch`. Renovate PRs (including the Python/R/Spark regex managers) and contributor PRs merge without being built.
-  - Fix: a new PR workflow with two parts:
-    - lint job: `uv run ruff check`, `ruff format --check`, shellcheck, hadolint, `renovate-config-validator`
-    - build job: builds and tests only the layers whose directories changed (path filters), CPU only, one version, no push. Parent images come from Docker Hub.
-- [x] **7. Container tests only check binary paths** — M (done except spark: each `tests.yaml` has a `# Functional tests` section derived from its Dockerfile, with `if command -v …` guards where the layer is stacked on several parents, plus a "Workspace is empty" check. The base, python-minimal, r-minimal and r-datascience tests were run once against the published images and pass, except the workspace check, which fails there because of #1/#2 until the next build. The other layers' tests have not been run. **Spark tests are still to write**, together with #5)
-  - Evidence: every `*/tests.yaml` is a near-copy of `which helm/kubectl/duckdb/...` checks. Nothing verifies that packages import or services start.
-  - Fix: add at least one functional `commandTests` entry per layer, for example:
-    - python-datascience: `python -c "import geopandas, osgeo.gdal, polars, sklearn"`
-    - python-pytorch: `python -c "import torch"`
-    - spark: `python -c "import pyspark"` plus a local `SparkSession`; for R, `library(sparklyr)` and `library(SparkR)`
-    - r-datascience: `Rscript -e "library(tidyverse); library(arrow); library(duckdb)"`
-    - jupyter: `jupyter lab --version`
-    - vscode: `code-server --list-extensions`
-    - rstudio: `rstudio-server verify-installation`
-    - base: `quarto check`, and `duckdb -c "LOAD httpfs"` run as the user
-- [x] **8. One failing variant blocks whole image families** — closed, working as intended
-  - Evidence: with `fail-fast: false`, a single failing matrix entry still fails the job, and every `needs:` child job is skipped for all versions.
-  - Evidence: GPU variants skip the "Build and load" step (`if: !contains(..., 'gpu')` in `main-workflow-template.yml`), so they are first built in "Push to DockerHub". Their build errors show up as push failures, and GPU images are never tested.
-  - Decisions:
-    - **No failure notification**: the maintainers check the pipeline result every Monday morning.
-    - **GPU images are not tested on purpose, for lack of disk**: they are too big for GitHub-hosted runners to load them into Docker and run the tests. Revisit once #12 has reduced image sizes; if GPU images become small enough, build and test them like the CPU ones.
-    - **A failed layer must fail all its children**: images are built sequentially on top of each other, so skipping every child job of a failed job is the expected behavior. Jobs stay as they are, with no split between GPU and CPU jobs.
-  - Only open point, tracked in #12: test GPU images if they become small enough.
-- [x] **9. Unpinned, unverified downloads at build time** — M–L (done except Spark/Hadoop/Hive, which moves to the Spark audit in #5: kubectl, helm, AWS CLI, DuckDB CLI, quarto, opencode, Julia and code-server are pinned in their install scripts with a `# renovate:` comment, tracked by one generic Renovate manager (weekly grouped "Build tools" PR), and verified by checksum (upstream file, or the GitHub asset digest read from the GitHub API) or by PGP signature for the AWS CLI. Versions stay out of Dockerfiles by design)
-  - Evidence (all in the scripts named below):
-    - ~~`install-helm.sh` pipes the `master` branch installer~~ Done: Helm 4 pinned as `HELM_VERSION` in `install-helm.sh`, installed from the official `get.helm.sh` archive with its SHA-256 checked, and bumped by a Renovate regex manager (`helm/helm` GitHub releases). Use it as the model for the other tools.
-    - these fetch "latest": `install-kubectl.sh`, `install-duckdb-cli.sh`, `install-quarto.sh`, `install-julia.sh` (unauthenticated GitHub API; an empty version on rate limit isn't caught), `install-vscode.sh` (code-server `install.sh`), `install-opencode.sh` (`curl | bash`), `install-awscli.sh`
-    - `spark/scripts/install-spark-hadoop-hive.sh` downloads Spark, Hadoop, Hive and jars (some from `minio.lab.sspcloud.fr`) without any checksum
-    - Hadoop comes from `downloads.apache.org`, which only hosts current releases, so 3.4.2 will return 404 once it's superseded
-  - Fix:
-    - pin each tool as an `ARG` in its Dockerfile and verify its sha256
-    - add a Renovate regex manager per tool, reusing the pattern in `renovate.json`
-    - switch Hadoop and Hive downloads to `archive.apache.org`
-    - also pin `HADOOP_VERSION`, `HIVE_VERSION` and the postgres JDBC version
-- [x] **10. `base/scripts/onyxia-init.sh` hardening** — M (closed here: the `curl --insecure` point is tracked in a separate GitHub issue, as it depends on other architecture decisions)
-  - ~~Line 22: `curl --insecure $REGION_INIT_SCRIPT | bash` runs a script fetched without TLS verification at every startup.~~ Moved to a separate GitHub issue: the fix depends on how Onyxia regions provide their CA certificates.
-  - ~~Lines 50-64: Vault values pasted into `sudo sh -c`~~ Done: values are written with `printf ... | sudo tee -a` (never evaluated by a shell), `printf %q` for `.bashrc`, keys read with `jq --arg`, and keys that are not valid variable names are skipped.
-  - ~~Lines 90-103: `GIT_PERSONAL_ACCESS_TOKEN` is put in the clone URL, so it's stored in `.git/config`~~ Won't fix: users work in their own isolated container and start a new one when the token expires. A credential helper would only move the plain-text token to `~/.git-credentials`, where anything running in the container (including AI agents) can still read it.
-  - ~~Lines 189-197: DuckDB `CREATE SECRET` built by string concatenation~~ Won't fix: the values (AWS/MinIO keys, session token, region, endpoint) cannot contain single quotes, and the SQL runs with the user's own rights. Only the shellcheck quoting fix was kept.
-- [x] **11. CI supply chain** — S (done; the optional scanning below is not)
-  - Evidence: no `permissions:` block in either workflow; actions pinned to mutable tags (`@v7`, ...); `.github/actions/container-structure-test` downloads `latest` without a checksum, in jobs that hold the Docker Hub credentials.
-  - Fix:
-    - ~~add `permissions: contents: read`~~ Done: set at the top of `main-workflow.yml` (inherited by the reusable template) and `check-code-quality.yml`.
-    - ~~add `helpers:pinGitHubActionDigests` to `renovate.json` `extends`~~ Rejected: actions stay pinned to version tags.
-    - ~~pin the container-structure-test version and verify its checksum~~ Done: `CST_VERSION` in `.github/actions/container-structure-test/action.yml`, downloaded from the GitHub release and checked against its `checksums.txt`, tracked by the generic Renovate manager (which now also reads `.github/actions/*/action.yml`).
-  - Optional: Trivy scan, plus `sbom: true` / `provenance: true` in `docker/build-push-action`.
+- Re-measure after the next build: the AWS CLI installer leftovers (about 70 MB zip + unzipped folder) are now removed from base.
+- Run `dive` on base and python-datascience. Suspected big items: TinyTeX (`install-quarto.sh`) and `build-essential` in base, and the GDAL stack from the ubuntugis PPA in python-datascience.
+- Consider moving TinyTeX and quarto to the IDE layers.
+- Add a CI step that reports layer sizes, so regressions show up.
+- **GPU testing:** GPU images are not tested in CI because they are too big for GitHub-hosted runners to load and test. Once sizes are reduced, check whether they fit, and test them like the CPU ones if so.
 
-## P2 — Performance
+### 13. Python compiled from source — M
 
-- [ ] **12. Image size** — M
-  - Once sizes are reduced, check whether GPU images fit on GitHub-hosted runners, so they can be tested like the CPU ones (see the decisions in #8).
-  - Evidence: sizes in the context section above.
-  - Fix:
-    - do #1 first
-    - run `dive` on base and python-datascience to measure. Suspected big items: TinyTeX (`install-quarto.sh`) and `build-essential` in base, and the GDAL stack from the `ubuntugis-unstable` PPA in python-datascience.
-    - consider moving TinyTeX and quarto to the IDE layers
-    - add a CI step that reports layer sizes so regressions show up
-- [ ] **13. Python compiled from source with PGO+LTO** — M
-  - Evidence: `python-minimal/scripts/install-python.sh` and its duplicate `r-python-julia/scripts/install-python.sh` compile CPython with `--enable-optimizations --with-lto`. This sits on the critical path of every Python chain, × 2 versions × CPU/GPU.
-  - Fix: install prebuilt python-build-standalone binaries (also PGO+LTO-optimized) with `uv python install` into `/opt/python`. The tests expect `/opt/python/bin/python` and `/opt/python/bin/pip`; `python` and `pip` symlinks may be needed. Check that C-extension builds (e.g. GDAL's Python bindings in #2) still work.
-- [ ] **14. Container startup work** — S
-  - Evidence: `onyxia-init.sh:221-226` runs `chown -R` over every directory in the workspace at each start, which is slow on volumes with virtualenvs or data. ~~Lines 205-209 print every installed R package at each start.~~ Removed.
-  - Fix: `find "$f" ! -user "$USERNAME" -exec chown ...`, or limit to the cloned repo; drop the package listing or make it opt-in.
-- [ ] **15. Useless CI steps** — S
-  - ~~Evidence: `docker/setup-qemu-action` runs, but no multi-arch build happens.~~ QEMU step removed with #19. `.github/actions/cache-common-images` pulls `golang` and `dockereng/export-build` in every job and warns "Failed to restore".
-  - Fix: remove both.
+`base/scripts/install-python.sh` compiles CPython with `--enable-optimizations --with-lto`. That sits on the critical path of every Python chain (python-minimal and r-python-julia), × 2 versions × CPU/GPU.
 
-## P3 — Code quality and maintainability
+- Fix: install prebuilt python-build-standalone binaries (also PGO+LTO-optimized) with `uv python install` into `/opt/python`.
+- The tests expect `/opt/python/bin/python` and `/opt/python/bin/pip`, so `python` and `pip` symlinks may be needed.
+- Check that C-extension builds still work, e.g. GDAL's Python bindings in python-datascience.
 
-- [x] **16. Duplicated scripts** — S–M (done: `apt_install` replaced by `base/scripts/apt-install.sh`, `install-python.sh` and `install-java.sh` moved to `base/scripts/`, per-layer copies deleted)
-  - Evidence:
-    - the `apt_install` function is copy-pasted in 6 scripts
-    - `install-python.sh` exists in both python-minimal and r-python-julia (identical except for the final newline)
-    - `install-java.sh` exists in both r-datascience and spark (identical)
-  - Fix: because every layer copies `scripts/` to `/opt`, shared helpers can live in `base/scripts/` (e.g. `/opt/apt-install.sh`) and be called from child layers.
-- [ ] **17. Two diverged definitions of the image graph** — M–L
-  - Evidence: `chains` in `utils/build_chain.py` versus the jobs in `main-workflow.yml`:
-    - local chain `python-pyspark` is `pyspark` in CI
-    - `jupyter-python-minimal` exists only locally, `vscode-pyspark` only in CI
-    - the CUDA base image is `12.8.1` locally and `12.6.3` in CI
-  - Fix: a single `images.yaml` (layers, parents, versions, GPU flag) that drives both the CI matrix and local builds. Alternatively, generate `main-workflow.yml` from it and check in CI that it's up to date.
-- [ ] **18. Shell hygiene** — S (CI) + M (fixes)
-  - Evidence: 197 shellcheck findings; no `pipefail` anywhere, so e.g. an empty Julia version slips through.
-  - Progress: shellcheck now runs in CI at `--severity=warning`. The 1 error and 22 warnings were fixed (`onyxia-init.sh`: `$*` in the final echo, split `export`s, DuckDB SQL quoting; `spark-entrypoint.sh`: split `export`, documented `SC2206` ignore for intentional word splitting). About 180 info/style findings remain, mostly SC2086; raise the threshold once they are fixed.
-  - Fix: add shellcheck to the lint job (#6), use `set -euo pipefail` in build scripts, and fix the findings incrementally. Be careful with `onyxia-init.sh`: it deliberately doesn't use `set -e`, so it tolerates failures at startup.
-- [x] **19. Half-built arm64 support** — S (done: images are amd64 only. The `uname -m` branches were removed with the #9 rewrites, and the unused QEMU setup step was removed from `main-workflow-template.yml`)
-  - Evidence: some scripts branch on `uname -m` (awscli, kubectl, duckdb), but `JAVA_HOME` (`*-amd64`), `install-quarto.sh`, `install-julia.sh` and `tests.yaml` are amd64-only, and CI builds amd64 only.
-  - Fix: pick one. Either drop the arm64 branches, or commit to multi-arch builds.
-- [x] **20. Python tooling** — S (done: scripts moved to `utils/`, repo turned into a non-packaged uv project, `generate_matrix.py` uses module constants instead of `args` globals. Unit tests for the tag scheme not added)
-  - Evidence:
-    - ~~`pyproject.toml` declares `ruff` as a runtime dependency instead of a dev group~~ Done: ruff, shellcheck-py and hadolint-py are in the `dev` dependency group
-    - the `images-datascience` entry point (`__init__.py`) only prints a greeting
-    - `generate_matrix.py` relies on globals (`DH_ORGA`, `args`, `TODAY_DATE`) defined under `__main__`
-    - the tag scheme users depend on has no unit tests
-  - Fix: move ruff to `[dependency-groups] dev`; pass config explicitly to functions; add pytest tests for the matrix/tag generation, run in the lint job.
-- [ ] **21. Small items** — S each
-  - ~~The `ppa:ubuntugis/ubuntugis-unstable` PPA is used in published images.~~ Done: the PPA is only enabled to install `libgdal-dev` and `gdal-bin`, then removed. Same for the PostgreSQL apt repository in base (`postgresql-client` and `libpq-dev`), which replaces the apt pinning.
-  - ~~Both `RPostgres` and the legacy `RPostgreSQL` are installed.~~ Done: `RPostgreSQL` removed.
-  - Hive 2.3.10 is on an end-of-life line; the postgres JDBC is 42.7.3. Deferred to the Spark audit (#5).
-  - ~~radian (R console used by the vscode R setup) is no longer maintained.~~ Done: radian removed; `r.rterm.linux` left unset so vscode-R uses R from `PATH`, and the radian-only `r.bracketedPaste` setting removed.
-  - ~~The vscode layer's `remotes::install_github('ManuelHentschel/vscDebugger')` has no GitHub token.~~ Done: `vscDebugger` removed. The `RDebugger.r-debugger` VS Code extension, which needs it, is still installed (to decide).
-  - Won't fix: `import tkinter` fails in python-minimal (`libtk8.6.so` missing): `install-python.sh` purges its build dependencies with `apt-get purge --auto-remove`, which also removes the Tk runtime library. Harmless on a headless server; either keep `libtk8.6` installed or accept it.
-  - ~~README is outdated~~ Done: link to `base/scripts/onyxia-init.sh`, build time 01:00 UTC, `PATH_TO_CABUNDLE` typo fixed to `PATH_TO_CA_BUNDLE`, image graph aligned with `main-workflow.yml` (`pyspark`, `rstudio`, `r-python-julia` on `r-datascience`, `rstudio-r-python-julia` added).
+### 14. Container startup work — S
 
-## Suggested order
+At every start, the end of `base/scripts/onyxia-init.sh` runs `chown -R` over every folder in `$ROOT_PROJECT_DIRECTORY`. That's slow on volumes with virtualenvs or data, and useless when the script runs as `onyxia` (Jupyter, VS Code), since a normal user can't change file owners.
 
-1. **Bundle A: one quick-win PR.** #1, #2, #3, #4, #11, #14, #15.
-   #5 was moved out of this bundle and widened into a Spark stack audit, to do after the easier items.
-2. **Bundle B: PR CI and functional tests.** #6, #7, and the lint part of #18. This is what makes the Renovate automation safe.
-3. ~~**Bundle C: failure isolation.** #8~~ Closed: a failure is meant to stop all child builds. GPU testing is revisited with #12.
-4. **Bundle D: pinning with checksums, tool by tool.** #9.
-5. ~~**Bundle E: init-script hardening.** #10~~ Done; the `curl --insecure` point moved to a separate GitHub issue.
-6. **Then:** performance (#13, #12) and refactoring (#16, #17, #19, #20, #21).
+- Suggested fix: only when running as root (RStudio), and only for files that need it:
+  ```bash
+  if [[ $(id -u) = 0 ]]; then
+      find "$ROOT_PROJECT_DIRECTORY" -mindepth 1 -path "$ROOT_PROJECT_DIRECTORY/lost+found" -prune \
+          -o \! -user "$USERNAME" -exec chown --no-dereference "$USERNAME:$GROUPNAME" {} +
+  fi
+  ```
+- Complementary, in the helm charts: `fsGroup` with `fsGroupChangePolicy: OnRootMismatch`.
+
+### 15. Unused CI step — S
+
+`.github/actions/cache-common-images` pulls `golang` and `dockereng/export-build` in every build job and warns "Failed to restore". It also has no `description`, which actionlint reports as an error. Remove the action and its step in `main-workflow-template.yml`.
+
+### 17. Two definitions of the image graph — M
+
+The image stacks are still declared twice: `chains` in `utils/build_chain.py` (local builds) and the jobs in `.github/workflows/main-workflow.yml` (CI). They currently match, and versions and the CUDA image already come from a single `versions.env`, but adding an image means editing both.
+
+Fix: a single `images.yaml` (layers, parents, languages, GPU flag) that drives both the CI matrix and local builds. Alternatively, generate `main-workflow.yml` from it and check in CI that it's up to date.
+
+### 21. Small items — S
+
+- **`RDebugger.r-debugger` VS Code extension:** still installed by `vscode/scripts/install-vscode-extensions.sh`, but its R backend `vscDebugger` was removed, so R debugging doesn't work (the extension only offers to install the package at first use). Remove it from `r_extensions`, and from the vscode tests if they list it.
+
+## Optional ideas
+
+- CI: Trivy vulnerability scan, and `sbom: true` / `provenance: true` in `docker/build-push-action`.
+- Shell: the remaining ~148 shellcheck info/style findings, mostly unquoted variables that never hold spaces (72 of them in `onyxia-init.sh`). Once fixed, raise the CI threshold to `info`.
+- Python: unit tests for the tag scheme in `utils/generate_matrix.py`, run in `check-code-quality.yml`.
+- Security: `curl --insecure $REGION_INIT_SCRIPT | bash` in `onyxia-init.sh` is tracked in a separate GitHub issue.
+
+## Decisions (don't reopen)
+
+- **Images are not built on PRs:** it was tried and costs too much compute. PRs only get linting, which is skipped for Renovate PRs.
+- **No notification on build failure:** the pipeline result is checked every Monday morning.
+- **A failed layer fails all its children:** the CI job structure is kept, with no GPU/CPU split.
+- **GitHub actions stay pinned to version tags,** not digests.
+- **Tool versions are pinned in install scripts,** not in Dockerfiles, which only pin Python, R and Spark.
+- **amd64 only.**
+- **The Git token stays in the clone URL:** containers are isolated and short-lived, and moving it to a credential helper would still leave it readable in plain text.
+- **DuckDB secret values are not SQL-escaped:** AWS/MinIO credentials can't contain quotes.
+- **`import tkinter` is broken in the images:** irrelevant for headless images.

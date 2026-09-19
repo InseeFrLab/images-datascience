@@ -4,10 +4,12 @@ import argparse
 import json
 import os
 from datetime import UTC, datetime
+from pathlib import Path
 
 DH_ORGA = "inseefrlab"
 IMAGES_PREFIX = "onyxia"
 TODAY_DATE = datetime.now(UTC).strftime("%Y.%m.%d")
+VERSIONS_FILE = Path(__file__).resolve().parent.parent / "versions.env"
 
 
 def generate_matrix(versions, input_image, output_image, spark_version, gpu_options, version_prefix):
@@ -75,21 +77,30 @@ def generate_r_python_julia_matrix(r_version, py_version, input_image, output_im
     return matrix
 
 
+def read_versions(path=VERSIONS_FILE):
+    """Parse the KEY="value" lines of versions.env into a dict, ignoring comments and blank lines."""
+    versions = {}
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            key, value = line.split("=", 1)
+            versions[key] = value.strip('"')
+    return versions
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_image", type=str)
     parser.add_argument("--output_image", type=str)
-    parser.add_argument("--python_version_1", type=str, nargs="?", const="")
-    parser.add_argument("--python_version_2", type=str, nargs="?", const="")
-    parser.add_argument("--r_version_1", type=str, nargs="?", const="")
-    parser.add_argument("--r_version_2", type=str, nargs="?", const="")
-    parser.add_argument("--spark_version", type=str, nargs="?", const="")
+    parser.add_argument("--languages", type=str, choices=["", "python", "r", "r-python"], default="")
+    parser.add_argument("--spark", type=str, default="false")
     parser.add_argument("--build_gpu", type=str, nargs="?")
-    parser.add_argument("--base_image_gpu", type=str, nargs="?", const="")
 
     args = parser.parse_args()
-    python_versions = [version for version in [args.python_version_1, args.python_version_2] if version]
-    r_versions = [version for version in [args.r_version_1, args.r_version_2] if version]
+    versions = read_versions()
+    python_versions = [versions["PYTHON_VERSION_1"], versions["PYTHON_VERSION_2"]]
+    r_versions = [versions["R_VERSION_1"], versions["R_VERSION_2"]]
+    spark_version = versions["SPARK_VERSION"] if args.spark == "true" else ""
     gpu_options = [False, True] if args.build_gpu == "true" else [False]
 
     if args.output_image == "base":
@@ -102,14 +113,14 @@ if __name__ == "__main__":
                 "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag},{DH_ORGA}/{onyxia_base_tag}-{TODAY_DATE}",
             },
             {
-                "base_image_tag": args.base_image_gpu,
+                "base_image_tag": versions["CUDA_BASE_IMAGE"],
                 "output_image_main_tag": f"{DH_ORGA}/{onyxia_base_tag}-gpu",
                 "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag}-gpu,{DH_ORGA}/{onyxia_base_tag}-gpu-{TODAY_DATE}",
             },
         ]
 
-    elif "r-python-julia" in args.output_image:
-        # Building multi-languages image
+    elif args.languages == "r-python":
+        # Multi-language images are only built with the newest versions of R and Python
         matrix = generate_r_python_julia_matrix(
             r_version=r_versions[0],
             py_version=python_versions[0],
@@ -119,24 +130,14 @@ if __name__ == "__main__":
 
     else:
         # Other images have either R or Python versions
-        if python_versions:
-            matrix = generate_matrix(
-                python_versions,
-                args.input_image,
-                args.output_image,
-                args.spark_version,
-                gpu_options,
-                "py",
-            )
-        elif r_versions:
-            matrix = generate_matrix(
-                r_versions,
-                args.input_image,
-                args.output_image,
-                args.spark_version,
-                gpu_options,
-                "r",
-            )
+        matrix = generate_matrix(
+            python_versions if args.languages == "python" else r_versions,
+            args.input_image,
+            args.output_image,
+            spark_version,
+            gpu_options,
+            "py" if args.languages == "python" else "r",
+        )
 
     print(matrix)
 

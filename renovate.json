@@ -5,16 +5,14 @@
   ],
   "customManagers": [
     {
-      "description": "Python version 1, the newer of the two maintained versions (python_version_1 in main-workflow.yml is the source of truth)",
+      "description": "Python version 1, the newer of the two maintained versions (versions.env is the source of truth; Dockerfile ARG defaults follow)",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^utils/build_chains\\.sh$/",
+        "/^versions\\.env$/",
         "/^python-minimal/Dockerfile$/",
         "/^r-python-julia/Dockerfile$/"
       ],
       "matchStrings": [
-        "python_version_1: *(?<currentValue>[^\\s]+)",
         "PYTHON_VERSION_1=\"(?<currentValue>[^\"]+)\"",
         "ARG PYTHON_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
@@ -23,14 +21,12 @@
       "depTypeTemplate": "python-v1"
     },
     {
-      "description": "Python version 2, the older of the two maintained versions (python_version_2 in main-workflow.yml is the source of truth)",
+      "description": "Python version 2, the older of the two maintained versions (versions.env is the source of truth)",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^utils/build_chains\\.sh$/"
+        "/^versions\\.env$/"
       ],
       "matchStrings": [
-        "python_version_2: *(?<currentValue>[^\\s]+)",
         "PYTHON_VERSION_2=\"(?<currentValue>[^\"]+)\""
       ],
       "depNameTemplate": "python",
@@ -38,15 +34,13 @@
       "depTypeTemplate": "python-v2"
     },
     {
-      "description": "R version 1, the newer of the two maintained versions (r_version_1 in main-workflow.yml is the source of truth)",
+      "description": "R version 1, the newer of the two maintained versions (versions.env is the source of truth; Dockerfile ARG default follows)",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^utils/build_chains\\.sh$/",
+        "/^versions\\.env$/",
         "/^r-minimal/Dockerfile$/"
       ],
       "matchStrings": [
-        "r_version_1: *(?<currentValue>[^\\s]+)",
         "R_VERSION_1=\"(?<currentValue>[^\"]+)\"",
         "ARG R_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
@@ -56,14 +50,12 @@
       "depTypeTemplate": "r-v1"
     },
     {
-      "description": "R version 2, the older of the two maintained versions (r_version_2 in main-workflow.yml is the source of truth)",
+      "description": "R version 2, the older of the two maintained versions (versions.env is the source of truth)",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^utils/build_chains\\.sh$/"
+        "/^versions\\.env$/"
       ],
       "matchStrings": [
-        "r_version_2: *(?<currentValue>[^\\s]+)",
         "R_VERSION_2=\"(?<currentValue>[^\"]+)\""
       ],
       "depNameTemplate": "rocker-org/rocker-versioned2",
@@ -72,21 +64,31 @@
       "depTypeTemplate": "r-v2"
     },
     {
-      "description": "Spark version (spark_version in main-workflow.yml is the source of truth)",
+      "description": "Spark version (versions.env is the source of truth; the spark Dockerfile ARG default follows)",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^\\.github/workflows/main-workflow\\.yml$/",
-        "/^utils/build_chains\\.sh$/",
+        "/^versions\\.env$/",
         "/^spark/Dockerfile$/"
       ],
       "matchStrings": [
-        "spark_version: *(?<currentValue>[^\\s]+)",
         "SPARK_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
       "depNameTemplate": "apache/spark",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+)$",
       "depTypeTemplate": "spark"
+    },
+    {
+      "description": "CUDA base image of the GPU variants (versions.env)",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^versions\\.env$/"
+      ],
+      "matchStrings": [
+        "CUDA_BASE_IMAGE=\"(?<depName>[^:\"]+):(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "depTypeTemplate": "cuda"
     },
     {
       "description": "Tools downloaded by install scripts and CI actions, pinned with a '# renovate: datasource=... depName=...' comment above a <TOOL>_VERSION=\"x.y.z\" line",
@@ -105,39 +107,62 @@
   "packageRules": [
     {
       "description": "One PR per version slot, updating every file at once",
-      "matchDepTypes": ["python-v1"],
+      "matchDepTypes": [
+        "python-v1"
+      ],
       "groupName": "Python version 1 update"
     },
     {
-      "matchDepTypes": ["python-v2"],
+      "matchDepTypes": [
+        "python-v2"
+      ],
       "groupName": "Python version 2 update"
     },
     {
-      "matchDepTypes": ["r-v1"],
+      "matchDepTypes": [
+        "r-v1"
+      ],
       "groupName": "R version 1 update"
     },
     {
-      "matchDepTypes": ["r-v2"],
+      "matchDepTypes": [
+        "r-v2"
+      ],
       "groupName": "R version 2 update"
     },
     {
-      "matchDepTypes": ["spark"],
+      "matchDepTypes": [
+        "spark"
+      ],
       "groupName": "Spark version update"
     },
     {
       "description": "Tools downloaded by install scripts and CI actions: one weekly PR for all of them",
-      "matchDepTypes": ["build-tool"],
+      "matchDepTypes": [
+        "build-tool"
+      ],
       "groupName": "Build tools",
-      "schedule": ["* * * * 0"]
+      "schedule": [
+        "* * * * 0"
+      ]
     },
     {
       "description": "Version 2 stays on its minor release and only receives patch updates",
-      "matchDepTypes": ["python-v2", "r-v2"],
+      "matchDepTypes": [
+        "python-v2",
+        "r-v2"
+      ],
       "separateMinorPatch": true
     },
     {
-      "matchDepTypes": ["python-v2", "r-v2"],
-      "matchUpdateTypes": ["major", "minor"],
+      "matchDepTypes": [
+        "python-v2",
+        "r-v2"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
       "enabled": false
     }
   ]
