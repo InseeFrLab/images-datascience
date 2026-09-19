@@ -55,7 +55,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 
 ## P1 — Reliability and security
 
-- [x] **6. No CI on pull requests** — M (done for linting only: `.github/workflows/lint.yml` runs ruff, shellcheck (warning level) and hadolint (`.hadolint.yaml`) on PRs. **Building images on PRs was rejected**: it was tried before and costs too much compute)
+- [x] **6. No CI on pull requests** — M (done for linting only: `.github/workflows/check-code-quality.yml` runs ruff, shellcheck (warning level) and hadolint (`.hadolint.yaml`) on PRs. **Building images on PRs was rejected**: it was tried before and costs too much compute)
   - Evidence: `.github/workflows/main-workflow.yml` triggers only on `schedule` and `workflow_dispatch`. Renovate PRs (including the Python/R/Spark regex managers) and contributor PRs merge without being built.
   - Fix: a new PR workflow with two parts:
     - lint job: `uv run ruff check`, `ruff format --check`, shellcheck, hadolint, `renovate-config-validator`
@@ -71,13 +71,14 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
     - vscode: `code-server --list-extensions`
     - rstudio: `rstudio-server verify-installation`
     - base: `quarto check`, and `duckdb -c "LOAD httpfs"` run as the user
-- [ ] **8. One failing variant blocks whole image families** — M (deferred until after #12)
+- [x] **8. One failing variant blocks whole image families** — closed, working as intended
   - Evidence: with `fail-fast: false`, a single failing matrix entry still fails the job, and every `needs:` child job is skipped for all versions.
   - Evidence: GPU variants skip the "Build and load" step (`if: !contains(..., 'gpu')` in `main-workflow-template.yml`), so they are first built in "Push to DockerHub". Their build errors show up as push failures, and GPU images are never tested.
   - Decisions:
     - **No failure notification**: the maintainers check the pipeline result every Monday morning.
     - **GPU images are not tested on purpose, for lack of disk**: they are too big for GitHub-hosted runners to load them into Docker and run the tests. Revisit once #12 has reduced image sizes; if GPU images become small enough, build and test them like the CPU ones.
-  - Remaining fix to consider: separate GPU jobs from CPU jobs, so that a GPU failure doesn't block the CPU images built on top of it.
+    - **A failed layer must fail all its children**: images are built sequentially on top of each other, so skipping every child job of a failed job is the expected behavior. Jobs stay as they are, with no split between GPU and CPU jobs.
+  - Only open point, tracked in #12: test GPU images if they become small enough.
 - [x] **9. Unpinned, unverified downloads at build time** — M–L (done except Spark/Hadoop/Hive, which moves to the Spark audit in #5: kubectl, helm, AWS CLI, DuckDB CLI, quarto, opencode, Julia and code-server are pinned in their install scripts with a `# renovate:` comment, tracked by one generic Renovate manager (weekly grouped "Build tools" PR), and verified by checksum (upstream file, or the GitHub asset digest read from the GitHub API) or by PGP signature for the AWS CLI. Versions stay out of Dockerfiles by design)
   - Evidence (all in the scripts named below):
     - ~~`install-helm.sh` pipes the `master` branch installer~~ Done: Helm 4 pinned as `HELM_VERSION` in `install-helm.sh`, installed from the official `get.helm.sh` archive with its SHA-256 checked, and bumped by a Renovate regex manager (`helm/helm` GitHub releases). Use it as the model for the other tools.
@@ -89,22 +90,23 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
     - add a Renovate regex manager per tool, reusing the pattern in `renovate.json`
     - switch Hadoop and Hive downloads to `archive.apache.org`
     - also pin `HADOOP_VERSION`, `HIVE_VERSION` and the postgres JDBC version
-- [ ] **10. `base/scripts/onyxia-init.sh` hardening** — M
-  - Line 22: `curl --insecure $REGION_INIT_SCRIPT | bash` runs a script fetched without TLS verification at every startup. Use `--cacert "$PATH_TO_CA_BUNDLE"` when set, and make `--insecure` opt-in via a dedicated env var. This requires coordination with the Onyxia helm charts.
-  - Lines 50-64: Vault values are pasted into `sudo sh -c "printf ... \"$value\""`, so a value containing `"`, `$` or a backtick gets corrupted or evaluated. This isn't privilege escalation, since that branch requires sudo anyway, but it breaks real secrets. Keys are also unquoted in the `jq` filter. Fix: `printf '%s=%q\n' "$key" "$value" | sudo tee -a /etc/environment`, and `jq --arg k "$key" '.data.data[$k]'`.
-  - Lines 90-103: `GIT_PERSONAL_ACCESS_TOKEN` is put in the clone URL, so it's stored in plain text in `.git/config` and shown by `git remote -v`. Use a credential helper instead (e.g. `git credential approve`, or `git -c credential.helper=...` for the clone).
-  - Lines 189-197: the DuckDB `CREATE SECRET` statement is built by string concatenation, so it breaks on quotes. Escape single quotes.
-- [ ] **11. CI supply chain** — S (M with scanning)
+- [x] **10. `base/scripts/onyxia-init.sh` hardening** — M (closed here: the `curl --insecure` point is tracked in a separate GitHub issue, as it depends on other architecture decisions)
+  - ~~Line 22: `curl --insecure $REGION_INIT_SCRIPT | bash` runs a script fetched without TLS verification at every startup.~~ Moved to a separate GitHub issue: the fix depends on how Onyxia regions provide their CA certificates.
+  - ~~Lines 50-64: Vault values pasted into `sudo sh -c`~~ Done: values are written with `printf ... | sudo tee -a` (never evaluated by a shell), `printf %q` for `.bashrc`, keys read with `jq --arg`, and keys that are not valid variable names are skipped.
+  - ~~Lines 90-103: `GIT_PERSONAL_ACCESS_TOKEN` is put in the clone URL, so it's stored in `.git/config`~~ Won't fix: users work in their own isolated container and start a new one when the token expires. A credential helper would only move the plain-text token to `~/.git-credentials`, where anything running in the container (including AI agents) can still read it.
+  - ~~Lines 189-197: DuckDB `CREATE SECRET` built by string concatenation~~ Won't fix: the values (AWS/MinIO keys, session token, region, endpoint) cannot contain single quotes, and the SQL runs with the user's own rights. Only the shellcheck quoting fix was kept.
+- [x] **11. CI supply chain** — S (done; the optional scanning below is not)
   - Evidence: no `permissions:` block in either workflow; actions pinned to mutable tags (`@v7`, ...); `.github/actions/container-structure-test` downloads `latest` without a checksum, in jobs that hold the Docker Hub credentials.
   - Fix:
-    - add `permissions: contents: read`
-    - add `helpers:pinGitHubActionDigests` to `renovate.json` `extends`
-    - pin the container-structure-test version and verify its checksum
+    - ~~add `permissions: contents: read`~~ Done: set at the top of `main-workflow.yml` (inherited by the reusable template) and `check-code-quality.yml`.
+    - ~~add `helpers:pinGitHubActionDigests` to `renovate.json` `extends`~~ Rejected: actions stay pinned to version tags.
+    - ~~pin the container-structure-test version and verify its checksum~~ Done: `CST_VERSION` in `.github/actions/container-structure-test/action.yml`, downloaded from the GitHub release and checked against its `checksums.txt`, tracked by the generic Renovate manager (which now also reads `.github/actions/*/action.yml`).
   - Optional: Trivy scan, plus `sbom: true` / `provenance: true` in `docker/build-push-action`.
 
 ## P2 — Performance
 
 - [ ] **12. Image size** — M
+  - Once sizes are reduced, check whether GPU images fit on GitHub-hosted runners, so they can be tested like the CPU ones (see the decisions in #8).
   - Evidence: sizes in the context section above.
   - Fix:
     - do #1 first
@@ -163,7 +165,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
 1. **Bundle A: one quick-win PR.** #1, #2, #3, #4, #11, #14, #15.
    #5 was moved out of this bundle and widened into a Spark stack audit, to do after the easier items.
 2. **Bundle B: PR CI and functional tests.** #6, #7, and the lint part of #18. This is what makes the Renovate automation safe.
-3. **Bundle C: failure isolation.** #8, after #12 (image size) since it may change the GPU testing choice.
+3. ~~**Bundle C: failure isolation.** #8~~ Closed: a failure is meant to stop all child builds. GPU testing is revisited with #12.
 4. **Bundle D: pinning with checksums, tool by tool.** #9.
-5. **Bundle E: init-script hardening.** #10, coordinated with the helm charts.
+5. ~~**Bundle E: init-script hardening.** #10~~ Done; the `curl --insecure` point moved to a separate GitHub issue.
 6. **Then:** performance (#13, #12) and refactoring (#16, #17, #19, #20, #21).

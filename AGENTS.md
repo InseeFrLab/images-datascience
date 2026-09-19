@@ -16,7 +16,7 @@ uv run shellcheck --severity=warning $(git ls-files '*.sh')  # lint shell script
 uv run hadolint $(git ls-files '*Dockerfile')              # lint Dockerfiles (config in .hadolint.yaml)
 ```
 
-These same checks run on every PR in `.github/workflows/lint.yml`, and they must pass. Images are deliberately **not** built on PRs: it was tried and costs too much compute. Image builds only happen in the weekly/manual `main-workflow.yml`.
+These same checks run on every PR in `.github/workflows/check-code-quality.yml`, and they must pass. Images are deliberately **not** built on PRs: it was tried and costs too much compute. Image builds only happen in the weekly/manual `main-workflow.yml`.
 
 Build a full image chain locally (each layer is built with `docker build`, then tested with `container-structure-test`, which must be installed):
 
@@ -73,6 +73,6 @@ The valid layer stacks are declared in the `chains` dict in `src/images_datascie
 The version inputs in `main-workflow.yml` are the source of truth for Python/R/Spark versions. They are duplicated in the `ARG` defaults of the `python-minimal`, `r-python-julia`, `r-minimal` and `spark` Dockerfiles and in the `*_VERSION_*` variables of `build_chains.sh`. `renovate.json` has one regex manager per version slot (Python 1/2, R 1/2, Spark) covering all of these files, and groups each slot into a single PR; version 2 only gets patch bumps, so moving it to a new minor release (e.g. when version 1 moves on) is a manual change. When changing a version by hand, update every occurrence; when adding a new place that pins one of these versions, add its pattern to the matching manager. CUDA base image tags (`build_chain.py`, `main-workflow.yml`) are not managed and must be updated manually.
 
 Tools downloaded at build time (kubectl, helm, AWS CLI, DuckDB CLI, quarto, opencode, Julia, code-server) are pinned in their install script, **not** in Dockerfiles (Dockerfiles only pin the versions the project manages: Python, R, Spark). Each script follows the same model, see `base/scripts/install-kubectl.sh`:
-- a `# renovate: datasource=<datasource> depName=<name>` comment right above a `<TOOL>_VERSION="x.y.z"` line. One generic regex manager in `renovate.json` picks it up, and all tool bumps land in a single weekly "Build tools" PR.
+- a `# renovate: datasource=<datasource> depName=<name>` comment right above a `<TOOL>_VERSION="x.y.z"` line. One generic regex manager in `renovate.json` picks it up (in `scripts/*.sh` and in `.github/actions/*/action.yml`, where container-structure-test is pinned the same way), and all tool bumps land in a single weekly "Build tools" PR.
 - the official release file is downloaded to a `mktemp -d` directory and verified before installing: against the upstream checksum file when there is one (kubectl, helm, quarto, Julia), against the SHA-256 GitHub records for the release asset (read from the GitHub API in the script, with `set -o pipefail`) when there is none (DuckDB, opencode, code-server), and with the PGP signature for the AWS CLI (the public key is embedded in `install-awscli.sh` and expires on 2027-07-01).
 - amd64 only.

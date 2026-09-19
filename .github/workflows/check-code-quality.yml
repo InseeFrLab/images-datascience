@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+# The GITHUB_TOKEN only needs to read the repository
+permissions:
+  contents: read
+
 jobs:
   lint:
     if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'renovate[bot]'
