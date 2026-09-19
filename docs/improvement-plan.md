@@ -43,6 +43,7 @@ Published sizes on 2026-09-19 (compressed, amd64):
 - Add a CI step that reports layer sizes, so regressions show up.
 - **GPU testing:** GPU images are not tested in CI because they are too big for GitHub-hosted runners to load and test. Once sizes are reduced, check whether they fit, and test them like the CPU ones if so.
 
+<<<<<<< Updated upstream
 ### 13. Python compiled from source — M
 
 `base/scripts/install-python.sh` compiles CPython with `--enable-optimizations --with-lto`. That sits on the critical path of every Python chain (python-minimal and r-python-julia), × 2 versions × CPU/GPU.
@@ -78,6 +79,8 @@ Fix: a single `images.yaml` (layers, parents, languages, GPU flag) that drives b
 
 - **`RDebugger.r-debugger` VS Code extension:** still installed by `vscode/scripts/install-vscode-extensions.sh`, but its R backend `vscDebugger` was removed, so R debugging doesn't work (the extension only offers to install the package at first use). Remove it from `r_extensions`, and from the vscode tests if they list it.
 
+=======
+>>>>>>> Stashed changes
 ## Optional ideas
 
 - CI: Trivy vulnerability scan, and `sbom: true` / `provenance: true` in `docker/build-push-action`.
@@ -96,3 +99,6 @@ Fix: a single `images.yaml` (layers, parents, languages, GPU flag) that drives b
 - **The Git token stays in the clone URL:** containers are isolated and short-lived, and moving it to a credential helper would still leave it readable in plain text.
 - **DuckDB secret values are not SQL-escaped:** AWS/MinIO credentials can't contain quotes.
 - **`import tkinter` is broken in the images:** irrelevant for headless images.
+- **The `chown -R` over `~/work` at startup stays:** the folder only holds what was just cloned or added by an init script, and the user must own all of it.
+- **The image graph stays declared twice** (`chains` in `utils/build_chain.py`, jobs in `main-workflow.yml`): no generated CI. Adding an image means updating both.
+- **Python is installed with uv only,** no build from source: the `EXTERNALLY-MANAGED` marker uv adds is removed, and Python is installed outside uv's default location so that `uv pip install --system` uses it.
