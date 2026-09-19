@@ -72,9 +72,6 @@ if command -v R &> /dev/null; then
     done
     R -e "install.packages(c('remotes', 'languageserver', 'rmarkdown', 'httpgd'))"
     R -e "remotes::install_github('ManuelHentschel/vscDebugger')"
-    pip install radian
-    r_path=$(which radian)
-    jq --arg rPath "$r_path" '.["r.rterm.linux"] = $rPath' ${REMOTE_CONFIG_DIR}/settings.json > tmp.json && mv tmp.json ${REMOTE_CONFIG_DIR}/settings.json
 fi
 
 # Julia-specific configuration

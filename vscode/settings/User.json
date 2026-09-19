@@ -10,7 +10,6 @@
     "redhat.telemetry.enabled": false,
     "julia.symbolCacheDownload": true,
     "julia.enableTelemetry": false,
-    "r.bracketedPaste": true,
     "[latex]":  {
 		"editor.wordWrap": "on"
 	},
