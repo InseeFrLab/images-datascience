@@ -1,0 +1,31 @@
+#!/bin/bash
+set -e
+
+# Build configuration
+
+PUSH=false
+
+DOCKER_BUILD_ARGS=""
+[ "$PUSH" = "true" ] && DOCKER_BUILD_ARGS+=" --push"
+
+
+# Build process
+
+PYTHON_VERSIONS=("3.13.15" "3.12.13")
+R_VERSIONS=("4.6.0" "4.5.3")
+SPARK_VERSION=4.1.1
+
+for py_ver in "${PYTHON_VERSIONS[@]}"; do
+  python3 src/images_datascience/build_chain.py --chain vscode-python --py_version $py_ver $DOCKER_BUILD_ARGS
+  python3 src/images_datascience/build_chain.py --chain vscode-pytorch --py_version $py_ver --gpu $DOCKER_BUILD_ARGS
+  python3 src/images_datascience/build_chain.py --chain jupyter-pyspark --py_version $py_ver --spark_version $SPARK_VERSION $DOCKER_BUILD_ARGS
+done
+
+for r_ver in "${R_VERSIONS[@]}"; do
+  python3 src/images_datascience/build_chain.py --chain rstudio --r_version $r_ver $DOCKER_BUILD_ARGS
+  python3 src/images_datascience/build_chain.py --chain sparkr --r_version $r_ver --spark_version $SPARK_VERSION $DOCKER_BUILD_ARGS
+done
+
+# r-python-julia images are built with only latest versions of R & Python
+python3 src/images_datascience/build_chain.py --chain rstudio-r-python-julia --r_version ${R_VERSIONS[0]} --py_version ${PYTHON_VERSIONS[0]} $DOCKER_BUILD_ARGS
+python3 src/images_datascience/build_chain.py --chain jupyter-r-python-julia --r_version ${R_VERSIONS[0]} --py_version ${PYTHON_VERSIONS[0]} $DOCKER_BUILD_ARGS
