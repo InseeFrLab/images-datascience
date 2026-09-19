@@ -70,10 +70,6 @@ The image stacks are still declared twice: `chains` in `utils/build_chain.py` (l
 
 Fix: a single `images.yaml` (layers, parents, languages, GPU flag) that drives both the CI matrix and local builds. Alternatively, generate `main-workflow.yml` from it and check in CI that it's up to date.
 
-### 21. Small items — S
-
-- **`RDebugger.r-debugger` VS Code extension:** still installed by `vscode/scripts/install-vscode-extensions.sh`, but its R backend `vscDebugger` was removed, so R debugging doesn't work (the extension only offers to install the package at first use). Remove it from `r_extensions`, and from the vscode tests if they list it.
-
 ## Optional ideas
 
 - CI: Trivy vulnerability scan, and `sbom: true` / `provenance: true` in `docker/build-push-action`.

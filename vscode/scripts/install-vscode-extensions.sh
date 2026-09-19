@@ -71,6 +71,7 @@ if command -v R &> /dev/null; then
         install_extension $extension
     done
     R -e "install.packages(c('remotes', 'languageserver', 'rmarkdown', 'httpgd'))"
+    R -e "install.packages('vscDebugger', repos = c('https://manuelhentschel.r-universe.dev', getOption('repos')))"
 fi
 
 # Julia-specific configuration
