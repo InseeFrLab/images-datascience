@@ -65,6 +65,7 @@ The valid layer stacks are declared in the `chains` dict in `src/images_datascie
 
 - `main-workflow.yml` runs weekly (Monday 01:00 UTC) and on manual dispatch. It defines one job per output image with `needs:` dependencies mirroring the layer graph, each calling the reusable `main-workflow-template.yml` with `image` (output name), `context` (layer directory), `base_image`, and language versions.
 - The template runs `src/images_datascience/generate_matrix.py` to expand versions × GPU/CPU into a build matrix (written to `$GITHUB_OUTPUT`), then builds, runs `<context>/tests.yaml`, and pushes only from `main`. GPU variants are built but **not tested** in CI: they are too big for GitHub-hosted runners to load and test (disk space).
+- Images are built for **amd64 only**: no multi-arch build, and install scripts only download amd64 binaries. Don't add arm64 branches.
 - Tag scheme: `onyxia-<image>:py<ver>` / `r<ver>` / `r<ver>-py<ver>`, plus `-spark<ver>`, `-gpu`, and a dated duplicate `-YYYY.MM.DD`. Base is `onyxia-base:latest[-gpu]`.
 - Two versions of Python and R are actively maintained for users (`*_version_1` = newer, `*_version_2` = older); neither is a fallback. `r-python-julia` images only use version 1; spark images are CPU-only (`build_gpu: false`).
 

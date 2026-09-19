@@ -120,7 +120,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
   - Evidence: `onyxia-init.sh:221-226` runs `chown -R` over every directory in the workspace at each start, which is slow on volumes with virtualenvs or data. Lines 205-209 print every installed R package at each start.
   - Fix: `find "$f" ! -user "$USERNAME" -exec chown ...`, or limit to the cloned repo; drop the package listing or make it opt-in.
 - [ ] **15. Useless CI steps** — S
-  - Evidence: `docker/setup-qemu-action` runs, but no multi-arch build happens. `.github/actions/cache-common-images` pulls `golang` and `dockereng/export-build` in every job and warns "Failed to restore".
+  - ~~Evidence: `docker/setup-qemu-action` runs, but no multi-arch build happens.~~ QEMU step removed with #19. `.github/actions/cache-common-images` pulls `golang` and `dockereng/export-build` in every job and warns "Failed to restore".
   - Fix: remove both.
 
 ## P3 — Code quality and maintainability
@@ -141,7 +141,7 @@ Audit of the repository done on 2026-09-19. Each item has an ID, the evidence fo
   - Evidence: 197 shellcheck findings; no `pipefail` anywhere, so e.g. an empty Julia version slips through.
   - Progress: shellcheck now runs in CI at `--severity=warning`. The 1 error and 22 warnings were fixed (`onyxia-init.sh`: `$*` in the final echo, split `export`s, DuckDB SQL quoting; `spark-entrypoint.sh`: split `export`, documented `SC2206` ignore for intentional word splitting). About 180 info/style findings remain, mostly SC2086; raise the threshold once they are fixed.
   - Fix: add shellcheck to the lint job (#6), use `set -euo pipefail` in build scripts, and fix the findings incrementally. Be careful with `onyxia-init.sh`: it deliberately doesn't use `set -e`, so it tolerates failures at startup.
-- [ ] **19. Half-built arm64 support** — S (decision)
+- [x] **19. Half-built arm64 support** — S (done: images are amd64 only. The `uname -m` branches were removed with the #9 rewrites, and the unused QEMU setup step was removed from `main-workflow-template.yml`)
   - Evidence: some scripts branch on `uname -m` (awscli, kubectl, duckdb), but `JAVA_HOME` (`*-amd64`), `install-quarto.sh`, `install-julia.sh` and `tests.yaml` are amd64-only, and CI builds amd64 only.
   - Fix: pick one. Either drop the arm64 branches, or commit to multi-arch builds.
 - [ ] **20. Python tooling** — S
