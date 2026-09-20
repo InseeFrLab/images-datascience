@@ -2,7 +2,7 @@
 set -eo pipefail
 
 # renovate: datasource=github-releases depName=coder/code-server
-CODE_SERVER_VERSION="4.137.0"
+CODE_SERVER_VERSION="4.138.0"
 
 # Download the official package and verify its checksum
 CODE_SERVER_DEB="code-server_${CODE_SERVER_VERSION}_amd64.deb"

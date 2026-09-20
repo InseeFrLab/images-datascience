@@ -1,7 +1,8 @@
 import argparse
 import logging
 import subprocess
-from pathlib import Path
+
+from .generate_matrix import read_versions
 
 logging.basicConfig(
     level=logging.INFO,
@@ -31,17 +32,6 @@ chains = {
     "rstudio-r-python-julia": ["base", "r-minimal", "r-datascience", "r-python-julia", "rstudio"],
     "marimo-python": ["base", "python-minimal", "python-datascience", "marimo"],
 }
-
-
-def read_versions():
-    versions_file_path = "versions.env"
-    versions = {}
-    for line in Path(versions_file_path).read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#"):
-            key, value = line.split("=", 1)
-            versions[key] = value.strip('"')
-    return versions
 
 
 def build_chain(chain_name, r_version, py_version, spark_version, gpu, no_test, push):
