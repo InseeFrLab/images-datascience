@@ -16,7 +16,7 @@ fileExistenceTests:
     uid: 1000
     gid: 100
   - name: 'Spark Home'
-    path: '/usr/local/lib/spark'
+    path: '/opt/spark'
     shouldExist: true
     permissions: "drwxr-xr-x"
     uid: 1000
@@ -41,7 +41,7 @@ commandTests:
   - name: "Does the binary exists?"
     command: "which"
     args: ["spark-submit"]
-    expectedOutput: ["/usr/local/lib/spark/bin/spark-submit"]
+    expectedOutput: ["/opt/spark/bin/spark-submit"]
   - name: "Spark starts and reports the version it was built with"
     command: "bash"
     args: ["-c", "spark-submit --version 2>&1 | grep -q \"version ${SPARK_VERSION}\""]
@@ -50,10 +50,10 @@ commandTests:
     args: ["-c", "test -x /opt/spark-entrypoint.sh"]
   - name: "py4j is reachable through its version-independent path"
     command: "bash"
-    args: ["-c", "test -f /usr/local/lib/spark/python/lib/py4j-src.zip"]
+    args: ["-c", "test -f /opt/spark/python/lib/py4j-src.zip"]
   - name: "S3A connector is present, at the Hadoop version Spark ships"
     command: "bash"
-    args: ["-c", "cd /usr/local/lib/spark/jars && ls bundle-*.jar hadoop-aws-$(basename hadoop-client-api-*.jar .jar | sed 's|hadoop-client-api-||').jar"]
+    args: ["-c", "cd /opt/spark/jars && ls bundle-*.jar hadoop-aws-$(basename hadoop-client-api-*.jar .jar | sed 's|hadoop-client-api-||').jar"]
     expectedOutput: ["bundle-.*\\.jar", "hadoop-aws-.*\\.jar"]
   - name: "Workspace is empty (no leftover install files)"
     command: "ls"
