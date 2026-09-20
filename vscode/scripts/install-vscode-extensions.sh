@@ -31,6 +31,7 @@ base_extensions=(
     "mhutchie.git-graph"
     "hediet.vscode-drawio"
     "continue.continue@1.3.38"
+    "sst-dev.opencode"
 )
 for extension in "${base_extensions[@]}"; do
     install_extension $extension
