@@ -47,37 +47,38 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
             KEYS=$(jq -r '.data.data.".onyxia".keysOrdering | .[]' <<< "$JSON")
         fi
 
-        for i in $KEYS;
-        do
-            echo $i
-            value=$(jq -r .data.data.$i <<< $JSON)
-            export $i="${value}"
+        while IFS= read -r key; do
+            [[ -z "$key" ]] && continue
+            if [[ ! "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+                echo "skipping Vault secret $key: not a valid environment variable name"
+                continue
+            fi
+            echo "$key"
+            value=$(jq -r --arg key "$key" '.data.data[$key]' <<< "$JSON")
+            export "$key=$value"
             if [[ $SUDO -eq 0 ]]; then
-                sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> /etc/environment"
+                printf '%s="%s"\n' "$key" "$value" | sudo tee -a /etc/environment >/dev/null
                 if command -v R &>/dev/null; then
-                    sudo sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
+                    printf '%s="%s"\n' "$key" "$value" | sudo tee -a "${R_HOME}/etc/Renviron.site" >/dev/null
                 fi
             else
-                sh -c "printf 'export %s=\"%s\"\n' $i \"$value\" >> ${HOME}/.bashrc"
+                printf 'export %s=%q\n' "$key" "$value" >> "${HOME}/.bashrc"
                 if command -v R &>/dev/null; then
-                    sh -c "printf '%s=\"%s\"\n' $i \"$value\" >> ${R_HOME}/etc/Renviron.site"
+                    printf '%s="%s"\n' "$key" "$value" >> "${R_HOME}/etc/Renviron.site"
                 fi
             fi
-        done
+        done <<< "$KEYS"
     fi
 fi
 
 if command -v kubectl &>/dev/null; then
-    export KUBERNETES_SERVICE_ACCOUNT=$(jq -Rr 'split(".")[1] | @base64d | fromjson | .["kubernetes.io"].serviceaccount.name' /var/run/secrets/kubernetes.io/serviceaccount/token)
-    export KUBERNETES_NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
-fi
-
-if command -v mc &>/dev/null; then
-    export MC_HOST_s3=https://$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY:$AWS_SESSION_TOKEN@$AWS_S3_ENDPOINT
+    KUBERNETES_SERVICE_ACCOUNT=$(jq -Rr 'split(".")[1] | @base64d | fromjson | .["kubernetes.io"].serviceaccount.name' /var/run/secrets/kubernetes.io/serviceaccount/token)
+    KUBERNETES_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+    export KUBERNETES_SERVICE_ACCOUNT KUBERNETES_NAMESPACE
 fi
 
 if [[ $(id -u) = 0 ]]; then
-    env | sed 's/^/export /g' | grep "AWS\|VAULT\|KC\|KUB\|MC" >> /root/.bashrc
+    env | sed 's/^/export /g' | grep "AWS\|VAULT\|KC\|KUB" >> /root/.bashrc
 fi
 
 if [[ -z $ROOT_PROJECT_DIRECTORY ]]; then
@@ -129,7 +130,7 @@ fi
 
 if command -v R &>/dev/null; then
     echo "Renviron.site detected"
-    echo -e "MC_HOST_s3=$MC_HOST_s3\nAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID\nAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY\nAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN\nAWS_DEFAULT_REGION=$AWS_DEFAULT_REGION\nAWS_S3_ENDPOINT=$AWS_S3_ENDPOINT\nAWS_EXPIRATION=$AWS_EXPIRATION" >> ${R_HOME}/etc/Renviron.site
+    echo -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID\nAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY\nAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN\nAWS_DEFAULT_REGION=$AWS_DEFAULT_REGION\nAWS_S3_ENDPOINT=$AWS_S3_ENDPOINT\nAWS_EXPIRATION=$AWS_EXPIRATION" >> ${R_HOME}/etc/Renviron.site
     echo -e "VAULT_ADDR=$VAULT_ADDR\nVAULT_TOKEN=$VAULT_TOKEN" >> ${R_HOME}/etc/Renviron.site
     echo -e "SPARK_HOME=$SPARK_HOME" >> ${R_HOME}/etc/Renviron.site
     echo -e "HADOOP_HOME=$HADOOP_HOME" >> ${R_HOME}/etc/Renviron.site
@@ -192,12 +193,12 @@ if command -v duckdb &>/dev/null; then
         fi
         duckdb -c "CREATE OR REPLACE PERSISTENT SECRET s3_onyxia_connection( \
             TYPE S3, \
-            KEY_ID '"$AWS_ACCESS_KEY_ID"', \
-            SECRET '"$AWS_SECRET_ACCESS_KEY"', \
-            REGION '"$AWS_DEFAULT_REGION"', \
-            SESSION_TOKEN '"$AWS_SESSION_TOKEN"', \
-            ENDPOINT '"$AWS_S3_ENDPOINT"', \
-            URL_STYLE '"$AWS_PATH_STYLE"' \
+            KEY_ID '$AWS_ACCESS_KEY_ID', \
+            SECRET '$AWS_SECRET_ACCESS_KEY', \
+            REGION '$AWS_DEFAULT_REGION', \
+            SESSION_TOKEN '$AWS_SESSION_TOKEN', \
+            ENDPOINT '$AWS_S3_ENDPOINT', \
+            URL_STYLE '$AWS_PATH_STYLE' \
         );" >/dev/null
         chown -R ${USERNAME}:${GROUPNAME} ${HOME}/.duckdb
     fi
@@ -219,5 +220,11 @@ for f in "$ROOT_PROJECT_DIRECTORY"/*; do
     fi
 done
 
-echo "execution of $@"
+# The AWS CLI apparently makes use of the $REQUESTS_CA_BUNDLE variable to configure the trust store.
+# In case one is configured for a service based on these images, the variable should be set accordingly.
+if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
+    export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
+fi
+
+echo "execution of $*"
 exec "$@"

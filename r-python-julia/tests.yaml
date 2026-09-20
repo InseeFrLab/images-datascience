@@ -26,10 +26,6 @@ commandTests:
     expectedOutput: ["/usr/local/bin/kubectl"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["mc"]
-    expectedOutput: ["/usr/local/bin/mc"]
-  - name: "Does the binary exists?"
-    command: "which"
     args: ["R"]
     expectedOutput: ["/usr/local/bin/R"]
   - name: "Does the binary exists?"
@@ -48,3 +44,13 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "Python is the requested version"
+    command: "bash"
+    args: ["-c", "python --version | grep -F \"Python ${PYTHON_VERSION}\""]
+  - name: "Julia runs and main package load"
+    command: "julia"
+    args: ["-e", "using HDF5"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

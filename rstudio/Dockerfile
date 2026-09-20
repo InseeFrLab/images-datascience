@@ -9,6 +9,8 @@ ENV USERID=${UID}
 ENV GROUPID=${GID}
 ENV PATH="/usr/lib/rstudio-server/bin:${PATH}"
 
+# RStudio is started by rocker's s6 /init, which must run as root
+# hadolint ignore=DL3002
 USER root
 
 COPY --chmod=0755 scripts/ /opt/
@@ -17,6 +19,8 @@ COPY --chmod=0755 scripts/ /opt/
 RUN /rocker_scripts/install_rstudio.sh && \
     /rocker_scripts/install_pandoc.sh && \
     /opt/configure-rstudio.sh && \
+    # Install opencode
+    /opt/install-opencode.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

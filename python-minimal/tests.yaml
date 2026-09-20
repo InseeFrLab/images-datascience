@@ -26,10 +26,6 @@ commandTests:
     expectedOutput: ["/usr/local/bin/kubectl"]
   - name: "Does the binary exists?"
     command: "which"
-    args: ["mc"]
-    expectedOutput: ["/usr/local/bin/mc"]
-  - name: "Does the binary exists?"
-    command: "which"
     args: ["python"]
     expectedOutput: ['/opt/python/bin/python']
   - name: "Does the binary exists?"
@@ -40,3 +36,13 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "Python is the requested version"
+    command: "bash"
+    args: ["-c", "python --version | grep -F \"Python ${PYTHON_VERSION}\""]
+  - name: "uv runs"
+    command: "uv"
+    args: ["--version"]
+  - name: "Workspace is empty (no leftover install files)"
+    command: "ls"
+    args: ["-A", "/home/onyxia/work"]
+    excludedOutput: ["."]

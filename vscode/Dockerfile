@@ -15,6 +15,8 @@ COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/
 # Install VSCode
 RUN /opt/install-vscode.sh && \
     /opt/install-vscode-extensions.sh && \
+    # Install opencode
+    /opt/install-opencode.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean
@@ -24,4 +26,4 @@ USER 1000
 
 EXPOSE 8080
 
-CMD ["code-server", "--bind-addr", "0.0.0.0:8080", "${WORKSPACE_DIR}"]
+CMD ["/bin/bash", "-c", "exec code-server --bind-addr 0.0.0.0:8080 \"${WORKSPACE_DIR}\""]

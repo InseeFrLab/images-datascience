@@ -1,0 +1,7 @@
+failure-threshold: warning
+ignored:
+  # Layers are stacked with FROM $BASE_IMAGE: WORKDIR and SHELL are inherited from base/Dockerfile,
+  # which hadolint cannot see when linting a child Dockerfile
+  - DL3045 # COPY to a relative destination without WORKDIR set
+  - SC3010 # [[ ]] undefined in POSIX sh (RUN uses bash)
+  - DL3066 # Non-numeric user id (USER root)

@@ -9,6 +9,7 @@ ENV SHELL="/bin/bash"
 ENV DEBIAN_FRONTEND="noninteractive"
 
 # User configuration
+# hadolint ignore=DL3064
 ENV USERNAME="onyxia"
 ENV UID="1000"
 ENV GROUPNAME="users"
@@ -39,7 +40,6 @@ RUN /opt/install-system-libs.sh && \
     /opt/install-kubectl.sh && \
     /opt/install-helm.sh && \
     /opt/install-awscli.sh && \
-    /opt/install-mc.sh && \
     /opt/install-duckdb-cli.sh && \
     /opt/install-duckdb-extensions.sh && \
     /opt/install-quarto.sh && \

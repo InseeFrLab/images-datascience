@@ -5,85 +5,165 @@
   ],
   "customManagers": [
     {
+      "description": "Python version 1, the newer of the two maintained versions (versions.env is the source of truth; Dockerfile ARG defaults follow)",
       "customType": "regex",
-      "fileMatch": ["r-minimal/Dockerfile"],
-      "matchStrings": ["ARG R_VERSION=\"(?<currentValue>.*?)\""],
+      "managerFilePatterns": [
+        "/^versions\\.env$/",
+        "/^python-minimal/Dockerfile$/",
+        "/^r-python-julia/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "PYTHON_VERSION_1=\"(?<currentValue>[^\"]+)\"",
+        "ARG PYTHON_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "python-version",
+      "depTypeTemplate": "python-v1"
+    },
+    {
+      "description": "Python version 2, the older of the two maintained versions (versions.env is the source of truth)",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^versions\\.env$/"
+      ],
+      "matchStrings": [
+        "PYTHON_VERSION_2=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "python-version",
+      "depTypeTemplate": "python-v2"
+    },
+    {
+      "description": "R version 1, the newer of the two maintained versions (versions.env is the source of truth; Dockerfile ARG default follows)",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^versions\\.env$/",
+        "/^r-minimal/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "R_VERSION_1=\"(?<currentValue>[^\"]+)\"",
+        "ARG R_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^R(?<version>.*?)$"
+      "extractVersionTemplate": "^R(?<version>.+)$",
+      "depTypeTemplate": "r-v1"
     },
     {
+      "description": "R version 2, the older of the two maintained versions (versions.env is the source of truth)",
       "customType": "regex",
-      "fileMatch": [".github/workflows/main-workflow.yml"],
-      "matchStrings": ["(^| )r_version_1: *(?<currentValue>[^\\s]*)"],
+      "managerFilePatterns": [
+        "/^versions\\.env$/"
+      ],
+      "matchStrings": [
+        "R_VERSION_2=\"(?<currentValue>[^\"]+)\""
+      ],
       "depNameTemplate": "rocker-org/rocker-versioned2",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^R(?<version>.*?)$"
+      "extractVersionTemplate": "^R(?<version>.+)$",
+      "depTypeTemplate": "r-v2"
     },
     {
+      "description": "Spark version (versions.env is the source of truth; the spark Dockerfile ARG default follows)",
       "customType": "regex",
-      "fileMatch": [".github/workflows/main-workflow.yml"],
-      "matchStrings": ["(^| )r_version_2: *(?<currentValue>[^\\s]*)"],
-      "depNameTemplate": "rocker-org/rocker-versioned2",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^R(?<version>.*?)$"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["python-minimal/Dockerfile"],
-      "matchStrings": ["ARG PYTHON_VERSION=\"(?<currentValue>.*?)\""],
-      "depNameTemplate": "python",
-      "datasourceTemplate": "python-version"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [".github/workflows/main-workflow.yml"],
-      "matchStrings": ["(^| )python_version_1: *(?<currentValue>[^\\s]*)"],
-      "depNameTemplate": "python",
-      "datasourceTemplate": "python-version"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [".github/workflows/main-workflow.yml"],
-      "matchStrings": ["(^| )python_version_2: *(?<currentValue>[^\\s]*)"],
-      "depNameTemplate": "python",
-      "datasourceTemplate": "python-version"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["spark/Dockerfile$"],
-      "matchStrings": ["ARG SPARK_VERSION=\"(?<currentValue>.*?)\""],
+      "managerFilePatterns": [
+        "/^versions\\.env$/",
+        "/^spark/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "SPARK_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
       "depNameTemplate": "apache/spark",
       "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>[^\\s]*)"
+      "extractVersionTemplate": "^v(?<version>.+)$",
+      "depTypeTemplate": "spark"
     },
     {
+      "description": "CUDA base image of the GPU variants (versions.env)",
       "customType": "regex",
-      "fileMatch": [".github/workflows/main-workflow.yml"],
-      "matchStrings": ["(^| )spark_version: *(?<currentValue>[^\\s]*)"],
-      "depNameTemplate": "apache/spark",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "v(?<version>[^\\s]*)"
+      "managerFilePatterns": [
+        "/^versions\\.env$/"
+      ],
+      "matchStrings": [
+        "CUDA_BASE_IMAGE=\"(?<depName>[^:\"]+):(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "depTypeTemplate": "cuda"
+    },
+    {
+      "description": "Tools downloaded by install scripts and CI actions, pinned with a '# renovate: datasource=... depName=...' comment above a <TOOL>_VERSION=\"x.y.z\" line",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)scripts/[^/]+\\.sh$/",
+        "/^\\.github/actions/[^/]+/action\\.yml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)\\n\\s*[A-Z_]+_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "extractVersionTemplate": "^v?(?<version>.+)$",
+      "depTypeTemplate": "build-tool"
     }
   ],
   "packageRules": [
     {
-      "matchManagers": ["regex"],
-      "matchJsonata": ["$contains(replaceString, '_version_2')"],
-      "matchUpdateTypes": ["major", "minor"],
+      "description": "One PR per version slot, updating every file at once",
+      "matchDepTypes": [
+        "python-v1"
+      ],
+      "groupName": "Python version 1 update"
+    },
+    {
+      "matchDepTypes": [
+        "python-v2"
+      ],
+      "groupName": "Python version 2 update"
+    },
+    {
+      "matchDepTypes": [
+        "r-v1"
+      ],
+      "groupName": "R version 1 update"
+    },
+    {
+      "matchDepTypes": [
+        "r-v2"
+      ],
+      "groupName": "R version 2 update"
+    },
+    {
+      "matchDepTypes": [
+        "spark"
+      ],
+      "groupName": "Spark version update"
+    },
+    {
+      "description": "Tools downloaded by install scripts and CI actions: one weekly PR for all of them",
+      "matchDepTypes": [
+        "build-tool"
+      ],
+      "groupName": "Build tools",
+      "schedule": [
+        "* * * * 0"
+      ]
+    },
+    {
+      "description": "Version 2 stays on its minor release and only receives patch updates",
+      "matchDepTypes": [
+        "python-v2",
+        "r-v2"
+      ],
+      "separateMinorPatch": true
+    },
+    {
+      "matchDepTypes": [
+        "python-v2",
+        "r-v2"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
       "enabled": false
-    },
-    {
-      "matchManagers": ["regex"],
-      "matchJsonata": ["$contains(replaceString, 'python_version_2')"],
-      "separateMinorPatch": true,
-      "groupName": "Python backup version update"
-    },
-    {
-      "matchManagers": ["regex"],
-      "matchJsonata": ["$contains(replaceString, 'r_version_2')"],
-      "separateMinorPatch": true,
-      "groupName": "R backup version update"
     }
   ]
 }

@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: '0 1 * * 1'
 
+# The GITHUB_TOKEN only needs to read the repository
+permissions:
+  contents: read
+
 jobs:
   base:
     uses: ./.github/workflows/main-workflow-template.yml
@@ -12,7 +16,6 @@ jobs:
       image: base
       context: base
       base_image: ubuntu:24.04
-      base_image_gpu: nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04
     secrets: inherit
   python-minimal:
     needs: [base]
@@ -21,8 +24,7 @@ jobs:
       image: python-minimal
       context: python-minimal
       base_image: base
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
+      languages: python
     secrets: inherit
   python-datascience:
     needs: [python-minimal]
@@ -31,8 +33,7 @@ jobs:
       image: python-datascience
       context: python-datascience
       base_image: python-minimal
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
+      languages: python
     secrets: inherit
   r-minimal:
     needs: [base]
@@ -41,8 +42,7 @@ jobs:
       image: r-minimal
       context: r-minimal
       base_image: base
-      r_version_1: 4.5.2
-      r_version_2: 4.4.3
+      languages: r
     secrets: inherit
   r-datascience:
     needs: [r-minimal]
@@ -51,8 +51,7 @@ jobs:
       image: r-datascience
       context: r-datascience
       base_image: r-minimal
-      r_version_1: 4.5.2
-      r_version_2: 4.4.3
+      languages: r
     secrets: inherit
   jupyter-python:
     needs: [python-datascience]
@@ -61,8 +60,7 @@ jobs:
       image: jupyter-python
       context: jupyter
       base_image: python-datascience
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
+      languages: python
     secrets: inherit
   vscode-python:
     needs: [python-datascience]
@@ -71,8 +69,7 @@ jobs:
       image: vscode-python
       context: vscode
       base_image: python-datascience
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
+      languages: python
     secrets: inherit
   pyspark:
     needs: [python-minimal]
@@ -81,9 +78,8 @@ jobs:
       image: pyspark
       context: spark
       base_image: python-minimal
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
-      spark_version: 4.1.1
+      languages: python
+      spark: true
       build_gpu: false
     secrets: inherit
   jupyter-pyspark:
@@ -93,9 +89,8 @@ jobs:
       image: jupyter-pyspark
       context: jupyter
       base_image: pyspark
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
-      spark_version: 4.1.1
+      languages: python
+      spark: true
       build_gpu: false
     secrets: inherit
   vscode-pyspark:
@@ -105,9 +100,8 @@ jobs:
       image: vscode-pyspark
       context: vscode
       base_image: pyspark
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
-      spark_version: 4.1.1
+      languages: python
+      spark: true
       build_gpu: false
     secrets: inherit
   python-pytorch:
@@ -117,8 +111,7 @@ jobs:
       image: python-pytorch
       context: python-pytorch
       base_image: python-minimal
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
+      languages: python
     secrets: inherit
   jupyter-pytorch:
     needs: [python-pytorch]
@@ -127,8 +120,7 @@ jobs:
       image: jupyter-pytorch
       context: jupyter
       base_image: python-pytorch
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
+      languages: python
     secrets: inherit
   vscode-pytorch:
     needs: [python-pytorch]
@@ -137,38 +129,7 @@ jobs:
       image: vscode-pytorch
       context: vscode
       base_image: python-pytorch
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
-    secrets: inherit
-  python-tensorflow:
-    needs: [python-minimal]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: python-tensorflow
-      context: python-tensorflow
-      base_image: python-minimal
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
-    secrets: inherit
-  jupyter-tensorflow:
-    needs: [python-tensorflow]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: jupyter-tensorflow
-      context: jupyter
-      base_image: python-tensorflow
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
-    secrets: inherit
-  vscode-tensorflow:
-    needs: [python-tensorflow]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: vscode-tensorflow
-      context: vscode
-      base_image: python-tensorflow
-      python_version_1: 3.13.12
-      python_version_2: 3.12.13
+      languages: python
     secrets: inherit
   rstudio:
     needs: [r-datascience]
@@ -177,8 +138,7 @@ jobs:
       image: rstudio
       context: rstudio
       base_image: r-datascience
-      r_version_1: 4.5.2
-      r_version_2: 4.4.3
+      languages: r
     secrets: inherit
   sparkr:
     needs: [r-minimal]
@@ -187,9 +147,8 @@ jobs:
       image: sparkr
       context: spark
       base_image: r-minimal
-      r_version_1: 4.5.2
-      r_version_2: 4.4.3
-      spark_version: 4.1.1
+      languages: r
+      spark: true
       build_gpu: false
     secrets: inherit
   rstudio-sparkr:
@@ -199,9 +158,8 @@ jobs:
       image: rstudio-sparkr
       context: rstudio
       base_image: sparkr
-      r_version_1: 4.5.2
-      r_version_2: 4.4.3
-      spark_version: 4.1.1
+      languages: r
+      spark: true
       build_gpu: false
     secrets: inherit
   r-python-julia:
@@ -211,8 +169,7 @@ jobs:
       image: r-python-julia
       context: r-python-julia
       base_image: r-datascience
-      r_version_1: 4.5.2
-      python_version_1: 3.13.12
+      languages: r-python
       build_gpu: false
     secrets: inherit
   vscode-r-python-julia:
@@ -222,8 +179,7 @@ jobs:
       image: vscode-r-python-julia
       context: vscode
       base_image: r-python-julia
-      r_version_1: 4.5.2
-      python_version_1: 3.13.12
+      languages: r-python
       build_gpu: false
     secrets: inherit
   jupyter-r-python-julia:
@@ -233,8 +189,7 @@ jobs:
       image: jupyter-r-python-julia
       context: jupyter
       base_image: r-python-julia
-      r_version_1: 4.5.2
-      python_version_1: 3.13.12
+      languages: r-python
       build_gpu: false
     secrets: inherit
   rstudio-r-python-julia:
@@ -244,7 +199,15 @@ jobs:
       image: rstudio-r-python-julia
       context: rstudio
       base_image: r-python-julia
-      r_version_1: 4.5.2
-      python_version_1: 3.13.12
+      languages: r-python
       build_gpu: false
+    secrets: inherit
+  marimo-python:
+    needs: [python-datascience]
+    uses: ./.github/workflows/main-workflow-template.yml
+    with:
+      image: marimo-python
+      context: marimo
+      base_image: python-datascience
+      languages: python
     secrets: inherit

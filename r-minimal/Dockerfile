@@ -4,7 +4,7 @@ FROM $BASE_IMAGE
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
 # R Config
-ARG R_VERSION="4.5.2"
+ARG R_VERSION="4.6.1"
 ENV R_VERSION=${R_VERSION}
 ENV R_HOME="/usr/local/lib/R"
 ENV DEFAULT_USER="${USERNAME}"
@@ -24,10 +24,7 @@ RUN /opt/install-r.sh && \
     # Install additional system libs required by some R packages
     /opt/install-system-libs-r.sh && \
     # Install some standard R packages
-    install2.r --ncpus -1 --error \
-        devtools \
-        lintr \
-        renv && \
+    /opt/install-r-packages.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

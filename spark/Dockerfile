@@ -35,7 +35,7 @@ RUN --mount=type=secret,id=github_token \
     if command -v R; then \
         /rocker_scripts/install_tidyverse.sh && \
         export GITHUB_PAT=`cat /run/secrets/github_token` && \
-        R -e "install.packages(c('sparklyr', 'arrow'))" && \
+        R -e "install.packages(c('remotes', 'sparklyr', 'arrow'))" && \
         R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \
     fi && \
     # Fix user permissions

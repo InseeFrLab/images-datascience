@@ -21,6 +21,8 @@ RUN /opt/install-jupyterlab.sh && \
     # Generate jupyter server config
     jupyter server --generate-config && \
     jupyter lab clean && \
+    # Install opencode
+    /opt/install-opencode.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean
@@ -30,4 +32,4 @@ USER 1000
 
 EXPOSE 8888
 
-CMD ["jupyter", "lab", "--no-browser", "--ip", "0.0.0.0", "--notebook-dir", "${WORKSPACE_DIR}"]
+CMD ["jupyter", "lab", "--no-browser", "--ip", "0.0.0.0"]

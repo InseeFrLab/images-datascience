@@ -14,14 +14,13 @@ if command -v pip &>/dev/null; then
         echo "configuration of python and pip to use a custom crt"
         pip config set global.cert $PATH_TO_CA_BUNDLE
         python /opt/certifi_ca.py
-        export REQUESTS_CA_BUNDLE=$PATH_TO_CA_BUNDLE
     fi
 fi
 
 if command -v uv &>/dev/null; then
     if [[ -n "$PIP_REPOSITORY" ]]; then
         echo "export UV_DEFAULT_INDEX=$PIP_REPOSITORY" >> "$ENV_FILE"
-        echo 'export UV_NATIVE_TLS=true' >> "$ENV_FILE"
+        echo 'export UV_SYSTEM_CERTS=true' >> "$ENV_FILE"
     fi
 fi
 

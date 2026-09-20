@@ -1,0 +1,20 @@
+[project]
+name = "images-datascience"
+version = "0.1.0"
+description = "A project to build ready-to-run datascience environment for Onyxia's instances."
+readme = "README.md"
+authors = [
+    { name = "avouacr", email = "avouacr@pm.me" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.ruff]
+line-length = 120
+
+[dependency-groups]
+dev = [
+    "hadolint-py>=2.15.1.2",
+    "ruff>=0.16.8",
+    "shellcheck-py>=0.11.0.1",
+]

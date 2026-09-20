@@ -10,10 +10,10 @@
     "redhat.telemetry.enabled": false,
     "julia.symbolCacheDownload": true,
     "julia.enableTelemetry": false,
-    "r.bracketedPaste": true,
     "[latex]":  {
 		"editor.wordWrap": "on"
 	},
 	"chat.disableAIFeatures": true,
-    "workbench.secondarySideBar.defaultVisibility": "hidden"
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+	"workbench.welcomePage.experimentalOnboarding": false
 }

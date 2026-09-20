@@ -30,7 +30,7 @@ base_extensions=(
     "ms-kubernetes-tools.vscode-kubernetes-tools"
     "mhutchie.git-graph"
     "hediet.vscode-drawio"
-    "continue.continue@1.3.29"
+    "continue.continue@1.3.38"
 )
 for extension in "${base_extensions[@]}"; do
     install_extension $extension
@@ -40,7 +40,7 @@ done
 python_extensions=(
     "ms-python.python"
     "ms-python.flake8"
-    "charliermarsh.ruff@2026.34.0"
+    "charliermarsh.ruff"
 )
 if command -v python &> /dev/null; then
     for extension in "${python_extensions[@]}"; do
@@ -70,11 +70,8 @@ if command -v R &> /dev/null; then
     for extension in "${r_extensions[@]}"; do
         install_extension $extension
     done
-    R -e "install.packages(c('languageserver', 'rmarkdown', 'httpgd'))"
-    R -e "remotes::install_github('ManuelHentschel/vscDebugger')"
-    pip install radian
-    r_path=$(which radian)
-    jq --arg rPath "$r_path" '.["r.rterm.linux"] = $rPath' ${REMOTE_CONFIG_DIR}/settings.json > tmp.json && mv tmp.json ${REMOTE_CONFIG_DIR}/settings.json
+    R -e "install.packages(c('remotes', 'languageserver', 'rmarkdown', 'httpgd'))"
+    R -e "install.packages('vscDebugger', repos = c('https://manuelhentschel.r-universe.dev', getOption('repos')))"
 fi
 
 # Julia-specific configuration
