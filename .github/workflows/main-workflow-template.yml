@@ -94,7 +94,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
+
       - name: Push to DockerHub
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v7

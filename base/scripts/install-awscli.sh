@@ -15,3 +15,6 @@ unzip -q "${TMP_DIR}/${AWS_CLI_ZIP}" -d "${TMP_DIR}"
 "${TMP_DIR}/aws/install"
 chmod +x /usr/local/bin/aws
 rm -rf "${TMP_DIR}"
+
+# Activate autocomplete in the CLI
+echo "complete -C '/usr/local/bin/aws_completer' aws" >> ~/.bashrc
