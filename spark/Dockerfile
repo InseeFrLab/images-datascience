@@ -3,40 +3,29 @@ FROM $BASE_IMAGE
 
 LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 
-ARG BASE_IMAGE
-
 ENV JAVA_VERSION="21"
 ENV JAVA_HOME="/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64"
 
-ARG SPARK_VERSION="4.1.1"
+ARG SPARK_VERSION="4.2.0"
 ENV SPARK_VERSION=${SPARK_VERSION}
 
-ENV HADOOP_HOME="/usr/local/lib/hadoop"
 ENV SPARK_HOME="/usr/local/lib/spark"
-ENV HIVE_HOME="/usr/local/lib/hive"
-ENV PYTHONPATH="${SPARK_HOME}/python:${SPARK_HOME}/python/lib/py4j-0.10.9.9-src.zip"
+ENV PYTHONPATH="${SPARK_HOME}/python:${SPARK_HOME}/python/lib/py4j-src.zip"
 ENV SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M"
-ENV HADOOP_OPTIONAL_TOOLS="hadoop-aws"
 
-ENV PATH="${SPARK_HOME}/bin:${HADOOP_HOME}/bin:${JAVA_HOME}/bin:${PATH}"
+ENV PATH="${SPARK_HOME}/bin:${JAVA_HOME}/bin:${PATH}"
 
 USER root
 
 COPY --chmod=0755 scripts/ /opt/
 
-RUN --mount=type=secret,id=github_token \
-    # Install JDK
-    /opt/install-java.sh && \
-    # Install Spark/Hadoop/Hive
-    /opt/install-spark-hadoop-hive.sh && \
-    # Put Spark config in the right place
-    cp /opt/spark-env.sh $SPARK_HOME/conf && \
+RUN /opt/install-java.sh && \
+    # Install Spark and the S3A connector
+    /opt/install-spark.sh && \
     # Install additional packages if R is installed
     if command -v R; then \
         /rocker_scripts/install_tidyverse.sh && \
-        export GITHUB_PAT=`cat /run/secrets/github_token` && \
-        R -e "install.packages(c('remotes', 'sparklyr', 'arrow'))" && \
-        R -e "remotes::install_github('apache/spark@v${SPARK_VERSION}', subdir='R/pkg')"; \
+        /opt/install-sparkr.sh; \
     fi && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
