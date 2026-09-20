@@ -4,4 +4,5 @@ ignored:
   # which hadolint cannot see when linting a child Dockerfile
   - DL3045 # COPY to a relative destination without WORKDIR set
   - SC3010 # [[ ]] undefined in POSIX sh (RUN uses bash)
+  - SC3011 # here-strings undefined in POSIX sh (RUN uses bash)
   - DL3066 # Non-numeric user id (USER root)

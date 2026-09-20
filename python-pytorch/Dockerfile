@@ -7,7 +7,8 @@ USER root
 
 RUN if ! [[ -z "${CUDA_VERSION}" ]]; then \
         # CUDA support
-        uv pip install --system --no-cache torch torchvision torchaudio; \
+        CUDA_MAJOR_MINOR=$(awk -F. '{print $1 $2}' <<< "$CUDA_VERSION") && \
+        uv pip install --system --no-cache torch torchvision torchaudio --index-url "https://download.pytorch.org/whl/cu${CUDA_MAJOR_MINOR}"; \
     else \
         # CPU only
         uv pip install --system --no-cache torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; \
