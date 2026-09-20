@@ -2,7 +2,7 @@ import argparse
 import logging
 import subprocess
 
-from .generate_matrix import read_versions
+from utils.generate_matrix import read_versions
 
 logging.basicConfig(
     level=logging.INFO,
