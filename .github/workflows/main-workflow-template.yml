@@ -40,18 +40,14 @@ jobs:
     steps:
     - name: Check out code 
       uses: actions/checkout@v7
-    - name: Install uv and Python
-      uses: astral-sh/setup-uv@v10.1.0
+    - name: Set up Python
+      uses: actions/setup-python@v7 
       with:
-        python-version: 3.14
+        python-version: '3.14'
     - id: set-matrix
       run: |
-        uv run python3 utils/generate_matrix.py
-            --input_image "${{ inputs.base_image }}" \
-            --output_image ${{ inputs.image }} \
-            --languages "${{ inputs.languages }}" \
-            --spark ${{ inputs.spark }} \
-            --build_gpu ${{ inputs.build_gpu }}
+        python3 utils/generate_matrix.py --input_image "${{ inputs.base_image }}" --output_image ${{ inputs.image }} \
+            --languages "${{ inputs.languages }}" --spark ${{ inputs.spark }} --build_gpu ${{ inputs.build_gpu }}
   docker:
     runs-on: ubuntu-latest
     needs: matrix_prep
@@ -82,6 +78,8 @@ jobs:
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
 
       - name: Test image using Google's Container Structure Test
         if: ${{ !contains(matrix.output_image_tags, 'gpu') }}
@@ -109,3 +107,5 @@ jobs:
             PYTHON_VERSION=${{ matrix.python_version }}
             R_VERSION=${{ matrix.r_version }}
             SPARK_VERSION=${{ matrix.spark_version }}
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"

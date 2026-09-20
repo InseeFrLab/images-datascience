@@ -23,7 +23,7 @@ Build a full image chain locally (each layer is built with `docker build`, then 
 ```bash
 python3 utils/build_chain.py --chain jupyter-python --py_version 3.13.15
 python3 utils/build_chain.py --chain rstudio --r_version 4.6.1
-python3 utils/build_chain.py --chain jupyter-pyspark --py_version 3.13.15 --spark_version 4.2.0
+python3 utils/build_chain.py --chain jupyter-pyspark --py_version 3.13.15 --spark_version 4.1.1
 # flags: --gpu (start from nvidia/cuda base), --no_test, --push
 ```
 
@@ -73,8 +73,6 @@ The valid layer stacks are declared in the `chains` dict in `utils/build_chain.p
 ### Version pinning
 
 `versions.env` (repo root) is the single source of truth for the Python, R and Spark versions and for the CUDA base image of GPU variants. It is read by the CI matrix (`utils/generate_matrix.py`, through `utils/versions.py`) and by local builds (`utils/build_chains.sh` sources it, `utils/build_chain.py` reads the CUDA image). The only copies are the `ARG` defaults of the `python-minimal`, `r-python-julia`, `r-minimal` and `spark` Dockerfiles, which CI always overrides. `renovate.json` has one regex manager per version slot (Python 1/2, R 1/2, Spark) covering `versions.env` and those Dockerfiles, and groups each slot into a single PR; version 2 only gets patch bumps, so moving it to a new minor release (e.g. when version 1 moves on) is a manual change. A separate manager tracks the CUDA image. When changing a version by hand, edit `versions.env` and the matching Dockerfile `ARG` default.
-
-The `spark` layer installs the official Apache Spark distribution (`spark/scripts/install-spark.sh`), which is already built with `-Pkubernetes -Phive -Phive-thriftserver -Psparkr --pip --r --connect`: no custom build, no separate Hadoop or Hive distribution. The only thing it adds is the S3A connector, whose jar versions are read from the distribution itself (the `hadoop-client-api` jar it ships, then the matching `hadoop-project` POM on Maven Central), so they are not pinned anywhere.
 
 Tools downloaded at build time (kubectl, helm, AWS CLI, DuckDB CLI, quarto, opencode, Julia, code-server) are pinned in their install script, **not** in Dockerfiles (Dockerfiles only pin the versions the project manages: Python, R, Spark). Each script follows the same model, see `base/scripts/install-kubectl.sh`:
 - a `# renovate: datasource=<datasource> depName=<name>` comment right above a `<TOOL>_VERSION="x.y.z"` line. One generic regex manager in `renovate.json` picks it up (in `scripts/*.sh` and in `.github/actions/*/action.yml`, where container-structure-test is pinned the same way), and all tool bumps land in a single weekly "Build tools" PR.
