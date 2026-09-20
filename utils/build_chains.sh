@@ -28,6 +28,5 @@ for r_ver in "${R_VERSIONS[@]}"; do
   uv run python3 -m utils.build_chain --chain sparkr --r_version $r_ver --spark_version $SPARK_VERSION $DOCKER_BUILD_ARGS
 done
 
-# r-python-julia images are built with only latest versions of R & Python
-uv run python3 -m utils.build_chain --chain rstudio-r-python-julia --r_version ${R_VERSIONS[0]} --py_version ${PYTHON_VERSIONS[0]} $DOCKER_BUILD_ARGS
-uv run python3 -m utils.build_chain --chain jupyter-r-python-julia --r_version ${R_VERSIONS[0]} --py_version ${PYTHON_VERSIONS[0]} $DOCKER_BUILD_ARGS
+# r-python-julia images are built with only latest version of R & Python
+uv run python3 -m utils.build_chain --chain vscode-r-python-julia --r_version ${R_VERSIONS[0]} --py_version ${PYTHON_VERSIONS[0]} $DOCKER_BUILD_ARGS
