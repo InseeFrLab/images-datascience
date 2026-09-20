@@ -51,10 +51,10 @@ commandTests:
   - name: "py4j is reachable through its version-independent path"
     command: "bash"
     args: ["-c", "test -f /usr/local/lib/spark/python/lib/py4j-src.zip"]
-  - name: "S3A connector is on the Spark classpath"
+  - name: "S3A connector is present, at the Hadoop version Spark ships"
     command: "bash"
-    args: ["-c", "ls /usr/local/lib/spark/jars"]
-    expectedOutput: ["hadoop-aws-.*\\.jar", "bundle-.*\\.jar"]
+    args: ["-c", "cd /usr/local/lib/spark/jars && ls bundle-*.jar hadoop-aws-$(basename hadoop-client-api-*.jar .jar | sed 's|hadoop-client-api-||').jar"]
+    expectedOutput: ["bundle-.*\\.jar", "hadoop-aws-.*\\.jar"]
   - name: "Workspace is empty (no leftover install files)"
     command: "ls"
     args: ["-A", "/home/onyxia/work"]
