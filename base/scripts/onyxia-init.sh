@@ -93,18 +93,23 @@ if command -v git &>/dev/null; then
     fi
     if [[ -n "$GIT_REPOSITORY" ]]; then
         if [[ -n "$GIT_PERSONAL_ACCESS_TOKEN" ]]; then
-            REPO_DOMAIN=`echo "$GIT_REPOSITORY" | awk -F/ '{print $3}'`
-            if [ $REPO_DOMAIN = "github.com" ]; then
-                GIT_REPOSITORY=`echo $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
+            URL_PREFIX=$(echo "$GIT_REPOSITORY" | grep -oE '^https?://')
+            URL_NO_PREFIX=$(echo "$GIT_REPOSITORY" | sed 's|^https\?://||')
+            REPO_DOMAIN=$(awk -F/ '{print $3}' <<< "$GIT_REPOSITORY")
+            if [ "$REPO_DOMAIN" = "github.com" ]; then
+                CLONE_URL="$URL_PREFIX"/"$GIT_PERSONAL_ACCESS_TOKEN"@"$URL_NO_PREFIX"
+            elif echo "$GIT_REPOSITORY" | grep -qi "bitbucket"; then
+                CLONE_URL="$URL_PREFIX"/x-token-auth:"$GIT_PERSONAL_ACCESS_TOKEN"@"$URL_NO_PREFIX"
             else
-                GIT_REPOSITORY=`echo $GIT_REPOSITORY | sed "s/$REPO_DOMAIN/oauth2:$GIT_PERSONAL_ACCESS_TOKEN@$REPO_DOMAIN/"`
+                # GitLab (gitlab.com or hosted instance)
+                CLONE_URL="$URL_PREFIX"/oauth2:"$GIT_PERSONAL_ACCESS_TOKEN"@"$URL_NO_PREFIX"
             fi
         fi
 
         if [[ -n "$GIT_BRANCH" ]]; then
-            git -C $ROOT_PROJECT_DIRECTORY clone $GIT_REPOSITORY --branch $GIT_BRANCH
+            git -C $ROOT_PROJECT_DIRECTORY clone $CLONE_URL --branch $GIT_BRANCH
         else
-            git -C $ROOT_PROJECT_DIRECTORY clone $GIT_REPOSITORY
+            git -C $ROOT_PROJECT_DIRECTORY clone $CLONE_URL
         fi
     fi
 
