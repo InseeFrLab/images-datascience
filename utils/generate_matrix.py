@@ -9,7 +9,7 @@ from pathlib import Path
 DH_ORGA = "inseefrlab"
 IMAGES_PREFIX = "onyxia"
 TODAY_DATE = datetime.now(UTC).strftime("%Y.%m.%d")
-VERSIONS_FILE = Path(__file__).resolve().parent.parent / "versions.env"
+VERSIONS_FILE = "versions.env"
 
 
 def generate_matrix(versions, input_image, output_image, spark_version, gpu_options, version_prefix):
@@ -77,10 +77,10 @@ def generate_r_python_julia_matrix(r_version, py_version, input_image, output_im
     return matrix
 
 
-def read_versions(path=VERSIONS_FILE):
+def read_versions():
     """Parse the KEY="value" lines of versions.env into a dict, ignoring comments and blank lines."""
     versions = {}
-    for line in path.read_text().splitlines():
+    for line in Path(VERSIONS_FILE).read_text().splitlines():
         line = line.strip()
         if line and not line.startswith("#"):
             key, value = line.split("=", 1)
@@ -108,12 +108,12 @@ if __name__ == "__main__":
         onyxia_base_tag = f"{IMAGES_PREFIX}-base:latest"
         matrix = [
             {
-                "base_image_tag": args.input_image,
+                "base_image_tag": versions["BASE_IMAGE_CPU"],
                 "output_image_main_tag": f"{DH_ORGA}/{onyxia_base_tag}",
                 "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag},{DH_ORGA}/{onyxia_base_tag}-{TODAY_DATE}",
             },
             {
-                "base_image_tag": versions["CUDA_BASE_IMAGE"],
+                "base_image_tag": versions["BASE_IMAGE_GPU"],
                 "output_image_main_tag": f"{DH_ORGA}/{onyxia_base_tag}-gpu",
                 "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag}-gpu,{DH_ORGA}/{onyxia_base_tag}-gpu-{TODAY_DATE}",
             },
