@@ -108,12 +108,12 @@ if __name__ == "__main__":
         onyxia_base_tag = f"{IMAGES_PREFIX}-base:latest"
         matrix = [
             {
-                "base_image_tag": args.input_image,
+                "base_image_tag": versions["BASE_IMAGE_CPU"],
                 "output_image_main_tag": f"{DH_ORGA}/{onyxia_base_tag}",
                 "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag},{DH_ORGA}/{onyxia_base_tag}-{TODAY_DATE}",
             },
             {
-                "base_image_tag": versions["CUDA_BASE_IMAGE"],
+                "base_image_tag": versions["BASE_IMAGE_GPU"],
                 "output_image_main_tag": f"{DH_ORGA}/{onyxia_base_tag}-gpu",
                 "output_image_tags": f"{DH_ORGA}/{onyxia_base_tag}-gpu,{DH_ORGA}/{onyxia_base_tag}-gpu-{TODAY_DATE}",
             },

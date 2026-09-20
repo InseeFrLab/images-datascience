@@ -79,16 +79,28 @@
       "depTypeTemplate": "spark"
     },
     {
-      "description": "CUDA base image of the GPU variants (versions.env)",
+      "description": "Base image of the GPU variants (versions.env)",
       "customType": "regex",
       "managerFilePatterns": [
         "/^versions\\.env$/"
       ],
       "matchStrings": [
-        "CUDA_BASE_IMAGE=\"(?<depName>[^:\"]+):(?<currentValue>[^\"]+)\""
+        "BASE_IMAGE_GPU=\"(?<depName>[^:\"]+):(?<currentValue>[^\"]+)\""
       ],
       "datasourceTemplate": "docker",
       "depTypeTemplate": "cuda"
+    },
+    {
+      "description": "Base image of the CPU variants (versions.env)",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^versions\\.env$/"
+      ],
+      "matchStrings": [
+        "BASE_IMAGE_CPU=\"(?<depName>[^:\"]+):(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "depTypeTemplate": "base-image"
     },
     {
       "description": "Tools downloaded by install scripts and CI actions, pinned with a '# renovate: datasource=... depName=...' comment above a <TOOL>_VERSION=\"x.y.z\" line",

@@ -15,7 +15,6 @@ jobs:
     with:
       image: base
       context: base
-      base_image: ubuntu:24.04
     secrets: inherit
   python-minimal:
     needs: [base]

@@ -12,9 +12,10 @@ on:
         required: true
         type: string
       base_image:
-        description: Name of the base image
-        required: true
+        description: Name of the base image (empty for base, whose external base images come from versions.env)
+        required: false
         type: string
+        default: ""
       languages:
         description: Languages of the image, which select the versions read from versions.env (python, r or r-python; empty for base)
         required: false
@@ -45,7 +46,7 @@ jobs:
         python-version: '3.14'
     - id: set-matrix
       run: |
-        python3 utils/generate_matrix.py --input_image ${{ inputs.base_image }} --output_image ${{ inputs.image }} \
+        python3 utils/generate_matrix.py --input_image "${{ inputs.base_image }}" --output_image ${{ inputs.image }} \
             --languages "${{ inputs.languages }}" --spark ${{ inputs.spark }} --build_gpu ${{ inputs.build_gpu }}
   docker:
     runs-on: ubuntu-latest
@@ -93,9 +94,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Restore common Docker images from cache
-        uses: ./.github/actions/cache-common-images
       
       - name: Push to DockerHub
         if: ${{ github.ref == 'refs/heads/main' }}
