@@ -47,6 +47,15 @@ if command -v python &> /dev/null; then
     for extension in "${python_extensions[@]}"; do
         install_extension $extension
     done
+    # ms-python.python is an extension pack that pulls in ms-python.vscode-python-envs,
+    # which shells out to the native "pet" locator bundled only in the platform-specific
+    # builds of ms-python.python. Open VSX only publishes the universal build, so pet is
+    # missing and the extension pops up a recurring "Default interpreter path could not be
+    # resolved" warning. ms-python.python locates interpreters on its own, so drop it.
+    # See https://github.com/microsoft/vscode-python/issues/25820
+    if code-server --list-extensions | grep -qx "ms-python.vscode-python-envs"; then
+        code-server --uninstall-extension ms-python.vscode-python-envs
+    fi
     python_path=$(which python)
     jq --arg pythonPath "$python_path" '.["python.defaultInterpreterPath"] = $pythonPath' ${REMOTE_CONFIG_DIR}/settings.json > tmp.json && mv tmp.json ${REMOTE_CONFIG_DIR}/settings.json
 fi
