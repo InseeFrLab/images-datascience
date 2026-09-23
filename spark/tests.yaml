@@ -15,20 +15,8 @@ fileExistenceTests:
     permissions: "-rwxr-xr-x"
     uid: 1000
     gid: 100
-  - name: 'Hadoop Home'
-    path: '/usr/local/lib/hadoop'
-    shouldExist: true
-    permissions: "drwxr-xr-x"
-    uid: 1000
-    gid: 100
   - name: 'Spark Home'
-    path: '/usr/local/lib/spark'
-    shouldExist: true
-    permissions: "drwxr-xr-x"
-    uid: 1000
-    gid: 100
-  - name: 'Hive Home'
-    path: '/usr/local/lib/hive'
+    path: '/opt/spark'
     shouldExist: true
     permissions: "drwxr-xr-x"
     uid: 1000
@@ -50,6 +38,23 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["spark-submit"]
+    expectedOutput: ["/opt/spark/bin/spark-submit"]
+  - name: "Spark starts and reports the version it was built with"
+    command: "bash"
+    args: ["-c", "spark-submit --version 2>&1 | grep -q \"version ${SPARK_VERSION}\""]
+  - name: "Spark on Kubernetes entrypoint is executable"
+    command: "bash"
+    args: ["-c", "test -x /opt/spark-entrypoint.sh"]
+  - name: "py4j is reachable through its version-independent path"
+    command: "bash"
+    args: ["-c", "test -f /opt/spark/python/lib/py4j-src.zip"]
+  - name: "S3A connector is present, at the Hadoop version Spark ships"
+    command: "bash"
+    args: ["-c", "cd /opt/spark/jars && ls bundle-*.jar hadoop-aws-$(basename hadoop-client-api-*.jar .jar | sed 's|hadoop-client-api-||').jar"]
+    expectedOutput: ["bundle-.*\\.jar", "hadoop-aws-.*\\.jar"]
   - name: "Workspace is empty (no leftover install files)"
     command: "ls"
     args: ["-A", "/home/onyxia/work"]

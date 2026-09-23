@@ -139,28 +139,6 @@ jobs:
       base_image: r-datascience
       languages: r
     secrets: inherit
-  sparkr:
-    needs: [r-minimal]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: sparkr
-      context: spark
-      base_image: r-minimal
-      languages: r
-      spark: true
-      build_gpu: false
-    secrets: inherit
-  rstudio-sparkr:
-    needs: [sparkr]
-    uses: ./.github/workflows/main-workflow-template.yml
-    with:
-      image: rstudio-sparkr
-      context: rstudio
-      base_image: sparkr
-      languages: r
-      spark: true
-      build_gpu: false
-    secrets: inherit
   r-python-julia:
     needs: [r-datascience]
     uses: ./.github/workflows/main-workflow-template.yml
