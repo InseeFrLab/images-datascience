@@ -47,6 +47,11 @@ if command -v python &> /dev/null; then
     for extension in "${python_extensions[@]}"; do
         install_extension $extension
     done
+    # Fix unwanted warning pop-up in vscode ("Default interpreter path ... could not be resolved")
+    # cause: https://github.com/microsoft/vscode-python/issues/25820
+    if code-server --list-extensions | grep -qx "ms-python.vscode-python-envs"; then
+        code-server --uninstall-extension ms-python.vscode-python-envs
+    fi
     python_path=$(which python)
     jq --arg pythonPath "$python_path" '.["python.defaultInterpreterPath"] = $pythonPath' ${REMOTE_CONFIG_DIR}/settings.json > tmp.json && mv tmp.json ${REMOTE_CONFIG_DIR}/settings.json
 fi
