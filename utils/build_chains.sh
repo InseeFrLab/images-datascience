@@ -25,7 +25,6 @@ done
 
 for r_ver in "${R_VERSIONS[@]}"; do
   uv run python3 -m utils.build_chain --chain rstudio --r_version $r_ver $DOCKER_BUILD_ARGS
-  uv run python3 -m utils.build_chain --chain sparkr --r_version $r_ver --spark_version $SPARK_VERSION $DOCKER_BUILD_ARGS
 done
 
 # r-python-julia images are built with only latest versions of R & Python

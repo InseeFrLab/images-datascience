@@ -22,11 +22,6 @@ COPY --chmod=0755 scripts/ /opt/
 RUN /opt/install-java.sh && \
     # Install Spark and the S3A connector
     /opt/install-spark.sh && \
-    # Install additional packages if R is installed
-    if command -v R; then \
-        /rocker_scripts/install_tidyverse.sh && \
-        /opt/install-sparkr.sh; \
-    fi && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

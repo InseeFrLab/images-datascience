@@ -20,7 +20,6 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PM-->PYSPARK[pyspark]:::package;
       PM-->PYTORCH[python-pytorch]:::package;
       RM-->RDS[r-datascience]:::package;
-      RM-->RSPARK[sparkr]:::package;
       RDS-->RPYJU[r-python-julia]:::package;
       PYSPARK--> JPYSPARK[jupyter-pyspark]:::ide;
       PYDS--> JPYDS[jupyter-python]:::ide;
@@ -29,7 +28,6 @@ They can be used alone but are designed to work with the [Onyxia](https://github
       PYDS--> VSCODEPYDS[vscode-python]:::ide;
       PYTORCH--> VSCODEPYTORCH[vscode-pytorch]:::ide;
       PYDS--> MARIMOPYDS[marimo-python]:::ide;
-      RSPARK -->RSTUDIOSPARKR[rstudio-sparkr]:::ide;
       RDS--> RSTUDIORDS[rstudio]:::ide;
       RPYJU--> JRPYJU[jupyter-r-python-julia]:::ide;
       RPYJU--> VSCODERPYJU[vscode-r-python-julia]:::ide;
