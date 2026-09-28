@@ -2,7 +2,7 @@
 set -eo pipefail
 
 # renovate: datasource=github-releases depName=JuliaLang/julia
-JULIA_VERSION="1.13.0"
+JULIA_VERSION="1.13.1"
 
 # Download the official archive and verify its checksum
 JULIA_ARCHIVE="julia-${JULIA_VERSION}-linux-x86_64.tar.gz"
