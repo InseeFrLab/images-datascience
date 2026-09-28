@@ -46,7 +46,7 @@ jobs:
         python-version: 3.14
     - id: set-matrix
       run: |
-        uv run python3 utils/generate_matrix.py
+        uv run python3 utils/generate_matrix.py \
             --input_image "${{ inputs.base_image }}" \
             --output_image ${{ inputs.image }} \
             --languages "${{ inputs.languages }}" \
