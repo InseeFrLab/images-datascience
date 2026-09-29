@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-SPARK_URL="https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/"
+SPARK_URL="https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}"
 SPARK_ARCHIVE="spark-${SPARK_VERSION}-bin-hadoop3.tgz"
 MAVEN_URL="https://repo1.maven.org/maven2"
 
