@@ -32,6 +32,7 @@ base_extensions=(
     "hediet.vscode-drawio"
     "continue.continue@1.3.38"
     "sst-dev.opencode"
+    "christofkaufmann.dataframe-viewer"
 )
 for extension in "${base_extensions[@]}"; do
     install_extension $extension
