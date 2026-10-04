@@ -2,7 +2,7 @@
 set -eo pipefail
 
 # renovate: datasource=github-releases depName=duckdb/duckdb
-DUCKDB_VERSION="1.5.5"
+DUCKDB_VERSION="1.5.6"
 
 # Download the GitHub archive and verify its checksum
 DUCKDB_ZIP="duckdb_cli-linux-amd64.zip"
