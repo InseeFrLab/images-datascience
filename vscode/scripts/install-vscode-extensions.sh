@@ -38,7 +38,9 @@ for extension in "${base_extensions[@]}"; do
     install_extension $extension
 done
 
+
 # Python-specific configuration
+
 python_extensions=(
     "ms-python.python"
     "ms-python.flake8"
@@ -57,12 +59,18 @@ if command -v python &> /dev/null; then
     jq --arg pythonPath "$python_path" '.["python.defaultInterpreterPath"] = $pythonPath' ${REMOTE_CONFIG_DIR}/settings.json > tmp.json && mv tmp.json ${REMOTE_CONFIG_DIR}/settings.json
 fi
 
+
 # R-specific configuration
+
+# Install arf as R console
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/eitsupi/arf/releases/latest/download/arf-console-installer.sh | sh
+
 r_extensions=(
-    "reditorsupport.r"
+    "REditorSupport.r"
     "RDebugger.r-debugger"
     "Posit.air-vscode"
 )
+
 if command -v R &> /dev/null; then
     # Install R kernel for jupyter notebooks
     if command -v pip &>/dev/null; then
@@ -77,14 +85,17 @@ if command -v R &> /dev/null; then
     for extension in "${r_extensions[@]}"; do
         install_extension $extension
     done
-    R -e "install.packages(c('remotes', 'languageserver', 'rmarkdown', 'httpgd'))"
+    R -e "install.packages(c('remotes', 'languageserver', 'rmarkdown', 'jgd'))"
+    R -e "install.packages('sess', repos = c('https://reditorsupport.r-universe.dev', getOption('repos')))"
     R -e "install.packages('vscDebugger', repos = c('https://manuelhentschel.r-universe.dev', getOption('repos')))"
 fi
+
 
 # Julia-specific configuration
 if command -v julia &> /dev/null; then
     install_extension "julialang.language-julia"
 fi
+
 
 # Quarto-specific configuration
 if command -v quarto &> /dev/null; then
