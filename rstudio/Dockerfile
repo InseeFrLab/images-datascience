@@ -28,4 +28,15 @@ RUN /rocker_scripts/install_rstudio.sh && \
 
 EXPOSE 8787
 
-CMD ["/init"]
+# Config for rootless
+ENV USER=${USERNAME}
+RUN chown -R ${USER} /var/lib/rstudio-server && \
+    chown -R ${USER} /usr/lib/rstudio-server && \
+    chown -R ${USER} /etc/rstudio
+
+USER 1000
+
+# Command args for regular, root launch
+# CMD ["/init"]
+# Command args for rootless launch
+CMD ["/usr/lib/rstudio-server/bin/rserver", "--server-daemonize=0", "--auth-none=0", "--auth-timeout-minutes=720", "--server-user=${USER}", "--auth-pam-helper-path=pam-helper"]
