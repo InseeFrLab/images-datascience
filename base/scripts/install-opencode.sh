@@ -2,7 +2,7 @@
 set -eo pipefail
 
 # renovate: datasource=github-releases depName=anomalyco/opencode
-OPENCODE_VERSION="1.18.34"
+OPENCODE_VERSION="1.19.0"
 
 # Download the GitHub archive and verify its checksum
 OPENCODE_ARCHIVE="opencode-linux-x64.tar.gz"
