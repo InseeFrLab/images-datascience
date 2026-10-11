@@ -2,7 +2,7 @@
 set -eo pipefail
 
 # renovate: datasource=github-releases depName=quarto-dev/quarto-cli
-QUARTO_VERSION="1.10.18"
+QUARTO_VERSION="1.10.19"
 
 # Download the official archive and verify its checksum
 QUARTO_URL="https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}"
