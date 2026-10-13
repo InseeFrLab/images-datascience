@@ -62,9 +62,6 @@ fi
 
 # R-specific configuration
 
-# Install arf as R console
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/eitsupi/arf/releases/latest/download/arf-console-installer.sh | sh
-
 r_extensions=(
     "REditorSupport.r"
     "RDebugger.r-debugger"
@@ -72,6 +69,8 @@ r_extensions=(
 )
 
 if command -v R &> /dev/null; then
+    # Install arf as R console
+    curl --proto '=https' --tlsv1.2 -LsSf https://github.com/eitsupi/arf/releases/latest/download/arf-console-installer.sh | sh
     # Install R kernel for jupyter notebooks
     if command -v pip &>/dev/null; then
         # First install the minimal jupyter-client python package to make R kernel available to jupyter notebooks
