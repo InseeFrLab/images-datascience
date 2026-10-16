@@ -2,5 +2,8 @@
     "jupyter.kernels.excludePythonEnvironments": [
         "/usr/bin/python3",
         "/bin/python3"
-    ]
+    ],
+    "r.consolePath": "${userHome}/.cargo/bin/arf",
+    "r.bracketedPaste": true,
+    "r.plot.backend": "jgd"
 }
