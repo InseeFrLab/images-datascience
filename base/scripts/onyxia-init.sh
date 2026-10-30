@@ -100,7 +100,7 @@ if command -v git &>/dev/null; then
             REPO_DOMAIN=$(awk -F/ '{print $3}' <<< "$GIT_REPOSITORY")
 
             if [ "$REPO_DOMAIN" = "github.com" ]; then
-                CLONE_URL="${URL_PREFIX}${GIT_PERSONAL_ACCESS_TOKEN}@${URL_NO_PREFIX}"
+                CLONE_URL="${URL_PREFIX}x-access-token:${GIT_PERSONAL_ACCESS_TOKEN}@${URL_NO_PREFIX}"
             elif echo "$GIT_REPOSITORY" | grep -qi "bitbucket"; then
                 CLONE_URL="${URL_PREFIX}x-token-auth:${GIT_PERSONAL_ACCESS_TOKEN}@${URL_NO_PREFIX}"
             else
