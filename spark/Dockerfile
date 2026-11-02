@@ -6,7 +6,7 @@ LABEL maintainer="InseeFrLab <innovation@insee.fr>"
 ENV JAVA_VERSION="21"
 ENV JAVA_HOME="/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64"
 
-ARG SPARK_VERSION="4.2.0"
+ARG SPARK_VERSION="4.3.0"
 ENV SPARK_VERSION=${SPARK_VERSION}
 
 ENV SPARK_HOME="/opt/spark"
