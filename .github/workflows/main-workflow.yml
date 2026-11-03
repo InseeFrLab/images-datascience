@@ -10,7 +10,11 @@ permissions:
   contents: read
 
 jobs:
+  # Check URLs before launching the build pipeline to fail fast on 404 errors
+  check-urls:
+    uses: ./.github/workflows/check-urls.yml
   base:
+    needs: [check-urls]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: base
