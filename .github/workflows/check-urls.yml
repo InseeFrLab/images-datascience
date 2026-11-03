@@ -1,0 +1,25 @@
+name: Check download URLs
+
+on:
+  pull_request:
+    paths:
+      - "versions.env"
+      - "*/scripts/*.sh"
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-urls:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+
+      - name: Check download URLs
+        run: python3 utils/check_urls.py
+        env:
+          # For binaries fetched from GItHub, to avoid the rate limit of unauthenticated requests
+          GITHUB_TOKEN: ${{ github.token }}

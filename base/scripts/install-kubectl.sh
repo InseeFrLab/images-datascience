@@ -4,11 +4,14 @@ set -e
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION="1.37.1"
 
-# Download the official binary and verify its checksum
+# Download the official binary
 KUBECTL_URL="https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 TMP_DIR=$(mktemp -d)
 curl -fsSL "${KUBECTL_URL}" -o "${TMP_DIR}/kubectl"
-KUBECTL_SHA256=$(curl -fsSL "${KUBECTL_URL}.sha256")
+
+# Checksum
+KUBECTL_CHECKSUM_URL="${KUBECTL_URL}.sha256"
+KUBECTL_SHA256=$(curl -fsSL "${KUBECTL_CHECKSUM_URL}")
 echo "${KUBECTL_SHA256}  ${TMP_DIR}/kubectl" | sha256sum --check --strict
 
 # Install kubectl
