@@ -1,6 +1,5 @@
 """Check that every URL in the install scripts works."""
 
-import os
 import re
 import sys
 import urllib.request
@@ -46,11 +45,8 @@ def find_and_expand_urls(script, versions):
 
 def check_url(url):
     """Return the HTTP status of the URL, following redirects, without reading the body."""
+    # Unauthenticated, like the downloads of the builds
     request = urllib.request.Request(url, headers={"User-Agent": "onyxia-images-url-check"})
-    # Authenticated GitHub API requests get 1000 requests/hour instead of 60 per IP. Unredirected header: never
-    # forwarded to another host on a redirect
-    if url.startswith("https://api.github.com/") and os.environ.get("GITHUB_TOKEN"):
-        request.add_unredirected_header("Authorization", f"Bearer {os.environ['GITHUB_TOKEN']}")
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
             return response.status

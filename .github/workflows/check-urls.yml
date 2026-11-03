@@ -20,6 +20,3 @@ jobs:
 
       - name: Check download URLs
         run: python3 utils/check_urls.py
-        env:
-          # For binaries fetched from GItHub, to avoid the rate limit of unauthenticated requests
-          GITHUB_TOKEN: ${{ github.token }}
