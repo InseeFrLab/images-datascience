@@ -53,3 +53,98 @@ commandTests:
     command: "ls"
     args: ["-A", "/home/onyxia/work"]
     excludedOutput: ["."]
+  - name: "onyxia-init.sh: Git config generated from GIT_PROVIDERS"
+    command: "bash"
+    args:
+      - "-c"
+      - |
+        set -e
+        export GIT_USER_NAME="Jane Doe" GIT_USER_MAIL="jane.doe@example.fr" GIT_CREDENTIALS_CACHE_DURATION=0
+        export GIT_PROVIDERS='[
+          {"id": "gitlab", "url": "https://gitlab.example.fr", "user": {"name": "Jane Doe", "email": "jane.doe@example.fr"},
+           "credentials": {"type": "oauth", "clientId": "CLIENT_ID_GITLAB", "scopes": ["read_repository", "write_repository"],
+            "authorizationUrl": "https://gitlab.example.fr/oauth/authorize", "tokenUrl": "https://gitlab.example.fr/oauth/token",
+            "deviceAuthorizationUrl": "https://gitlab.example.fr/oauth/authorize_device", "refreshToken": "REFRESH_TOKEN_GITLAB"}},
+          {"id": "github", "url": "https://github.com", "user": {"name": "jdoe", "email": "jdoe@users.noreply.github.com"},
+           "credentials": {"type": "oauth", "clientId": "CLIENT_ID_GITHUB", "scopes": ["repo"],
+            "authorizationUrl": "https://github.com/login/oauth/authorize", "tokenUrl": "https://github.com/login/oauth/access_token",
+            "deviceAuthorizationUrl": "https://github.com/login/device/code"}},
+          {"id": "forgejo", "url": "https://forge.example.org", "user": {"name": "Jane D.", "email": "jane@example.org"},
+           "credentials": {"type": "oauth", "clientId": "CLIENT_ID_FORGEJO", "scopes": ["write:repository"],
+            "authorizationUrl": "https://forge.example.org/login/oauth/authorize", "tokenUrl": "https://forge.example.org/login/oauth/access_token",
+            "refreshToken": "REFRESH_TOKEN_FORGEJO"}},
+          {"id": "bitbucket", "url": "https://bitbucket.org", "user": {"name": "Jane Doe", "email": "jane.doe@example.fr"},
+           "credentials": {"type": "token", "username": "x-bitbucket-api-token-auth", "token": "TOKEN_BITBUCKET"}}
+        ]'
+
+        # The service doesn't get the secrets in its environment
+        /opt/onyxia-init.sh bash -c 'test -z "${GIT_PROVIDERS:-}"'
+
+        diff -u - ~/.gitconfig <<'EOF'
+        [user]
+        	name = Jane Doe
+        	email = jane.doe@example.fr
+        [credential]
+        	helper = cache --timeout=0
+        [includeIf "hasconfig:remote.*.url:https://gitlab.example.fr/**"]
+        	path = /home/onyxia/.gitconfig-onyxia-gitlab
+        [credential "https://gitlab.example.fr"]
+        	helper = 
+        	oauthClientId = CLIENT_ID_GITLAB
+        	oauthScopes = read_repository write_repository
+        	oauthAuthURL = https://gitlab.example.fr/oauth/authorize
+        	oauthTokenURL = https://gitlab.example.fr/oauth/token
+        	helper = cache --timeout=31536000
+        	oauthDeviceAuthURL = https://gitlab.example.fr/oauth/authorize_device
+        	helper = !timeout 300 git credential-oauth -device
+        [includeIf "hasconfig:remote.*.url:https://forge.example.org/**"]
+        	path = /home/onyxia/.gitconfig-onyxia-forgejo
+        [credential "https://forge.example.org"]
+        	helper = 
+        	oauthClientId = CLIENT_ID_FORGEJO
+        	oauthScopes = write:repository
+        	oauthAuthURL = https://forge.example.org/login/oauth/authorize
+        	oauthTokenURL = https://forge.example.org/login/oauth/access_token
+        	helper = cache --timeout=31536000
+        	helper = !timeout 30 git credential-oauth
+        [includeIf "hasconfig:remote.*.url:https://bitbucket.org/**"]
+        	path = /home/onyxia/.gitconfig-onyxia-bitbucket
+        [credential "https://bitbucket.org"]
+        	helper = 
+        	helper = store
+        [includeIf "hasconfig:remote.*.url:https://github.com/**"]
+        	path = /home/onyxia/.gitconfig-onyxia-github
+        [credential "https://github.com"]
+        	helper = 
+        	oauthClientId = CLIENT_ID_GITHUB
+        	oauthScopes = repo
+        	oauthAuthURL = https://github.com/login/oauth/authorize
+        	oauthTokenURL = https://github.com/login/oauth/access_token
+        	helper = cache --timeout=31536000
+        	oauthDeviceAuthURL = https://github.com/login/device/code
+        	helper = !timeout 300 git credential-oauth -device
+        [pull]
+        	rebase = false
+        EOF
+
+        diff -u - ~/.gitconfig-onyxia-forgejo <<'EOF'
+        [user]
+        	name = Jane D.
+        	email = jane@example.org
+        EOF
+
+        diff -u - ~/.git-credentials <<'EOF'
+        https://x-bitbucket-api-token-auth:TOKEN_BITBUCKET@bitbucket.org
+        EOF
+        test "$(stat -c %a ~/.git-credentials)" = 600
+
+        # The refresh tokens are only in the memory of the cache
+        printf 'url=https://gitlab.example.fr\n\n' | git credential-cache get | grep -qx 'oauth_refresh_token=REFRESH_TOKEN_GITLAB'
+        printf 'url=https://forge.example.org\n\n' | git credential-cache get | grep -qx 'oauth_refresh_token=REFRESH_TOKEN_FORGEJO'
+        if grep -rq REFRESH_TOKEN ~/.gitconfig ~/.gitconfig-onyxia-* ~/.git-credentials; then exit 1; fi
+
+        # Each forge's identity applies to its repositories, the default one elsewhere
+        git init -q /tmp/repo
+        test "$(git -C /tmp/repo config user.email)" = jane.doe@example.fr
+        git -C /tmp/repo remote add origin https://forge.example.org/jane/project.git
+        test "$(git -C /tmp/repo config user.email)" = jane@example.org
