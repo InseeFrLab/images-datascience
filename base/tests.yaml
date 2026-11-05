@@ -32,9 +32,13 @@ commandTests:
     command: "which"
     args: ["duckdb"]
     expectedOutput: ["/usr/local/bin/duckdb"]
+  - name: "Does the binary exists?"
+    command: "which"
+    args: ["git-credential-oauth"]
+    expectedOutput: ["/usr/local/bin/git-credential-oauth"]
   - name: "CLI tools run"
     command: "bash"
-    args: ["-c", "aws --version && kubectl version --client && helm version && git --version && psql --version && jq --version"]
+    args: ["-c", "aws --version && kubectl version --client && helm version && git --version && git credential-oauth -h 2>&1 | grep -q git-credential-oauth && psql --version && jq --version"]
   - name: "DuckDB runs"
     command: "bash"
     args: ["-c", "duckdb --version"]

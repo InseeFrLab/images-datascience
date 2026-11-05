@@ -53,6 +53,7 @@ If Onyxia support is checked, it means that the Onyxia product could inject auto
 | PIP_REPOSITORY   | https://some.entreprise.mirror/repository/pypi-proxy/simple   | Configure an externally managed pip repository manager   | ✔️   | ✔️  |
 | R_REPOSITORY | https://some.entreprise.mirror/repository/cran   |  Configure an externally managed cran repository manager   |not yet (*)   | not yet  (*)   |
 | PATH_TO_CA_BUNDLE  | /etc/ssl/certs/ca-certificates.crt  | Configure a path to a ca bundle with autorities to support an auto-signed some.entreprise.mirror   | not yet (*)   | not yet (*)    |
+| GIT_PROVIDERS | `[{"id":"gitlab","url":"https://gitlab.example.com","user":{"name":"Jane","email":"jane@example.com"},"credentials":{"type":"token","username":"jane","token":"…"}}]` | Git forges to configure, as JSON: `git.providers` of the Onyxia context. Sets the commit identity and the credentials per forge, with a token (`credentials.type: "token"`) or OAuth through [git-credential-oauth](https://github.com/hickford/git-credential-oauth) (`credentials.type: "oauth"`). Takes over from `GIT_PERSONAL_ACCESS_TOKEN` for the forges it lists | not yet | not yet |
 
 (*) For now you should inject this another way, contact on onyxia slack for some recipes depend of your context.
 
