@@ -43,6 +43,7 @@ RUN /opt/install-system-libs.sh && \
     /opt/install-duckdb-cli.sh && \
     /opt/install-duckdb-extensions.sh && \
     /opt/install-quarto.sh && \
+    /opt/install-git-credential-oauth.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

@@ -85,16 +85,143 @@ if [[ -z $ROOT_PROJECT_DIRECTORY ]]; then
     ROOT_PROJECT_DIRECTORY="$WORKSPACE_DIR"
 fi
 
+# Some images start as root (RStudio): what is written in the home directory has to
+# belong to the user, and the credential cache daemon has to run as the user.
+git_as_user() {
+    if [[ $(id -u) = 0 ]]; then
+        sudo -u "$USERNAME" -H git "$@"
+    else
+        git "$@"
+    fi
+}
+
+# Scheme, host and port of a URL: what git credentials are matched on.
+git_url_origin() {
+    [[ "$1" =~ ^https?://[^/]+ ]] && echo "${BASH_REMATCH[0]}"
+}
+
+# Configures an entry of GIT_PROVIDERS: the commit identity on this forge and the
+# credentials that git uses for it.
+configure_git_provider() {
+    local provider="$1"
+    local id url origin name email identity_file type
+
+    id=$(jq -r '.id' <<< "$provider")
+    url=$(jq -r '.url' <<< "$provider")
+    origin=$(git_url_origin "$url")
+    if [[ -z "$origin" ]]; then
+        echo "skipping Git provider $id: not an http(s) URL"
+        return
+    fi
+    echo "configuration of the Git provider $id"
+
+    name=$(jq -r '.user.name // empty' <<< "$provider")
+    email=$(jq -r '.user.email // empty' <<< "$provider")
+    identity_file="${HOME}/.gitconfig-onyxia-${id//[^a-zA-Z0-9_-]/_}"
+    [[ -n "$name" ]] && git_as_user config --file "$identity_file" user.name "$name"
+    [[ -n "$email" ]] && git_as_user config --file "$identity_file" user.email "$email"
+    if [[ -f "$identity_file" ]]; then
+        git_as_user config --global "includeIf.hasconfig:remote.*.url:${url}/**.path" "$identity_file"
+    fi
+
+    type=$(jq -r '.credentials.type // empty' <<< "$provider")
+    [[ -z "$type" ]] && return
+
+    # An empty value drops the helpers configured so far for this forge, the former
+    # credential.helper with a short timeout would otherwise evict the refresh token.
+    git_as_user config --global --replace-all "credential.${origin}.helper" ""
+
+    case "$type" in
+        token)
+            git_as_user config --global --add "credential.${origin}.helper" store
+            jq -j --arg origin "$origin" \
+                '"url=\($origin)\nusername=\(.credentials.username)\npassword=\(.credentials.token)\n\n"' <<< "$provider" |
+                git_as_user credential-store store
+            ;;
+        oauth)
+            local client_id scopes authorization_url token_url device_url refresh_token
+            client_id=$(jq -r '.credentials.clientId' <<< "$provider")
+            scopes=$(jq -r '.credentials.scopes | join(" ")' <<< "$provider")
+            authorization_url=$(jq -r '.credentials.authorizationUrl' <<< "$provider")
+            token_url=$(jq -r '.credentials.tokenUrl' <<< "$provider")
+            device_url=$(jq -r '.credentials.deviceAuthorizationUrl // empty' <<< "$provider")
+            refresh_token=$(jq -r '.credentials.refreshToken // empty' <<< "$provider")
+
+            git_as_user config --global "credential.${origin}.oauthClientId" "$client_id"
+            git_as_user config --global "credential.${origin}.oauthScopes" "$scopes"
+            git_as_user config --global "credential.${origin}.oauthAuthURL" "$authorization_url"
+            git_as_user config --global "credential.${origin}.oauthTokenURL" "$token_url"
+
+            # The cache keeps the access token and, unlike the store helper, the refresh
+            # token. It only lives in memory: long enough to outlive the service.
+            git_as_user config --global --add "credential.${origin}.helper" "cache --timeout=$GIT_OAUTH_CACHE_TIMEOUT"
+            # When it can't refresh, git-credential-oauth falls back on an interactive flow
+            # and waits for it without any limit: git would hang.
+            if [[ -n "$device_url" ]]; then
+                git_as_user config --global "credential.${origin}.oauthDeviceAuthURL" "$device_url"
+                git_as_user config --global --add "credential.${origin}.helper" "!timeout 300 git credential-oauth -device"
+            else
+                # The browser flow can't succeed from a service.
+                git_as_user config --global --add "credential.${origin}.helper" "!timeout 30 git credential-oauth"
+            fi
+
+            # Seeds the cache with an expired password: git discards it and hands the refresh
+            # token to git-credential-oauth. This has to go straight to the helper, "git
+            # credential approve" ignores expired credentials.
+            if [[ -n "$refresh_token" ]]; then
+                printf 'url=%s\nusername=oauth2\npassword=expired\npassword_expiry_utc=1\noauth_refresh_token=%s\n\n' "$origin" "$refresh_token" |
+                    git_as_user credential-cache --timeout="$GIT_OAUTH_CACHE_TIMEOUT" store
+            fi
+            ;;
+        *)
+            echo "Git provider $id: unknown credentials type $type"
+            return
+            ;;
+    esac
+
+    GIT_PROVIDERS_ORIGINS_WITH_CREDENTIALS+=" $origin "
+}
+
 if command -v git &>/dev/null; then
     if [[ -n "$PATH_TO_CA_BUNDLE" ]]; then
         echo "configuration of git to a custom crt"
         git config --global http.sslVerify true
         git config --global http.sslCAInfo $PATH_TO_CA_BUNDLE
     fi
+
+    # Git config
+    # NOTE: Before the Git providers, whose identity has to come later in the config to win.
+    if [ -n "$GIT_USER_NAME" ]; then
+        git config --global user.name "$GIT_USER_NAME"
+    fi
+    if [ -n "$GIT_USER_MAIL" ]; then
+        git config --global user.email "$GIT_USER_MAIL"
+    fi
+    if [ -n "$GIT_CREDENTIALS_CACHE_DURATION" ]; then
+        git config --global credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
+    fi
+    # The ownership of the files git_as_user is about to write to, or to read
+    [ -f ${HOME}/.gitconfig ] && chown ${USERNAME}:${GROUPNAME} ${HOME}/.gitconfig
+
+    # GIT_PROVIDERS: git.providers of the Onyxia context, as JSON.
+    GIT_OAUTH_CACHE_TIMEOUT=31536000
+    GIT_PROVIDERS_ORIGINS_WITH_CREDENTIALS=""
+    if [[ -n "$GIT_PROVIDERS" ]] && ! jq -e 'type == "array"' <<< "$GIT_PROVIDERS" &>/dev/null; then
+        echo "ignoring GIT_PROVIDERS: not a JSON array"
+        GIT_PROVIDERS=""
+    fi
+    if [[ -n "$GIT_PROVIDERS" ]]; then
+        while IFS= read -r provider; do
+            configure_git_provider "$provider"
+        done < <(jq -c '.[] | select((.credentials.type == "oauth" and .credentials.refreshToken == null) | not)' <<< "$GIT_PROVIDERS")
+    fi
+
     if [[ -n "$GIT_REPOSITORY" ]]; then
         CLONE_URL="$GIT_REPOSITORY"
 
-        if [[ -n "$GIT_PERSONAL_ACCESS_TOKEN" ]]; then
+        # With the credentials of a Git provider nothing goes in the URL: it would be saved
+        # in .git/config, in the project directory, and outdated once the token is refreshed.
+        if [[ -n "$GIT_PERSONAL_ACCESS_TOKEN" && "$GIT_PROVIDERS_ORIGINS_WITH_CREDENTIALS" != *" $(git_url_origin "$GIT_REPOSITORY") "* ]]; then
             URL_PREFIX=$(echo "$GIT_REPOSITORY" | grep -oE '^https?://')
             URL_NO_PREFIX=$(echo "$GIT_REPOSITORY" | sed 's|^https\?://||')
             REPO_DOMAIN=$(awk -F/ '{print $3}' <<< "$GIT_REPOSITORY")
@@ -115,16 +242,18 @@ if command -v git &>/dev/null; then
         fi
     fi
 
-    # Git config
-    if [ -n "$GIT_USER_NAME" ]; then
-        git config --global user.name "$GIT_USER_NAME"
+    # Providers relying on the device flow only, once the project is cloned: nobody is there
+    # to enter the code during the startup, the clone would wait for it. Without credentials
+    # it fails right away on a private repository, the user can clone it from a terminal.
+    if [[ -n "$GIT_PROVIDERS" ]]; then
+        while IFS= read -r provider; do
+            configure_git_provider "$provider"
+        done < <(jq -c '.[] | select(.credentials.type == "oauth" and .credentials.refreshToken == null)' <<< "$GIT_PROVIDERS")
     fi
-    if [ -n "$GIT_USER_MAIL" ]; then
-        git config --global user.email "$GIT_USER_MAIL"
-    fi
-    if [ -n "$GIT_CREDENTIALS_CACHE_DURATION" ]; then
-        git config --global credential.helper "cache --timeout=$GIT_CREDENTIALS_CACHE_DURATION"
-    fi
+    # The processes of the service have no use of these credentials, they're now in the
+    # helpers. The refresh token is outdated anyway after its first use.
+    unset GIT_PROVIDERS
+
     # Default strategy when performing a git pull
     # Use Git's former default (fast-forward if possible, else merge) to avoid cryptic error message
     git config --global pull.rebase false
