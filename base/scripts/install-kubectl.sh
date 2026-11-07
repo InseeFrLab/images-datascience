@@ -2,7 +2,7 @@
 set -e
 
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION="1.37.1"
+KUBECTL_VERSION="1.37.2"
 
 # Download the official binary and verify its checksum
 KUBECTL_URL="https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
