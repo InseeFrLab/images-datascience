@@ -2,15 +2,18 @@
 set -e
 set -o pipefail
 
-SPARK_URL="https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}"
-SPARK_ARCHIVE="spark-${SPARK_VERSION}-bin-hadoop3.tgz"
-MAVEN_URL="https://repo1.maven.org/maven2"
+# Repository root, not a file: the jars downloaded from it are only known once Spark is downloaded
+MAVEN_REPOSITORY="https://repo1.maven.org/maven2"
 
+# Download the official Spark distribution
+SPARK_URL="https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz"
+SPARK_ARCHIVE=$(basename "${SPARK_URL}")
 TMP_DIR=$(mktemp -d)
+curl -fsSL "${SPARK_URL}" -o "${TMP_DIR}/${SPARK_ARCHIVE}"
 
-# Download the official Spark distribution and verify its checksum
-curl -fsSL "${SPARK_URL}/${SPARK_ARCHIVE}" -o "${TMP_DIR}/${SPARK_ARCHIVE}"
-curl -fsSL "${SPARK_URL}/${SPARK_ARCHIVE}.sha512" -o "${TMP_DIR}/${SPARK_ARCHIVE}.sha512"
+# Checksum
+SPARK_CHECKSUM_URL="${SPARK_URL}.sha512"
+curl -fsSL "${SPARK_CHECKSUM_URL}" -o "${TMP_DIR}/${SPARK_ARCHIVE}.sha512"
 (cd "${TMP_DIR}" && sha512sum --check --strict "${SPARK_ARCHIVE}.sha512")
 
 mkdir -p "${SPARK_HOME}"
@@ -20,7 +23,7 @@ tar xzf "${TMP_DIR}/${SPARK_ARCHIVE}" -C "${SPARK_HOME}" --owner root --group ro
 # -Phadoop-cloud). Its versions are read from the distribution itself, so they cannot drift from
 # the Hadoop client it embeds.
 HADOOP_VERSION=$(basename "${SPARK_HOME}"/jars/hadoop-client-api-*.jar .jar | sed "s|^hadoop-client-api-||")
-HADOOP_POM="${MAVEN_URL}/org/apache/hadoop/hadoop-project/${HADOOP_VERSION}/hadoop-project-${HADOOP_VERSION}.pom"
+HADOOP_POM="${MAVEN_REPOSITORY}/org/apache/hadoop/hadoop-project/${HADOOP_VERSION}/hadoop-project-${HADOOP_VERSION}.pom"
 curl -fsSL "${HADOOP_POM}" -o "${TMP_DIR}/hadoop-project.pom"
 
 # Read a <property> value from the Hadoop POM, failing the build if it is not there
@@ -37,7 +40,7 @@ read_pom_property() {
 # Download a jar from Maven Central into the Spark classpath and verify its checksum
 install_maven_jar() {
     local jar="$2-$3.jar"
-    local url="${MAVEN_URL}/$1/$2/$3/${jar}"
+    local url="${MAVEN_REPOSITORY}/$1/$2/$3/${jar}"
     curl -fsSL "${url}" -o "${TMP_DIR}/${jar}"
     SHA1=$(curl -fsSL "${url}.sha1")
     echo "${SHA1}  ${TMP_DIR}/${jar}" | sha1sum --check --strict
