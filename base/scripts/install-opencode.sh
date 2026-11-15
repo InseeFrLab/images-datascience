@@ -3,7 +3,7 @@ set -eo pipefail
 
 # OpenCode v2 is only published on npm (no GitHub release): the native binary ships in a per-platform package
 # renovate: datasource=npm depName=@opencode/cli-linux-x64
-OPENCODE_VERSION="2.2.0"
+OPENCODE_VERSION="2.3.0"
 
 # Download the npm package
 OPENCODE_URL="https://registry.npmjs.org/@opencode/cli-linux-x64/-/cli-linux-x64-${OPENCODE_VERSION}.tgz"

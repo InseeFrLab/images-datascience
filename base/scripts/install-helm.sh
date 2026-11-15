@@ -2,7 +2,7 @@
 set -e
 
 # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION="4.3.1"
+HELM_VERSION="4.3.2"
 
 # Download the official release
 HELM_URL="https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz"
