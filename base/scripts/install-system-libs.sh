@@ -20,6 +20,7 @@ add-apt-repository -y ppa:git-core/ppa  # For Git
     locales \
     nano \
     openssh-client \
+    ripgrep \
     sudo \
     tini \
     unzip \
