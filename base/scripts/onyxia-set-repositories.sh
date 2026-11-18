@@ -47,7 +47,8 @@ if command -v R &>/dev/null; then
         UBUNTU_CODENAME=$(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d= -f2)
         # Using "/bin/linux" style URLS for PACKAGE_MANAGER_URL allows easier management for local package managers (eg: Nexus)
         # See also : https://docs.posit.co/rspm/admin/serving-binaries.html#using-linux-binary-packages
-        echo "  r[\"PackageManager\"] <- sprintf(\"${PACKAGE_MANAGER_URL}/latest/bin/linux/${UBUNTU_CODENAME}-%s/%s\", R.version[\"arch\"], substr(getRversion(), 1, 3))" >> ${R_HOME}/etc/Rprofile.site
+        echo "  r[\"LinuxBinaries\"] <- sprintf(\"${PACKAGE_MANAGER_URL}/latest/bin/linux/${UBUNTU_CODENAME}-%s/%s\", R.version[\"arch\"], substr(getRversion(), 1, 3))" >> ${R_HOME}/etc/Rprofile.site
+        echo "  r[\"Sources\"] <- \"${PACKAGE_MANAGER_URL}/latest\"" >> ${R_HOME}/etc/Rprofile.site
       fi
 
       if [[ -n "$R_REPOSITORY" ]]; then
