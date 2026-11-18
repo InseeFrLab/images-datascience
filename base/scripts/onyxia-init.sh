@@ -216,7 +216,25 @@ if command -v git &>/dev/null; then
         done < <(jq -c '.[] | select((.credentials.type == "oauth" and .credentials.refreshToken == null) | not)' <<< "$GIT_PROVIDERS")
     fi
 
-    if [[ -n "$GIT_REPOSITORY" ]]; then
+    # GIT_REPOSITORIES: git.repositories of the chart values, as JSON ([{url, branch}]).
+    # Takes over from GIT_REPOSITORY, which then holds the first one.
+    if [[ -n "$GIT_REPOSITORIES" ]] && ! jq -e 'type == "array"' <<< "$GIT_REPOSITORIES" &>/dev/null; then
+        echo "ignoring GIT_REPOSITORIES: not a JSON array"
+        GIT_REPOSITORIES=""
+    fi
+    if [[ -n "$GIT_REPOSITORIES" ]] && jq -e 'length > 0' <<< "$GIT_REPOSITORIES" &>/dev/null; then
+        # Nothing goes in the URL: the credentials are those of the Git providers. The
+        # token of GIT_PERSONAL_ACCESS_TOKEN belongs to one forge, it would be sent to all.
+        while IFS=$'\t' read -r url branch; do
+            [[ -z "$url" ]] && continue
+            echo "cloning $url"
+            if [[ -n "$branch" ]]; then
+                git -C "$ROOT_PROJECT_DIRECTORY" clone "$url" --branch "$branch" || echo "failed to clone $url"
+            else
+                git -C "$ROOT_PROJECT_DIRECTORY" clone "$url" || echo "failed to clone $url"
+            fi
+        done < <(jq -r '.[] | select(.url | type == "string") | [.url, (.branch // "")] | @tsv' <<< "$GIT_REPOSITORIES")
+    elif [[ -n "$GIT_REPOSITORY" ]]; then
         CLONE_URL="$GIT_REPOSITORY"
 
         # With the credentials of a Git provider nothing goes in the URL: it would be saved

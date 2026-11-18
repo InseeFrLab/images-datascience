@@ -148,3 +148,33 @@ commandTests:
         test "$(git -C /tmp/repo config user.email)" = jane.doe@example.fr
         git -C /tmp/repo remote add origin https://forge.example.org/jane/project.git
         test "$(git -C /tmp/repo config user.email)" = jane@example.org
+  - name: "onyxia-init.sh: clones every repository of GIT_REPOSITORIES"
+    command: "bash"
+    args:
+      - "-c"
+      - |
+        set -e
+        for repo in first second; do
+          git init -q -b main "/tmp/src-$repo"
+          git -C "/tmp/src-$repo" -c user.name=t -c user.email=t@t commit -q --allow-empty -m init
+          git -C "/tmp/src-$repo" branch dev
+          git clone -q --bare "/tmp/src-$repo" "/tmp/$repo.git"
+        done
+        mkdir /tmp/work
+        export ROOT_PROJECT_DIRECTORY=/tmp/work
+        export GIT_REPOSITORIES='[
+          {"providerId": "a", "url": "file:///tmp/first.git", "branch": "dev"},
+          {"providerId": "b", "url": "file:///tmp/second.git", "branch": ""},
+          {"providerId": "c", "url": "file:///tmp/missing.git", "branch": ""}
+        ]'
+        # Set by the charts to the first repository, for what still reads it
+        export GIT_REPOSITORY=file:///tmp/first.git GIT_BRANCH=dev GIT_PERSONAL_ACCESS_TOKEN=SECRET_TOKEN
+
+        # A repository that can't be cloned doesn't stop the startup
+        /opt/onyxia-init.sh true
+
+        test "$(git -C /tmp/work/first branch --show-current)" = dev
+        test "$(git -C /tmp/work/second branch --show-current)" = main
+        test "$(ls /tmp/work)" = "$(printf 'first\nsecond')"
+        # The token of GIT_PERSONAL_ACCESS_TOKEN isn't put in the URLs
+        if grep -rq SECRET_TOKEN /tmp/work/*/.git/config; then exit 1; fi
