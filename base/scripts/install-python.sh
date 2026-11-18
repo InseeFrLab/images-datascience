@@ -21,7 +21,8 @@ savedAptMark="$(apt-mark showmanual)"
     zlib1g-dev
 
 # Build Python from sources
-wget -nv https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
+PYTHON_URL="https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz"
+wget -nv "${PYTHON_URL}"
 tar xzvf Python-${PYTHON_VERSION}.tgz
 cd Python-${PYTHON_VERSION}
 ./configure \

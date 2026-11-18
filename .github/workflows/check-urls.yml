@@ -1,0 +1,20 @@
+name: Check download URLs
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'  # Runs at 05:00 UTC every day
+
+permissions:
+  contents: read
+
+jobs:
+  check-urls:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+
+      - name: Check download URLs
+        run: python3 utils/check_urls.py
