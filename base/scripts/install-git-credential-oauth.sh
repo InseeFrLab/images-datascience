@@ -9,7 +9,7 @@ GIT_CREDENTIAL_OAUTH_URL="https://github.com/hickford/git-credential-oauth/relea
 GIT_CREDENTIAL_OAUTH_ARCHIVE=$(basename "${GIT_CREDENTIAL_OAUTH_URL}")
 TMP_DIR=$(mktemp -d)
 curl -fsSL "${GIT_CREDENTIAL_OAUTH_URL}/${GIT_CREDENTIAL_OAUTH_ARCHIVE}" -o "${TMP_DIR}/${GIT_CREDENTIAL_OAUTH_ARCHIVE}"
-curl -fsSL "${GIT_CREDENTIAL_OAUTH_URL}/git-credential-oauth_${GIT_CREDENTIAL_OAUTH_VERSION}_checksums.txt" -o "${TMP_DIR}/checksums.txt"
+curl -fsSL "${GIT_CREDENTIAL_OAUTH_URL%/*}/git-credential-oauth_${GIT_CREDENTIAL_OAUTH_VERSION}_checksums.txt" -o "${TMP_DIR}/checksums.txt"
 (cd "${TMP_DIR}" && sha256sum --check --strict --ignore-missing checksums.txt)
 
 # Install git-credential-oauth
