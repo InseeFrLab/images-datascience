@@ -5,8 +5,8 @@ set -e
 GIT_CREDENTIAL_OAUTH_VERSION="0.18.0"
 
 # Download the official archive and verify its checksum
-GIT_CREDENTIAL_OAUTH_URL="https://github.com/hickford/git-credential-oauth/releases/download/v${GIT_CREDENTIAL_OAUTH_VERSION}"
-GIT_CREDENTIAL_OAUTH_ARCHIVE="git-credential-oauth_${GIT_CREDENTIAL_OAUTH_VERSION}_linux_amd64.tar.gz"
+GIT_CREDENTIAL_OAUTH_URL="https://github.com/hickford/git-credential-oauth/releases/download/v${GIT_CREDENTIAL_OAUTH_VERSION}/git-credential-oauth_${GIT_CREDENTIAL_OAUTH_VERSION}_linux_amd64.tar.gz"
+GIT_CREDENTIAL_OAUTH_ARCHIVE=$(basename "${GIT_CREDENTIAL_OAUTH_URL}")
 TMP_DIR=$(mktemp -d)
 curl -fsSL "${GIT_CREDENTIAL_OAUTH_URL}/${GIT_CREDENTIAL_OAUTH_ARCHIVE}" -o "${TMP_DIR}/${GIT_CREDENTIAL_OAUTH_ARCHIVE}"
 curl -fsSL "${GIT_CREDENTIAL_OAUTH_URL}/git-credential-oauth_${GIT_CREDENTIAL_OAUTH_VERSION}_checksums.txt" -o "${TMP_DIR}/checksums.txt"
