@@ -2,7 +2,7 @@
 set -e
 
 # renovate: datasource=github-tags depName=aws/aws-cli
-AWS_CLI_VERSION="2.40.3"
+AWS_CLI_VERSION="2.42.1"
 
 # Download the official archive
 AWS_CLI_URL="https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip"
