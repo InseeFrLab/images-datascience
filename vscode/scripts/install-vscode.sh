@@ -11,8 +11,14 @@ TMP_DIR=$(mktemp -d)
 curl -fsSL "${CODE_SERVER_URL}" -o "${TMP_DIR}/${CODE_SERVER_DEB}"
 
 # Checksum
+# The build passes a token as the github_token secret: unauthenticated, the
+# GitHub API allows 60 requests per hour per IP, shared by the CI runners
+GITHUB_API_AUTH=()
+if [[ -s /run/secrets/github_token ]]; then
+    GITHUB_API_AUTH=(-H "Authorization: Bearer $(cat /run/secrets/github_token)")
+fi
 CODE_SERVER_RELEASE_URL="https://api.github.com/repos/coder/code-server/releases/tags/v${CODE_SERVER_VERSION}"
-CODE_SERVER_SHA256=$(curl -fsSL "${CODE_SERVER_RELEASE_URL}" |
+CODE_SERVER_SHA256=$(curl -fsSL "${GITHUB_API_AUTH[@]}" "${CODE_SERVER_RELEASE_URL}" |
     jq -er --arg asset "${CODE_SERVER_DEB}" '.assets[] | select(.name == $asset) | .digest // empty | sub("^sha256:"; "")')
 echo "${CODE_SERVER_SHA256}  ${TMP_DIR}/${CODE_SERVER_DEB}" | sha256sum --check --strict
 
