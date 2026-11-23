@@ -3,7 +3,7 @@ name: Build and push Docker images
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 1 * * 1'
+    - cron: '0 1 * * 0'
 
 # The GITHUB_TOKEN only needs to read the repository
 permissions:
