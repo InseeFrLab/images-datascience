@@ -29,7 +29,7 @@ WORKDIR ${WORKSPACE_DIR}
 
 COPY --chmod=0755 scripts/ /opt/
 
-RUN /opt/install-system-libs.sh && \
+RUN --mount=type=secret,id=github_token /opt/install-system-libs.sh && \
     # Make sudo passwordless
     echo 'onyxia ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     # Disable default sudo message when opening shell
@@ -43,6 +43,7 @@ RUN /opt/install-system-libs.sh && \
     /opt/install-duckdb-cli.sh && \
     /opt/install-duckdb-extensions.sh && \
     /opt/install-quarto.sh && \
+    /opt/install-git-credential-oauth.sh && \
     # Fix user permissions
     /opt/fix-user-permissions.sh && \
     # Clean

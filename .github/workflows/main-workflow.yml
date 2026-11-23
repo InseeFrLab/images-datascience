@@ -3,14 +3,18 @@ name: Build and push Docker images
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 1 * * 1'
+    - cron: '0 1 * * 0'
 
 # The GITHUB_TOKEN only needs to read the repository
 permissions:
   contents: read
 
 jobs:
+  # Check URLs before launching the build pipeline to fail fast on 404 errors
+  check-urls:
+    uses: ./.github/workflows/check-urls.yml
   base:
+    needs: [check-urls]
     uses: ./.github/workflows/main-workflow-template.yml
     with:
       image: base

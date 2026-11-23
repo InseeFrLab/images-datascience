@@ -13,7 +13,7 @@ COPY --chown=${USERNAME}:${GROUPNAME} settings/User.json ${USER_CONFIG_DIR}/sett
 COPY --chown=${USERNAME}:${GROUPNAME} settings/Remote.json ${REMOTE_CONFIG_DIR}/settings.json
 
 # Install VSCode
-RUN /opt/install-vscode.sh && \
+RUN --mount=type=secret,id=github_token /opt/install-vscode.sh && \
     /opt/install-vscode-extensions.sh && \
     # Install opencode
     /opt/install-opencode.sh && \
