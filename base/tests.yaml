@@ -1,4 +1,7 @@
 schemaVersion: "2.0.0"
+# container-structure-test substitutes $NAME and ${NAME} in the args with the
+# image's environment (an unknown name becomes empty, and $$ isn't an escape):
+# the scripts below use no shell variables, only $(...)
 metadataTest:
   user: 1000
   workdir: "/home/onyxia/work"
@@ -78,7 +81,7 @@ commandTests:
         ]'
 
         # The service doesn't get the secrets in its environment
-        /opt/onyxia-init.sh bash -c 'test -z "${GIT_PROVIDERS:-}"'
+        /opt/onyxia-init.sh bash -c '! printenv GIT_PROVIDERS'
 
         diff -u - ~/.gitconfig <<'EOF'
         [user]
@@ -154,12 +157,11 @@ commandTests:
       - "-c"
       - |
         set -e
-        for repo in first second; do
-          git init -q -b main "/tmp/src-$repo"
-          git -C "/tmp/src-$repo" -c user.name=t -c user.email=t@t commit -q --allow-empty -m init
-          git -C "/tmp/src-$repo" branch dev
-          git clone -q --bare "/tmp/src-$repo" "/tmp/$repo.git"
-        done
+        git init -q -b main /tmp/src
+        git -C /tmp/src -c user.name=t -c user.email=t@t commit -q --allow-empty -m init
+        git -C /tmp/src branch dev
+        git clone -q --bare /tmp/src /tmp/first.git
+        git clone -q --bare /tmp/src /tmp/second.git
         mkdir /tmp/work
         export ROOT_PROJECT_DIRECTORY=/tmp/work
         export GIT_REPOSITORIES='[
