@@ -14,5 +14,5 @@ install2.r --ncpus -1 --error \
     tidyverse
 
 # Install package for data science not present in CRAN
-NOT_CRAN=true install2.R --ncpus 1 --error --no-multiarch \
+NOT_CRAN=true install2.r --ncpus 1 --error  \
     --repos "https://community.r-multiverse.org" "polars"
