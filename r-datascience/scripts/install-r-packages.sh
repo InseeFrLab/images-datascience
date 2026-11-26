@@ -12,3 +12,7 @@ install2.r --ncpus -1 --error \
     RPostgres \
     RPostgreSQL \
     tidyverse
+
+# Install package for data science not present in CRAN
+NOT_CRAN=true install2.r --ncpus 1 --error  \
+    --repos "https://community.r-multiverse.org" "polars"
