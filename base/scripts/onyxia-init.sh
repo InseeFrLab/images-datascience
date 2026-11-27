@@ -58,14 +58,8 @@ if  [[ -n "$VAULT_RELATIVE_PATH" ]]; then
             export "$key=$value"
             if [[ $SUDO -eq 0 ]]; then
                 printf '%s="%s"\n' "$key" "$value" | sudo tee -a /etc/environment >/dev/null
-                if command -v R &>/dev/null; then
-                    printf '%s="%s"\n' "$key" "$value" | sudo tee -a "${R_HOME}/etc/Renviron.site" >/dev/null
-                fi
             else
                 printf 'export %s=%q\n' "$key" "$value" >> "${HOME}/.bashrc"
-                if command -v R &>/dev/null; then
-                    printf '%s="%s"\n' "$key" "$value" >> "${R_HOME}/etc/Renviron.site"
-                fi
             fi
         done <<< "$KEYS"
     fi
@@ -284,14 +278,7 @@ fi
 
 if command -v R &>/dev/null; then
     echo "Renviron.site detected"
-    echo -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID\nAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY\nAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN\nAWS_DEFAULT_REGION=$AWS_DEFAULT_REGION\nAWS_S3_ENDPOINT=$AWS_S3_ENDPOINT\nAWS_EXPIRATION=$AWS_EXPIRATION" >> ${R_HOME}/etc/Renviron.site
-    echo -e "VAULT_ADDR=$VAULT_ADDR\nVAULT_TOKEN=$VAULT_TOKEN" >> ${R_HOME}/etc/Renviron.site
-    echo -e "SPARK_HOME=$SPARK_HOME" >> ${R_HOME}/etc/Renviron.site
-    if [[ -e "$JAVA_HOME" ]]; then
-        echo -e "JAVA_HOME=$JAVA_HOME" >> ${R_HOME}/etc/Renviron.site
-    fi
-    env | grep "KUBERNETES" >> ${R_HOME}/etc/Renviron.site
-    env | grep "IMAGE_NAME" >> ${R_HOME}/etc/Renviron.site
+    printenv >> ${R_HOME}/etc/Renviron.site
 
     # Configure rproj in rstudio
     if command -v rstudio-server &>/dev/null; then 
@@ -326,9 +313,6 @@ if [[ $SUDO -eq 0 ]]; then
     for var in "${env_vars[@]}"; do
         if [[ -n "${!var}" ]]; then
         sudo sh -c "printf '%s=\"%s\"\n' $var \"${!var}\" >> /etc/environment"
-            if command -v R &>/dev/null; then
-                sudo sh -c "printf '%s=\"%s\"\n' $var \"${!var}\" >> ${R_HOME}/etc/Renviron.site"
-            fi
         fi
     done
 fi
